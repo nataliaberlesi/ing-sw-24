@@ -1,5 +1,11 @@
 package it.polimi.ingsw.Server.Model;
 
+import java.util.HashMap;
+
+/**
+ * the card abstract class is extended by all cards that are in play
+ * throughout the game
+ */
 public abstract class Card {
 
     /**
@@ -42,6 +48,15 @@ public abstract class Card {
      */
     protected Card(Symbol backSymbol, Symbol[] frontCorners, Symbol[] backCorners) {
     }
+    /**
+     * method checks weather there are enough of the right symbols are on the board where its placed
+     * resource cards automatically pass
+     * gold cards require check
+     * @return true if there are enough of the right symbols on the board
+     */
+    public boolean checkPrerequisites(HashMap<Symbol, Integer> symbolCounter){
+        return true;
+    }
 
     public void flipCard(){
         isFacingUp=!isFacingUp;
@@ -69,5 +84,6 @@ public abstract class Card {
     public boolean isFacingeUp() {
         return isFacingUp;
     }
+
 
 }
