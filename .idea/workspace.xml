@@ -4,11 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0844a219-b385-434a-8316-d30e9520619c" name="Changes" comment="Added CornerCardObjective, SymbolObjetiove and PointsCardObjective.">
-      <change afterPath="$PROJECT_DIR$/src/main/java/it/polimi/ingsw/Server/Model/DescendingDiagonalObjective.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/it/polimi/ingsw/Server/Model/IncrementingDiagonalObjective.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/it/polimi/ingsw/Server/Model/VerticalPatternObjective.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="0844a219-b385-434a-8316-d30e9520619c" name="Changes" comment="created DescendingDiagonalObjective, IncrementingDiagonalObjective and VerticalPatternObjective">
+      <change beforePath="$PROJECT_DIR$/src/main/java/it/polimi/ingsw/Server/Model/Board.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/polimi/ingsw/Server/Model/Board.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -80,7 +77,7 @@
       <workItem from="1710838061581" duration="61000" />
       <workItem from="1710838244542" duration="123000" />
       <workItem from="1710838401385" duration="670000" />
-      <workItem from="1710840459549" duration="23067000" />
+      <workItem from="1710840459549" duration="24920000" />
     </task>
     <task id="LOCAL-00001" summary="Created packages for client and server">
       <option name="closed" value="true" />
@@ -138,7 +135,15 @@
       <option name="project" value="LOCAL" />
       <updated>1710887694731</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="created DescendingDiagonalObjective, IncrementingDiagonalObjective and VerticalPatternObjective">
+      <option name="closed" value="true" />
+      <created>1710890106244</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1710890106244</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -162,7 +167,8 @@
     <MESSAGE value="Added comments to Card and added Objective and CardObjective classes with shells of some method" />
     <MESSAGE value="Added comments to Card and its subclasses" />
     <MESSAGE value="Added CornerCardObjective, SymbolObjetiove and PointsCardObjective." />
-    <option name="LAST_COMMIT_MESSAGE" value="Added CornerCardObjective, SymbolObjetiove and PointsCardObjective." />
+    <MESSAGE value="created DescendingDiagonalObjective, IncrementingDiagonalObjective and VerticalPatternObjective" />
+    <option name="LAST_COMMIT_MESSAGE" value="created DescendingDiagonalObjective, IncrementingDiagonalObjective and VerticalPatternObjective" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
