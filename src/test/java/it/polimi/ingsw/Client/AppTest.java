@@ -1,4 +1,4 @@
-package it.polimi.ingsw.client;
+package it.polimi.ingsw.Client;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
