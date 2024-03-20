@@ -20,14 +20,14 @@ public class ResourceCard extends Card {
      * @param backSymbol   is a Symbol that is on the back of the card
      * @param frontCorners must be an array of 4 Symbols indicating the symbols on each corner
      * @param backCorners  must be an array of 4 Symbols indicating the symbols on each corner
-     * @param cardObjective dictates how may point will be gathered when card is placed
+     * @param cardObjective is the objective that will be activated once the card is placed
      */
-    public ResourceCard(Symbol backSymbol, Symbol[] frontCorners, Symbol[] backCorners, CardObjective cardObjective) {}
-
+    protected ResourceCard(Symbol backSymbol, Symbol[] frontCorners, Symbol[] backCorners, CardObjective cardObjective) {
+        super(backSymbol, frontCorners, backCorners);
+        this.cardObjective = cardObjective;
+    }
 
     public CardObjective getCardObjective() {
         return cardObjective;
     }
-
-
 }
