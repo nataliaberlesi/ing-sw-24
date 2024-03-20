@@ -61,10 +61,17 @@ public abstract class Card {
         return true;
     }
 
+    /**
+     * changes orientation of card
+     */
     public void flipCard(){
         isFacingUp=!isFacingUp;
     }
 
+    /**
+     *
+     * @return the corners of the card according to it's orientation
+     */
     public Symbol[] getVisibleCorners(){
         if(isFacingUp){
             return frontCorners;
@@ -72,18 +79,34 @@ public abstract class Card {
         return backCorners;
     }
 
+    /**
+     *
+     * @return the corners on the back of the card, independent of card orientation
+     */
     public Symbol[] getBackCorners() {
         return backCorners;
     }
 
+    /**
+     *
+     * @return the conrners on the front of the card, independent of card orientation
+     */
     public Symbol[] getFrontCorners() {
         return frontCorners;
     }
 
+    /**
+     *
+     * @return the center symbol on the back of the card
+     */
     public Symbol getBackSymbol() {
         return backSymbol;
     }
 
+    /**
+     *
+     * @return true if card is facing up
+     */
     public boolean isFacingeUp() {
         return isFacingUp;
     }

@@ -4,7 +4,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * CardObjective is the effect that activates when the card is placed
+ * CardObjective is the effect that is activated when the card is placed
+ * and assigns point accordingly
  */
 public interface CardObjective {
     /**

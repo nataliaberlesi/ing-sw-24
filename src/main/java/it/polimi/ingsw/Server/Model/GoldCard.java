@@ -18,10 +18,18 @@ public class GoldCard extends ResourceCard{
      * @param frontCorners  must be an array of 4 Symbols indicating the symbols on each corner
      * @param backCorners   must be an array of 4 Symbols indicating the symbols on each corner
      * @param cardObjective dictates how may point will be gathered when card is placed
-     * @param prerequisites is the list of Symbols that are necessary to have on the board in order to place the card
+     * @param prerequisites is the list with the symbols necessary to be on the board in order to be able to place the card
      */
-    protected GoldCard(Symbol backSymbol, Symbol[] frontCorners, Symbol[] backCorners, CardObjective cardObjective, ArrayList<Symbol> prerequisites) {
+    public GoldCard(Symbol backSymbol, Symbol[] frontCorners, Symbol[] backCorners, CardObjective cardObjective, ArrayList<Symbol> prerequisites) {
+        super(backSymbol, frontCorners, backCorners, cardObjective);
+        this.prerequisites = prerequisites;
     }
+
+    /**
+     *
+     * @param symbolCounter map containing number of visible occurrences for each symbol
+     * @return true if enough of the right symbols are visible on the board
+     */
     @Override
     public boolean checkPrerequisites(HashMap<Symbol, Integer> symbolCounter){
         //Caution, area under construction...
