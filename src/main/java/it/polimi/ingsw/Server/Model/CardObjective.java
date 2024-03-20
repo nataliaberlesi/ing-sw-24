@@ -1,7 +1,17 @@
 package it.polimi.ingsw.Server.Model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
+/**
+ * CardObjective is the effect that activates when the card is placed
+ */
 public interface CardObjective {
-    public int calculatePoints(ArrayList<Symbol> symbolCounter, int coveredCorners );
+    /**
+     * calculates the points when card is placed
+     * @param symbolCounter map containing number of visible occurrences for each symbol
+     * @param coveredCorners is the number of corners that are covered by the card when placed
+     * @return the number of points awarded when card is placed
+     */
+    public int calculatePoints(HashMap<Symbol, Integer> symbolCounter, int coveredCorners );
 }

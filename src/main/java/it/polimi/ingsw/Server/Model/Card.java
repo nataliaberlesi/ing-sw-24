@@ -46,7 +46,10 @@ public abstract class Card {
      * @param frontCorners must be an array of 4 Symbols indicating the symbols on each corner
      * @param backCorners must be an array of 4 Symbols indicating the symbols on each corner
      */
-    protected Card(Symbol backSymbol, Symbol[] frontCorners, Symbol[] backCorners) {
+    protected Card(Symbol backSymbol, Symbol[] frontCorners, Symbol[] backCorners, Symbol backSymbol1, Symbol[] frontCorners1, Symbol[] backCorners1) {
+        this.backSymbol = backSymbol1;
+        this.frontCorners = frontCorners1;
+        this.backCorners = backCorners1;
     }
     /**
      * method checks weather there are enough of the right symbols are on the board where its placed

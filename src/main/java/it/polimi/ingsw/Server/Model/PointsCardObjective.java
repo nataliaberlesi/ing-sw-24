@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Server.Model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class PointsCardObjective implements CardObjective{
 
@@ -10,8 +11,9 @@ public class PointsCardObjective implements CardObjective{
         this.points = points;
     }
 
+
     @Override
-    public int calculatePoints(ArrayList<Symbol> symbolCounter, int coveredCorners) {
+    public int calculatePoints(HashMap<Symbol, Integer> symbolCounter, int coveredCorners) {
         return 0;
     }
 }

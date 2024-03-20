@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Server.Model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class SymbolObjetiove implements CardObjective ,Objective{
     private final Symbol symbolOfInterest;
@@ -11,18 +12,19 @@ public class SymbolObjetiove implements CardObjective ,Objective{
         this.numberOfOccurrences = numberOfOccurrences;
     }
 
-    @Override
-    public int calculatePoints(ArrayList<Symbol> symbolCounter, int coveredCorners) {
-        return 0;
-    }
+
 
     @Override
     public void updateObjective(Symbol cardBackSymbol, Coordinates coordinates) {
-
     }
 
     @Override
     public int calculateePoints(ArrayList<Symbol> symbolCounter) {
+        return 0;
+    }
+
+    @Override
+    public int calculatePoints(HashMap<Symbol, Integer> symbolCounter, int coveredCorners) {
         return 0;
     }
 }
