@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 /**
  * CardObjective is the effect that is activated when the card is placed
- * and assigns point accordingly
+ * and assigns points accordingly
  */
 public interface CardObjective {
     /**

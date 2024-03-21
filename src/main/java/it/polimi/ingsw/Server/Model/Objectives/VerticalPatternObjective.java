@@ -1,17 +1,21 @@
-package it.polimi.ingsw.Server.Model;
+package it.polimi.ingsw.Server.Model.Objectives;
+
+import it.polimi.ingsw.Server.Model.Coordinates;
+import it.polimi.ingsw.Server.Model.Objective;
+import it.polimi.ingsw.Server.Model.Symbol;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * Assigns 3 points for each occurence of a vertical pattern on the board at the end of a game
+ * Assigns 3 points for each occurrence of a vertical pattern on the board at the end of a game
  */
-public abstract class VerticalPatternObjective implements Objective{
+public abstract class VerticalPatternObjective implements Objective {
 
     /**
-     * number of points assigned for each occurence of a vertical pattern
+     * number of points assigned for each occurrence of a vertical pattern
      */
-    private static final int POINTS=3;
+    private static final int POINTS = 3;
 
     /**
      * symbol of the cards that form the vertical column of the pattern
@@ -26,12 +30,12 @@ public abstract class VerticalPatternObjective implements Objective{
     /**
      * list of the coordinates of the cards that deviate from the column
      */
-    private ArrayList<Coordinates> ListOfOutOfLineSymbols=new ArrayList<>();
+    private ArrayList<Coordinates> ListOfOutOfLineSymbols = new ArrayList<>();
 
     /**
      * map of the cards that form the vertical column in the pattern
      */
-    private HashMap<Coordinates, Symbol> ListOfSymbolsOfInterest=new HashMap<>();
+    private HashMap<Coordinates, Symbol> ListOfSymbolsOfInterest = new HashMap<>();
 
     /**
      *

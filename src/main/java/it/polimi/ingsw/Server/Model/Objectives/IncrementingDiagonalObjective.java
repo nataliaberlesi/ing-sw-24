@@ -1,9 +1,13 @@
-package it.polimi.ingsw.Server.Model;
+package it.polimi.ingsw.Server.Model.Objectives;
+
+import it.polimi.ingsw.Server.Model.Coordinates;
+import it.polimi.ingsw.Server.Model.Objective;
+import it.polimi.ingsw.Server.Model.Symbol;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class IncrementingDiagonalObjective implements Objective{
+public class IncrementingDiagonalObjective implements Objective {
 
     /**
      * number of points assigned for each time descending diagonal pattern of a certain color is found
@@ -12,13 +16,13 @@ public class IncrementingDiagonalObjective implements Objective{
     private final static int POINTS=2;
 
     /**
-     * symbolOfInterest indicates the backSymbol of the cards that will be checked
-     * the back symbol is indicator of the color of the card
+     * symbolOfInterest indicates the backSymbol of the cards that won't be filtered out in the updateObjective method
+     * the back symbol is an indicator of the card's color
      */
     private final Symbol symbolOfInterest;
 
     /**
-     * list of coordinates that house cards of the color of interest
+     * contains the list of all coordinates present in the board of the cards that contain the symbol of interest
      */
     private ArrayList<Coordinates> ListOfCoordinatessOfInterest=new ArrayList<>();
 
@@ -48,7 +52,7 @@ public class IncrementingDiagonalObjective implements Objective{
      * @return number of point earned
      */
     @Override
-    public int calculateePoints(ArrayList<Symbol> symbolCounter) {
+    public int calculatePoints(ArrayList<Symbol> symbolCounter) {
         return 0;
     }
 }

@@ -6,6 +6,9 @@ package it.polimi.ingsw.Server.Model;
  * it is possible to draw directly from each of them,
  * face up cards derive from the deck
  */
+
+ //WIP: 2 decks or 2 objects (one for gold cards and another for common cards)?
+
 public class DrawingSection {
     /**
      * every time a face up card is drawn, the top card of the deck will replace it.
@@ -38,8 +41,8 @@ public class DrawingSection {
      * @param cardIndex index of the card that is being drawn, must be < 3
      * @return drawable card at the index that is in input
      */
-    public Card drwCard(int cardIndex){
-        //Caution, method under construction
+    public Card drawCard(int cardIndex){
+        //Caution, method under construction WIP
         return drawableCards[cardIndex];
     }
 

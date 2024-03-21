@@ -8,7 +8,7 @@ public class Hand {
     /**
      * Array of 3 cards
      */
-    private Card[] cards=new Card[3];
+    private Card[] cards = new Card[3];
 
     /**
      *
@@ -18,12 +18,12 @@ public class Hand {
 
     /**
      *
-     * @param cardIndex is the index of the card that will be removed from card
+     * @param cardIndex is the index of the card that will be removed from hand
      *                  to later be placed on the board
      * @return card that is in cards[cardIndex]
      */
     public Card placeCard(int cardIndex){
-        //Caution, method under construction...
+        //Caution, method under construction... WIP
         return cards[cardIndex];
     }
 }

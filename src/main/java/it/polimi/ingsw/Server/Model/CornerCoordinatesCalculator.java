@@ -17,14 +17,22 @@ public class CornerCoordinatesCalculator {
     }
 
     /**
-     * this method calculates the coordinates of a given corner of a card being placed in given coordinates
+     * calculates the pointed coordinates of a given card's corner being placed in given coordinates
      * @param centerCoordinates coordinates of the card
-     * @param cornerNumber number of the corner of the card
-     * @return the coordinates of the corner
+     * @param cornerNumber number of the card's corner
+     * @return the pointed coordinates by a corner
      */
     public static Coordinates cornerCoordinates(Coordinates centerCoordinates, int cornerNumber){
         int x=centerCoordinates.getX()+relativeCoordinates.get(cornerNumber).getX();
         int y=centerCoordinates.getY()+relativeCoordinates.get(cornerNumber).getY();
         return new Coordinates(x,y);
+
+        /**
+         *                         Coordinates(x,y)
+         *                        /
+         *              1--------0
+         *              |        |
+         *              2--------3
+         */
     }
 }

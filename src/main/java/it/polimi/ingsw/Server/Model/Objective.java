@@ -18,5 +18,5 @@ public interface Objective {
      * @param symbolCounter map containing number of visible occurrences for each symbol
      * @return number of point earned
      */
-    public int calculateePoints(ArrayList<Symbol> symbolCounter);
+    public int calculatePoints(ArrayList<Symbol> symbolCounter);
 }

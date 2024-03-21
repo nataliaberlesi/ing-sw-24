@@ -1,4 +1,7 @@
-package it.polimi.ingsw.Server.Model;
+package it.polimi.ingsw.Server.Model.Objectives;
+
+import it.polimi.ingsw.Server.Model.CardObjective;
+import it.polimi.ingsw.Server.Model.Symbol;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,7 +10,7 @@ import java.util.HashMap;
  * Objective that assigns points relative to how many corners are covered when card is placed
  *
  */
-public class CornerCardObjective implements CardObjective{
+public class CornerCardObjective implements CardObjective {
     /**
      * points assigned per covered corner
      */

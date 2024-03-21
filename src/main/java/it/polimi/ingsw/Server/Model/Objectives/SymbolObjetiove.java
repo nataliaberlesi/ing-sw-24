@@ -1,4 +1,9 @@
-package it.polimi.ingsw.Server.Model;
+package it.polimi.ingsw.Server.Model.Objectives;
+
+import it.polimi.ingsw.Server.Model.CardObjective;
+import it.polimi.ingsw.Server.Model.Coordinates;
+import it.polimi.ingsw.Server.Model.Objective;
+import it.polimi.ingsw.Server.Model.Symbol;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,7 +11,7 @@ import java.util.HashMap;
 /**
  * Counts the number of occurrences of a specific symbol on the board and assigns points accordingly
  */
-public class SymbolObjetiove implements CardObjective ,Objective{
+public class SymbolObjetiove implements CardObjective, Objective {
     /**
      * points assigned for each number of occurences of a symbol on the board
      */
@@ -60,7 +65,7 @@ public class SymbolObjetiove implements CardObjective ,Objective{
      * @return number of point earned
      */
     @Override
-    public int calculateePoints(ArrayList<Symbol> symbolCounter) {
+    public int calculatePoints(ArrayList<Symbol> symbolCounter) {
         return 0;
     }
 }

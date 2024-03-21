@@ -1,4 +1,7 @@
-package it.polimi.ingsw.Server.Model;
+package it.polimi.ingsw.Server.Model.Objectives;
+
+import it.polimi.ingsw.Server.Model.CardObjective;
+import it.polimi.ingsw.Server.Model.Symbol;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,7 +9,7 @@ import java.util.HashMap;
 /**
  * PointsCardObjective assigns points when a card is placed, no checks necessary.
  */
-public class PointsCardObjective implements CardObjective{
+public class PointsCardObjective implements CardObjective {
 
     /**
      * points that will be gained when card is placed

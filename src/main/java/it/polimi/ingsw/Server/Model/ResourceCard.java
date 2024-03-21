@@ -6,7 +6,7 @@ import java.util.HashMap;
 
 /**
  * Resource is a Card that can be placed during the game after the first round
- * and can always be placed in placeable coordinate
+ * and can always be placed in placeable coordinates
  */
 public class ResourceCard extends Card {
 

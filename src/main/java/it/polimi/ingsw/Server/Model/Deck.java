@@ -15,7 +15,7 @@ public class Deck {
      * @return a card from the deck
      */
     public Card draw(){
-        //Caution, method under construction
+        //Caution, method under construction WIP
         return cards.get(0);
     }
 }
