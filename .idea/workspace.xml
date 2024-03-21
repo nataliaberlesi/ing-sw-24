@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0844a219-b385-434a-8316-d30e9520619c" name="Changes" comment="Created hand class">
-      <change afterPath="$PROJECT_DIR$/src/main/java/it/polimi/ingsw/Server/Model/Deck.java" afterDir="false" />
+    <list default="true" id="0844a219-b385-434a-8316-d30e9520619c" name="Changes" comment="Created Deck">
+      <change afterPath="$PROJECT_DIR$/src/main/java/it/polimi/ingsw/Server/Model/DrawingSection.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/it/polimi/ingsw/Server/Model/Deck.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/it/polimi/ingsw/Server/Model/Deck.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -83,7 +84,7 @@
       <workItem from="1710932946619" duration="561000" />
       <workItem from="1710933527182" duration="11484000" />
       <workItem from="1710955247204" duration="622000" />
-      <workItem from="1711012354702" duration="2622000" />
+      <workItem from="1711012354702" duration="4894000" />
     </task>
     <task id="LOCAL-00001" summary="Created packages for client and server">
       <option name="closed" value="true" />
@@ -197,7 +198,15 @@
       <option name="project" value="LOCAL" />
       <updated>1711013143757</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="Created Deck">
+      <option name="closed" value="true" />
+      <created>1711016836149</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1711016836149</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -226,7 +235,8 @@
     <MESSAGE value="Created CornerCoordinatesCalculator with comments" />
     <MESSAGE value="Added comments" />
     <MESSAGE value="Created hand class" />
-    <option name="LAST_COMMIT_MESSAGE" value="Created hand class" />
+    <MESSAGE value="Created Deck" />
+    <option name="LAST_COMMIT_MESSAGE" value="Created Deck" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

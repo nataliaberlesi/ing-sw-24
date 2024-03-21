@@ -11,23 +11,11 @@ public class Deck {
      */
     private ArrayList<Card> cards;
     /**
-     * card on top, must always be viewed as facing down
-     */
-    private Card topCard;
-
-    /**
-     * helper function that replaces a top card once it is drawn
-     */
-    private void replaceTopCard(){
-
-    }
-
-    /**
      *
-     * @return top card
+     * @return a card from the deck
      */
-    public Card drawTopCard(){
+    public Card draw(){
         //Caution, method under construction
-        return topCard;
+        return cards.get(0);
     }
 }
