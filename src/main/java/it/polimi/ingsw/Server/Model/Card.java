@@ -19,9 +19,9 @@ public abstract class Card {
     /**
      * isFacingUp indicates the orientation of the card, false if card is facing down,
      * it will be used to verify which corners are visible
-     * cards are facing up when initialized
+     * cards are facing down when initialized
      */
-    private boolean isFacingUp = true;
+    private boolean isFacingUp = false;
 
     /**
      * frontCorners are the corners visible on the front

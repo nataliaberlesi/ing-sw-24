@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Server.Model;
 
+import it.polimi.ingsw.Server.Model.Objectives.Objective;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 

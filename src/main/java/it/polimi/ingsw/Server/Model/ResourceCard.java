@@ -1,8 +1,6 @@
 package it.polimi.ingsw.Server.Model;
 
-import sun.jvm.hotspot.debugger.cdbg.Sym;
-
-import java.util.HashMap;
+import it.polimi.ingsw.Server.Model.Objectives.CardObjective;
 
 /**
  * Resource is a Card that can be placed during the game after the first round

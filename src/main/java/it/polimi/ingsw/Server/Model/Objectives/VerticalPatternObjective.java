@@ -1,7 +1,6 @@
 package it.polimi.ingsw.Server.Model.Objectives;
 
 import it.polimi.ingsw.Server.Model.Coordinates;
-import it.polimi.ingsw.Server.Model.Objective;
 import it.polimi.ingsw.Server.Model.Symbol;
 
 import java.util.ArrayList;
