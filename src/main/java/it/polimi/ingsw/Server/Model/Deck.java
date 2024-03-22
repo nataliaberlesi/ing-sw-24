@@ -18,4 +18,11 @@ public class Deck {
         //Caution, method under construction WIP
         return cards.get(0);
     }
+
+    /**
+     * shuffles cards in deck
+     */
+    public void shuffle(){
+
+    }
 }
