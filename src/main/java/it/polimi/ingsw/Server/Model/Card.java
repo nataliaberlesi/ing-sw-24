@@ -3,8 +3,12 @@ package it.polimi.ingsw.Server.Model;
 import java.util.HashMap;
 
 /**
- * This abstract class is extended by all cards that are in play
- * throughout the game
+ * All cards in game are composed of four front facing corners, four back facing corners and a symbol in the center of the back side.
+ * Cards can either be facing up or facing down and can be flipped.
+ * All cards are facing down when initialized .
+ * By default, all cards satisfy the prerequisites necessary to be placed (regardless of what symbols are visible on the board),
+ * so method that checks prerequisites will always return true.
+ * However, this method will be overridden in the GoldCard class.
  */
 public abstract class Card {
 
@@ -58,8 +62,8 @@ public abstract class Card {
 
     /**
      * checks weather there are enough of the correct symbols on the board where so that the card can be placed
-     * resource cards automatically passes
-     * gold cards requires check
+     * resource and starting cards automatically pass
+     * gold cards require check
      * @return true if there are enough of the right symbols on the board
      */
     public boolean checkPrerequisites(HashMap<Symbol, Integer> symbolCounter){
@@ -67,7 +71,8 @@ public abstract class Card {
     }
 
     /**
-     * changes orientation of card
+     * Changes orientation of card from facing uo to facing down and vice versa.
+     * Changing orientation of card influences which corners and center symbols are visible when card is placed.
      */
     public void flipCard(){
         isFacingUp=!isFacingUp;
