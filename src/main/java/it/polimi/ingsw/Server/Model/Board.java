@@ -5,16 +5,23 @@ import it.polimi.ingsw.Server.Model.Objectives.Objective;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-/** The Board acts like a dynamic matrix,
- * each time that a card is placed it creates the necessary coordinates
- * to indicate where the next cards can be placed and where they can't
+/**
+ * The Board acts like a dynamic matrix of coordinates where it is legal to place cards (placeable coordinates).
+ * These coordinates are stored in a hashmap, where each coordinate is a key to a list of symbols that occupy those coordinates
+ * (So if a card is later placed there, those symbols will be covered).
+ * The board also stores a dynamic list of coordinates where it will always be illegal to place a card(unplaceable coordinates).
+ * Each time a card is placed, it's "visible" corners will create new placeable coordinates (if not already present) and
+ * it's "hidden" corners will create new unplaceable coordinates.
+ * There is also a symbol counter (in the form of a hashmap) that keeps track of how many visible symbols are present on the board.
+ * Every time a card is placed, the symbol counter will be updated by taking away the symbols that have been covered and adding the
+ * symbols of the card that is being placed.
  */
 public class Board {
 
     //We will probably also need an ArrayList<Coordinates> that memorizes all the keys for occupiedCoordinates
-
+    //Or we might not need occupied coordinates at all
     /**
-     * map of all coordinates that are already occupied by a card
+     * map of all coordinates that are already occupied by a card. So another card cannot be placed in these coordinates
      */
     private HashMap<Coordinates, Card> occupiedCoordinates = new HashMap<>();
 
@@ -24,13 +31,13 @@ public class Board {
     private ArrayList<Coordinates> unplaceableCoordinates = new ArrayList<>();
 
     /**
-     * map of all coordinates where cards are allowed to be placed (initially = (0,0))
+     * map of all coordinates where cards are allowed to be placed
      */
     private HashMap<Coordinates, ArrayList<Symbol>> placeableCoordinates = new HashMap<>();
 
     /**
      * map containing the number of visible occurrences for each symbol
-     * Useful for objectives that assign points based on the number of symbols present in the Board
+     * Useful for objectives and card objectives that assign points based on the number of symbols present in the Board
      */
     private HashMap<Symbol, Integer> visibleSymbolCounter = new HashMap<>();
 
@@ -40,15 +47,8 @@ public class Board {
      * there are only ever 3 objectives in the array
      * (2 common objectives for all players and a personal one for each player)
      */
-    private final Objective[] objectives;
+    private Objective[] objectives;
 
-    /**
-     *
-     * @param objectives array of objectives that will assign points at the end of the game
-     */
-    public Board(Objective[] objectives) {
-        this.objectives = objectives;
-    }
 
     /**
      * removes the symbols that are being covered from the symbolCounter
@@ -60,7 +60,7 @@ public class Board {
     /**
      * associates each corner (symbol) of the card that is being placed in the Board
      * to the adequate coordinates it points to
-     * if a card's corned is FULL ("hidden"), it adds the corresponding pointed coordinates to the unplaceableCoordinates hashmap
+     * if a card's corned is FULL ("hidden"), it adds the corresponding pointed coordinates to the unplaceableCoordinates list
      * if a card's corner is "visible", it adds its symbol and pointed coordinates to the placeableCoordinates hashmap
      * @param card card that is being placed
      * @param coordinates location where the card is being placed
@@ -77,7 +77,6 @@ public class Board {
      * @return true if receives as an input valid coordinates and helper functions don't raise exceptions,
      * false if invalid coordinates are passed
      */
-
     public boolean placeCard(Card card, Coordinates coordinates){return false;}
 
 }
