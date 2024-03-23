@@ -2,16 +2,20 @@ package it.polimi.ingsw.Server.Model;
 
 /**
  * collection of cards that can be drawn,
- * consisting from a deck and two face up cards,
- * it is possible to draw directly from each of them,
- * face up cards derive from the deck
+ * consisting from a deck, a face down card and two face up cards,
+ * it is possible to draw directly from each of the cards.
+ * When a face up card is drawn it is replaced by the face down card after it has been flipped;
+ * when a face down card is drawn or when it replaces a face up card, it is replaced by a card from the deck that will also
+ * be face down.
+ * The cards that can be drawn are placed in an array,
+ * the face down card is always in position 0, while the face up cards are in positions 1 and 2.
  */
 
  //WIP: 2 decks or 2 objects (one for gold cards and another for common cards)?
 
 public class DrawingSection {
     /**
-     * every time a face up card is drawn, the top card of the deck will replace it.
+     * every time the face down card is drawn or moved, it is replaced by a card in the deck.
      *
      */
     private final Deck deck;

@@ -11,7 +11,7 @@ import java.util.HashMap;
  */
 public class GoldCard extends ResourceCard{
     /**
-     * list that contains the necessary symbols to be on the board in order to be able to place the card
+     * list that contains the necessary symbols that have to be on the board in order to be able to place the card
      */
     private final ArrayList<Symbol> prerequisites;
 
