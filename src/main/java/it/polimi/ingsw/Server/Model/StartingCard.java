@@ -8,7 +8,7 @@ import java.util.ArrayList;
 public class StartingCard extends Card{
 
     /**
-     * frontCenterSymbols  are the symbols on the front of the card, in the center, so they can't be covered
+     * frontCenterSymbols are the symbols on the front of the card, in the center, so they can't be covered
      */
     private final ArrayList<Symbol> frontCenterSymbols;
 

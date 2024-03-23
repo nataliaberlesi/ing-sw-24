@@ -14,5 +14,5 @@ public enum Symbol {
     SCROLL,
     INK,
     BLANK,
-    FULL;
+    FULL
 }

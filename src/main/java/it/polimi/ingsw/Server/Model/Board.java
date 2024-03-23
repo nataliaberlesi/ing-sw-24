@@ -18,12 +18,14 @@ import java.util.HashMap;
  */
 public class Board {
 
-    //We will probably also need an ArrayList<Coordinates> that memorizes all the keys for occupiedCoordinates
-    //Or we might not need occupied coordinates at all
+/* we might not need a map of placed cards but if we do
+    we will probably also need an ArrayList<Coordinates> that memorizes all the keys for occupiedCoordinates
+
     /**
      * map of all coordinates that are already occupied by a card. So another card cannot be placed in these coordinates
-     */
+
     private HashMap<Coordinates, Card> occupiedCoordinates = new HashMap<>();
+    */
 
     /**
      * list of all coordinates where cards can't be placed
