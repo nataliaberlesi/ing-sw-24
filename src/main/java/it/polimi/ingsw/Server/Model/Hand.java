@@ -6,7 +6,7 @@ package it.polimi.ingsw.Server.Model;
  */
 public class Hand {
     /**
-     * Array of 3 cards
+     * The cards that are in a player hand, must be 3 cards at the end of each turn unless there are no more cards to draw
      */
     private Card[] cards = new Card[3];
 
