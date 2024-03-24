@@ -16,7 +16,7 @@ public class Hand {
      *
      * @param card that is being drawn and will be added to cards
      */
-    public void drawCard(Card card){}
+    public void placeCardInHand(Card card){}
 
     /**
      *
@@ -24,7 +24,7 @@ public class Hand {
      *                  to later be placed on the board
      * @return card that is in cards[cardIndex]
      */
-    public Card placeCard(int cardIndex){
+    public Card getCardFromHand(int cardIndex){
         //Caution, method under construction... WIP
         return cards[cardIndex];
     }
