@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Server.Model;
 
-import it.polimi.ingsw.Server.Model.Objectives.Objective;
+import it.polimi.ingsw.Server.Model.Cards.Card;
+import it.polimi.ingsw.Server.Model.Cards.Objectives.Objective;
 
 import java.util.ArrayList;
 import java.util.HashMap;

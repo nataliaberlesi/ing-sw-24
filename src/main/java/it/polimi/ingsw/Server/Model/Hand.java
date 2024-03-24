@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Server.Model;
 
+import it.polimi.ingsw.Server.Model.Cards.Card;
+
 /**
  * This is the players hand, it can never have more than three cards,
  * at the end of each turn the hand must contain three cards.

@@ -1,5 +1,8 @@
 package it.polimi.ingsw.Server.Model;
 
+import it.polimi.ingsw.Server.Model.Cards.Card;
+import it.polimi.ingsw.Server.Model.Cards.Deck;
+
 /**
  * collection of cards that can be drawn,
  * consisting from a deck, a face down card and two face up cards,
