@@ -14,12 +14,12 @@ public interface Objective {
      * @param cardBackSymbol symbol the card that is being placed
      * @param coordinates coordinates of the card that is being placed
      */
-    public void updateObjective(Symbol cardBackSymbol, Coordinates coordinates);
+    void updateObjective(Symbol cardBackSymbol, Coordinates coordinates);
 
     /**
      *
      * @param symbolCounter map containing number of visible occurrences for each symbol
      * @return number of point earned
      */
-    public int calculatePoints(HashMap<Symbol, Integer> symbolCounter);
+    int calculatePoints(HashMap<Symbol, Integer> symbolCounter) throws RuntimeException;
 }
