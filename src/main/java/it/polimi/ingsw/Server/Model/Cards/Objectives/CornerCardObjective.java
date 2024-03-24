@@ -23,6 +23,15 @@ public class CornerCardObjective implements CardObjective {
      */
     @Override
     public int calculatePoints(HashMap<Symbol, Integer> symbolCounter, int coveredCorners) {
+        if(coveredCorners<1){
+
+        }
         return 0;
+    }
+
+    public class CornerOutOfBoundException extends Exception{
+        public CornerOutOfBoundException(String message) {
+            super((message));
+        }
     }
 }
