@@ -4,6 +4,7 @@ import it.polimi.ingsw.Server.Model.Coordinates;
 import it.polimi.ingsw.Server.Model.Symbol;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * objective that assigns 3 points per set of 3 different Symbols (SCROLL, INK, FEATHER)
@@ -31,7 +32,13 @@ public class MixSymbolObjective implements Objective{
      * @return number of point earned
      */
     @Override
-    public int calculatePoints(ArrayList<Symbol> symbolCounter) {
+    public int calculatePoints(HashMap<Symbol, Integer> symbolCounter) {
         return 0;
     }
+
+    /**
+     * @param symbolCounter map containing number of visible occurrences for each symbol
+     * @return number of point earned
+     */
+
 }

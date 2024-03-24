@@ -14,16 +14,17 @@ public class StartingCard extends Card{
      */
     private final ArrayList<Symbol> frontCenterSymbols;
 
-
     /**
+     * @param cardId       unique identifier used to associate card to graphic resource
      * @param backSymbol   is a Symbol that is on the back of the card
-     * @param frontCorners must be an array of 4 Symbols indicating the symbols on each corner
-     * @param backCorners  must be an array of 4 Symbols indicating the symbols on each corner
+     * @param frontCorners must be an array of 4 Symbols indicating the symbols on each front corner
+     * @param backCorners  must be an array of 4 Symbols indicating the symbols on each back corner
      * @param frontCenterSymbols are the Symbols that are present on some of the starting cards, in the center of the front
      *                           facing side
      */
-    protected StartingCard(Symbol backSymbol, Symbol[] frontCorners, Symbol[] backCorners, ArrayList<Symbol> frontCenterSymbols) {
-        super(backSymbol, frontCorners, backCorners);
+    protected StartingCard(String cardId, Symbol backSymbol, Symbol[] frontCorners, Symbol[] backCorners, ArrayList<Symbol> frontCenterSymbols) {
+        super(cardId, backSymbol, frontCorners, backCorners);
         this.frontCenterSymbols = frontCenterSymbols;
     }
+
 }

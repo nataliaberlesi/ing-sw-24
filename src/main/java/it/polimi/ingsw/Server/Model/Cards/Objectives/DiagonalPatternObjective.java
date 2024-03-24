@@ -4,6 +4,7 @@ import it.polimi.ingsw.Server.Model.Coordinates;
 import it.polimi.ingsw.Server.Model.Symbol;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *  objective that assigns 2 points per diagonal pattern of cards of the same color
@@ -54,7 +55,7 @@ public class DiagonalPatternObjective implements Objective {
      * @return number of point earned
      */
     @Override
-    public int calculatePoints(ArrayList<Symbol> symbolCounter) {
+    public int calculatePoints(HashMap<Symbol, Integer> symbolCounter) {
         return 0;
     }
 }

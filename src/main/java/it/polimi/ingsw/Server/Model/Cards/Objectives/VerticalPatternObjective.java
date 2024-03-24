@@ -9,7 +9,7 @@ import java.util.HashMap;
 /**
  * Assigns 3 points for each occurrence of a vertical pattern on the board at the end of a game
  */
-public abstract class VerticalPatternObjective implements Objective {
+public class VerticalPatternObjective implements Objective {
 
     /**
      * number of points assigned for each occurrence of a vertical pattern
@@ -55,4 +55,23 @@ public abstract class VerticalPatternObjective implements Objective {
         return false;
     }
 
+    /**
+     * updates class regarding the color and coordinates of a card that is being placed
+     *
+     * @param cardBackSymbol symbol the card that is being placed
+     * @param coordinates    coordinates of the card that is being placed
+     */
+    @Override
+    public void updateObjective(Symbol cardBackSymbol, Coordinates coordinates) {
+
+    }
+
+    /**
+     * @param symbolCounter map containing number of visible occurrences for each symbol
+     * @return number of point earned
+     */
+    @Override
+    public int calculatePoints(HashMap<Symbol, Integer> symbolCounter) {
+        return 0;
+    }
 }

@@ -63,7 +63,7 @@ public class SymbolObjetiove implements CardObjective, Objective {
      * @return number of point earned
      */
     @Override
-    public int calculatePoints(ArrayList<Symbol> symbolCounter) {
+    public int calculatePoints(HashMap<Symbol, Integer> symbolCounter) {
         return 0;
     }
 }
