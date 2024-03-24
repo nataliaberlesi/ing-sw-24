@@ -12,6 +12,7 @@ import java.util.HashMap;
  */
 public abstract class Card {
 
+    private final String CardId;
     /**
      * backSymbol is the symbol that is visible on the back side of the card,
      * it is visible only if the card is facing down,
@@ -49,16 +50,17 @@ public abstract class Card {
 
     /**
      *
+     * @param cardId unique identifier used to associate card to graphic resource
      * @param backSymbol is a Symbol that is on the back of the card
      * @param frontCorners must be an array of 4 Symbols indicating the symbols on each front corner
      * @param backCorners must be an array of 4 Symbols indicating the symbols on each back corner
      */
-    protected Card(Symbol backSymbol, Symbol[] frontCorners, Symbol[] backCorners) {
+    protected Card(String cardId, Symbol backSymbol, Symbol[] frontCorners, Symbol[] backCorners) {
+        CardId = cardId;
         this.backSymbol = backSymbol;
         this.frontCorners = frontCorners;
         this.backCorners = backCorners;
     }
-
 
     /**
      * checks weather there are enough of the correct symbols on the board where so that the card can be placed
