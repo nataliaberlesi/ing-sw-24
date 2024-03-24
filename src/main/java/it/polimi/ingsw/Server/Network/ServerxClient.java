@@ -1,6 +1,5 @@
 package it.polimi.ingsw.Server.Network;
 
-import org.json.JSONObject;
 
 import java.io.*;
 import java.net.Socket;
@@ -19,24 +18,13 @@ public class ServerxClient implements Runnable{
     }
     public void play() throws IOException {
         while(true) {
-            Receive();
-            Send();
+            receive();
+            send();
         }
     }
-    public void Send() {
-        JSONObject jobj=new JSONObject(2);
-        jobj.put("Day",increaseDay());
-        jobj.put("Message","Hello World!");
-        outSocket.println(jobj.toString());
-        System.out.println("Message sent:"+jobj.toString());
+    public void send() {
     }
-    public void Receive() throws IOException {
-        System.out.println("Aspetto un messaggio...");
-        String string=inSocket.readLine();
-        JSONObject jobj=new JSONObject(string);
-        System.out.println("Name:"+jobj.get("Name"));
-        System.out.println("Password:"+jobj.get("Psw"));
-        System.out.println("Message received: "+string);
+    public void receive() throws IOException {
     }
     public int increaseDay() {
         return ++this.day;
