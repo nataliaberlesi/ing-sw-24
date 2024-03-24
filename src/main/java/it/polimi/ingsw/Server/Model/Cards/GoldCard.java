@@ -17,14 +17,15 @@ public class GoldCard extends ResourceCard{
     private final ArrayList<Symbol> prerequisites;
 
     /**
+     * @param cardId        unique identifier used to associate card to graphic resource
      * @param backSymbol    is a Symbol that is on the back of the card
-     * @param frontCorners  must be an array of 4 Symbols indicating the symbols on each corner
-     * @param backCorners   must be an array of 4 Symbols indicating the symbols on each corner
-     * @param cardObjective dictates how may point will be gathered when card is placed
+     * @param frontCorners  must be an array of 4 Symbols indicating the symbols on each front corner
+     * @param backCorners   must be an array of 4 Symbols indicating the symbols on each back corner
+     * @param cardObjective is the objective that will be activated once the card is placed
      * @param prerequisites is the list with the symbols necessary to be on the board in order to be able to place the card
      */
-    public GoldCard(Symbol backSymbol, Symbol[] frontCorners, Symbol[] backCorners, CardObjective cardObjective, ArrayList<Symbol> prerequisites) {
-        super(backSymbol, frontCorners, backCorners, cardObjective);
+    protected GoldCard(String cardId, Symbol backSymbol, Symbol[] frontCorners, Symbol[] backCorners, CardObjective cardObjective, ArrayList<Symbol> prerequisites) {
+        super(cardId, backSymbol, frontCorners, backCorners, cardObjective);
         this.prerequisites = prerequisites;
     }
 
