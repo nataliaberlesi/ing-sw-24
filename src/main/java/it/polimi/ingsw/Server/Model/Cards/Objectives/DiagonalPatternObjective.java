@@ -13,20 +13,23 @@ import java.util.HashMap;
  *  red and blu cards only assign points for incrementing diagonal pattern.
  */
 public class DiagonalPatternObjective implements Objective {
+
     /**
      * number of points assigned for each time descending diagonal pattern of a certain color is found
      *
      */
     private final static int POINTS=2;
+
     /**
      * symbolOfInterest indicates the backSymbol of the cards that won't be filtered out in the updateObjective method
      * the back symbol is an indicator of the card's color
      */
     private final Symbol symbolOfInterest;
+
     /**
      * contains the list of all coordinates present in the board of the cards that contain the symbol of interest
      */
-    private ArrayList<Coordinates> ListOfCoordinatesOfInterest=new ArrayList<>();
+    private final ArrayList<Coordinates> ListOfCoordinatesOfInterest=new ArrayList<>();
 
     /**
      *
@@ -49,6 +52,24 @@ public class DiagonalPatternObjective implements Objective {
 
     }
 
+    /**
+     * if symbols of interest are leafs or butterflies (AKA green or purple cards) then in order to award points this method is called
+     * to find descending diagonal patterns
+     * @return 2*number of descending diagonal patterns
+     */
+    private int descendingDiagonalPatternPointCalculator(){
+
+        return 0;
+    }
+
+    /**
+     * if symbols of interest are mushrooms or wolves (AKA red or blue cards) then in order to award points this method is called
+     * to find incrementing diagonal patterns
+     * @return 2*number of incrementing diagonal patterns
+     */
+    private int incrementingDiagonalPatternPointCalculator(){
+        return 0;
+    }
     /**
      * Symbol counter is ignored
      * @param symbolCounter map containing number of visible occurrences for each symbol

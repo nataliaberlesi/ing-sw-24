@@ -32,6 +32,7 @@ class CornerCardObjectiveTest {
         CardObjective cornerCardObjective=new CornerCardObjective();
         int coveredCorners=0;
         assertThrows(CornerCardObjective.CornerOutOfBoundException.class, ()->cornerCardObjective.calculatePoints(null,coveredCorners));
+
     }
 
     /**
@@ -43,4 +44,6 @@ class CornerCardObjectiveTest {
         int coveredCorners=5;
         assertThrows(CornerCardObjective.CornerOutOfBoundException.class, ()->cornerCardObjective.calculatePoints(null,coveredCorners));
     }
+
+
 }
