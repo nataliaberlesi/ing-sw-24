@@ -33,6 +33,10 @@ public class Deck implements Iterator<Card> {
         return false;
     }
 
+    public Deck(ArrayList<Card> cards) {
+        this.cards = cards;
+    }
+
     /**
      * Returns the next element in the iteration.
      *
