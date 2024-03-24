@@ -28,8 +28,6 @@ public class ResourceCard extends Card {
     }
 
 
-
-
     public CardObjective getCardObjective() {
         return cardObjective;
     }

@@ -27,4 +27,7 @@ public class StartingCard extends Card{
         this.frontCenterSymbols = frontCenterSymbols;
     }
 
+    public ArrayList<Symbol> getFrontCenterSymbols() {
+        return frontCenterSymbols;
+    }
 }

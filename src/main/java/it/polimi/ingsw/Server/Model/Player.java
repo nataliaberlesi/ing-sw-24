@@ -5,7 +5,7 @@ public class Player {
     /**
      * player name is used to identify players, must be unique
      */
-    private final String playerName;
+    private final String nickname;
 
     /**
      * first player is used to determine turn order as well as who will play the final turn of the game:
@@ -47,7 +47,7 @@ public class Player {
 
 
 
-    public Player(String playerName) {
-        this.playerName = playerName;
+    public Player(String nickname) {
+        this.nickname = nickname;
     }
 }

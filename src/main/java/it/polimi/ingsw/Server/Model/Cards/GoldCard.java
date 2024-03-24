@@ -39,4 +39,8 @@ public class GoldCard extends ResourceCard{
         //Caution, area under construction... WIP
         return false;
     }
+
+    public ArrayList<Symbol> getPrerequisites() {
+        return prerequisites;
+    }
 }
