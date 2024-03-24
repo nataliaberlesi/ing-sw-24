@@ -2,7 +2,6 @@ package it.polimi.ingsw.Server.Model.Cards.Objectives;
 
 import it.polimi.ingsw.Server.Model.Symbol;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 /**

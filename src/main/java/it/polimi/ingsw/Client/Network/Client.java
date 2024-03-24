@@ -2,7 +2,6 @@ package it.polimi.ingsw.Client.Network;
 
 import java.io.*;
 import java.net.Socket;
-import java.nio.Buffer;
 
 public class Client {
     private PrintWriter outSocket;
