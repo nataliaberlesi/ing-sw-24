@@ -16,7 +16,7 @@ public class MixSymbolObjective implements Objective{
      */
     private static final int POINTS=3;
     /**
-     * updates class regarding the color and coordinates of a card that is being placed
+     * this class ignores all updates
      *
      * @param cardBackSymbol symbol the card that is being placed
      * @param coordinates    coordinates of the card that is being placed
@@ -28,16 +28,17 @@ public class MixSymbolObjective implements Objective{
 
     /**
      * @param symbolCounter map containing number of visible occurrences for each symbol
-     * @return number of point earned
+     * @return 3 points per set of 3 different Symbols (SCROLL, INK, FEATHER) visible on the board of the player.
      */
     @Override
     public int calculatePoints(HashMap<Symbol, Integer> symbolCounter) {
-        return 0;
+        int numberOfScrolls=symbolCounter.get(Symbol.SCROLL),
+                numberOfFeathers=symbolCounter.get(Symbol.FEATHER),
+                numberOfInk= symbolCounter.get(Symbol.INK);
+        int numberOfsetsOfThree=Math.min(Math.min(numberOfFeathers,numberOfInk),numberOfScrolls);
+        return POINTS*numberOfsetsOfThree;
     }
 
-    /**
-     * @param symbolCounter map containing number of visible occurrences for each symbol
-     * @return number of point earned
-     */
+
 
 }
