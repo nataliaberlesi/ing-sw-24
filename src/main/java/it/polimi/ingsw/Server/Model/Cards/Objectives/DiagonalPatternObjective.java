@@ -1,9 +1,7 @@
 package it.polimi.ingsw.Server.Model.Cards.Objectives;
 
+import it.polimi.ingsw.Server.Model.*;
 import it.polimi.ingsw.Server.Model.Cards.OccupiedCoordinateException;
-import it.polimi.ingsw.Server.Model.Coordinates;
-import it.polimi.ingsw.Server.Model.InvalidSymbolException;
-import it.polimi.ingsw.Server.Model.Symbol;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -86,23 +84,31 @@ public class DiagonalPatternObjective implements Objective {
     }
 
     /**
-     * if symbols of interest are leafs or butterflies (AKA green or purple cards) then in order to award points this method is called
-     * to find descending diagonal patterns
-     * @return 2*number of descending diagonal patterns
+     * if symbols of interest are leafs or butterflies (AKA green or purple cards) then method assigns points for every descending diagonal pattern,
+     * if symbols of interest are wolf or mushroom (AKA red or blue cards) then method assigns points for every incrementing diagonal pattern
+     * @return 2*number of diagonal patterns
      */
-    private int descendingDiagonalPatternPointCalculator(){
-
-        return 0;
+    private int diagonalPatternPointCalculator(int cornerNumber){
+        int occurences=0;
+        Coordinates currentCoordinates, bottomRightCoordinates1, bottomRightCoordinates2;
+        for(int i=0; i<listOfCoordinatesOfInterest.size();i++){
+            currentCoordinates=listOfCoordinatesOfInterest.get(i);
+            bottomRightCoordinates1=CornerCoordinatesCalculator.cornerCoordinates(currentCoordinates, cornerNumber);
+            if(listOfCoordinatesOfInterest.contains(bottomRightCoordinates1)){
+                bottomRightCoordinates2=CornerCoordinatesCalculator.cornerCoordinates(bottomRightCoordinates1, cornerNumber);
+                if(listOfCoordinatesOfInterest.contains(bottomRightCoordinates2)){
+                    occurences++;
+                    listOfCoordinatesOfInterest.remove(currentCoordinates);
+                    listOfCoordinatesOfInterest.remove(bottomRightCoordinates1);
+                    listOfCoordinatesOfInterest.remove(bottomRightCoordinates2);
+                    i--;
+                }
+            }
+        }
+        return POINTS*occurences;
     }
 
-    /**
-     * if symbols of interest are mushrooms or wolves (AKA red or blue cards) then in order to award points this method is called
-     * to find incrementing diagonal patterns
-     * @return 2*number of incrementing diagonal patterns
-     */
-    private int incrementingDiagonalPatternPointCalculator(){
-        return 0;
-    }
+
     /**
      * Symbol counter is ignored
      * @param symbolCounter map containing number of visible occurrences for each symbol
@@ -110,11 +116,13 @@ public class DiagonalPatternObjective implements Objective {
      */
     @Override
     public int calculatePoints(HashMap<Symbol, Integer> symbolCounter) {
+        // Sorting list to make sure maximum points are assigned
+        listOfCoordinatesOfInterest.sort(new CoordinatesComparator());
+        // type of pattern to look for is determined by symbol of interest.
         if(symbolOfInterest.equals(Symbol.MUSHROOM) || symbolOfInterest.equals(Symbol.WOLF)){
-            return incrementingDiagonalPatternPointCalculator();
+            return diagonalPatternPointCalculator(0);
         }
-        return descendingDiagonalPatternPointCalculator();
-
+        return diagonalPatternPointCalculator(3);
     }
 
 

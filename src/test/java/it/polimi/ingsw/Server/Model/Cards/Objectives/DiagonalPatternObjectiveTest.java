@@ -13,8 +13,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class DiagonalPatternObjectiveTest {
 
-    private static final ArrayList<Coordinates> descendingCoordinates=new ArrayList<>(Arrays.asList(new Coordinates(), new Coordinates(1,-1),new Coordinates(2,-2),new Coordinates(3,-3), new Coordinates(4,-4)));
-    private static final ArrayList<Coordinates> incrementingCoordinates=new ArrayList<>(Arrays.asList(new Coordinates(), new Coordinates(1,1),new Coordinates(2,2),new Coordinates(3,3),new Coordinates(4,4)));
+    private static final ArrayList<Coordinates> descendingCoordinates=new ArrayList<>(Arrays.asList(new Coordinates(2,-2),new Coordinates(3,-3), new Coordinates(4,-4),new Coordinates(), new Coordinates(1,-1)));
+    private static final ArrayList<Coordinates> incrementingCoordinates=new ArrayList<>(Arrays.asList(new Coordinates(2,2),new Coordinates(3,3),new Coordinates(4,4),new Coordinates(), new Coordinates(1,1)));
     private DiagonalPatternObjective autoFillDescendingPattern(Symbol symbolOfInterest){
         DiagonalPatternObjective dpo=new DiagonalPatternObjective(symbolOfInterest);
         for(Coordinates coordinates: descendingCoordinates){
@@ -84,12 +84,12 @@ class DiagonalPatternObjectiveTest {
     }
 
     /**
-     *            M   = 4 points
-     *          M
-     *        M
-     *      M
-     *    M
-     *  M
+     *            W   = 4 points
+     *          W
+     *        W
+     *      W
+     *    W
+     *  W
      *
      */
     @Test
