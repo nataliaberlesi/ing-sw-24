@@ -28,10 +28,10 @@ class CornerCardObjectiveTest {
      * must throw CornerOutOfBoundException if covered corners are less than 1 as that move is illegal
      */
     @Test
-    void zeroCoveredCornersThrowsRuntimeException(){
-        CardObjective cornerCardObjective=new CornerCardObjective();
-        int coveredCorners=0;
-        assertThrows(CornerCardObjective.CornerOutOfBoundException.class, ()->cornerCardObjective.calculatePoints(null,coveredCorners));
+    void zeroCoveredCornersThrowsRuntimeException() {
+        CardObjective cornerCardObjective = new CornerCardObjective();
+        int coveredCorners = 0;
+        assertThrows(CornerCardObjective.CornerOutOfBoundException.class, () -> cornerCardObjective.calculatePoints(null, coveredCorners));
 
     }
 
@@ -39,11 +39,10 @@ class CornerCardObjectiveTest {
      * must throw CornerOutOfBoundException if covered corners more than 4 as that move is illegal
      */
     @Test
-    void fiveCoveredCornersThrowsRuntimeException(){
-        CardObjective cornerCardObjective=new CornerCardObjective();
-        int coveredCorners=5;
-        assertThrows(CornerCardObjective.CornerOutOfBoundException.class, ()->cornerCardObjective.calculatePoints(null,coveredCorners));
+    void fiveCoveredCornersThrowsRuntimeException() {
+        CardObjective cornerCardObjective = new CornerCardObjective();
+        int coveredCorners = 5;
+        assertThrows(CornerCardObjective.CornerOutOfBoundException.class, () -> cornerCardObjective.calculatePoints(null, coveredCorners));
     }
-
 
 }

@@ -26,6 +26,26 @@ public class Coordinates {
         new Coordinates(0, 0);
     }
 
+    /**
+     *
+     * @param obj any object that might be equal to this one
+     * @return true if object is instance of coordinates and x and y variables are the same
+     */
+    @Override
+    public boolean equals(Object obj) {
+        if(obj==this){
+            return true;
+        }
+        if(!(obj instanceof Coordinates)){
+            return false;
+        }
+        Coordinates coordinates=(Coordinates) obj;
+        return coordinates.getX() == this.x &&
+                coordinates.getY() == this.y;
+
+
+    }
+
     public int getY() {
         return y;
     }

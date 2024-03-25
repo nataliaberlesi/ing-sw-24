@@ -2,6 +2,7 @@ package it.polimi.ingsw.Server.Model.Cards.Objectives;
 
 import it.polimi.ingsw.Server.Model.Cards.OccupiedCoordinateException;
 import it.polimi.ingsw.Server.Model.Coordinates;
+import it.polimi.ingsw.Server.Model.InvalidSymbolException;
 import it.polimi.ingsw.Server.Model.Symbol;
 import org.junit.jupiter.api.Test;
 
@@ -138,9 +139,17 @@ class DiagonalPatternObjectiveTest {
      *
      */
     @Test
-    void updateObjectiveCoordinatesConflict(){
-        Objective diagonalObjective=this.autoFillDescendingPattern(Symbol.LEAF);
-        assertThrows(OccupiedCoordinateException.class, ()->diagonalObjective.updateObjective(Symbol.LEAF,new Coordinates()));
+    void updateObjectiveCoordinatesConflict() {
+        Objective diagonalObjective = this.autoFillDescendingPattern(Symbol.LEAF);
+        assertThrows(OccupiedCoordinateException.class, () -> diagonalObjective.updateObjective(Symbol.LEAF, new Coordinates()));
+    }
+
+    /**
+     * if a symbol that can't be on the center back of a card is passed in constructor, then it must throw a runtimeException
+     */
+    @Test
+    void constructorInvalidParameterThrowException() {
+        assertThrows(InvalidSymbolException.class, () -> new DiagonalPatternObjective(Symbol.SCROLL));
     }
 
 }

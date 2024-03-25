@@ -1,6 +1,8 @@
 package it.polimi.ingsw.Server.Model.Cards.Objectives;
 
+import it.polimi.ingsw.Server.Model.Cards.OccupiedCoordinateException;
 import it.polimi.ingsw.Server.Model.Coordinates;
+import it.polimi.ingsw.Server.Model.InvalidSymbolException;
 import it.polimi.ingsw.Server.Model.Symbol;
 
 import java.util.ArrayList;
@@ -29,18 +31,44 @@ public class DiagonalPatternObjective implements Objective {
     /**
      * contains the list of all coordinates present in the board of the cards that contain the symbol of interest
      */
-    private final ArrayList<Coordinates> ListOfCoordinatesOfInterest=new ArrayList<>();
+    private final ArrayList<Coordinates> listOfCoordinatesOfInterest=new ArrayList<>();
 
     /**
      *
      * @param symbolOfInterest is the symbol that will be used to filter the cards that will be added
      *                         to the list of coordinates
+     * @throws InvalidSymbolException if a symbol that can't be on the center back of a card is passed
      */
-    public DiagonalPatternObjective(Symbol symbolOfInterest) {
-        this.symbolOfInterest = symbolOfInterest;
+    public DiagonalPatternObjective(Symbol symbolOfInterest) throws InvalidSymbolException {
+        if(validSymbol(symbolOfInterest)) {
+            this.symbolOfInterest = symbolOfInterest;
+        }
+        else {
+            throw new InvalidSymbolException("invalid symbol passed in diagonal objective");
+        }
     }
 
-
+    /**
+     *
+     * @param symbol of the cards that will be checked to see if they form a diagonal pattern
+     * @return true if a valid symbol (AKA a symbol that can be on the center back of a card) is passed
+     */
+    private boolean validSymbol(Symbol symbol) {
+        return symbol.equals(Symbol.WOLF) || symbol.equals(Symbol.BUTTERFLY) || symbol.equals(Symbol.MUSHROOM) || symbol.equals(Symbol.LEAF);
+    }
+    /**
+     *
+     * @param coordinates of card that has been placed
+     * @return true if coordinates are already saved, meaning there is already a card in that spot.
+     */
+    private boolean occupied(Coordinates coordinates){
+        for(Coordinates coordinatesOfInterest: listOfCoordinatesOfInterest){
+            if(coordinates.equals(coordinatesOfInterest)){
+                return true;
+            }
+        }
+        return false;
+    }
     /**
      * updates class regarding the color and coordinates of a card that is being placed
      *
@@ -48,8 +76,13 @@ public class DiagonalPatternObjective implements Objective {
      * @param coordinates    coordinates of the card that is being placed
      */
     @Override
-    public void updateObjective(Symbol cardBackSymbol, Coordinates coordinates) {
-
+    public void updateObjective(Symbol cardBackSymbol, Coordinates coordinates) throws OccupiedCoordinateException{
+        if(cardBackSymbol==this.symbolOfInterest){
+            if(occupied(coordinates)){
+                throw new OccupiedCoordinateException("Placing two cards in same coordinates, found in diagonal objective");
+            }
+            this.listOfCoordinatesOfInterest.add(coordinates);
+        }
     }
 
     /**
@@ -77,6 +110,12 @@ public class DiagonalPatternObjective implements Objective {
      */
     @Override
     public int calculatePoints(HashMap<Symbol, Integer> symbolCounter) {
-        return 0;
+        if(symbolOfInterest.equals(Symbol.MUSHROOM) || symbolOfInterest.equals(Symbol.WOLF)){
+            return incrementingDiagonalPatternPointCalculator();
+        }
+        return descendingDiagonalPatternPointCalculator();
+
     }
+
+
 }
