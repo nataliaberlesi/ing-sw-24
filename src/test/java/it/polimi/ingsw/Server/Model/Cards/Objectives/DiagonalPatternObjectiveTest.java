@@ -117,24 +117,30 @@ class DiagonalPatternObjectiveTest {
      *        M     W
      *      M     W
      *    M     W
-     *  M
+     *  M     W
+     *      W
+     *    W
      */
     @Test
     void calculatePointsHeterogeneousIncrementingPoints(){
         Objective incrementingPattern= this.autoFillIncrementingPattern(Symbol.MUSHROOM);
+        incrementingPattern.updateObjective(Symbol.WOLF,new Coordinates(0,2));
+        incrementingPattern.updateObjective(Symbol.WOLF,new Coordinates(1,3));
         incrementingPattern.updateObjective(Symbol.WOLF,new Coordinates(2,4));
         incrementingPattern.updateObjective(Symbol.WOLF,new Coordinates(3,5));
         incrementingPattern.updateObjective(Symbol.WOLF,new Coordinates(4,6));
         assertEquals(2,incrementingPattern.calculatePoints(null));
     }
     /**
-     * if the same coordinates are passed twice, meaning that two cards where placed in the same spot,
+     * if the same symbol and coordinates are passed twice, meaning that two cards where placed in the same spot,
      * updateObjective should throw RuntimeException
+     * in this example the coordinates [0,0] are passed twice
+     *
      */
     @Test
     void updateObjectiveCoordinatesConflict(){
         Objective diagonalObjective=this.autoFillDescendingPattern(Symbol.LEAF);
-        assertThrows(OccupiedCoordinateException.class, ()->diagonalObjective.updateObjective(Symbol.BUTTERFLY,new Coordinates()));
+        assertThrows(OccupiedCoordinateException.class, ()->diagonalObjective.updateObjective(Symbol.LEAF,new Coordinates()));
     }
 
 }
