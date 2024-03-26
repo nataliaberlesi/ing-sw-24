@@ -8,7 +8,7 @@ import java.util.HashMap;
 /**
  * Counts the number of occurrences of a specific symbol on the board and assigns points accordingly
  */
-public class SymbolObjetiove implements CardObjective, Objective {
+public class SymbolObjective implements CardObjective, Objective {
     /**
      * points assigned for each number of occurences of a symbol on the board
      */
@@ -27,7 +27,7 @@ public class SymbolObjetiove implements CardObjective, Objective {
      * @param symbolOfInterest symbol that will be counted
      * @param numberOfOccurrences number of symbols equal to symbolOfInterest that are visible on the board
      */
-    public SymbolObjetiove(Symbol symbolOfInterest, int numberOfOccurrences) {
+    public SymbolObjective(Symbol symbolOfInterest, int numberOfOccurrences) {
         this.symbolOfInterest = symbolOfInterest;
         this.numberOfOccurrences = numberOfOccurrences;
     }
