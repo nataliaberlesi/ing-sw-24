@@ -27,12 +27,29 @@ public class CornerCoordinatesCalculator {
         int y=centerCoordinates.getY()+relativeCoordinates.get(cornerNumber).getY();
         return new Coordinates(x,y);
 
-        /**
+        /*
          *                         Coordinates(x,y)
          *                        /
          *              1--------0
          *              |        |
          *              2--------3
          */
+    }
+
+    /**
+     *
+     * @param coordinates coordinates of card
+     * @param rightOrLeft position of the coordinates being calculated relative to coordinates where searching from
+     * @return coordinates that are two units below either to the right or left
+     */
+    public static Coordinates cornerCoordinatesShiftedDown(Coordinates coordinates, String rightOrLeft){
+        Coordinates result=new Coordinates();
+        result.setY(coordinates.getY()-3);
+        switch (rightOrLeft){
+            case "right" -> result.setX(coordinates.getX()+1);
+            case "left"  -> result.setX(coordinates.getX()-1);
+            default -> throw new RuntimeException(rightOrLeft+"relative position invalid");
+        }
+        return result;
     }
 }

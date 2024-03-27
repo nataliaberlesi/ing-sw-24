@@ -1,7 +1,6 @@
 package it.polimi.ingsw.Server.Model.Cards.Objectives;
 
-import it.polimi.ingsw.Server.Model.Coordinates;
-import it.polimi.ingsw.Server.Model.Symbol;
+import it.polimi.ingsw.Server.Model.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,7 +18,7 @@ public class VerticalPatternObjective implements Objective {
     /**
      * symbol of the cards that form the vertical column of the pattern
      */
-    private final Symbol symbolOfInterest;
+    private final Symbol verticalSymbol;
 
     /**
      * symbol of the card that deviates from the column
@@ -29,21 +28,27 @@ public class VerticalPatternObjective implements Objective {
     /**
      * list of the coordinates of the cards that deviate from the column
      */
-    private ArrayList<Coordinates> ListOfOutOfLineSymbols = new ArrayList<>();
+    private final ArrayList<Coordinates> listOfOutOfLineSymbols = new ArrayList<>();
 
     /**
      * map of the cards that form the vertical column in the pattern
      */
-    private HashMap<Coordinates, Symbol> ListOfSymbolsOfInterest = new HashMap<>();
+    // can be substituted with HashSet, must override HashCode() in Coordinates first
+    private final ArrayList<Coordinates> listOfVerticalSymbols = new ArrayList<>();
 
     /**
      *
-     * @param symbolOfInterest symbol of the cards that form the vertical column of the pattern
-     * @param outOfLineSymbol symbol of the card that deviates from the column
+     * @param verticalSymbol symbol of the cards that form the vertical column of the pattern
      */
-    protected VerticalPatternObjective(Symbol symbolOfInterest, Symbol outOfLineSymbol) {
-        this.symbolOfInterest = symbolOfInterest;
-        this.outOfLineSymbol = outOfLineSymbol;
+    public VerticalPatternObjective(Symbol verticalSymbol) throws InvalidSymbolException {
+        this.verticalSymbol = verticalSymbol;
+        switch (verticalSymbol){
+            case WOLF -> this.outOfLineSymbol=Symbol.MUSHROOM;
+            case LEAF -> this.outOfLineSymbol=Symbol.BUTTERFLY;
+            case MUSHROOM -> this.outOfLineSymbol=Symbol.LEAF;
+            case BUTTERFLY -> this.outOfLineSymbol=Symbol.WOLF;
+            default -> throw new InvalidSymbolException(verticalSymbol+" can't be on the center back of a card");
+        }
     }
 
     /**
@@ -52,6 +57,15 @@ public class VerticalPatternObjective implements Objective {
      * @return true if pattern is found
      */
     private boolean checkVertical(Coordinates bottomCoordinates){
+        Coordinates topCoordinates;
+        if(listOfVerticalSymbols.contains(bottomCoordinates)){
+            topCoordinates=new Coordinates(bottomCoordinates.getX(),bottomCoordinates.getY()+2);
+            if(listOfVerticalSymbols.contains(topCoordinates)){
+                listOfVerticalSymbols.remove(topCoordinates);
+                listOfVerticalSymbols.remove(bottomCoordinates);
+                return true;
+            }
+        }
         return false;
     }
 
@@ -63,7 +77,84 @@ public class VerticalPatternObjective implements Objective {
      */
     @Override
     public void updateObjective(Symbol cardBackSymbol, Coordinates coordinates) {
+            if(cardBackSymbol==verticalSymbol){
+                listOfVerticalSymbols.add(coordinates);
+            }
+            else if(cardBackSymbol==outOfLineSymbol){
+                listOfOutOfLineSymbols.add(coordinates);
+            }
+    }
 
+    /**
+     *        M
+     *        M
+     *          L
+     *    3 points
+     * @return number of patterns like the one shown above
+     */
+    private int calculateRedVerticalPatternOccurrences(){
+        int numberOfOccurrences=0;
+        for(Coordinates currentCo: listOfOutOfLineSymbols){
+            Coordinates bottomOfColumn= CornerCoordinatesCalculator.cornerCoordinates(currentCo, 1);
+            if(checkVertical(bottomOfColumn)){
+                numberOfOccurrences++;
+            }
+        }
+        return numberOfOccurrences;
+    }
+
+    /**
+     *        L
+     *        L
+     *      B
+     *    3 points
+     * @return number of patterns like the one shown above
+     */
+    private int calculateGreenVerticalPatternOccurrences(){
+        int numberOfOccurrences=0;
+        for(Coordinates currentCo: listOfOutOfLineSymbols){
+            Coordinates bottomOfColumn= CornerCoordinatesCalculator.cornerCoordinates(currentCo, 0);
+            if(checkVertical(bottomOfColumn)){
+                numberOfOccurrences++;
+            }
+        }
+        return numberOfOccurrences;
+    }
+
+    /**
+     *          M
+     *        W
+     *        W
+     *    3 points
+     * @return number of patterns like the one shown above
+     */
+    private int calculateBlueVerticalPatternOccurrences(){
+        int numberOfOccurrences=0;
+        for(Coordinates currentCo: listOfOutOfLineSymbols){
+            Coordinates bottomOfColumn= CornerCoordinatesCalculator.cornerCoordinatesShiftedDown(currentCo,"left");
+            if(checkVertical(bottomOfColumn)){
+                numberOfOccurrences++;
+            }
+        }
+        return numberOfOccurrences;
+    }
+
+    /**
+     *      W
+     *        B
+     *        B
+     *    3 points
+     * @return number of patterns like the one shown above
+     */
+    private int calculatePurpleVerticalPatternOccurrences(){
+        int numberOfOccurrences=0;
+        for(Coordinates currentCo: listOfOutOfLineSymbols){
+            Coordinates bottomOfColumn= CornerCoordinatesCalculator.cornerCoordinatesShiftedDown(currentCo,"right");
+            if(checkVertical(bottomOfColumn)){
+                numberOfOccurrences++;
+            }
+        }
+        return numberOfOccurrences;
     }
 
     /**
@@ -72,6 +163,16 @@ public class VerticalPatternObjective implements Objective {
      */
     @Override
     public int calculatePoints(HashMap<Symbol, Integer> symbolCounter) {
-        return 0;
+        listOfOutOfLineSymbols.sort(new CoordinatesComparator());
+        int numberOfOccurrences=0;
+        switch (verticalSymbol){
+            case WOLF -> numberOfOccurrences=calculateBlueVerticalPatternOccurrences();
+            case LEAF -> numberOfOccurrences=calculateGreenVerticalPatternOccurrences();
+            case MUSHROOM -> numberOfOccurrences=calculateRedVerticalPatternOccurrences();
+            case BUTTERFLY -> numberOfOccurrences=calculatePurpleVerticalPatternOccurrences();
+            //it should be impossible to call this exception
+            default -> throw new InvalidSymbolException(verticalSymbol+" can't be on the center back of a card");
+        }
+        return POINTS*numberOfOccurrences;
     }
 }

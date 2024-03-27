@@ -10,7 +10,7 @@ import java.util.HashMap;
  */
 public class SymbolObjective implements CardObjective, Objective {
     /**
-     * points assigned for each number of occurences of a symbol on the board
+     * points assigned for each number of occurrences of a symbol on the board
      */
     private static final int POINTS=2;
     /**
@@ -65,7 +65,6 @@ public class SymbolObjective implements CardObjective, Objective {
      */
     @Override
     public void updateObjective(Symbol cardBackSymbol, Coordinates coordinates) {
-
     }
 
     /**

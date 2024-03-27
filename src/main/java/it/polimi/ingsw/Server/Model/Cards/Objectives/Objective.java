@@ -13,8 +13,9 @@ public interface Objective {
      * updates class regarding the color and coordinates of a card that is being placed
      * @param cardBackSymbol symbol the card that is being placed
      * @param coordinates coordinates of the card that is being placed
+     * @throws RuntimeException if objective already has coordinates saved (meaning a card is being placed where one is already present)
      */
-    void updateObjective(Symbol cardBackSymbol, Coordinates coordinates);
+    void updateObjective(Symbol cardBackSymbol, Coordinates coordinates) throws RuntimeException;
 
     /**
      *
