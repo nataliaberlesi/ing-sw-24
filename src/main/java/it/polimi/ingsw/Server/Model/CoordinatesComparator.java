@@ -2,6 +2,10 @@ package it.polimi.ingsw.Server.Model;
 
 import java.util.Comparator;
 
+/**
+ * orders coordinates from the highest to the lowest on the Y axis
+ */
+
 public class CoordinatesComparator implements Comparator<Coordinates> {
     /**
      * Compares its two arguments for order.  Returns a negative integer,

@@ -49,9 +49,9 @@ public class Deck implements Iterator<Card> {
     public Card next() {
         if(this.hasNext()){
             // getting card that is being drawn
-            Card cardBeingDrawn= cards.get(0);
+            Card cardBeingDrawn= cards.getFirst();
             //removing card from deck
-            cards.remove(0);
+            cards.removeFirst();
             //returning card that is being drawn
             return cardBeingDrawn;
         }

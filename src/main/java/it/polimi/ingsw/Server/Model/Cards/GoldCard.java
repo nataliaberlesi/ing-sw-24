@@ -22,22 +22,27 @@ public class GoldCard extends ResourceCard{
      * @param backSymbol    is a Symbol that is on the back of the card
      * @param frontCorners  must be an array of 4 Symbols indicating the symbols on each front corner
      * @param cardObjective is the objective that will be activated once the card is placed
-     * @param prerequisites is the list with the symbols necessary to be on the board in order to be able to place the card
+     * @param prerequisites is the list with the symbols necessary to be on the board in order to be able to place the card,
+     *                      it can be empty, but not null.
      */
-    protected GoldCard(String cardId, Symbol backSymbol, Symbol[] frontCorners, CardObjective cardObjective, ArrayList<Symbol> prerequisites) {
+    protected GoldCard(String cardId, Symbol backSymbol, Symbol[] frontCorners, CardObjective cardObjective, ArrayList<Symbol> prerequisites) throws InvalidSymbolException{
         super(cardId, backSymbol, frontCorners, cardObjective);
         if(checkInvalidSymbol(prerequisites)){
-            throw new InvalidSymbolException();
+            throw new InvalidSymbolException("invalid symbol present in prerequisites");
         }
         this.prerequisites = prerequisites;
     }
 
+    //method might need to be static because I think other classes use it
     /**
      *
      * @return true if an invalid symbol for prerequisites is found, so any symbol different from MUSHROOM, WOLF, BUTTERFLY, LEAF.
      */
-    private boolean checkInvalidSymbol(){
-
+    private boolean checkInvalidSymbol(ArrayList<Symbol> prerequisites){
+        if(!prerequisites.isEmpty()){
+            return (prerequisites.contains(Symbol.INK) || prerequisites.contains(Symbol.BLANK) || prerequisites.contains(Symbol.SCROLL) || prerequisites.contains(Symbol.FEATHER)|| prerequisites.contains(Symbol.FULL));
+        }
+        return false;
     }
 
     /**
@@ -47,7 +52,7 @@ public class GoldCard extends ResourceCard{
      */
     @Override
     public boolean checkPrerequisites(HashMap<Symbol, Integer> symbolCounter){
-        HashMap<Symbol, Integer> symbolCounterCopy=symbolCounter;
+        HashMap<Symbol, Integer> symbolCounterCopy=new HashMap<>(symbolCounter);
         for(Symbol cardPrerequisite: prerequisites){
             int counter=symbolCounterCopy.get(cardPrerequisite);
             if(counter<=0){
