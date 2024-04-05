@@ -23,7 +23,7 @@ class DeckTest {
      */
     @Test
     void hasNextDeckWithCardsReturnTrue(){
-        Card exampleCard=new ResourceCard(null,null,null,null,null);
+        Card exampleCard=new ResourceCard(null,null,null,null);
         Deck deck=new Deck(new ArrayList<Card>(Collections.singletonList(exampleCard)));
         assertTrue(deck.hasNext());
     }

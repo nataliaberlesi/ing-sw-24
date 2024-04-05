@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Server.Model.Cards;
 
+import it.polimi.ingsw.Server.Model.InvalidSymbolException;
 import it.polimi.ingsw.Server.Model.Symbol;
 
 import java.util.HashMap;
@@ -14,7 +15,7 @@ import java.util.HashMap;
  */
 public abstract class Card {
 
-    private final String CardId;
+    private final String cardId;
     /**
      * backSymbol is the symbol that is visible on the back side of the card,
      * it is visible only if the card is facing down,
@@ -57,8 +58,11 @@ public abstract class Card {
      * @param frontCorners must be an array of 4 Symbols indicating the symbols on each front corner
      * @param backCorners must be an array of 4 Symbols indicating the symbols on each back corner
      */
-    protected Card(String cardId, Symbol backSymbol, Symbol[] frontCorners, Symbol[] backCorners) {
-        CardId = cardId;
+    protected Card(String cardId, Symbol backSymbol, Symbol[] frontCorners, Symbol[] backCorners) throws IllegalArgumentException{
+        if(cardId==null){
+            throw new IllegalArgumentException("cardId can't be null");
+        }
+        this.cardId = cardId;
         this.backSymbol = backSymbol;
         this.frontCorners = frontCorners;
         this.backCorners = backCorners;
@@ -121,9 +125,11 @@ public abstract class Card {
      *
      * @return true if card is facing up
      */
-    public boolean isFacingeUp() {
+    public boolean isFacingUp() {
         return isFacingUp;
     }
 
-
+    public String getCardId() {
+        return cardId;
+    }
 }

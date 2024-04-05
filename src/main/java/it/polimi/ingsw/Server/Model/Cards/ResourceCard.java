@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Server.Model.Cards;
 
 import it.polimi.ingsw.Server.Model.Cards.Objectives.CardObjective;
+import it.polimi.ingsw.Server.Model.InvalidSymbolException;
 import it.polimi.ingsw.Server.Model.Symbol;
 
 /**
@@ -15,15 +16,19 @@ public class ResourceCard extends Card {
      */
     private final CardObjective cardObjective;
 
+    private static final Symbol[] backCorners={Symbol.BLANK,Symbol.BLANK,Symbol.BLANK,Symbol.BLANK};
+
     /**
      * @param cardId       unique identifier used to associate card to graphic resource
      * @param backSymbol   is a Symbol that is on the back of the card
      * @param frontCorners must be an array of 4 Symbols indicating the symbols on each front corner
-     * @param backCorners  must be an array of 4 Symbols indicating the symbols on each back corner
      * @param cardObjective is the objective that will be activated once the card is placed
      */
-    protected ResourceCard(String cardId, Symbol backSymbol, Symbol[] frontCorners, Symbol[] backCorners, CardObjective cardObjective) {
+    protected ResourceCard(String cardId, Symbol backSymbol, Symbol[] frontCorners, CardObjective cardObjective) throws InvalidSymbolException{
         super(cardId, backSymbol, frontCorners, backCorners);
+        if(backSymbol!=Symbol.MUSHROOM && backSymbol!=Symbol.WOLF && backSymbol!=Symbol.BUTTERFLY && backSymbol!=Symbol.LEAF){
+            throw new InvalidSymbolException(backSymbol+" can't be on the center back of a card");
+        }
         this.cardObjective = cardObjective;
     }
 

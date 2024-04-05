@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CornerCardObjectiveTest {
+
     /**
      * calculatePoints must return 2 if 1 corner is covered
      */
@@ -14,6 +15,7 @@ class CornerCardObjectiveTest {
         int coveredCorners=1;
         assertEquals(2, cornerCardObjective.calculatePoints(null, coveredCorners));
     }
+
     /**
      * calculatePoints must return 6 if 3 corners are covered
      */
@@ -32,7 +34,6 @@ class CornerCardObjectiveTest {
         CardObjective cornerCardObjective = new CornerCardObjective();
         int coveredCorners = 0;
         assertThrows(CornerCardObjective.CornerOutOfBoundException.class, () -> cornerCardObjective.calculatePoints(null, coveredCorners));
-
     }
 
     /**
