@@ -2,7 +2,7 @@ package it.polimi.ingsw.Server.Network;
 
 import java.util.ArrayList;
 
-class Message {
+public class Message {
     /**
      * The type of message [i.e. System;Game;Warning...]
      */
