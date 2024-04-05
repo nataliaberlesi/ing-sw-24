@@ -1,6 +1,9 @@
 package it.polimi.ingsw.Server.Network;
 
 
+import com.google.gson.Gson;
+import it.polimi.ingsw.Server.Model.Player;
+
 import java.io.*;
 import java.net.Socket;
 
@@ -9,12 +12,16 @@ public class PlayerConnection{
      * Channel used to communicate between a single player and the server
      */
     private Socket socket;
-    private BufferedReader inSocket;
-    private PrintWriter outSocket;
     /**
      * States if the player has been the first to connect to the server
      */
     boolean isMaster;
+    /**
+     * The player instance in the model
+     */
+    private Player player;
+    private BufferedReader inSocket;
+    private PrintWriter outSocket;
 
     /**
      *
@@ -38,20 +45,27 @@ public class PlayerConnection{
     }
 
     /**
-     * Sends a String into the output channel
-     * @param s Is the message to be sent
+     * Sends a Message into the output channel
+     * @param message Is the Message to be sent
      */
-    public void send(String s) {
-
+    public void send(Message message) {
+        outSocket.println(new Gson().toJson(message)); //converts a Message into a json string
     }
 
     /**
-     * Waits for a message to be received
-     * @return The message received
+     * Waits for a Message to be received
+     * @return The Message received
      * @throws IOException
      */
-    public String receive() throws IOException {
-        return "";
+    public Message receive() throws IOException {
+        return new Gson().fromJson(inSocket.readLine(), Message.class); //converts a json String into a Message
+    }
+    public Player getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 }
 

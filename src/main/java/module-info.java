@@ -6,6 +6,7 @@ module com.example.demo {
     requires com.dlsc.formsfx;
     requires org.kordamp.bootstrapfx.core;
     requires com.almasb.fxgl.all;
+    requires com.google.gson;
 
     opens it.polimi.ingsw to javafx.fxml;
     exports it.polimi.ingsw;
