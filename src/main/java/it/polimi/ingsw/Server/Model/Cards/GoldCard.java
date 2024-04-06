@@ -28,7 +28,7 @@ public class GoldCard extends ResourceCard{
      */
     protected GoldCard(String cardId, Symbol backSymbol, Symbol[] frontCorners, CardObjective cardObjective, ArrayList<Symbol> prerequisites) throws InvalidSymbolException{
         super(cardId, backSymbol, frontCorners, cardObjective);
-        if(!SymbolController.containsOnlyBackSymbols(prerequisites)|| prerequisites.isEmpty()){
+        if(!SymbolController.containsOnlyBackSymbols(prerequisites) || prerequisites.isEmpty()){
             throw new InvalidSymbolException("invalid symbol present in prerequisites");
         }
         this.prerequisites = prerequisites;
@@ -54,7 +54,5 @@ public class GoldCard extends ResourceCard{
         return true;
     }
 
-    public ArrayList<Symbol> getPrerequisites() {
-        return prerequisites;
-    }
+
 }

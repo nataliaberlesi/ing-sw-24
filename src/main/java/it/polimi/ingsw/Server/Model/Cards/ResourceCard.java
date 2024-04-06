@@ -17,6 +17,7 @@ public class ResourceCard extends Card {
      */
     private final CardObjective cardObjective;
 
+
     private static final Symbol[] backCorners={Symbol.BLANK,Symbol.BLANK,Symbol.BLANK,Symbol.BLANK};
 
     /**
@@ -25,14 +26,13 @@ public class ResourceCard extends Card {
      * @param frontCorners must be an array of 4 Symbols indicating the symbols on each front corner
      * @param cardObjective is the objective that will be activated once the card is placed
      */
-    protected ResourceCard(String cardId, Symbol backSymbol, Symbol[] frontCorners, CardObjective cardObjective) throws InvalidSymbolException{
+    protected ResourceCard(String cardId, Symbol backSymbol, Symbol[] frontCorners, CardObjective cardObjective) throws RuntimeException{
         super(cardId, backSymbol, frontCorners, backCorners);
-        if(!SymbolController.isBackSymbol(backSymbol)){
+        if(SymbolController.isNotBackSymbol(backSymbol)){
             throw new InvalidSymbolException(backSymbol+" can't be on the center back of a card");
         }
         this.cardObjective = cardObjective;
     }
-
 
     public CardObjective getCardObjective() {
         return cardObjective;

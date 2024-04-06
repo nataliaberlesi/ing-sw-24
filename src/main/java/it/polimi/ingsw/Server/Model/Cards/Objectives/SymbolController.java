@@ -23,13 +23,10 @@ public class SymbolController {
      */
     private final static HashSet<Symbol> emptySymbols=new HashSet<>(Set.of(Symbol.BLANK,Symbol.FULL));
 
-    public static boolean isBackSymbol(Symbol symbol){
-        return (backSymbols.contains(symbol));
+    public static boolean isNotBackSymbol(Symbol symbol){
+        return (!backSymbols.contains(symbol));
     }
 
-    public static boolean isGoldenSymbol(Symbol symbol){
-        return (goldenSymbols.contains(symbol));
-    }
 
     public static boolean isEmptySymbol(Symbol symbol){
         return (emptySymbols.contains(symbol));
@@ -42,10 +39,12 @@ public class SymbolController {
      */
     public static boolean containsOnlyBackSymbols(ArrayList<Symbol> symbols){
         for(Symbol symbol: symbols){
-            if(!isBackSymbol(symbol)){
+            if(isNotBackSymbol(symbol)){
                 return false;
             }
         }
         return true;
     }
+
+
 }

@@ -1,6 +1,5 @@
 package it.polimi.ingsw.Server.Model.Cards;
 
-import it.polimi.ingsw.Server.Model.InvalidSymbolException;
 import it.polimi.ingsw.Server.Model.Symbol;
 
 import java.util.HashMap;
@@ -57,10 +56,14 @@ public abstract class Card {
      * @param backSymbol is a Symbol that is on the back of the card
      * @param frontCorners must be an array of 4 Symbols indicating the symbols on each front corner
      * @param backCorners must be an array of 4 Symbols indicating the symbols on each back corner
+     * @throws IllegalArgumentException if there is no cardId or if corners are not exactly 4
      */
     protected Card(String cardId, Symbol backSymbol, Symbol[] frontCorners, Symbol[] backCorners) throws IllegalArgumentException{
         if(cardId==null){
             throw new IllegalArgumentException("cardId can't be null");
+        }
+        if(frontCorners.length!=4 || backCorners.length!=4){
+            throw new IllegalArgumentException("corners of a card must always be 4");
         }
         this.cardId = cardId;
         this.backSymbol = backSymbol;
