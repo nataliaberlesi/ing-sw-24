@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Server.Model.Cards.Objectives;
 
+import it.polimi.ingsw.Server.Model.InvalidSymbolException;
 import it.polimi.ingsw.Server.Model.Symbol;
 import org.junit.jupiter.api.Test;
 
@@ -67,7 +68,10 @@ class SymbolObjectiveTest {
         assertThrows(CornerCardObjective.CornerOutOfBoundException.class, () -> so.calculatePoints(null, coveredCorners));
     }
 
-
+    @Test
+    void emptySymbolWillThrowExceptionInConstructor(){
+        assertThrows(InvalidSymbolException.class, () -> new SymbolObjective(Symbol.BLANK));
+    }
 
 
 }

@@ -34,13 +34,12 @@ class GoldCardTest {
     }
 
     @Test
-    void emptyPrerequisitesAlwaysReturnsTrue(){
+    void emptyPrerequisitesThrowsException(){
         ArrayList<Symbol> emptyPrerequisites= new ArrayList<>();
-        Card goldCard=new GoldCard("0",Symbol.WOLF,frontFacingSymbols,null,emptyPrerequisites);
-        assertTrue(goldCard.checkPrerequisites(visibleSymbols));
+        assertThrows(InvalidSymbolException.class, ()->new GoldCard("0",Symbol.WOLF,frontFacingSymbols,null,emptyPrerequisites));
     }
     @Test
-    void invalidSymbolsInPrerequisiteReturnsFalse(){
+    void invalidSymbolsInPrerequisiteThrowsException(){
         ArrayList<Symbol> invalidCardPrerequisites=new ArrayList<>(cardPrerequisites);
         invalidCardPrerequisites.add(Symbol.INK);
         assertThrows(InvalidSymbolException.class, ()-> new GoldCard("0",Symbol.WOLF,frontFacingSymbols,null,invalidCardPrerequisites));

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Server.Model.Cards;
 
 import it.polimi.ingsw.Server.Model.Cards.Objectives.CardObjective;
+import it.polimi.ingsw.Server.Model.Cards.Objectives.SymbolController;
 import it.polimi.ingsw.Server.Model.InvalidSymbolException;
 import it.polimi.ingsw.Server.Model.Symbol;
 
@@ -27,23 +28,12 @@ public class GoldCard extends ResourceCard{
      */
     protected GoldCard(String cardId, Symbol backSymbol, Symbol[] frontCorners, CardObjective cardObjective, ArrayList<Symbol> prerequisites) throws InvalidSymbolException{
         super(cardId, backSymbol, frontCorners, cardObjective);
-        if(checkInvalidSymbol(prerequisites)){
+        if(!SymbolController.containsOnlyBackSymbols(prerequisites)|| prerequisites.isEmpty()){
             throw new InvalidSymbolException("invalid symbol present in prerequisites");
         }
         this.prerequisites = prerequisites;
     }
 
-    //method might need to be static because I think other classes use it
-    /**
-     *
-     * @return true if an invalid symbol for prerequisites is found, so any symbol different from MUSHROOM, WOLF, BUTTERFLY, LEAF.
-     */
-    private boolean checkInvalidSymbol(ArrayList<Symbol> prerequisites){
-        if(!prerequisites.isEmpty()){
-            return (prerequisites.contains(Symbol.INK) || prerequisites.contains(Symbol.BLANK) || prerequisites.contains(Symbol.SCROLL) || prerequisites.contains(Symbol.FEATHER)|| prerequisites.contains(Symbol.FULL));
-        }
-        return false;
-    }
 
     /**
      *

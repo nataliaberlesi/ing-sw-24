@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Server.Model.Cards.Objectives;
 
 import it.polimi.ingsw.Server.Model.Coordinates;
+import it.polimi.ingsw.Server.Model.InvalidSymbolException;
 import it.polimi.ingsw.Server.Model.Symbol;
 
 import java.util.HashMap;
@@ -25,8 +26,12 @@ public class SymbolObjective implements CardObjective, Objective {
     /**
      *
      * @param symbolOfInterest symbol that will be counted
+     * @throws InvalidSymbolException if a FULL or BLANK symbol is passed, since no cards that count those symbols to assign points exists in the game
      */
-    public SymbolObjective(Symbol symbolOfInterest) {
+    public SymbolObjective(Symbol symbolOfInterest) throws InvalidSymbolException{
+        if(SymbolController.isEmptySymbol(symbolOfInterest)){
+            throw new InvalidSymbolException(symbolOfInterest+" can't be used for SymbolObjective");
+        }
         this.symbolOfInterest = symbolOfInterest;
         int numberOfOccurrences= 3;
         if(symbolOfInterest.equals(Symbol.SCROLL)||symbolOfInterest.equals(Symbol.INK)||symbolOfInterest.equals(Symbol.FEATHER)){

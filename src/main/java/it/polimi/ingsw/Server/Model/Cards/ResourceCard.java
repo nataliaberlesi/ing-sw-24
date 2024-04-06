@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Server.Model.Cards;
 
 import it.polimi.ingsw.Server.Model.Cards.Objectives.CardObjective;
+import it.polimi.ingsw.Server.Model.Cards.Objectives.SymbolController;
 import it.polimi.ingsw.Server.Model.InvalidSymbolException;
 import it.polimi.ingsw.Server.Model.Symbol;
 
@@ -26,7 +27,7 @@ public class ResourceCard extends Card {
      */
     protected ResourceCard(String cardId, Symbol backSymbol, Symbol[] frontCorners, CardObjective cardObjective) throws InvalidSymbolException{
         super(cardId, backSymbol, frontCorners, backCorners);
-        if(backSymbol!=Symbol.MUSHROOM && backSymbol!=Symbol.WOLF && backSymbol!=Symbol.BUTTERFLY && backSymbol!=Symbol.LEAF){
+        if(!SymbolController.isBackSymbol(backSymbol)){
             throw new InvalidSymbolException(backSymbol+" can't be on the center back of a card");
         }
         this.cardObjective = cardObjective;
