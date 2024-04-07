@@ -1,7 +1,5 @@
 package it.polimi.ingsw.Server.Model.Cards;
 
-import it.polimi.ingsw.Server.Model.Cards.Card;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -10,16 +8,17 @@ import java.util.Iterator;
  * Deck of cards, can hold only either gold cards or resource cards
  */
 public class Deck implements Iterator<Card> {
+
     /**
      * cards in deck, can be either only resource cards or only gold cards
      */
-    private final ArrayList<Card> cards;
+    private final ArrayList<ResourceCard> resourceCards;
 
     /**
      * shuffles cards in deck
      */
     public void shuffle(){
-        Collections.shuffle(cards);
+        Collections.shuffle(resourceCards);
     }
 
     /**
@@ -31,11 +30,15 @@ public class Deck implements Iterator<Card> {
      */
     @Override
     public boolean hasNext() {
-        return !cards.isEmpty();
+        return !resourceCards.isEmpty();
     }
 
-    public Deck(ArrayList<Card> cards) {
-        this.cards = cards;
+    /**
+     *
+     * @param cards that compose the deck
+     */
+    public Deck(ArrayList<ResourceCard> cards) {
+        this.resourceCards = cards;
     }
 
     /**
@@ -46,12 +49,12 @@ public class Deck implements Iterator<Card> {
      *
      */
     @Override
-    public Card next() {
+    public ResourceCard next() {
         if(this.hasNext()){
             // getting card that is being drawn
-            Card cardBeingDrawn= cards.getFirst();
+            ResourceCard cardBeingDrawn= resourceCards.getFirst();
             //removing card from deck
-            cards.removeFirst();
+            resourceCards.removeFirst();
             //returning card that is being drawn
             return cardBeingDrawn;
         }

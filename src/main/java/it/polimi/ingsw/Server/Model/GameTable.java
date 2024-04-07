@@ -7,11 +7,30 @@ import java.util.ArrayList;
  */
 public class GameTable {
 
+    private final DrawingSection goldDrawingSection;
+
+    private final DrawingSection resourceDrawingSection;
+
+    //maybe unnecessary
     private ArrayList<Board> boards;
 
-    private DrawingSection goldDrawingSection;
+    public GameTable(DrawingSection resourceDrawingSection, DrawingSection goldDrawingSection){
+        this.resourceDrawingSection=resourceDrawingSection;
+        this.goldDrawingSection=goldDrawingSection;
+    }
 
-    private DrawingSection resourceDrawingSection;
+    public void addBoard(Board board) throws RuntimeException{
+        if(boards.size()>=4){
+            throw new RuntimeException("too many boards are being added to a table");
+        }
+        boards.add(board);
+    }
 
+    public DrawingSection getGoldDrawingSection() {
+        return goldDrawingSection;
+    }
 
+    public DrawingSection getResourceDrawingSection() {
+        return resourceDrawingSection;
+    }
 }

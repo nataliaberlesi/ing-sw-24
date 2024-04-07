@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Server.Model;
 
-import it.polimi.ingsw.Server.Model.Cards.Card;
 import it.polimi.ingsw.Server.Model.Cards.Deck;
+import it.polimi.ingsw.Server.Model.Cards.ResourceCard;
 
 /**
  * collection of cards that can be drawn,
@@ -30,7 +30,7 @@ public class DrawingSection {
      * when a face up card is drawn it is replaced by the face down card after it has been flipped
      * when the face down card is drawn or moved it is replaced my a card from the deck
      */
-    private Card[] drawableCards=new Card[3];
+    private final ResourceCard[] drawableCards=new ResourceCard[3];
 
     /**
      *
@@ -48,9 +48,17 @@ public class DrawingSection {
      * @param cardIndex index of the card that is being drawn, must be < 3
      * @return drawable card at the index that is in input
      */
-    public Card drawCard(int cardIndex){
-        //Caution, method under construction WIP
-        return drawableCards[cardIndex];
+    public ResourceCard drawCard(int cardIndex) throws IllegalArgumentException{
+        if(cardIndex<0 || cardIndex>2){
+            throw new IllegalArgumentException(cardIndex+" is not a valid index of card in drawing section");
+        }
+        ResourceCard cardBeingDrawn=drawableCards[cardIndex];
+        if(cardIndex!=0) {
+            drawableCards[0].flipCard();
+            drawableCards[cardIndex] = drawableCards[0];
+        }
+        drawableCards[0]=deck.next();
+        return cardBeingDrawn;
     }
 
 }
