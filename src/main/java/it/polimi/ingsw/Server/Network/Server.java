@@ -14,6 +14,7 @@ public class Server {
      * The server socket that listens for connections
      */
     private final ServerSocket serverSocket;
+
     /**
      * The active connections inside the server
      */
@@ -29,13 +30,15 @@ public class Server {
         this.serverSocket = new ServerSocket(port);
         waitMaster();
     }
+    public ArrayList<PlayerConnection> getConnections() {
+        return connections;
+    }
 
     /**
      * Waits for the master player to connect and add it to the connections
      * @throws IOException
      */
-    private void waitMaster() throws IOException {
-        this.connections=new ArrayList<PlayerConnection>();
+    private void waitMaster() throws IOException {this.connections=new ArrayList<PlayerConnection>();
         PlayerConnection master=connectPlayer(true);
         this.connections.add(master);
     }
@@ -45,7 +48,6 @@ public class Server {
      * @throws IOException
      */
     public void waitPlayer() throws IOException {
-        this.connections=new ArrayList<PlayerConnection>();
         PlayerConnection player=connectPlayer(false);
         this.connections.add(player);
     }
@@ -60,4 +62,5 @@ public class Server {
         Socket Socket=serverSocket.accept();
         return new PlayerConnection(Socket, isMaster);
     }
+
 }

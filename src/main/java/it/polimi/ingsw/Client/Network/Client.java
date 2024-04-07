@@ -7,36 +7,30 @@ public class Client {
     private PrintWriter outSocket;
     private BufferedReader inSocket;
     private BufferedReader inKeyboard;
-    public Client() throws IOException {
-        Socket s=new Socket("localhost",3000);
-        outSocket=new PrintWriter(new BufferedWriter(new OutputStreamWriter(s.getOutputStream())),true);
-        inSocket=new BufferedReader(new InputStreamReader(s.getInputStream()));
-        inKeyboard=new BufferedReader(new InputStreamReader(System.in));
-        play();
+    private Socket socket;
+    public Client(String server ,int port) throws IOException {
+        connect(server, port);
+        setupIO();
     }
 
-    public void play() throws IOException {
-        while(true) {
-           send();
-           receive();
-        }
-    }
-    public Object putName(Object jobj) throws IOException {
-
-        return jobj;
-
-    }
-    public Object putPsw(Object jobj) throws IOException {
-      return jobj;
-    }
-    public void send() {
-
-    }
-    public void receive() throws IOException {
-
+    /**
+     * Connects the client to a server in a specific port
+     * @param server The address of the server
+     * @param port The port of the server
+     * @throws IOException
+     */
+    private void connect(String server, int port) throws IOException {
+        this.socket=new Socket(server,port);
     }
 
-    public static void main(String[] args) throws IOException {
-        Client client=new Client();
+    /**
+     * Setups outSocket, inSocket and inKeyboard
+     * @throws IOException
+     */
+    private void setupIO() throws IOException {
+        this.outSocket=new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())),true);
+        this.inSocket=new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        this.inKeyboard=new BufferedReader(new InputStreamReader(System.in));
     }
+
 }
