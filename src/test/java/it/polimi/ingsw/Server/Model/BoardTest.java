@@ -13,12 +13,12 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 class BoardTest {
 
-    private static final Objective[] patternObjectives={new VerticalPatternObjective(Symbol.MUSHROOM),new VerticalPatternObjective(Symbol.MUSHROOM),new VerticalPatternObjective(Symbol.MUSHROOM)};
     private static final ArrayList<Symbol> frontCenterSymbols=new ArrayList<>(Arrays.asList(Symbol.MUSHROOM,Symbol.WOLF));
     private static final Symbol[] startingCardBackCorners={Symbol.MUSHROOM,Symbol.WOLF,Symbol.LEAF,Symbol.BUTTERFLY};
     private static final CardObjective onePoint= new PointsCardObjective(1);
     private static final CardObjective featherPoints= new SymbolObjective(Symbol.FEATHER);
     private static final Symbol[] frontCorners={Symbol.WOLF, Symbol.FULL, Symbol.MUSHROOM, Symbol.BLANK};
+    private static final Symbol[] frontCornersWithFeather={Symbol.WOLF, Symbol.FEATHER, Symbol.MUSHROOM, Symbol.BLANK};
     //private static final ResourceCard rc=new ResourceCard("1",Symbol.WOLF,frontCorners,zeroPoints);
     //private static final StartingCard sc=new StartingCard("0",frontCorners,startingCardBackCorners,frontCenterSymbols);
     //private static final ResourceCard gc=new GoldCard("2",Symbol.WOLF,frontCorners,zeroPoints,frontCenterSymbols);
@@ -81,11 +81,28 @@ class BoardTest {
         assertFalse(board.placeCard(gdb, new Coordinates(1,-1)));
     }
 
+    @Test
+    void diagonalBluePatternWithFeatherAndMushroomReturnsSeven(){
+        Board board=makeBoard();
+        ResourceCard rcf=new ResourceCard("5",Symbol.WOLF,frontCornersWithFeather,onePoint);
+        ResourceCard rc=makeResourceCard();
+        ResourceCard gc=makeGoldCard();
+        rcf.flipCard();
+        gc.flipCard();
+        rc.flipCard();
+        board.placeCard(rcf,new Coordinates(1,-1));
+        board.placeCard(gc,new Coordinates(2,0));
+        board.placeCard(rc,new Coordinates(3,1));
+        board.calculateObjectivePoints();
+        assertEquals(7, board.getScore());
+    }
+
     private Board makeBoard(){
         StartingCard sc=new StartingCard("0",frontCorners,startingCardBackCorners,frontCenterSymbols);
         sc.flipCard();
         Board board= new Board(sc);
-        for(Objective o: patternObjectives){
+        Objective[] boardObjectives={new VerticalPatternObjective(Symbol.MUSHROOM),new DiagonalPatternObjective(Symbol.WOLF),new SymbolObjective(Symbol.MUSHROOM)};
+        for(Objective o: boardObjectives){
             board.addObjective(o);
         }
         return board;
