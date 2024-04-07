@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 class BoardTest {
@@ -71,6 +72,15 @@ class BoardTest {
         assertFalse(board.placeCard(makeResourceCard(),new Coordinates(-1,1)));
     }
 
+    @Test
+    void insufficientVisibleSymbolsWhenPlacingGoldCardReturnsFalse(){
+        Board board=makeBoard();
+        ArrayList<Symbol> butterflyPrerequisites=new ArrayList<>(List.of(Symbol.BUTTERFLY));
+        ResourceCard gdb=new GoldCard("3", Symbol.WOLF, frontCorners, onePoint, butterflyPrerequisites);
+        gdb.flipCard();
+        assertFalse(board.placeCard(gdb, new Coordinates(1,-1)));
+    }
+
     private Board makeBoard(){
         StartingCard sc=new StartingCard("0",frontCorners,startingCardBackCorners,frontCenterSymbols);
         sc.flipCard();
@@ -81,10 +91,6 @@ class BoardTest {
         return board;
     }
 
-    private boolean placeResourceCard(Board board,ResourceCard rc, Coordinates coordinates){
-        rc.flipCard();
-        return board.placeCard(rc,coordinates);
-    }
 
     private ResourceCard makeResourceCard(){
         return new ResourceCard("1",Symbol.WOLF,frontCorners,onePoint);
