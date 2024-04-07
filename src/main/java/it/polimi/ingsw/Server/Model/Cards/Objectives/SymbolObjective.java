@@ -50,7 +50,7 @@ public class SymbolObjective implements CardObjective, Objective {
      * @throws CornerCardObjective.CornerOutOfBoundException if coveredCorners are less than 1 or more than 4 as such a move is illegal
      */
     @Override
-    public int calculatePoints(HashMap<Symbol, Integer> symbolCounter, int coveredCorners) {
+    public int calculatePoints(HashMap<Symbol, Integer> symbolCounter, int coveredCorners) throws RuntimeException{
         //a card must cover at least one corner when it is placed, it is illegal to do otherwise
         if(coveredCorners<1){
             throw new CornerCardObjective.CornerOutOfBoundException("IMPOSSIBLE TO COVER LESS THAN 1 CORNER");
@@ -59,7 +59,14 @@ public class SymbolObjective implements CardObjective, Objective {
         if(coveredCorners>4){
             throw new CornerCardObjective.CornerOutOfBoundException("IMPOSSIBLE TO COVER MORE THAN 4 CORNERS");
         }
-        return this.calculatePoints(symbolCounter);
+        if(SymbolController.isNotGoldenSymbol(symbolOfInterest)){
+            throw new InvalidSymbolException(symbolOfInterest+" can't be a symbol of interest of a golden card");
+        }
+        int pointsEarnedByCard=0;
+        if(symbolCounter.get(symbolOfInterest)!=null){
+            pointsEarnedByCard=symbolCounter.get(symbolOfInterest);
+        }
+        return pointsEarnedByCard;
     }
 
     /**

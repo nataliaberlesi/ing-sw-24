@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Server.Model;
 
+import java.util.Objects;
+
 /**
  * Represents a set of coordinates in a two-dimensional space.
  */
@@ -60,6 +62,11 @@ public class Coordinates {
 
     public void setX(int x) {
         this.x = x;
+    }
+
+    @Override
+    public int hashCode(){
+        return Objects.hash(x,y);
     }
 
 }

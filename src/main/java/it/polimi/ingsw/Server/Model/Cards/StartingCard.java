@@ -26,7 +26,7 @@ public class StartingCard extends Card{
      * @throws RuntimeException if frontCenterSymbols are 0 or more than 3 or are not MUSHROOMS, LEAFS, BUTTERFLIES, WOLVES, as such a card doesn't exist.
      *                          the same limitation on symbols are applied to the backCorners plus they must all be different
      */
-    protected StartingCard(String cardId, Symbol[] frontCorners, Symbol[] backCorners, ArrayList<Symbol> frontCenterSymbols) throws RuntimeException{
+    public StartingCard(String cardId, Symbol[] frontCorners, Symbol[] backCorners, ArrayList<Symbol> frontCenterSymbols) throws RuntimeException{
         super(cardId, null, frontCorners, backCorners);
         if(!SymbolController.containsOnlyBackSymbols(frontCenterSymbols)||!SymbolController.containsOnlyBackSymbols(new ArrayList<>(Arrays.asList(backCorners)))){
             throw new InvalidSymbolException ("invalid symbol was passed in frontCenterSymbols or BackCorners in the StartingCard constructor");

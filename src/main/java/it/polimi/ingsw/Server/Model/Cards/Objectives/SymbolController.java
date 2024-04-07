@@ -46,5 +46,14 @@ public class SymbolController {
         return true;
     }
 
+    /**
+     *
+     * @param symbol being evaluated
+     * @return true if symbol is not a golden symbol
+     */
+    public static boolean isNotGoldenSymbol(Symbol symbol){
+        return !goldenSymbols.contains(symbol);
+    }
+
 
 }

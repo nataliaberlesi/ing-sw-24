@@ -106,9 +106,11 @@ public class Board {
 
 
     /**
-     * receives a card and coordinates where it needs to be placed,
-     * checks weather it can be placed and if so uses helper methods to update
-     * the board's attributes and places the card in the specified coordinates
+     * places card in given coordinates if coordinates are contained in placeableCoordinates,
+     * placing a card will create new placeable and unplaceable coordinates for each corner (placeable if corner is "visible"),
+     * the symbols that the card covers by being placed will be removed from the visible symbol counter and the symbols visible
+     * on the card will be added. Points earner by placing the card will be added to the score.
+     * The objectives of the board will be updated on the card being placed.
      *
      * @param card is the card that is being placed
      * @param coordinates are the coordinates where the card will be placed
@@ -117,23 +119,29 @@ public class Board {
      * @throws RuntimeException if a set of coordinates is occupied by more than 4 corners/symbols
      */
     public boolean placeCard(ResourceCard card, Coordinates coordinates) throws RuntimeException{
-        // checks weather the coordinates are placeable and if prerequisites are met (always true for resource cards)
-        if(placeableCoordinates.containsKey(coordinates) && card.checkPrerequisites(visibleSymbolCounter)){
+        // checks weather the coordinates are placeable and if prerequisites are met (always true for resource cards or back facing cards)
+        if(placeableCoordinates.containsKey(coordinates)){
+            if(card.checkPrerequisites(visibleSymbolCounter)){
             //gets the symbols on corners that will be covered
             ArrayList<Symbol> coveredSymbols=placeableCoordinates.get(coordinates);
-            //then it removes the coordinates where the card is being placed from the
-            //hashmap of placeableCoordinates.
-            placeableCoordinates.remove(coordinates);
             //removes covered symbols from the visibleSymbolCounter
             removeCoveredSymbolsFromSymbolCounter(coveredSymbols);
+            //removes the coordinates where the card is being placed from the hashmap of placeableCoordinates.
+            placeableCoordinates.remove(coordinates);
+            //adds coordinates to unplaceableCoordinates
+            unplaceableCoordinates.add(coordinates);
+            //then for each corner it creates new placeable or unplaceable corners, or it adds symbols to existing ones
+            placeCornerSymbolsSurroundingCoordinates(card, coordinates);
             //calculate points gained by placing card and adds it to the score
             score+=card.getCardObjective().calculatePoints(visibleSymbolCounter,coveredSymbols.size());
-            //then for each corner it creates new placeable or unplaceable corners,
-            //or it adds symbols to existing ones
-            placeCornerSymbolsSurroundingCoordinates(card, coordinates);
+            //if the card is face down then the symbol in the center of the card is added to the visible symbol counter
+            if(!card.isFacingUp()){
+                updateVisibleCounter(card.getBackSymbol());
+            }
             //adds card and coordinates to occupiedCoordinates
             updateBoardObjectives(card.getBackSymbol(), coordinates);
             return true;
+            }
         }
         return false;
     }
@@ -277,4 +285,7 @@ public class Board {
         }
     }
 
+    public int getScore() {
+        return score;
+    }
 }

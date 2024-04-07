@@ -25,16 +25,25 @@ class SymbolObjectiveTest {
         symbolCounter.put(Symbol.MUSHROOM,6);
         return symbolCounter;
     }
+    private HashMap<Symbol,Integer> fillHashMapThatWontEarnPointsForInk(){
+        HashMap<Symbol,Integer> symbolCounter=new HashMap<>();
+        symbolCounter.put(Symbol.INK,0);
+        symbolCounter.put(Symbol.FEATHER,1);
+        symbolCounter.put(Symbol.BUTTERFLY,2);
+        symbolCounter.put(Symbol.WOLF,9);
+        symbolCounter.put(Symbol.MUSHROOM,6);
+        return symbolCounter;
+    }
     @Test
-    void twoSetsOfSymbolsReturnsFourInk(){
+    void fiveInkSymbolsReturnsFIve(){
         CardObjective so=new SymbolObjective(Symbol.INK);
-        assertEquals(4,so.calculatePoints(fillHashMapThatWillEarnTwoPointsForInk(), 4));
+        assertEquals(5,so.calculatePoints(fillHashMapThatWillEarnTwoPointsForInk(), 4));
     }
 
     @Test
-    void zeroSetsOfSymbolsReturnsZeroButterfly(){
-        CardObjective so=new SymbolObjective(Symbol.BUTTERFLY);
-        assertEquals(0,so.calculatePoints(fillHashMapThatWontEarnPointsForButterfly(), 4));
+    void zeroInkReturnsZero(){
+        CardObjective so=new SymbolObjective(Symbol.INK);
+        assertEquals(0,so.calculatePoints(fillHashMapThatWontEarnPointsForInk(), 4));
     }
     @Test
     void twoSetsOfSymbolsReturnsFourMushroom(){
@@ -52,7 +61,7 @@ class SymbolObjectiveTest {
      */
     @Test
     void zeroCoveredCornersThrowsRuntimeException() {
-        CardObjective so=new SymbolObjective(Symbol.BUTTERFLY);
+        CardObjective so=new SymbolObjective(Symbol.INK);
         int coveredCorners = 0;
         assertThrows(CornerCardObjective.CornerOutOfBoundException.class, () -> so.calculatePoints(null, coveredCorners));
 
@@ -63,7 +72,7 @@ class SymbolObjectiveTest {
      */
     @Test
     void fiveCoveredCornersThrowsRuntimeException() {
-        CardObjective so=new SymbolObjective(Symbol.BUTTERFLY);
+        CardObjective so=new SymbolObjective(Symbol.INK);
         int coveredCorners = 5;
         assertThrows(CornerCardObjective.CornerOutOfBoundException.class, () -> so.calculatePoints(null, coveredCorners));
     }

@@ -26,7 +26,7 @@ public class GoldCard extends ResourceCard{
      * @param prerequisites is the list with the symbols necessary to be on the board in order to be able to place the card,
      *                      it can be empty, but not null.
      */
-    protected GoldCard(String cardId, Symbol backSymbol, Symbol[] frontCorners, CardObjective cardObjective, ArrayList<Symbol> prerequisites) throws InvalidSymbolException{
+    public GoldCard(String cardId, Symbol backSymbol, Symbol[] frontCorners, CardObjective cardObjective, ArrayList<Symbol> prerequisites) throws InvalidSymbolException{
         super(cardId, backSymbol, frontCorners, cardObjective);
         if(!SymbolController.containsOnlyBackSymbols(prerequisites) || prerequisites.isEmpty()){
             throw new InvalidSymbolException("invalid symbol present in prerequisites");
@@ -42,14 +42,16 @@ public class GoldCard extends ResourceCard{
      */
     @Override
     public boolean checkPrerequisites(HashMap<Symbol, Integer> symbolCounter){
-        HashMap<Symbol, Integer> symbolCounterCopy=new HashMap<>(symbolCounter);
-        for(Symbol cardPrerequisite: prerequisites){
-            int counter=symbolCounterCopy.get(cardPrerequisite);
-            if(counter<=0){
-               return false;
+        if(this.isFacingUp()) {
+            HashMap<Symbol, Integer> symbolCounterCopy = new HashMap<>(symbolCounter);
+            for (Symbol cardPrerequisite : prerequisites) {
+                int counter = symbolCounterCopy.get(cardPrerequisite);
+                if (counter <= 0) {
+                    return false;
+                }
+                counter--;
+                symbolCounterCopy.put(cardPrerequisite, counter);
             }
-            counter--;
-            symbolCounterCopy.put(cardPrerequisite, counter);
         }
         return true;
     }
