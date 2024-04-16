@@ -4,12 +4,14 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="792.0" prefWidth="1408.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.Client.View.GUI.GUIMainController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="792.0" prefWidth="1408.0" xmlns="http://javafx.com/javafx/21">
     <children>
         <ImageView fitHeight="792.0" fitWidth="1408.0" pickOnBounds="true" preserveRatio="true">
             <image>
-                <Image url="@Images/initialScreen.png"/>
+                <Image url="@Images/initialScreen.png" />
             </image>
         </ImageView>
+        <ImageView fitHeight="96.0" fitWidth="250.0" layoutX="282.0" layoutY="555.0" onMouseClicked="#switchToCreate" opacity="0.0" pickOnBounds="true" preserveRatio="true" />
+        <ImageView fitHeight="96.0" fitWidth="250.0" layoutX="880.0" layoutY="555.0" onMouseClicked="#switchToJoin" opacity="0.0" pickOnBounds="true" preserveRatio="true" />
     </children>
 </AnchorPane>
