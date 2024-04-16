@@ -45,7 +45,7 @@ public class GoldCard extends ResourceCard{
         if(this.isFacingUp()) {
             HashMap<Symbol, Integer> symbolCounterCopy = new HashMap<>(symbolCounter);
             for (Symbol cardPrerequisite : prerequisites) {
-                if (symbolCounterCopy.get(cardPrerequisite)==null) {
+                if (symbolCounterCopy.get(cardPrerequisite)==null||symbolCounterCopy.get(cardPrerequisite)==0) {
                     return false;
                 }
                 int counter = symbolCounterCopy.get(cardPrerequisite)-1;

@@ -53,7 +53,7 @@ class SymbolObjectiveTest {
 
     @Test
     void zeroSetsOfSymbolsReturnsZeroFeather(){
-        Objective so=new SymbolObjective(Symbol.FEATHER);
+        Objective so=new SymbolObjective(Symbol.BUTTERFLY);
         assertEquals(0,so.calculatePoints(fillHashMapThatWontEarnPointsForButterfly()));
     }
     /**

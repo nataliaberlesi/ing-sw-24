@@ -1,9 +1,10 @@
 package it.polimi.ingsw.Server.Model.Cards;
 
+import it.polimi.ingsw.Server.Model.Cards.Objectives.PointsCardObjective;
+import it.polimi.ingsw.Server.Model.Symbol;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -14,7 +15,7 @@ class DeckTest {
      */
     @Test
     void hasNextEmptyDeckReturnFlase() {
-        Deck deck=new Deck(new ArrayList<Card>());
+        Deck deck=new Deck(new ArrayList<>());
         assertFalse(deck.hasNext());
     }
 
@@ -23,8 +24,9 @@ class DeckTest {
      */
     @Test
     void hasNextDeckWithCardsReturnTrue(){
-        Card exampleCard=new ResourceCard(null,null,null,null);
-        Deck deck=new Deck(new ArrayList<Card>(Collections.singletonList(exampleCard)));
+        Symbol[] frontCornerSymbols ={Symbol.BLANK, Symbol.BUTTERFLY,Symbol.INK,Symbol.MUSHROOM};
+        ResourceCard exampleCard=new ResourceCard("0",Symbol.WOLF,frontCornerSymbols,new PointsCardObjective(2));
+        Deck deck=new Deck(new ArrayList<>(Collections.singletonList(exampleCard)));
         assertTrue(deck.hasNext());
     }
 }
