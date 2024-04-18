@@ -3,27 +3,32 @@ package it.polimi.ingsw.Server.Model;
 import java.util.ArrayList;
 
 /**
- * GameTable where boards are set as well as drawing sections.
+ * Table where boards are set as well as drawing sections.
  */
-public class GameTable {
+public class Table {
 
     private final DrawingSection goldDrawingSection;
 
     private final DrawingSection resourceDrawingSection;
 
-    //maybe unnecessary
-    private ArrayList<Board> boards;
+    private final ArrayList<Player> players=new ArrayList<>();
 
-    public GameTable(DrawingSection resourceDrawingSection, DrawingSection goldDrawingSection){
+
+    public Table(DrawingSection resourceDrawingSection, DrawingSection goldDrawingSection){
         this.resourceDrawingSection=resourceDrawingSection;
         this.goldDrawingSection=goldDrawingSection;
     }
 
-    public void addBoard(Board board) throws RuntimeException{
-        if(boards.size()>=4){
-            throw new RuntimeException("too many boards are being added to a table");
+    public boolean addPlayer(Player player){
+        if(players.size()>3||players.contains(player)){
+            return false;
         }
-        boards.add(board);
+        players.add(player);
+        return true;
+    }
+
+    public ArrayList<Player> getPlayers() {
+        return players;
     }
 
     public DrawingSection getGoldDrawingSection() {

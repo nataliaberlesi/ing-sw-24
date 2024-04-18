@@ -10,11 +10,6 @@ public class Player {
      */
     private final String nickname;
 
-    /**
-     * first player is used to determine turn order as well as who will play the final turn of the game:
-     * the person that plays right before the first player
-     */
-    private boolean isFirstPlayer=false;
 
     /**
      * Each player has a unique color that is a visual indicator of player
@@ -35,25 +30,13 @@ public class Player {
      */
     private Board playerBoard;
 
-    /**
-     * Contains the board of each player and the drawing sections where a player must draw a card (if possible) at the
-     * of his/her turn.
-     */
-    private GameTable table;
 
-    /**
-     * player whose turn is next
-     */
-    private Player nextPlayer;
 
 
     public Player(String nickname) {
         this.nickname = nickname;
     }
 
-    public void setFirstPlayer() {
-        isFirstPlayer = true;
-    }
 
     public void setPlayerColor(Color playerColor) {
         this.playerColor = playerColor;
@@ -67,21 +50,11 @@ public class Player {
         this.playerBoard = playerBoard;
     }
 
-    public void setTable(GameTable table) {
-        this.table = table;
-    }
-
-    public void setNextPlayer(Player nextPlayer) {
-        this.nextPlayer = nextPlayer;
-    }
 
     public String getNickname() {
         return nickname;
     }
 
-    public boolean isFirstPlayer() {
-        return isFirstPlayer;
-    }
 
     public Color getPlayerColor() {
         return playerColor;
@@ -95,11 +68,4 @@ public class Player {
         return playerBoard;
     }
 
-    public GameTable getTable() {
-        return table;
-    }
-
-    public Player getNextPlayer() {
-        return nextPlayer;
-    }
 }
