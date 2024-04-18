@@ -10,6 +10,10 @@ public class Player {
      */
     private final String nickname;
 
+    /**
+     * ara that contains all the cards that can be drawn
+     */
+    private DrawableArea drawableArea;
 
     /**
      * Each player has a unique color that is a visual indicator of player

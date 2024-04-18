@@ -16,7 +16,7 @@ import it.polimi.ingsw.Server.Model.Cards.ResourceCard;
 
  //WIP: 2 decks or 2 objects (one for gold cards and another for common cards)?
 
-public class DrawingSection {
+public class DrawableCards {
     /**
      * every time the face down card is drawn or moved, it is replaced by a card in the deck.
      *
@@ -37,7 +37,7 @@ public class DrawingSection {
      * @param deck from which the drawableCards come from,
      *             can't change during game
      */
-    public DrawingSection(Deck deck) {
+    public DrawableCards(Deck deck) {
         this.deck = deck;
     }
 
