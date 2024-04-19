@@ -13,7 +13,6 @@ import java.util.function.Supplier;
 public class ObjectiveFactory {
 
     private final static HashMap<String, Supplier<Objective>> objectiveMaker=new HashMap<>(){{
-
         put("O00",()->new DiagonalPatternObjective(Symbol.MUSHROOM));
         put("O01",()->new DiagonalPatternObjective(Symbol.LEAF));
         put("O02",()->new DiagonalPatternObjective(Symbol.WOLF));
@@ -48,12 +47,20 @@ public class ObjectiveFactory {
         return everyObjectiveID;
     }
 
+
     /**
      *
      * @param objectiveID is the ID of the objective that will be initiated
      * @return objective corresponding to ID
      */
-    public static Objective makeObjective(String objectiveID){
-        return objectiveMaker.get(objectiveID).get();
+    public static Objective makeObjective(String objectiveID) throws IllegalArgumentException{
+        Supplier<Objective> objectiveSupplier= objectiveMaker.get(objectiveID);
+        if(objectiveSupplier!=null){
+            return objectiveSupplier.get();
+        }
+        else{
+            throw new IllegalArgumentException(objectiveID+" Card not found");
+        }
     }
+
 }

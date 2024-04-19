@@ -75,10 +75,10 @@ public class Board {
      * @param objective that is being added to board, there can never be more than 3
      * @throws RuntimeException if more than 3 objectives are added to board
      */
-    public void addObjective(Objective objective) throws RuntimeException{
+    public void addObjective(String objective) throws RuntimeException{
         for(int i =0; i<3; i++){
             if(objectives[i]==null){
-                objectives[i]=objective;
+                objectives[i]=ObjectiveFactory.makeObjective(objective);
                 return;
             }
         }

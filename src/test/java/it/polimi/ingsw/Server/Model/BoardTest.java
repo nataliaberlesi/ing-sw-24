@@ -1,6 +1,5 @@
 package it.polimi.ingsw.Server.Model;
 
-import it.polimi.ingsw.Server.Model.Cards.Objectives.*;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -14,8 +13,9 @@ class BoardTest {
     @BeforeEach
     void setUp(){
         board=new Board("S4",facingUp);
-        Objective[] objectives=new Objective[]{new SymbolObjective(Symbol.BUTTERFLY), new DiagonalPatternObjective(Symbol.WOLF), new VerticalPatternObjective(Symbol.BUTTERFLY)};
-        for(Objective objective:objectives){
+        // "011"=new SymbolObjective(Symbol.BUTTERFLY)  "O02"=new DiagonalPatternObjective(Symbol.WOLF)  "O07"=new VerticalPatternObjective(Symbol.BUTTERFLY)
+        String[] objectives=new String[]{"O11", "O02", "O07"};
+        for(String objective:objectives){
             board.addObjective(objective);
         }
         board.placeCard("RP3", new Coordinates(1,1), facingDown);
