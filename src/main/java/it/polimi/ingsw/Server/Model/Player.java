@@ -25,7 +25,7 @@ public class Player {
      * at the end of each turn players hand will always have exactly three cards,
      * unless cards in the drawing sections have run out.
      */
-    private Hand playerHand;
+    private final Hand playerHand=new Hand();
 
     /**
      *  personal board where cards will be placed by player,
@@ -43,14 +43,17 @@ public class Player {
 
 
     public void setPlayerColor(Color playerColor) {
+        if(this.playerColor != null) {
+            throw new RuntimeException("Player color already set");
+        }
         this.playerColor = playerColor;
     }
 
-    public void setPlayerHand(Hand playerHand) {
-        this.playerHand = playerHand;
-    }
 
     public void setPlayerBoard(Board playerBoard) {
+        if(this.playerBoard != null) {
+            throw new RuntimeException("Player board already set");
+        }
         this.playerBoard = playerBoard;
     }
 
