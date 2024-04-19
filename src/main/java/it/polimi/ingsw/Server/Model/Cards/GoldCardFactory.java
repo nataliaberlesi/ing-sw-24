@@ -11,6 +11,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.function.Supplier;
 
+/**
+ * makes all gold cards or a specific gold card or just the complete list of gold IDs.
+ */
 public class GoldCardFactory {
 
     /**
@@ -95,7 +98,7 @@ public class GoldCardFactory {
      * @param cardID is a unique code that identifies a specific card
      * @return the card specified by the ID
      */
-    public static ResourceCard makeGoldCard(String cardID) {
+    public static ResourceCard makeGoldCard(String cardID) throws IllegalArgumentException{
         Supplier<ResourceCard> cardSupplier= goldCardMaker.get(cardID);
         if(cardSupplier!=null){
             return cardSupplier.get();
@@ -109,7 +112,7 @@ public class GoldCardFactory {
      *
      * @return every cardID that can be assigned to a resourceCard
      */
-    private static ArrayList<String> makeEveryGoldCardID(){
+    public static ArrayList<String> makeEveryGoldCardID(){
         ArrayList<String> everyGoldCardID = new ArrayList<>();
         ArrayList<String> resourceCardsPrefix=new ArrayList<>();
         resourceCardsPrefix.add("GR");
@@ -143,7 +146,7 @@ public class GoldCardFactory {
      * @param symbol that is missing from prerequisites
      * @return list containing incomplete prerequisites plus the given symbol
      */
-    private static ArrayList<Symbol> add(ArrayList<Symbol> incompletePrerequisites, Symbol symbol){
+    static ArrayList<Symbol> add(ArrayList<Symbol> incompletePrerequisites, Symbol symbol){
         incompletePrerequisites.add(symbol);
         return incompletePrerequisites;
     }

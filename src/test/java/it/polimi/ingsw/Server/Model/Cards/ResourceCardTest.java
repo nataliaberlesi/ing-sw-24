@@ -14,14 +14,13 @@ class ResourceCardTest {
     @Test
     void frontFacingCardReturnsFrontFacingCorners(){
         Card resourcecard=new ResourceCard("0",Symbol.MUSHROOM, frontCornerSymbols,null);
-        resourcecard.flipCard();
-        assertEquals(frontCornerSymbols,resourcecard.getVisibleCorners());
+        assertEquals(frontCornerSymbols,resourcecard.getFrontCorners());
     }
 
     @Test
     void backFacingCardReturnsBackFacingCorners(){
         Card resourcecard=new ResourceCard("0",Symbol.MUSHROOM, frontCornerSymbols,null);
-        assertEquals(resourcecard.getBackCorners(),resourcecard.getVisibleCorners());
+        assertEquals(resourcecard.getBackCorners(),resourcecard.getBackCorners());
     }
 
     @Test

@@ -14,7 +14,10 @@ import java.util.HashMap;
  */
 public abstract class Card {
 
-    private final String cardId;
+    /**
+     * unique identifier of a card, also used to link it to a specific graphic resource
+     */
+    private final String cardID;
     /**
      * backSymbol is the symbol that is visible on the back side of the card,
      * it is visible only if the card is facing down,
@@ -23,12 +26,6 @@ public abstract class Card {
      */
     private final Symbol backSymbol;
 
-    /**
-     * isFacingUp indicates the orientation of the card, false if card is facing down,
-     * it will be used to verify which corners are visible
-     * cards are facing down when initialized
-     */
-    private boolean isFacingUp = false;
 
     /**
      * frontCorners are the corners visible on the front
@@ -52,20 +49,20 @@ public abstract class Card {
 
     /**
      *
-     * @param cardId unique identifier used to associate card to graphic resource
+     * @param cardID unique identifier used to associate card to graphic resource
      * @param backSymbol is a Symbol that is on the back of the card
      * @param frontCorners must be an array of 4 Symbols indicating the symbols on each front corner
      * @param backCorners must be an array of 4 Symbols indicating the symbols on each back corner
      * @throws IllegalArgumentException if there is no cardId or if corners are not exactly 4
      */
-    protected Card(String cardId, Symbol backSymbol, Symbol[] frontCorners, Symbol[] backCorners) throws IllegalArgumentException{
-        if(cardId==null){
+    protected Card(String cardID, Symbol backSymbol, Symbol[] frontCorners, Symbol[] backCorners) throws IllegalArgumentException{
+        if(cardID==null){
             throw new IllegalArgumentException("cardId can't be null");
         }
         if(frontCorners.length!=4 || backCorners.length!=4){
             throw new IllegalArgumentException("corners of a card must always be 4");
         }
-        this.cardId = cardId;
+        this.cardID = cardID;
         this.backSymbol = backSymbol;
         this.frontCorners = frontCorners;
         this.backCorners = backCorners;
@@ -81,24 +78,6 @@ public abstract class Card {
         return true;
     }
 
-    /**
-     * Changes orientation of card from facing uo to facing down and vice versa.
-     * Changing orientation of card influences which corners and center symbols are visible when card is placed.
-     */
-    public void flipCard(){
-        isFacingUp=!isFacingUp;
-    }
-
-    /**
-     *
-     * @return the corners of the card according to it's orientation
-     */
-    public Symbol[] getVisibleCorners(){
-        if(isFacingUp){
-            return frontCorners;
-        }
-        return backCorners;
-    }
 
     /**
      *
@@ -124,15 +103,8 @@ public abstract class Card {
         return backSymbol;
     }
 
-    /**
-     *
-     * @return true if card is facing up
-     */
-    public boolean isFacingUp() {
-        return isFacingUp;
+    public String getCardID() {
+        return cardID;
     }
 
-    public String getCardId() {
-        return cardId;
-    }
 }

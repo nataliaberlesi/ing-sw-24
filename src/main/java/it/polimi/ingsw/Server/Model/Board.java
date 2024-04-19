@@ -1,9 +1,7 @@
 package it.polimi.ingsw.Server.Model;
 
-import it.polimi.ingsw.Server.Model.Cards.Card;
+import it.polimi.ingsw.Server.Model.Cards.*;
 import it.polimi.ingsw.Server.Model.Cards.Objectives.Objective;
-import it.polimi.ingsw.Server.Model.Cards.ResourceCard;
-import it.polimi.ingsw.Server.Model.Cards.StartingCard;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -62,10 +60,11 @@ public class Board {
     /**
      * a board is created by placing a starting card, which is very similar to resource and gold cards, but unlike them,
      * if it is placed facing up then it will show symbols in the center that must be added to the visibleSymbolCounter.
-     * @param startingCard is the first card that is placed, it occupies coordinates (0,0).
+     * @param startingCardID is the ID of the first card that is placed, it occupies coordinates (0,0).
      */
-    public Board(StartingCard startingCard) {
-        placeStartingCard(startingCard);
+    public Board(String startingCardID, boolean isFacingUp) {
+        StartingCard startingCard= StartingCardFactory.makeStartingCard(startingCardID);
+        placeStartingCard(startingCard, isFacingUp);
     }
 
     /**
@@ -91,11 +90,12 @@ public class Board {
      * visibleSymbolCounter.
      * @param startingCard is the first card that is placed, it occupies coordinates (0,0).
      */
-    private void placeStartingCard(StartingCard startingCard) {
+    private void placeStartingCard(StartingCard startingCard, Boolean isFacingUp) {
+        Symbol[] corners=getVisibleCorners(startingCard, isFacingUp);
         // place starting card in coordinates (0,0) and creates new placeable and unplaceable coordinates
-        placeCornerSymbolsSurroundingCoordinates(startingCard, new Coordinates());
+        placeCornerSymbolsSurroundingCoordinates(corners, new Coordinates());
         // add center symbols to visible counter if card is facing up
-        if(startingCard.isFacingUp()){
+        if(isFacingUp){
             ArrayList<Symbol> centerSymbols=startingCard.getFrontCenterSymbols();
             for(Symbol centerSymbol: centerSymbols){
                 updateVisibleCounter(centerSymbol);
@@ -112,48 +112,56 @@ public class Board {
      * on the card will be added. Points earner by placing the card will be added to the score.
      * The objectives of the board will be updated on the card being placed.
      *
-     * @param card is the card that is being placed
+     * @param cardID is the ID of the card that is being placed
      * @param coordinates are the coordinates where the card will be placed
      * @return true if receives as an input valid coordinates and helper functions don't raise exceptions,
      * false if invalid coordinates are passed
      * @throws RuntimeException if a set of coordinates is occupied by more than 4 corners/symbols
      */
-    public boolean placeCard(ResourceCard card, Coordinates coordinates) throws RuntimeException{
+    public boolean placeCard(String cardID, Coordinates coordinates, boolean isFacingUp) throws RuntimeException{
         // checks weather the coordinates are placeable and if prerequisites are met (always true for resource cards or back facing cards)
-        if(placeableCoordinates.containsKey(coordinates)){
-            if(card.checkPrerequisites(visibleSymbolCounter)){
-            //gets the symbols on corners that will be covered
-            ArrayList<Symbol> coveredSymbols=placeableCoordinates.get(coordinates);
-            //removes covered symbols from the visibleSymbolCounter
-            removeCoveredSymbolsFromSymbolCounter(coveredSymbols);
-            //removes the coordinates where the card is being placed from the hashmap of placeableCoordinates.
-            placeableCoordinates.remove(coordinates);
-            //adds coordinates to unplaceableCoordinates
-            unplaceableCoordinates.add(coordinates);
-            //then for each corner it creates new placeable or unplaceable corners, or it adds symbols to existing ones
-            placeCornerSymbolsSurroundingCoordinates(card, coordinates);
-            //calculate points gained by placing card and adds it to the score
-            score+=card.getCardObjective().calculatePoints(visibleSymbolCounter,coveredSymbols.size());
-            //if the card is face down then the symbol in the center of the card is added to the visible symbol counter
-            if(!card.isFacingUp()){
-                updateVisibleCounter(card.getBackSymbol());
-            }
-            //adds card and coordinates to occupiedCoordinates
-            updateBoardObjectives(card.getBackSymbol(), coordinates);
-            return true;
+        if(isPlaceable(coordinates)){
+            ResourceCard card= ResourceCardFactory.makeResourceCard(cardID);
+            //if card is facing down, it is unnecessary to check prerequisites
+            if(!isFacingUp||card.checkPrerequisites(visibleSymbolCounter)){
+                //gets the symbols on corners that will be covered
+                ArrayList<Symbol> coveredSymbols=placeableCoordinates.get(coordinates);
+                //removes covered symbols from the visibleSymbolCounter
+                removeCoveredSymbolsFromSymbolCounter(coveredSymbols);
+                //removes the coordinates where the card is being placed from the hashmap of placeableCoordinates.
+                placeableCoordinates.remove(coordinates);
+                //adds coordinates to unplaceableCoordinates
+                unplaceableCoordinates.add(coordinates);
+                Symbol[] cardVisibleCorners=getVisibleCorners(card, isFacingUp);
+                //then for each corner it creates new placeable or unplaceable corners, or it adds symbols to existing ones
+                placeCornerSymbolsSurroundingCoordinates(cardVisibleCorners, coordinates);
+                //if the card is face down then the symbol in the center of the card is added to the visible symbol counter
+                if(!isFacingUp){
+                    updateVisibleCounter(card.getBackSymbol());
+                }
+                else{
+                    //calculate points gained by placing card and adds it to the score
+                    score+=card.getCardObjective().calculatePoints(visibleSymbolCounter,coveredSymbols.size());
+                }
+                //adds card and coordinates to occupiedCoordinates
+                updateBoardObjectives(card.getBackSymbol(), coordinates);
+                return true;
             }
         }
         return false;
     }
 
+
     /**
-     * each objective will calculate points and add to the score
+     *
+     * @param coordinates where user wants to place card
+     * @return true if it is possible to place a card in those coordinates
      */
-    public void calculateObjectivePoints(){
-        for(Objective objective:objectives){
-            score+=objective.calculatePoints(visibleSymbolCounter);
-        }
+    public boolean isPlaceable(Coordinates coordinates){
+        return placeableCoordinates.containsKey(coordinates);
     }
+
+
 
     /**
      * updates the visibleSymbolCounter adding the new symbols that are now visible
@@ -226,14 +234,11 @@ public class Board {
      * to the adequate coordinates it points to
      * if a card's corned is FULL ("hidden"), it adds the corresponding pointed coordinates to the unplaceableCoordinates list
      * if a card's corner is "visible", it adds its symbol and pointed coordinates to the placeableCoordinates hashmap
-     * @param card card that is being placed
+     * @param corners are the visible corners of card being placed
      * @param coordinates location where the card is being placed
      * @throws RuntimeException if a set of coordinates is occupied by more than 4 corners/symbols
      */
-    private void placeCornerSymbolsSurroundingCoordinates(Card card, Coordinates coordinates) throws RuntimeException{
-
-        // getting visible corners from the card that is being placed
-        Symbol[] corners = card.getVisibleCorners();
+    private void placeCornerSymbolsSurroundingCoordinates(Symbol[] corners, Coordinates coordinates) throws RuntimeException{
 
         // will store the corner that is being considered
         Symbol currentCorner;
@@ -285,7 +290,36 @@ public class Board {
         }
     }
 
+    /**
+     *
+     * @return the current score plus the points gained from the objectives
+     */
+    public int getFinalScore(){
+        int finalScore=score;
+        for(Objective objective:objectives){
+            finalScore+=objective.calculatePoints(visibleSymbolCounter);
+        }
+        return finalScore;
+    }
+
+    /**
+     *
+     * @return current score
+     */
     public int getScore() {
         return score;
+    }
+
+    /**
+     *
+     * @param card that is being placed
+     * @param isFacingUp indicates the orientation of card
+     * @return the corners on the visible side of the card
+     */
+    private Symbol[] getVisibleCorners(Card card, boolean isFacingUp){
+        if(isFacingUp){
+            return card.getFrontCorners();
+        }
+           return  card.getBackCorners();
     }
 }

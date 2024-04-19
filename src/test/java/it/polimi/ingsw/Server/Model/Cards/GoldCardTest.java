@@ -22,25 +22,23 @@ class GoldCardTest {
     @Test
     void sufficientVisibleSymbolsReturnsTrue() {
         Card goldCard=new GoldCard("0",Symbol.WOLF,frontFacingSymbols,null,cardPrerequisites);
-        goldCard.flipCard();
         assertTrue(goldCard.checkPrerequisites(visibleSymbols));
     }
 
     @Test
     void insufficientVisibleSymbolsReturnsFalse(){
         Card goldCard=new GoldCard("0",Symbol.WOLF,frontFacingSymbols,null,cardPrerequisites);
-        goldCard.flipCard();
         HashMap<Symbol, Integer>insufficientVisibleSymbols=new HashMap<>(visibleSymbols);
         insufficientVisibleSymbols.put(Symbol.LEAF, 1);
         assertFalse(goldCard.checkPrerequisites(insufficientVisibleSymbols));
     }
 
     @Test
-    void checkingFacingDownCardPrerequisitesReturnsTrue(){
+    void checkingFacingDownCardPrerequisitesReturnsFalse(){
         Card goldCard=new GoldCard("0",Symbol.WOLF,frontFacingSymbols,null,cardPrerequisites);
         HashMap<Symbol, Integer>insufficientVisibleSymbols=new HashMap<>(visibleSymbols);
         insufficientVisibleSymbols.put(Symbol.LEAF, 1);
-        assertTrue(goldCard.checkPrerequisites(insufficientVisibleSymbols));
+        assertFalse(goldCard.checkPrerequisites(insufficientVisibleSymbols));
     }
 
     @Test

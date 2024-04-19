@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.function.Supplier;
 
 /**
- * factory can make a specific card for a given I, or it can make every resource card
+ * makes all resource cards or a specific resource card or just the complete list of resource IDs.
  */
 public class ResourceCardFactory {
 
@@ -75,7 +75,7 @@ public class ResourceCardFactory {
      *
      * @return every cardID that can be assigned to a resourceCard
      */
-    private static ArrayList<String> makeEveryResourceCardID(){
+    public static ArrayList<String> makeEveryResourceCardID(){
         ArrayList<String> everyResourceCardID = new ArrayList<>();
         ArrayList<String> resourceCardsPrefix=new ArrayList<>();
         resourceCardsPrefix.add("RR");
@@ -93,9 +93,12 @@ public class ResourceCardFactory {
     /**
      *
      * @param cardID is a unique code that identifies a specific card
-     * @return the card specified by the ID
+     * @return the card specified by the ID, if it starts wi
      */
-    public static ResourceCard makeResourceCard(String cardID) {
+    public static ResourceCard makeResourceCard(String cardID) throws IllegalArgumentException{
+        if(cardID.startsWith("G")){
+            return GoldCardFactory.makeGoldCard(cardID);
+        }
         Supplier<ResourceCard> cardSupplier= resourceCardMaker.get(cardID);
         if(cardSupplier!=null){
             return cardSupplier.get();
@@ -109,7 +112,7 @@ public class ResourceCardFactory {
      *
      * @return every resource card
      */
-    public static ArrayList<ResourceCard> makeEveryResourceCard(){
+    private static ArrayList<ResourceCard> makeEveryResourceCard(){
         ArrayList<ResourceCard> everyResourceCard=new ArrayList<>();
         ArrayList<String> everyResourceCardID= makeEveryResourceCardID();
         for(String cardID:everyResourceCardID){

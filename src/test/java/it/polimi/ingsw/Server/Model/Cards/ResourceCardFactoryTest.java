@@ -12,12 +12,12 @@ class ResourceCardFactoryTest {
     @Test
     void RB7inCreateCardReturnsRB7Card(){
         ResourceCard r= ResourceCardFactory.makeResourceCard("RB7");
-        assertEquals("RB7", r.getCardId());
+        assertEquals("RB7", r.getCardID());
     }
 
     @Test
     void makeEveryResourceCardReturnsEveryResourceCard(){
-        ArrayList<ResourceCard> er=ResourceCardFactory.makeEveryResourceCard();
+        ArrayList<String> er=ResourceCardFactory.makeEveryResourceCardID();
         assertEquals(40,er.size());
     }
 }

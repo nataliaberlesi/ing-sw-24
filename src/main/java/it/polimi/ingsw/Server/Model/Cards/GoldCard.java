@@ -42,7 +42,6 @@ public class GoldCard extends ResourceCard{
      */
     @Override
     public boolean checkPrerequisites(HashMap<Symbol, Integer> symbolCounter){
-        if(this.isFacingUp()) {
             HashMap<Symbol, Integer> symbolCounterCopy = new HashMap<>(symbolCounter);
             for (Symbol cardPrerequisite : prerequisites) {
                 if (symbolCounterCopy.get(cardPrerequisite)==null||symbolCounterCopy.get(cardPrerequisite)==0) {
@@ -51,7 +50,6 @@ public class GoldCard extends ResourceCard{
                 int counter = symbolCounterCopy.get(cardPrerequisite)-1;
                 symbolCounterCopy.put(cardPrerequisite, counter);
             }
-        }
         return true;
     }
 

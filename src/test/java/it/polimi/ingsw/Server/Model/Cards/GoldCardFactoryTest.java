@@ -5,14 +5,13 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 
 import static junit.framework.Assert.assertEquals;
-import static org.junit.jupiter.api.Assertions.*;
 
 class GoldCardFactoryTest {
 
     @Test
     void GB7inCreateCardReturnsGB7Card(){
         ResourceCard r= GoldCardFactory.makeGoldCard("GB7");
-        assertEquals("GB7", r.getCardId());
+        assertEquals("GB7", r.getCardID());
     }
 
     @Test

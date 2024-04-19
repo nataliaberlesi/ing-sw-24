@@ -7,12 +7,12 @@ import java.util.Iterator;
 /**
  * Deck of cards, can hold only either gold cards or resource cards
  */
-public class Deck implements Iterator<Card> {
+public class Deck implements Iterator<String> {
 
     /**
      * cards in deck, can be either only resource cards or only gold cards
      */
-    private final ArrayList<ResourceCard> resourceCards;
+    private final ArrayList<String> resourceCards;
 
     /**
      * shuffles cards in deck
@@ -37,7 +37,7 @@ public class Deck implements Iterator<Card> {
      *
      * @param cards that compose the deck
      */
-    public Deck(ArrayList<ResourceCard> cards) {
+    public Deck(ArrayList<String> cards) {
         this.resourceCards = cards;
     }
 
@@ -48,11 +48,10 @@ public class Deck implements Iterator<Card> {
      * @return the next element in the iteration, returns null if cards is empty
      *
      */
-    @Override
-    public ResourceCard next() {
+    public String next() {
         if(this.hasNext()){
             // getting card that is being drawn
-            ResourceCard cardBeingDrawn= resourceCards.getFirst();
+            String cardBeingDrawn= resourceCards.getFirst();
             //removing card from deck
             resourceCards.removeFirst();
             //returning card that is being drawn
@@ -61,4 +60,5 @@ public class Deck implements Iterator<Card> {
         //if deck is empty then it returns null
         return null;
     }
+
 }

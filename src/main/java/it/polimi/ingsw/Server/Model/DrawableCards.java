@@ -1,7 +1,6 @@
 package it.polimi.ingsw.Server.Model;
 
 import it.polimi.ingsw.Server.Model.Cards.Deck;
-import it.polimi.ingsw.Server.Model.Cards.ResourceCard;
 
 /**
  * collection of cards that can be drawn,
@@ -30,15 +29,21 @@ public class DrawableCards {
      * when a face up card is drawn it is replaced by the face down card after it has been flipped
      * when the face down card is drawn or moved it is replaced my a card from the deck
      */
-    private final ResourceCard[] drawableCards=new ResourceCard[3];
+    private final String[] drawableCards=new String[3];
 
     /**
      *
-     * @param deck from which the drawableCards come from,
-     *             can't change during game
+     * @param deck from which the drawableCards come from, takes the first three cards from deck and inserts them in the array of drawable cards
+     *
      */
-    public DrawableCards(Deck deck) {
+    public DrawableCards(Deck deck) throws IllegalArgumentException{
+        if(deck==null||!deck.hasNext()){
+            throw new IllegalArgumentException("DrawableCards can't be initialized with empty deck");
+        }
         this.deck = deck;
+        for(int i=0; i<drawableCards.length; i++){
+            drawableCards[i]=this.deck.next();
+        }
     }
 
     /**
@@ -48,13 +53,12 @@ public class DrawableCards {
      * @param cardIndex index of the card that is being drawn, must be < 3
      * @return drawable card at the index that is in input
      */
-    public ResourceCard drawCard(int cardIndex) throws IllegalArgumentException{
+    public String drawCard(int cardIndex) throws IllegalArgumentException{
         if(cardIndex<0 || cardIndex>2){
             throw new IllegalArgumentException(cardIndex+" is not a valid index of card in drawing section");
         }
-        ResourceCard cardBeingDrawn=drawableCards[cardIndex];
+        String cardBeingDrawn=drawableCards[cardIndex];
         if(cardIndex!=0) {
-            drawableCards[0].flipCard();
             drawableCards[cardIndex] = drawableCards[0];
         }
         drawableCards[0]=deck.next();

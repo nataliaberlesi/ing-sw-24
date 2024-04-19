@@ -1,7 +1,6 @@
 package it.polimi.ingsw.Server.Model.Cards;
 
-import it.polimi.ingsw.Server.Model.Cards.Objectives.PointsCardObjective;
-import it.polimi.ingsw.Server.Model.Symbol;
+
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -24,9 +23,7 @@ class DeckTest {
      */
     @Test
     void hasNextDeckWithCardsReturnTrue(){
-        Symbol[] frontCornerSymbols ={Symbol.BLANK, Symbol.BUTTERFLY,Symbol.INK,Symbol.MUSHROOM};
-        ResourceCard exampleCard=new ResourceCard("0",Symbol.WOLF,frontCornerSymbols,new PointsCardObjective(2));
-        Deck deck=new Deck(new ArrayList<>(Collections.singletonList(exampleCard)));
+        Deck deck=new Deck(new ArrayList<>(Collections.singletonList("BB3")));
         assertTrue(deck.hasNext());
     }
 }

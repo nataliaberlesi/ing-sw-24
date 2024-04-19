@@ -1,119 +1,57 @@
 package it.polimi.ingsw.Server.Model;
 
-import it.polimi.ingsw.Server.Model.Cards.GoldCard;
 import it.polimi.ingsw.Server.Model.Cards.Objectives.*;
-import it.polimi.ingsw.Server.Model.Cards.ResourceCard;
-import it.polimi.ingsw.Server.Model.Cards.StartingCard;
-import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 class BoardTest {
 
-    private static final ArrayList<Symbol> frontCenterSymbols=new ArrayList<>(Arrays.asList(Symbol.MUSHROOM,Symbol.WOLF));
-    private static final Symbol[] startingCardBackCorners={Symbol.MUSHROOM,Symbol.WOLF,Symbol.LEAF,Symbol.BUTTERFLY};
-    private static final CardObjective onePoint= new PointsCardObjective(1);
-    private static final CardObjective featherPoints= new SymbolObjective(Symbol.FEATHER);
-    private static final Symbol[] frontCorners={Symbol.WOLF, Symbol.FULL, Symbol.MUSHROOM, Symbol.BLANK};
-    private static final Symbol[] frontCornersWithFeather={Symbol.WOLF, Symbol.FEATHER, Symbol.MUSHROOM, Symbol.BLANK};
-    //private static final ResourceCard rc=new ResourceCard("1",Symbol.WOLF,frontCorners,zeroPoints);
-    //private static final StartingCard sc=new StartingCard("0",frontCorners,startingCardBackCorners,frontCenterSymbols);
-    //private static final ResourceCard gc=new GoldCard("2",Symbol.WOLF,frontCorners,zeroPoints,frontCenterSymbols);
-
-
-    @Test
-    void placingStartingCardAndCalculatingPointsReturnsZero(){
-        Board board=makeBoard();
-        assertEquals(0, board.getScore());
-    }
-
-    @Test
-    void placingResourceCardinLegalPositionReturnsTrue(){
-        Board board=makeBoard();
-        assertTrue(board.placeCard(makeResourceCard(),new Coordinates(1,-1)));
-    }
-    @Test
-    void placingResourceCardAndCalculatingPointsReturnsOne(){
-        Board board=makeBoard();
-        ResourceCard rc=makeResourceCard();
-        rc.flipCard();
-        board.placeCard(rc,new Coordinates(1,-1));
-        assertEquals(1, board.getScore());
-    }
-
-    @Test
-    void placingResourceCardAndThenGoldCardReturnsTrue(){
-        Board board=makeBoard();
-        ResourceCard rc=makeResourceCard();
-        ResourceCard gc=makeGoldCard();
-        gc.flipCard();
-        rc.flipCard();
-        board.placeCard(rc,new Coordinates(1,-1));
-        assertTrue(board.placeCard(gc,new Coordinates(2,0)));
-    }
-    @Test
-    void placingResourceCardAndThenGoldCardAndCalculatePointsReturnsOne(){
-        Board board=makeBoard();
-        ResourceCard rc=makeResourceCard();
-        ResourceCard gc=makeGoldCard();
-        gc.flipCard();
-        rc.flipCard();
-        board.placeCard(rc,new Coordinates(1,-1));
-        board.placeCard(gc,new Coordinates(2,0));
-        assertEquals(1, board.getScore());
-    }
-
-    @Test
-    void placingCardInIllegalPositionReturnsFalse(){
-        Board board=makeBoard();
-        assertFalse(board.placeCard(makeResourceCard(),new Coordinates(-1,1)));
-    }
-
-    @Test
-    void insufficientVisibleSymbolsWhenPlacingGoldCardReturnsFalse(){
-        Board board=makeBoard();
-        ArrayList<Symbol> butterflyPrerequisites=new ArrayList<>(List.of(Symbol.BUTTERFLY));
-        ResourceCard gdb=new GoldCard("3", Symbol.WOLF, frontCorners, onePoint, butterflyPrerequisites);
-        gdb.flipCard();
-        assertFalse(board.placeCard(gdb, new Coordinates(1,-1)));
-    }
-
-    @Test
-    void diagonalBluePatternWithFeatherAndMushroomReturnsSeven(){
-        Board board=makeBoard();
-        ResourceCard rcf=new ResourceCard("5",Symbol.WOLF,frontCornersWithFeather,onePoint);
-        ResourceCard rc=makeResourceCard();
-        ResourceCard gc=makeGoldCard();
-        rcf.flipCard();
-        gc.flipCard();
-        rc.flipCard();
-        board.placeCard(rcf,new Coordinates(1,-1));
-        board.placeCard(gc,new Coordinates(2,0));
-        board.placeCard(rc,new Coordinates(3,1));
-        board.calculateObjectivePoints();
-        assertEquals(7, board.getScore());
-    }
-
-    private Board makeBoard(){
-        StartingCard sc=new StartingCard("0",frontCorners,startingCardBackCorners,frontCenterSymbols);
-        sc.flipCard();
-        Board board= new Board(sc);
-        Objective[] boardObjectives={new VerticalPatternObjective(Symbol.MUSHROOM),new DiagonalPatternObjective(Symbol.WOLF),new SymbolObjective(Symbol.MUSHROOM)};
-        for(Objective o: boardObjectives){
-            board.addObjective(o);
+    private static final boolean facingDown=false;
+    private static final boolean facingUp=true;
+    private Board board;
+    @BeforeEach
+    void setUp(){
+        board=new Board("S4",facingUp);
+        Objective[] objectives=new Objective[]{new SymbolObjective(Symbol.BUTTERFLY), new DiagonalPatternObjective(Symbol.WOLF), new VerticalPatternObjective(Symbol.BUTTERFLY)};
+        for(Objective objective:objectives){
+            board.addObjective(objective);
         }
-        return board;
+        board.placeCard("RP3", new Coordinates(1,1), facingDown);
+        board.placeCard("RR1", new Coordinates(0,2), facingDown);
+        board.placeCard("GP9", new Coordinates(1,3), facingDown);
+        board.placeCard("RB6", new Coordinates(0,4), facingDown);
+    }
+
+    @Test
+    void placingAllFaceDownCardsReturnsZeroPoints(){
+        assertEquals(0,board.getScore());
+    }
+
+    @Test
+    void oneVerticalPatternAndOneThreOfAKindReturnsFivePoints(){
+        assertEquals(5,board.getFinalScore());
+    }
+
+    @Test
+    void placingCardInLegalPositionReturnsTrue(){
+        assertTrue(board.placeCard("RG3",new Coordinates(2,2),facingUp));
+    }
+
+    @Test
+    void placingEightDiagonalPurpleCardsAndHavingTenVisibleButterfliesReturnsAndOneVerticalPatternReturnsNine(){
+        board.placeCard("RB0",new Coordinates(2,2),facingDown);
+        board.placeCard("RB1",new Coordinates(3,3),facingDown);
+        board.placeCard("RB2",new Coordinates(4,4),facingDown);
+        board.placeCard("GB3",new Coordinates(5,5),facingDown);
+        board.placeCard("GB6",new Coordinates(6,6),facingDown);
+        board.placeCard("GB0",new Coordinates(7,7),facingDown);
+        board.placeCard("RB9",new Coordinates(8,8),facingDown);
+        board.placeCard("RB9",new Coordinates(9,9),facingDown);
+        assertEquals(9,board.getFinalScore());
     }
 
 
-    private ResourceCard makeResourceCard(){
-        return new ResourceCard("1",Symbol.WOLF,frontCorners,onePoint);
-    }
 
-    private ResourceCard makeGoldCard(){
-        return new GoldCard("2",Symbol.WOLF,frontCorners,featherPoints,frontCenterSymbols);
-    }
 }
