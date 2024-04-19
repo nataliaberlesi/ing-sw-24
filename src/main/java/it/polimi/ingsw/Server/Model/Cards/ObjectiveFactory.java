@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.function.Supplier;
 
 /**
- * makes objective IDs and also objective corrisponding to a specific ID
+ * makes objective IDs and also objective corresponding to a specific ID
  */
 public class ObjectiveFactory {
 
