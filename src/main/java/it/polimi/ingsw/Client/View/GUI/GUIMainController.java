@@ -15,6 +15,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Class representing the gui view, and acting as main controller for JavaFX application.
+ */
+
 public class GUIMainController extends View implements Initializable{
 
     /**
@@ -46,6 +50,7 @@ public class GUIMainController extends View implements Initializable{
      */
     @FXML
     private Label playersNumberLabel;
+
     public GUIMainController(Stage stage) {
         this.stage = stage;
         this.pionColorChoice = new ChoiceBox<>();
@@ -111,7 +116,9 @@ public class GUIMainController extends View implements Initializable{
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         pionColorChoice.getItems().addAll(View.AVAILABLE_PION_COLORS.values());
-        playersNumberChoice.getItems().addAll(MIN_PLAYERS_NUMBER, MAX_PLAYERS_NUMBER);
+        playersNumberChoice.getItems().addAll(2,3,4);
     }
+
+
 
 }

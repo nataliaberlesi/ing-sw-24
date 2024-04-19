@@ -17,17 +17,9 @@ public abstract class View {
      * Regex for valid usernames.
      */
     protected static final String USERNAME_REGEX = "^\\w{4,16}$";
+
     /**
-     * Minimum number of players.
-     */
-    protected static final int MIN_PLAYERS_NUMBER = 2;
-    /**
-     * Maximum number of players.
-     */
-    protected static final int MAX_PLAYERS_NUMBER = 4;
-    /**
-     * Flag for first player
-     */
+     * Flag for first player*/
     protected boolean firstPlayer = false;
     /**
      * Chosen number of players for the game.
