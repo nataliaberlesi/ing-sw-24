@@ -2,11 +2,15 @@ package it.polimi.ingsw.Server.Model.Cards;
 
 public class DeckFactory {
 
-    public static Deck createGoldDeck(){
-        return new Deck(GoldCardFactory.makeEveryGoldCardID());
+    public static Deck createShuffledGoldDeck(){
+        Deck deck=new Deck(GoldCardFactory.makeEveryGoldCardID());
+        deck.shuffle();
+        return deck;
     }
 
-    public static Deck createResourceDeck(){
-        return new Deck(ResourceCardFactory.makeEveryResourceCardID());
+    public static Deck createShuffledResourceDeck(){
+        Deck deck=new Deck(ResourceCardFactory.makeEveryResourceCardID());
+        deck.shuffle();
+        return deck;
     }
 }

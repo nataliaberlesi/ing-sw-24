@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Server.Model;
 
 import it.polimi.ingsw.Server.Model.Cards.Deck;
+import it.polimi.ingsw.Server.Model.Cards.DeckFactory;
 import it.polimi.ingsw.Server.Model.Cards.GoldCardFactory;
 import it.polimi.ingsw.Server.Model.Cards.ResourceCardFactory;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,13 +36,17 @@ class DrawableCardsTest {
     @Test
     void goldDrawableCardsHaveAllOfTheCards(){
         ArrayList<String> allGoldCards=GoldCardFactory.makeEveryGoldCardID();
-        assertTrue(checkEveryCard(allGoldCards,goldDrawableCards));
+        Deck shuffledGoldDeck=DeckFactory.createShuffledGoldDeck();
+        DrawableCards drawableCards=new DrawableCards(shuffledGoldDeck);
+        assertTrue(checkEveryCard(allGoldCards,drawableCards));
     }
 
     @Test
     void resourceDrawableCardsHaveAllOfTheCards(){
         ArrayList<String> allResourceCards=ResourceCardFactory.makeEveryResourceCardID();
-        assertTrue(checkEveryCard(allResourceCards,resourceDrawableCards));
+        Deck shuffledResourceDeck= DeckFactory.createShuffledResourceDeck();
+        DrawableCards drawableCards=new DrawableCards(shuffledResourceDeck);
+        assertTrue(checkEveryCard(allResourceCards,drawableCards));
     }
 
     private boolean checkEveryCard(ArrayList<String> cards, DrawableCards drawableCards){
