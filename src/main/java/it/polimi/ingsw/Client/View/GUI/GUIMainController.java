@@ -81,7 +81,7 @@ public class GUIMainController extends View implements Initializable{
     private void switchToCreate() throws IOException {
         this.pionColor = null;
         this.createMode = true;
-        switchScene("/it/polimi/ingsw/Client.View.GUI/startMenu.fxml");
+        switchScene("startMenu.fxml");
     }
 
     /**
@@ -91,7 +91,7 @@ public class GUIMainController extends View implements Initializable{
     private void switchToJoin() throws IOException {
         this.pionColor = null;
         this.createMode = false;
-        this.switchScene("/it/polimi/ingsw/Client.View.GUI/startMenu.fxml");
+        this.switchScene("startMenu.fxml");
         this.playersNumberLabel.setVisible(false);
         this.playersNumberChoice.setVisible(false);
     }
