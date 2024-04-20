@@ -33,6 +33,17 @@ public class MessageHandler {
      * handle a message
      * @param message
      */
+    public void handle(Message message, String type, String method) throws MessageHandlerException {
+        if(message.getMethod().equals(method) && message.getType().equals(type)) {
+            handle(message);
+        } else {
+            throw new MessageHandlerException("Wrong message");
+        }
+    }
+    /**
+     * handle a message
+     * @param message
+     */
     public void handle(Message message) throws MessageHandlerException {
         String type= message.getType();
         String method= message.getMethod();
@@ -83,16 +94,6 @@ public class MessageHandler {
         if(!(params.get(0) instanceof String)||!(params.get(1) instanceof Integer || !(params.get(2) instanceof Integer) || !(params.get(3) instanceof Boolean))) {
             throw new MessageHandlerException("Wrong parameters exception");
         };
-    }
-
-    public class MessageHandlerException extends RuntimeException {
-        public MessageHandlerException(String string) {
-            super(string);
-        }
-
-        public MessageHandlerException(String string, Exception cause) {
-            super(string, cause);
-        }
     }
 
 }
