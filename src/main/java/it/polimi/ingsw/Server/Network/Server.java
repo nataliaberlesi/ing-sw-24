@@ -45,7 +45,8 @@ public class Server {
      * Waits for the master player to connect and add it to the connections
      * @throws IOException
      */
-    private void waitMaster() throws IOException {this.connections=new ArrayList<PlayerConnection>();
+    private void waitMaster() throws IOException {
+        this.connections=new ArrayList<PlayerConnection>();
         PlayerConnection master=connectPlayer(true);
         this.connections.add(master);
     }
@@ -55,6 +56,7 @@ public class Server {
      * @throws IOException
      */
     public void waitPlayer() throws IOException {
+        openServerSocket();
         PlayerConnection player=connectPlayer(false);
         this.connections.add(player);
     }
@@ -67,6 +69,7 @@ public class Server {
      */
     private PlayerConnection connectPlayer(boolean isMaster) throws IOException {
         Socket Socket=serverSocket.accept();
+        closeServerSocket();
         return new PlayerConnection(Socket, isMaster);
     }
 
