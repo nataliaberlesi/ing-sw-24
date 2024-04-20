@@ -13,7 +13,7 @@ public class Server {
     /**
      * The server socket that listens for connections
      */
-    private final ServerSocket serverSocket;
+    private ServerSocket serverSocket;
 
     /**
      * The active connections inside the server
@@ -27,11 +27,18 @@ public class Server {
      */
     public Server(int port) throws IOException {
         this.port = port;
-        this.serverSocket = new ServerSocket(port);
+        openServerSocket();
         waitMaster();
     }
     public ArrayList<PlayerConnection> getConnections() {
         return connections;
+    }
+
+    public void openServerSocket() throws IOException {
+        this.serverSocket=new ServerSocket(this.port);
+    }
+    public void closeServerSocket() throws IOException {
+        serverSocket.close();
     }
 
     /**
