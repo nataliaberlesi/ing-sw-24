@@ -17,17 +17,36 @@ public class Message {
      */
     private ArrayList<Object> params;
 
+    /**
+     * creates a message from an arraylist of parameters
+     * @param type
+     * @param method
+     * @param params
+     */
     public Message(String type, String method, ArrayList<Object> params) {
         this.type = type;
         this.method = method;
         this.params = params;
     }
+
+    /**
+     * creates a message with empty parameters
+     * @param type
+     * @param method
+     */
     public Message(String type, String method) {
         this.type = type;
         this.method = method;
         this.params=new ArrayList<Object>();
     }
-    public Message(String type, String method, String...params) {
+
+    /**
+     * creates a message with a variable amount of parameters
+     * @param type
+     * @param method
+     * @param params
+     */
+    public Message(String type, String method, Object...params) {
         this.type=type;
         this.method=method;
         this.params=new ArrayList<Object>();
