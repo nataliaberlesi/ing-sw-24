@@ -2,6 +2,8 @@ package it.polimi.ingsw.Server.Network;
 
 
 import com.google.gson.Gson;
+import it.polimi.ingsw.Server.Network.Message;
+import it.polimi.ingsw.Server.Network.Parser;
 import it.polimi.ingsw.Server.Model.Player;
 
 import java.io.*;
@@ -20,6 +22,7 @@ public class PlayerConnection{
      * The player instance in the model
      */
     private Player player;
+    private Parser parser;
     private BufferedReader inSocket;
     private PrintWriter outSocket;
 
@@ -42,23 +45,24 @@ public class PlayerConnection{
     private void setUpIO() throws IOException {
         inSocket=new BufferedReader(new InputStreamReader(socket.getInputStream()));
         outSocket=new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())),true);
+        parser= Parser.getInstance();
     }
 
     /**
-     * Sends a Message into the output channel
+     * Sends a Message into outSocket
      * @param message Is the Message to be sent
      */
     public void send(Message message) {
-        outSocket.println(new Gson().toJson(message)); //converts a Message into a json string
+        outSocket.println(parser.toString(message)); //parses a Message into a json string
     }
 
     /**
-     * Waits for a Message to be received
+     * Waits for a String to be received and parses it into a Message
      * @return The Message received
      * @throws IOException
      */
     public Message receive() throws IOException {
-        return new Gson().fromJson(inSocket.readLine(), Message.class); //converts a json String into a Message
+        return parser.toMessage(inSocket.readLine());
     }
     public Player getPlayer() {
         return player;
