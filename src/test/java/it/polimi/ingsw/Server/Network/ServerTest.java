@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Server.Network;
 
-import it.polimi.ingsw.Client.Network.Client;
+import it.polimi.ingsw.Client.Network.NetworkManager;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -24,13 +24,13 @@ class ServerTest {
         assertTrue(ts.getServer().getConnections().get(0).isMaster);
     }
     static class ThreadClient implements Runnable {
-        Client client;
-        public Client getClient() {
-            return client;
+        NetworkManager networkManager;
+        public NetworkManager getClient() {
+            return networkManager;
         }
         public void run() {
             try {
-                this.client=new Client("localhost",1000);
+                this.networkManager =new NetworkManager("localhost",1000);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
