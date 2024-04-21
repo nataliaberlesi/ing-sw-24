@@ -1,11 +1,14 @@
 package it.polimi.ingsw.Client.View.GUI;
 
+import it.polimi.ingsw.Client.Network.Gateway;
+import it.polimi.ingsw.Client.Network.NetworkManager;
 import it.polimi.ingsw.Client.View.View;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -16,10 +19,25 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 /**
- * Class representing the gui view, and acting as main controller for JavaFX application.
+ * Class representing the gui view and acting as main controller for JavaFX application.
  */
 
 public class GUIMainController extends View implements Initializable{
+
+    /**
+     * Gateway instance for communicating with server
+     * */
+    private final Gateway gateway;
+
+    /**
+     * Network Manager instance for gateway constructor
+     * */
+    private NetworkManager networkManager;
+
+    /**
+     * Alert dialog for errors.
+     */
+    private final Alert errorAlert;
 
     /**
      * Main application stage.
@@ -55,6 +73,12 @@ public class GUIMainController extends View implements Initializable{
         this.stage = stage;
         this.pionColorChoice = new ChoiceBox<>();
         this.playersNumberChoice = new ChoiceBox<>();
+        this.errorAlert = new Alert(Alert.AlertType.ERROR);
+        try { this.networkManager = new NetworkManager("localhost", 80600);
+                } catch (IOException e){
+                this.showErrorAlert("Unable to connect to server", "Server is currently unavailable, try again soon");
+                }
+        this.gateway = new Gateway(networkManager);
     }
 
     /**
@@ -63,23 +87,36 @@ public class GUIMainController extends View implements Initializable{
      * @param resourceName fxml file resource to load
      */
 
-    private void switchScene(String resourceName) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(resourceName));
-        fxmlLoader.setController(this);
-        Parent root = fxmlLoader.load();
-        Scene scene = new Scene(root);
-        this.stage.setScene(scene);
-        this.stage.sizeToScene();
-        this.stage.hide();
-        this.stage.show();
+    private void switchScene(String resourceName) {
+        try {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(resourceName));
+            fxmlLoader.setController(this);
+            Parent root = fxmlLoader.load();
+            Scene scene = new Scene(root);
+            this.stage.setScene(scene);
+            this.stage.show();
+        } catch (IOException e){
+            throw new ViewException(e.getMessage(), e);
+        }
     }
+
+    /** Connects player to create or join mode based on server response of master status of player trying to connect
+     * */
+
+    @FXML
+    private void connectPlayer() throws IOException{
+        if (gateway.masterStatus()){
+            switchToCreate();
+        }
+        else switchToJoin();
+    }
+
 
     /**
      * Show game create menu event.
      */
-    @FXML
-    private void switchToCreate() throws IOException {
-        this.pionColor = null;
+
+    private void switchToCreate() {
         this.createMode = true;
         switchScene("startMenu.fxml");
     }
@@ -87,9 +124,8 @@ public class GUIMainController extends View implements Initializable{
     /**
      * Show game join menu event.
      */
-    @FXML
-    private void switchToJoin() throws IOException {
-        this.pionColor = null;
+
+    private void switchToJoin() {
         this.createMode = false;
         this.switchScene("startMenu.fxml");
         this.playersNumberLabel.setVisible(false);
@@ -97,14 +133,14 @@ public class GUIMainController extends View implements Initializable{
     }
 
     /**
-     * Confirm create/join event, WIP
+     * Confirm create/join event
      */
     @FXML
     private void confirmCreateJoin() {
-//        if (this.createMode)
-//            this.createGame();
-//        else
-//            this.joinGame();
+        if (this.createMode)
+            this.createGame();
+        else
+            this.joinGame();
     }
 
     /**
@@ -119,6 +155,24 @@ public class GUIMainController extends View implements Initializable{
         playersNumberChoice.getItems().addAll(2,3,4);
     }
 
+    /**
+     * Show error alert message.
+     *
+     * @param header  header text
+     * @param content content text
+     */
+    private void showErrorAlert(String header, String content) {
+        this.errorAlert.setHeaderText(header);
+        this.errorAlert.setContentText(content);
+        this.errorAlert.showAndWait();
+    }
 
+    private void createGame(){
+
+    }
+
+    private void joinGame(){
+
+    }
 
 }

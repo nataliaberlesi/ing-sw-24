@@ -2,9 +2,13 @@ package it.polimi.ingsw.Client.Network;
 
 import java.io.IOException;
 
+/**
+ * Gateway of communication between client and server to call methods on Model
+ * */
 public class Gateway {
     private final Dispatcher dispatcher;
     private final Receiver receiver;
+
     public Gateway(NetworkManager networkManager) {
         this.dispatcher=new Dispatcher(networkManager);
         this.receiver=new Receiver(networkManager);

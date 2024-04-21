@@ -11,7 +11,7 @@
                 <Image url="@Images/initialScreen.png" />
             </image>
         </ImageView>
-        <ImageView fitHeight="96.0" fitWidth="250.0" layoutX="282.0" layoutY="555.0" onMouseClicked="#switchToCreate" opacity="0.0" pickOnBounds="true" preserveRatio="true" />
-        <ImageView fitHeight="96.0" fitWidth="250.0" layoutX="880.0" layoutY="555.0" onMouseClicked="#switchToJoin" opacity="0.0" pickOnBounds="true" preserveRatio="true" />
+
+        <ImageView fitHeight="96.0" fitWidth="250.0" layoutX="880.0" layoutY="555.0" onMouseClicked="#connectPlayer" opacity="0.0" pickOnBounds="true" preserveRatio="true" />
     </children>
 </AnchorPane>

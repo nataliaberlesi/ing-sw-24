@@ -34,4 +34,28 @@ public abstract class View {
      */
     protected String pionColor;
 
+    /**
+     * Runtime exception for errors within any view class.
+     */
+    public static class ViewException extends RuntimeException {
+        /**
+         * ViewException constructor with message.
+         *
+         * @param message message to be shown
+         */
+        public ViewException(String message) {
+            super(message);
+        }
+
+        /**
+         * ViewException constructor with message and cause.
+         *
+         * @param message message to be shown
+         * @param cause   cause of the exception
+         */
+        public ViewException(String message, Throwable cause) {
+            super(message, cause);
+        }
+    }
+
 }
