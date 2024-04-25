@@ -29,5 +29,20 @@ public class Receiver {
         messageHandler.handle(receivedmessage);
         return (Boolean)receivedmessage.getParams().get(0);
     }
+    public boolean createGame() throws IOException, MessageHandlerException{
+        Message receivedmessage=networkManager.receive();
+        messageHandler.handle(receivedmessage);
+        return (Boolean)receivedmessage.getParams().getFirst();
+    }
+    public boolean joinGame() throws IOException, MessageHandlerException{
+        Message receivedmessage=networkManager.receive();
+        messageHandler.handle(receivedmessage);
+        return (Boolean)receivedmessage.getParams().getFirst();
+    }
+    public boolean checkWaitForStart() throws IOException, MessageHandlerException{
+        Message receivedmessage=networkManager.receive();
+        messageHandler.handle(receivedmessage);
+        return (Boolean)receivedmessage.getParams().getFirst();
+    }
 
 }

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Client.View.GUI;
 
 import it.polimi.ingsw.Client.Network.Gateway;
+import it.polimi.ingsw.Client.Network.MessageHandlerException;
 import it.polimi.ingsw.Client.Network.NetworkManager;
 import it.polimi.ingsw.Client.View.View;
 import javafx.fxml.FXML;
@@ -27,12 +28,14 @@ public class GUIMainController extends View implements Initializable{
     /**
      * Gateway instance for communicating with server
      * */
-    private final Gateway gateway;
+    private Gateway gateway;
 
     /**
      * Network Manager instance for gateway constructor
      * */
     private NetworkManager networkManager;
+
+    private GUISecondaryController guiSecondaryController;
 
     /**
      * Alert dialog for errors.
@@ -74,11 +77,7 @@ public class GUIMainController extends View implements Initializable{
         this.pionColorChoice = new ChoiceBox<>();
         this.playersNumberChoice = new ChoiceBox<>();
         this.errorAlert = new Alert(Alert.AlertType.ERROR);
-        try { this.networkManager = new NetworkManager("localhost", 80600);
-                } catch (IOException e){
-                this.showErrorAlert("Unable to connect to server", "Server is currently unavailable, try again soon");
-                }
-        this.gateway = new Gateway(networkManager);
+
     }
 
     /**
@@ -100,17 +99,22 @@ public class GUIMainController extends View implements Initializable{
         }
     }
 
-    /** Connects player to create or join mode based on server response of master status of player trying to connect
+    /** Connects player to create or join mode based on server response indicating the master status of the player trying to connect
      * */
 
     @FXML
     private void connectPlayer() throws IOException{
+        try {
+            this.networkManager = new NetworkManager("localhost", 80600);
+        } catch (IOException e){
+            this.showErrorAlert("Unable to connect to server", "Server is currently unavailable, please try again soon");
+        }
+        this.gateway = new Gateway(networkManager);
         if (gateway.masterStatus()){
             switchToCreate();
         }
         else switchToJoin();
     }
-
 
     /**
      * Show game create menu event.
@@ -167,12 +171,84 @@ public class GUIMainController extends View implements Initializable{
         this.errorAlert.showAndWait();
     }
 
-    private void createGame(){
+    /**
+     * Send master player's information to server to create game in server
+     * */
+    @Override
+    protected void createGame(){
+        if (playerGivesCorrectInformation(this.createMode)) {
+            this.playersNumber = this.playersNumberChoice.getValue();
+            this.username = this.usernameField.getCharacters().toString();
+            boolean isAbleToCreateGame;
+            try {
+                isAbleToCreateGame = this.gateway.createGame(this.playersNumber, this.username);
+                if (isAbleToCreateGame) {
+                    waitForStart();
+                }
+            } catch (IOException e) {
+                throw new MessageHandlerException("Unable to create game", e);
+            }
+
+        }
+
+    }
+    /**
+     * Send player's information to server to join a player to an existing game
+     * */
+    @Override
+    protected void joinGame(){
+        if (playerGivesCorrectInformation(this.createMode)) {
+            this.username = this.usernameField.getCharacters().toString();
+
+            boolean isAbleToJoinGame;
+            try {
+                isAbleToJoinGame = this.gateway.joinGame(this.username);
+                if (isAbleToJoinGame) {
+                    waitForStart();
+                }
+            } catch (IOException e) {
+                throw new MessageHandlerException("Unable to join game", e);
+            }
+        }
+    }
+
+    /** Checks if the information provided by the player is correct
+     * @param createMode create vs join flag
+     * */
+
+    private boolean playerGivesCorrectInformation(boolean createMode){
+        if (!View.correctUsername(usernameField.getCharacters().toString())){
+            this.showErrorAlert("Invalid username", "Username must contain between 4 and 16 alphanumeric characters");
+            return false;
+        }
+        if (createMode){
+            if (this.usernameField.getCharacters() == null || this.playersNumberChoice.getValue() == null){
+                this.showErrorAlert("Empty field", "Please provide all required information");
+                return false;
+            }
+        }
+        else {
+            if (this.usernameField.getCharacters() == null){
+                this.showErrorAlert("Empty field", "Please provide all required information");
+                return false;
+            }
+        }
+        return true;
 
     }
 
-    private void joinGame(){
-
+    /**
+     * Waits for positive server response to be able to create the secondary controller and display the starting view.
+     * In the meantime shows user a loading screen.
+     * */
+    @Override
+    protected void waitForStart() throws IOException {
+        switchScene("loading.fxml");
+        if (!gateway.checkWaitForStart()){
+            waitForStart();
+        }
+        guiSecondaryController = new GUISecondaryController(gateway);
+        guiSecondaryController.displayStartingView();
     }
 
 }

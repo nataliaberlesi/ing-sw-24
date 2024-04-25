@@ -25,12 +25,26 @@ public class Dispatcher {
 
     /**
      * Sends to Server the request to draw a card
-     * @param cardindex
+     * @param cardIndex
      * @param drawingSection
      * @throws IOException
      */
-    public void drawCard(int cardindex, String drawingSection) throws IOException {
-        Message message=new Message("GAME","drawCard",cardindex,drawingSection);
+    public void drawCard(int cardIndex, String drawingSection) throws IOException {
+        Message message=new Message("GAME","drawCard",cardIndex,drawingSection);
+        networkManager.send(message);
+    }
+
+    public void createGame(int playersNumber, String masterUsername) throws IOException{
+        Message message = new Message("SYSTEM","createGame", playersNumber, masterUsername);
+        networkManager.send(message);
+    }
+
+    public void joinGame(String playerUsername) throws IOException{
+        Message message = new Message("SYSTEM","joinGame", playerUsername);
+        networkManager.send(message);
+    }
+    public void checkWaitForStart() throws IOException {
+        Message message = new Message("SYSTEM", "checkWaitForStart");
         networkManager.send(message);
     }
 

@@ -1,6 +1,9 @@
 package it.polimi.ingsw.Client.View;
 
+import java.io.IOException;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public abstract class View {
 
@@ -19,12 +22,9 @@ public abstract class View {
     protected static final String USERNAME_REGEX = "^\\w{4,16}$";
 
     /**
-     * Flag for first player*/
-    protected boolean firstPlayer = false;
-    /**
      * Chosen number of players for the game.
      */
-    protected int numPlayers;
+    protected int playersNumber;
     /**
      * Chosen player username.
      */
@@ -34,9 +34,27 @@ public abstract class View {
      */
     protected String pionColor;
 
+    protected static boolean correctUsername(String username) {
+        Pattern pattern = Pattern.compile(USERNAME_REGEX);
+        Matcher matcher = pattern.matcher(username);
+        return matcher.matches();
+    }
+
+    /**
+     * Method called to create the game.
+     */
+    protected abstract void createGame();
+
+    /**
+     * Method called to join the game.
+     */
+    protected abstract void joinGame();
+
     /**
      * Runtime exception for errors within any view class.
      */
+
+    protected abstract void waitForStart() throws IOException;
     public static class ViewException extends RuntimeException {
         /**
          * ViewException constructor with message.

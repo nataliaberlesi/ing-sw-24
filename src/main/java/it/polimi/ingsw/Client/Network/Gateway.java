@@ -44,4 +44,21 @@ public class Gateway {
     public boolean masterStatus() throws IOException {
         return receiver.masterStatus();
     }
+
+    //TODO: server side -> returns true at the end of the creation of the game for the master player
+    public boolean createGame(int playersNumber, String masterUsername) throws IOException,MessageHandlerException {
+        dispatcher.createGame(playersNumber,masterUsername);
+        return receiver.createGame();
+    }
+    //TODO: server side -> returns true at the end of the creation of the game for additional players
+    public boolean joinGame(String playerUsername) throws IOException {
+        dispatcher.joinGame(playerUsername);
+        return receiver.joinGame();
+    }
+    //TODO: server side -> returns true when all players for the game have been created
+    public boolean checkWaitForStart() throws IOException {
+        dispatcher.checkWaitForStart();
+        return receiver.checkWaitForStart();
+    }
+
 }
