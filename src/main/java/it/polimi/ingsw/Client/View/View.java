@@ -54,7 +54,7 @@ public abstract class View {
      * Runtime exception for errors within any view class.
      */
 
-    protected abstract void waitForStart() throws IOException;
+    protected abstract void waitForStart();
     public static class ViewException extends RuntimeException {
         /**
          * ViewException constructor with message.

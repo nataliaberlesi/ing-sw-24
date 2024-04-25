@@ -60,5 +60,10 @@ public class Gateway {
         dispatcher.checkWaitForStart();
         return receiver.checkWaitForStart();
     }
+    //TODO: server side -> returns true if chosen username for this player is already used by another player
+    public boolean unavailableUsername(String playerUsername) throws IOException {
+        dispatcher.unavailableUsername(playerUsername);
+        return receiver.unavailableUsername();
+    }
 
 }

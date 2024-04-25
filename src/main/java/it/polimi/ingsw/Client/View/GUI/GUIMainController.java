@@ -216,10 +216,17 @@ public class GUIMainController extends View implements Initializable{
      * @param createMode create vs join flag
      * */
 
-    private boolean playerGivesCorrectInformation(boolean createMode){
+    private boolean playerGivesCorrectInformation(boolean createMode) {
         if (!View.correctUsername(usernameField.getCharacters().toString())){
             this.showErrorAlert("Invalid username", "Username must contain between 4 and 16 alphanumeric characters");
             return false;
+        }
+        try {
+            if (gateway.unavailableUsername(usernameField.getCharacters().toString())){
+                this.showErrorAlert("Invalid username", "Username already taken, please select another one");
+            }
+        } catch (IOException e) {
+            throw new MessageHandlerException("Unable to verify availability of username", e);
         }
         if (createMode){
             if (this.usernameField.getCharacters() == null || this.playersNumberChoice.getValue() == null){
@@ -242,13 +249,29 @@ public class GUIMainController extends View implements Initializable{
      * In the meantime shows user a loading screen.
      * */
     @Override
-    protected void waitForStart() throws IOException {
+    protected void waitForStart() {
         switchScene("loading.fxml");
-        if (!gateway.checkWaitForStart()){
+        if (!checkWaitForStart()){
+            try {
+                wait(1000); //wait a second before trying again to not overload server with requests
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
             waitForStart();
         }
         guiSecondaryController = new GUISecondaryController(gateway);
         guiSecondaryController.displayStartingView();
+    }
+
+    /**
+     * Asks server if game can start
+     * */
+    protected boolean checkWaitForStart() {
+        try {
+            return gateway.checkWaitForStart();
+        } catch (IOException e) {
+            throw new MessageHandlerException("Unable to check wait for start ", e);
+        }
     }
 
 }

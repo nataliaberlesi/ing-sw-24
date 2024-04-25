@@ -45,4 +45,10 @@ public class Receiver {
         return (Boolean)receivedmessage.getParams().getFirst();
     }
 
+    public boolean unavailableUsername() throws IOException, MessageHandlerException{
+        Message receivedmessage=networkManager.receive();
+        messageHandler.handle(receivedmessage);
+        return (Boolean)receivedmessage.getParams().getFirst();
+    }
+
 }
