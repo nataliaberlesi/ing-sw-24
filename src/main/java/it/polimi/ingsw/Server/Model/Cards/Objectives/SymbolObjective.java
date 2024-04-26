@@ -85,10 +85,7 @@ public class SymbolObjective implements CardObjective, Objective {
      * @return two points for each set of two or three(depending on symbolOfInterest) visible on the board
      */
     @Override
-    public int calculatePoints(HashMap<Symbol, Integer> symbolCounter) throws RuntimeException{
-        if(SymbolController.isNotBackSymbol(symbolOfInterest)){
-            throw new RuntimeException("a Symbol objective can only use this method at end of game to check for backCorners");
-        }
+    public int calculatePoints(HashMap<Symbol, Integer> symbolCounter) {
         int numberOfVisibleVisibleSymbols=0;
         if(symbolCounter.get(symbolOfInterest)!=null){
             numberOfVisibleVisibleSymbols=symbolCounter.get(symbolOfInterest);
