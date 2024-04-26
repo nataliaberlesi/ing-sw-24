@@ -31,6 +31,20 @@ public class DrawableCards {
      */
     private final String[] drawableCards=new String[3];
 
+
+    /**
+     * method returns cardID of card corresponding ot index, but won't remove card from drawableCards
+     * @param cardIndex is the index of card that will return cardID
+     * @return cardID corresponding to the index
+     * @throws IllegalArgumentException if index greater than 2 or smaller than 0 is passed
+     */
+    public String seeCard(int cardIndex) throws IllegalArgumentException{
+        if(cardIndex<0 || cardIndex>2){
+            throw new IndexOutOfBoundException(cardIndex+" is not a valid index of card in drawing section");
+        }
+        return drawCard(cardIndex);
+    }
+
     /**
      *
      * @param deck from which the drawableCards come from, takes the first three cards from deck and inserts them in the array of drawable cards
@@ -53,9 +67,9 @@ public class DrawableCards {
      * @param cardIndex index of the card that is being drawn, must be < 3
      * @return drawable card at the index that is in input
      */
-    public String drawCard(int cardIndex) throws IllegalArgumentException{
+    public String drawCard(int cardIndex) throws IndexOutOfBoundException{
         if(cardIndex<0 || cardIndex>2){
-            throw new IllegalArgumentException(cardIndex+" is not a valid index of card in drawing section");
+            throw new IndexOutOfBoundException(cardIndex+" is not a valid index of card in drawing section");
         }
         String cardBeingDrawn=drawableCards[cardIndex];
         if(cardIndex!=0) {
@@ -63,6 +77,15 @@ public class DrawableCards {
         }
         drawableCards[0]=deck.next();
         return cardBeingDrawn;
+    }
+
+    /**
+     * Exception thrown when an index smaller than 0 or bigger than 2
+     */
+    public static class IndexOutOfBoundException extends RuntimeException{
+        public IndexOutOfBoundException(String message) {
+            super((message));
+        }
     }
 
 }
