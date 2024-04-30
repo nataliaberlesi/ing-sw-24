@@ -25,7 +25,7 @@ public class Gateway {
      * @throws MessageHandlerException
      */
     public boolean placeCard(String card, int x, int y, boolean isFlipped) throws IOException,MessageHandlerException {
-        dispatcher.placeCard(card,x,y,isFlipped);
+        dispatcher.dispatch("GAME","placeCard",card,x,y,isFlipped);
         return receiver.placeCard();
     }
 
@@ -38,31 +38,37 @@ public class Gateway {
      * @throws MessageHandlerException
      */
     public String drawCard(int cardIndex, String drawingSection) throws IOException,MessageHandlerException {
-        dispatcher.drawCard(cardIndex,drawingSection);
+        dispatcher.dispatch("GAME","drawCard",cardIndex,drawingSection);
         return receiver.drawCard();
     }
+
+    /**
+     * receives the master status
+     * @return
+     * @throws IOException
+     */
     public boolean masterStatus() throws IOException {
         return receiver.masterStatus();
     }
 
     //TODO: server side -> returns true at the end of the creation of the game for the master player
     public boolean createGame(int playersNumber, String masterUsername) throws IOException,MessageHandlerException {
-        dispatcher.createGame(playersNumber,masterUsername);
+        dispatcher.dispatch("SYSTEM","createGame",playersNumber,masterUsername);
         return receiver.createGame();
     }
     //TODO: server side -> returns true at the end of the creation of the game for additional players
     public boolean joinGame(String playerUsername) throws IOException {
-        dispatcher.joinGame(playerUsername);
+        dispatcher.dispatch("SYSTEM","joinGame",playerUsername);
         return receiver.joinGame();
     }
     //TODO: server side -> returns true when all players for the game have been created
     public boolean checkWaitForStart() throws IOException {
-        dispatcher.checkWaitForStart();
+        dispatcher.dispatch("SYSTEM","checkWaitForStart");
         return receiver.checkWaitForStart();
     }
     //TODO: server side -> returns true if chosen username for this player is already used by another player
     public boolean unavailableUsername(String playerUsername) throws IOException {
-        dispatcher.unavailableUsername(playerUsername);
+        dispatcher.dispatch("SYSTEM","unavailableUsername",playerUsername);
         return receiver.unavailableUsername();
     }
 
