@@ -33,7 +33,7 @@ public class MessageHandler {
      * handle a message
      * @param message
      */
-    public void handle(Message message, String type, String method) throws MessageHandlerException {
+    public void handleAndCheck(Message message, String type, String method) throws MessageHandlerException {
         if(message.getMethod().equals(method) && message.getType().equals(type)) {
             handle(message);
         } else {
