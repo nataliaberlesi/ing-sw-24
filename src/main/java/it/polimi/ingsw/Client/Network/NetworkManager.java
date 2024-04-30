@@ -3,18 +3,14 @@ package it.polimi.ingsw.Client.Network;
 import java.io.*;
 import java.net.Socket;
 
-/**
- * Class used for low level client-side communication with server
- * */
 public class NetworkManager {
-
     private PrintWriter outSocket;
     private BufferedReader inSocket;
     private BufferedReader inKeyboard;
     private Socket socket;
     private Parser parser;
-    public NetworkManager(String serverIP , int port) throws IOException {
-        connect(serverIP, port);
+    public NetworkManager(String server , int port) throws IOException {
+        connect(server, port);
         setupIO();
     }
 
