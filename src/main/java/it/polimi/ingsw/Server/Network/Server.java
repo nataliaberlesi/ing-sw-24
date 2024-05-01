@@ -1,9 +1,15 @@
 package it.polimi.ingsw.Server.Network;
 
+import com.google.gson.Gson;
+
 import java.io.IOException;
+import java.io.Reader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class Server {
     /**
@@ -19,7 +25,7 @@ public class Server {
      * The active connections inside the server
      */
     private ArrayList<PlayerConnection> connections;
-
+    private static final String serverSetupAddress = "serverSetupInfo.json";
     /**
      * Creates a server using a custom port, then waits for a master player to connect
      * @param port
@@ -29,6 +35,18 @@ public class Server {
         this.port = port;
         openServerSocket();
         waitMaster();
+    }
+    public Server() throws IOException {
+        this.port=getPortFromSettings();
+        openServerSocket();
+        waitMaster();
+    }
+    private int getPortFromSettings() throws IOException {
+        Gson gson = new Gson();
+        Reader reader = Files.newBufferedReader(Paths.get(serverSetupAddress));
+        Map<String, String> settings = gson.fromJson(reader, Map.class);
+        reader.close();
+        return Integer.parseInt(settings.get("port"));
     }
     public ArrayList<PlayerConnection> getConnections() {
         return connections;
