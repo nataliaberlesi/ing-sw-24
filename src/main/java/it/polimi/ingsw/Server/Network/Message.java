@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Server.Network;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Message {
     /**
@@ -16,10 +17,28 @@ public class Message {
      */
     private ArrayList<Object> params;
 
+    /**
+     * Creates a message from an arraylist of parameters
+     * @param type
+     * @param method
+     * @param params
+     */
     public Message(String type, String method, ArrayList<Object> params) {
         this.type = type;
         this.method = method;
         this.params = params;
+    }
+    /**
+     * creates a message with a variable amount of parameters
+     * @param type
+     * @param method
+     * @param params
+     */
+    public Message(String type, String method, Object...params) {
+        this.type=type;
+        this.method=method;
+        this.params=new ArrayList<Object>();
+        this.params.addAll(Arrays.asList(params));
     }
 
     public String getType() {
@@ -44,5 +63,8 @@ public class Message {
 
     public void setParams(ArrayList<Object> params) {
         this.params = params;
+    }
+    public void addParam(Object param) {
+        params.add(param);
     }
 }
