@@ -1,1 +1,39 @@
-IS24-LB07
+# IS24-LB07
+
+## Implemented Features
+
+| Functionality  | Status |
+| :------------- | :-------------: |
+| MODEL  | :white_check_mark:  |
+| SERVER CONTROLLER  | :stopwatch:  |
+| SERVER NETWORK  | :stopwatch:  |
+| CLIENT NETWORK  | :stopwatch:  |
+| CLIENT CLI  | :no_entry:  |
+| CLIENT GUI  | :stopwatch:  |
+| MULTI MATCH  | :no_entry: |
+| CHAT  | :no_entry:  |
+| PERSISTENCE  | :stopwatch:  |
+
+### Legend
+
+:white_check_mark: Implemented   :stopwatch: Work in Progress   :no_entry: Not implemented
+
+## Tools
+
+| Tool  | Description |
+| :------------- | :------------- |
+| IntelliJ IDEA Ultimate  | IDE  |
+| Visio | UML  |
+| Maven | Dependency Management  |
+| JUnit  | Unit Testing  |
+| JavaFX  | Graphical Library  |
+
+## Team
+
+* Giuliano Croppi - giuliano.croppi@mail.polimi.it
+* Kevin Vallerin - kevin.vallerin@mail.polimi.it
+* Natalia Berlesi de Vasconcellos - natalia.berlesidevasconcellos@mail.polimi.it
+
+## License
+
+[Codex Naturalis](https://www.craniocreations.it/prodotto/codex-naturalis) is property of [Cranio Creations](https://www.craniocreations.it) and all of the copyrighted graphical assets used in this project were supplied by [Politecnico di Milano](https://www.polimi.it) in collaboration with their rights' holders.
