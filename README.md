@@ -4,7 +4,7 @@
 
 | Functionality  | Status |
 | :------------- | :-------------: |
-| MODEL  | :white_check_mark:  |
+| MODEL  | [:white_check_mark:](https://github.com/nataliaberlesi/ing-sw-24/tree/master/src/main/java/it/polimi/ingsw/Server/Model)  |
 | SERVER CONTROLLER  | :stopwatch:  |
 | SERVER NETWORK  | :stopwatch:  |
 | CLIENT NETWORK  | :stopwatch:  |
