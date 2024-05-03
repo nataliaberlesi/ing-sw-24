@@ -17,7 +17,8 @@ public class PlayerConnection{
     /**
      * States if the player has been the first to connect to the server
      */
-    boolean isMaster;
+    private boolean isMaster;
+    private Gateway gateway;
     /**
      * The player instance in the model
      */
@@ -36,8 +37,8 @@ public class PlayerConnection{
         socket=s;
         setUpIO();
         this.isMaster=isMaster;
+        this.gateway=new Gateway(this);
     }
-
     /**
      * Setups input stream and output stream for the socket
      * @throws IOException
@@ -70,6 +71,13 @@ public class PlayerConnection{
 
     public void setPlayer(Player player) {
         this.player = player;
+    }
+
+    public boolean isMaster() {
+        return this.isMaster;
+    }
+    public Gateway getGateway() {
+        return this.gateway;
     }
 }
 
