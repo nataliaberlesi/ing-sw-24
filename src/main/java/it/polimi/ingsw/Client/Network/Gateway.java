@@ -1,17 +1,38 @@
 package it.polimi.ingsw.Client.Network;
 
+import it.polimi.ingsw.Client.Network.MessageHandler;
+
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Gateway of communication between client and server to call methods on Model
  * */
 public class Gateway {
-    private final Dispatcher dispatcher;
-    private final Receiver receiver;
+    private NetworkManager networkManager;
+    private MessageHandler messageHandler;
 
     public Gateway(NetworkManager networkManager) {
-        this.dispatcher=new Dispatcher(networkManager);
-        this.receiver=new Receiver(networkManager);
+        this.networkManager=networkManager;
+    }
+    /**
+     * dispatches a message
+     * @param type
+     * @param method
+     * @param params
+     * @throws IOException
+     */
+    public void dispatch(String type, String method, Object...params) throws IOException{
+        Message message=new Message(type,method);
+        for(Object param: params) {
+            message.addParam(param);
+        }
+        networkManager.send(message);
+    }
+    public ArrayList<Object> receive(String expectedType, String expectedMethod) throws IOException {
+        Message receivedMessage=networkManager.receive();
+        messageHandler.handleAndCheck(receivedMessage,expectedType,expectedMethod);
+        return receivedMessage.getParams();
     }
 
     /**
@@ -25,8 +46,8 @@ public class Gateway {
      * @throws MessageHandlerException
      */
     public boolean placeCard(String card, int x, int y, boolean isFlipped) throws IOException,MessageHandlerException {
-        dispatcher.dispatch("GAME","placeCard",card,x,y,isFlipped);
-        return receiver.placeCard();
+        dispatch("GAME","placeCard",card,x,y,isFlipped);
+        return (Boolean)receive("GAME","placeCard").get(0);
     }
 
     /**
@@ -38,8 +59,8 @@ public class Gateway {
      * @throws MessageHandlerException
      */
     public String drawCard(int cardIndex, String drawingSection) throws IOException,MessageHandlerException {
-        dispatcher.dispatch("GAME","drawCard",cardIndex,drawingSection);
-        return receiver.drawCard();
+        dispatch("GAME","drawCard",cardIndex,drawingSection);
+        return (String)receive("GAME","drawCard").get(0);
     }
 
     /**
@@ -48,28 +69,26 @@ public class Gateway {
      * @throws IOException
      */
     public boolean masterStatus() throws IOException {
-        return receiver.masterStatus();
+        return (Boolean)receive("SYSTEM","masterStatus").getFirst();
     }
 
     //TODO: server side -> returns true at the end of the creation of the game for the master player
-    public boolean createGame(int playersNumber, String masterUsername) throws IOException,MessageHandlerException {
-        dispatcher.dispatch("SYSTEM","createGame",playersNumber,masterUsername);
-        return receiver.createGame();
+    public void createGame(int playersNumber, String masterUsername) throws IOException,MessageHandlerException {
+        dispatch("SYSTEM","createGame",playersNumber,masterUsername);
     }
     //TODO: server side -> returns true at the end of the creation of the game for additional players
-    public boolean joinGame(String playerUsername) throws IOException {
-        dispatcher.dispatch("SYSTEM","joinGame",playerUsername);
-        return receiver.joinGame();
+    public void joinGame(String playerUsername) throws IOException {
+        dispatch("SYSTEM","joinGame",playerUsername);
     }
     //TODO: server side -> returns true when all players for the game have been created
     public boolean checkWaitForStart() throws IOException {
-        dispatcher.dispatch("SYSTEM","checkWaitForStart");
-        return receiver.checkWaitForStart();
+        dispatch("SYSTEM","checkWaitForStart");
+        return (Boolean)receive("SYSTEM","checkWaitForStart").getFirst();
     }
     //TODO: server side -> returns true if chosen username for this player is already used by another player
     public boolean unavailableUsername(String playerUsername) throws IOException {
-        dispatcher.dispatch("SYSTEM","unavailableUsername",playerUsername);
-        return receiver.unavailableUsername();
+        dispatch("SYSTEM","unavailableUsername",playerUsername);
+        return (Boolean)receive("SYSTEM","unavailableUsername").getFirst();
     }
 
 }
