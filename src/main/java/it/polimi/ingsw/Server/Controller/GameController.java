@@ -32,5 +32,7 @@ public class GameController {
     public void setServer(Server server) {
         this.server = server;
     }
+    public void shutDown() {
 
+    }
 }
