@@ -91,4 +91,9 @@ public class Gateway {
         return (Boolean)receive("SYSTEM","unavailableUsername").getFirst();
     }
 
+    public String getInitialCard(String playerUsername) throws IOException {
+        dispatch("SYSTEM", "getInitialCard", playerUsername);
+        return (String) receive("SYSTEM", "getInitialCard").getFirst();
+    }
+
 }
