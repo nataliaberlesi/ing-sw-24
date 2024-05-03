@@ -21,7 +21,7 @@ class ServerTest {
         t1.start();
         new Thread(tc).start();
         t1.join();
-        assertTrue(ts.getServer().getConnections().get(0).isMaster);
+        assertTrue(ts.getServer().getConnections().get(0).isMaster());
     }
     static class ThreadClient implements Runnable {
         NetworkManager networkManager;
