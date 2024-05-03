@@ -7,16 +7,18 @@ import it.polimi.ingsw.Client.View.View;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
@@ -35,8 +37,6 @@ public class GUIMainController extends View implements Initializable{
      * */
     private NetworkManager networkManager;
 
-    private GUISecondaryController guiSecondaryController;
-
     /**
      * Alert dialog for errors.
      */
@@ -46,6 +46,8 @@ public class GUIMainController extends View implements Initializable{
      * Main application stage.
      */
     private final Stage stage;
+
+    private Map<String, Image> tokenImages;
     /**
      * Token color ChoiceBox.
      */
@@ -254,9 +256,9 @@ public class GUIMainController extends View implements Initializable{
             waitForStart();
         }
         else {
-            stage.close();
-            guiSecondaryController = new GUISecondaryController(gateway);
-            guiSecondaryController.displayFirstRoundView();
+            //stage.close();
+            //guiSecondaryController = new GUISecondaryController(gateway, stage);
+            displayFirstRoundView();
         }
     }
 
@@ -268,6 +270,25 @@ public class GUIMainController extends View implements Initializable{
             return gateway.checkWaitForStart();
         } catch (IOException e) {
             throw new MessageHandlerException("Unable to check wait for start ", e);
+        }
+    }
+
+    protected void displayFirstRoundView(){
+
+        this.tokenImages = new HashMap<>();
+        View.AVAILABLE_TOKEN_COLORS.values().forEach(color -> this.tokenImages.put(color,
+                new Image(String.valueOf(GUIMainController.class.getResource(
+                        String.format("Images/Tokens/%sToken.png", color.toLowerCase()))))));
+
+        Parent root = new ScrollPane();
+        Node grid = new GridPane();
+        Scene scene = new Scene(root);
+        this.stage.setScene(scene);
+
+        try {
+            String initialCard = gateway.getInitialCard(this.username);
+        } catch (IOException e) {
+            throw new MessageHandlerException("Unable to get initial card", e);
         }
     }
 }
