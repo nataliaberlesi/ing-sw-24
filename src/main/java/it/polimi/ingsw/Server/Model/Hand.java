@@ -35,11 +35,24 @@ public class Hand {
      * @throws RuntimeException if a card that doesn't exist is being taken from hand
      */
     public String getCardFromHand(int cardIndex) throws RuntimeException{
+        String cardBeingTakenFromHand=showCardInHand(cardIndex);
+        cards[cardIndex]=null;
+        return cardBeingTakenFromHand;
+    }
+
+
+    /**
+     *
+     *
+     * @param cardIndex index of card that will be returned without being removed from hand
+     * @return card corresponding to index
+     * @throws RuntimeException if index given doesn't correspond to existing card
+     */
+    public String showCardInHand(int cardIndex) throws RuntimeException{
         String cardBeingTakenFromHand=cards[cardIndex];
         if(cardBeingTakenFromHand==null){
             throw new RuntimeException("no card in this position in this hand");
         }
-        cards[cardIndex]=null;
         return cardBeingTakenFromHand;
     }
 }
