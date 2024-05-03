@@ -33,12 +33,10 @@ public class Server {
      */
     public Server(int port) throws IOException {
         this.port = port;
-        openServerSocket();
         waitMaster();
     }
     public Server() throws IOException {
         this.port=getPortFromSettings();
-        openServerSocket();
         waitMaster();
     }
     private int getPortFromSettings() throws IOException {
@@ -74,7 +72,6 @@ public class Server {
      * @throws IOException
      */
     public void waitPlayer() throws IOException {
-        openServerSocket();
         PlayerConnection player=connectPlayer(false);
         this.connections.add(player);
     }
@@ -86,6 +83,7 @@ public class Server {
      * @throws IOException
      */
     private PlayerConnection connectPlayer(boolean isMaster) throws IOException {
+        openServerSocket();
         Socket Socket=serverSocket.accept();
         closeServerSocket();
         return new PlayerConnection(Socket, isMaster);
