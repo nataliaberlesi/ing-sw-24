@@ -1,6 +1,5 @@
 package it.polimi.ingsw.Client.View;
 
-import java.io.IOException;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -10,11 +9,13 @@ public abstract class View {
     /**
     * Map of available pion colors.
     */
-    public static final Map<String, String> AVAILABLE_PION_COLORS = Map.of(
-                "y", "YELLOW",
-                "b", "BLUE",
-                "g", "GREEN",
-                "r", "RED");
+    public static final Map<String, String> AVAILABLE_TOKEN_COLORS = Map.of(
+            "B", "BLACK",
+            "b", "BLUE",
+            "g", "GREEN",
+            "r", "RED",
+            "y", "YELLOW"
+        );
 
     /**
      * Regex for valid usernames.
@@ -51,10 +52,13 @@ public abstract class View {
     protected abstract void joinGame();
 
     /**
+     * Method called to wait until all players connect to start the game.
+     * */
+    protected abstract void waitForStart();
+
+    /**
      * Runtime exception for errors within any view class.
      */
-
-    protected abstract void waitForStart();
     public static class ViewException extends RuntimeException {
         /**
          * ViewException constructor with message.

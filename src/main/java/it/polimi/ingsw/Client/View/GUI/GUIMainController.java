@@ -47,10 +47,10 @@ public class GUIMainController extends View implements Initializable{
      */
     private final Stage stage;
     /**
-     * Pion color ChoiceBox.
+     * Token color ChoiceBox.
      */
     @FXML
-    private ChoiceBox<String> pionColorChoice;
+    private ChoiceBox<String> tokenColorChoice;
 
     /**
      * Players number ChoiceBox.
@@ -74,7 +74,7 @@ public class GUIMainController extends View implements Initializable{
 
     public GUIMainController(Stage stage) {
         this.stage = stage;
-        this.pionColorChoice = new ChoiceBox<>();
+        this.tokenColorChoice = new ChoiceBox<>();
         this.playersNumberChoice = new ChoiceBox<>();
         this.errorAlert = new Alert(Alert.AlertType.ERROR);
 
@@ -105,15 +105,16 @@ public class GUIMainController extends View implements Initializable{
     @FXML
     private void connectPlayer() throws IOException{
         try {
-            this.networkManager = new NetworkManager("localhost", 80600);
+            this.networkManager = new NetworkManager("localhost", 8600);
         } catch (IOException e){
             this.showErrorAlert("Unable to connect to server", "Server is currently unavailable, please try again soon");
         }
-        this.gateway = new Gateway(networkManager);
-        if (gateway.masterStatus()){
-            switchToCreate();
+        if (this.networkManager != null) {
+            this.gateway = new Gateway(networkManager);
+            if (gateway.masterStatus()) {
+                switchToCreate();
+            } else switchToJoin();
         }
-        else switchToJoin();
     }
 
     /**
@@ -155,7 +156,7 @@ public class GUIMainController extends View implements Initializable{
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        pionColorChoice.getItems().addAll(View.AVAILABLE_PION_COLORS.values());
+        tokenColorChoice.getItems().addAll(View.AVAILABLE_TOKEN_COLORS.values());
         playersNumberChoice.getItems().addAll(2,3,4);
     }
 
@@ -179,12 +180,9 @@ public class GUIMainController extends View implements Initializable{
         if (playerGivesCorrectInformation(this.createMode)) {
             this.playersNumber = this.playersNumberChoice.getValue();
             this.username = this.usernameField.getCharacters().toString();
-            boolean isAbleToCreateGame;
             try {
-                isAbleToCreateGame = this.gateway.createGame(this.playersNumber, this.username);
-                if (isAbleToCreateGame) {
-                    waitForStart();
-                }
+                this.gateway.createGame(this.playersNumber, this.username);
+                waitForStart();
             } catch (IOException e) {
                 throw new MessageHandlerException("Unable to create game", e);
             }
@@ -199,13 +197,9 @@ public class GUIMainController extends View implements Initializable{
     protected void joinGame(){
         if (playerGivesCorrectInformation(this.createMode)) {
             this.username = this.usernameField.getCharacters().toString();
-
-            boolean isAbleToJoinGame;
             try {
-                isAbleToJoinGame = this.gateway.joinGame(this.username);
-                if (isAbleToJoinGame) {
-                    waitForStart();
-                }
+                this.gateway.joinGame(this.username);
+                waitForStart();
             } catch (IOException e) {
                 throw new MessageHandlerException("Unable to join game", e);
             }
@@ -259,8 +253,11 @@ public class GUIMainController extends View implements Initializable{
             }
             waitForStart();
         }
-        guiSecondaryController = new GUISecondaryController(gateway);
-        guiSecondaryController.displayStartingView();
+        else {
+            stage.close();
+            guiSecondaryController = new GUISecondaryController(gateway);
+            guiSecondaryController.displayFirstRoundView();
+        }
     }
 
     /**
@@ -273,5 +270,4 @@ public class GUIMainController extends View implements Initializable{
             throw new MessageHandlerException("Unable to check wait for start ", e);
         }
     }
-
 }
