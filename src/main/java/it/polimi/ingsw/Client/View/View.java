@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import it.polimi.ingsw.Client.Network.Gateway;
-import it.polimi.ingsw.Client.Network.MessageType;
 
+import it.polimi.ingsw.Client.Network.MessageParser;
+import it.polimi.ingsw.Client.Network.MessageType;
 public abstract class View {
 
     /**
@@ -53,13 +53,16 @@ public abstract class View {
      */
     protected List<String> winners = Collections.emptyList();
 
-    protected final Gateway gateway;
+    protected final MessageParser messageParser;
+
+    protected final MessageDispatcher messageDispatcher;
 
     protected MessageType previousMessageType;
 
-    protected View(Gateway gateway){
-        this.gateway = gateway;
-        this.gateway.setView(this);
+    protected View(MessageParser messageParser, MessageDispatcher messageDispatcher){
+        this.messageParser = messageParser;
+        this.messageDispatcher = messageDispatcher;
+        this.messageParser.setView(this);
     }
 
     /**
@@ -114,7 +117,7 @@ public abstract class View {
      * Update winners after final round.
      */
     protected void checkWinners() {
-        this.winners = this.gateway.getWinners();
+        this.winners = this.messageParser.getWinners();
     }
 
     /**
@@ -132,7 +135,7 @@ public abstract class View {
      */
     protected void continueGame() {
         if (!finalRound) {
-            if (this.gateway.getCurrentPlayer().equals(this.username)) {
+            if (this.messageParser.getCurrentPlayer().equals(this.username)) {
                 this.enableActions();
             } else {
                 this.waitTurn();
@@ -144,7 +147,7 @@ public abstract class View {
      * Updates final round flag after action
      * */
     private void checkFinalRound() {
-        this.finalRound = this.gateway.checkFinalRound();
+        this.finalRound = this.messageParser.checkFinalRound();
     }
 
     /**
@@ -224,8 +227,8 @@ public abstract class View {
      * Method called to update the view according to received message type.
      */
     public void updateView() {
-        String messageParams = this.gateway.getMessageParams();
-        switch (this.gateway.getMessageType()) {
+        String messageParams = this.messageParser.getMessageParams();
+        switch (this.messageParser.getMessageType()) {
             case CREATE -> {
                 this.checkWaitForStart(messageParams);
                 this.isMaster = true;
