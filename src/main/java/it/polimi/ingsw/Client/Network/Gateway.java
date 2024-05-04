@@ -1,12 +1,11 @@
 package it.polimi.ingsw.Client.Network;
 
-import com.almasb.fxgl.logging.LoggerLevel;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.Client.Network.MessageHandler;
+import it.polimi.ingsw.Client.View.View;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Logger;
 
 /**
  * Gateway of communication between client and server to call methods on Model
@@ -14,25 +13,26 @@ import java.util.logging.Logger;
 public class Gateway {
     private NetworkManager networkManager;
     private MessageHandler messageHandler;
+    private View view;
     private Parser parser;
     private JsonObject currentMessage;
     private JsonObject messageParams;
-    private JsonObject messageType;
+    private MessageType messageType;
 
 
     public Gateway(NetworkManager networkManager) {
         this.networkManager=networkManager;
         this.parser=Parser.getInstance();
     }
-    public String getMessageType() {
-        return messageType.get("type").getAsString();
+    public MessageType getMessageType() {
+        return messageType;
     }
     public String getMessageParams(){
         return messageParams.get("params").getAsString();
     }
     public void buildMessage(String inMessage) {
         currentMessage=parser.toJsonObject(inMessage);
-        messageType=parser.toJsonObject(currentMessage.get("type").getAsString());
+        messageType=MessageType.valueOf(currentMessage.get("type").getAsString());
         messageParams=parser.toJsonObject(currentMessage.get("params").getAsString());
         view.updateView();
     }
@@ -49,14 +49,8 @@ public class Gateway {
         }
         String param=parser.toString(parameters);
         Message message=new Message(type, username,param);
-
-        networkManager.send(message);
+        networkManager.setOutMessage(parser.toString(message));
     }
-    public ArrayList<Object> receive(MessageType expectedType, String expectedMethod) throws IOException {
-        //TODO
-        return null;
-    }
-
     /**
      * Dispatches the placeCard message
      * @param card
