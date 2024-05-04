@@ -1,14 +1,10 @@
 package it.polimi.ingsw.Client.View;
-
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import it.polimi.ingsw.Client.Network.Gateway;
-import it.polimi.ingsw.Client.Network.MessageHandlerException;
 import it.polimi.ingsw.Client.Network.MessageType;
 
 public abstract class View {
@@ -145,6 +141,13 @@ public abstract class View {
     }
 
     /**
+     * Updates final round flag after action
+     * */
+    private void checkFinalRound() {
+        this.finalRound = this.gateway.checkFinalRound();
+    }
+
+    /**
      * Method called to display loading screen until all players connect to start the game.
      * */
     protected abstract void waitForStart();
@@ -211,11 +214,11 @@ public abstract class View {
     protected abstract void returnToMainMenu();
 
     /**
-     * Updates final round flag after action
-     * */
-    private void checkFinalRound() {
-        this.finalRound = this.gateway.checkFinalRound();
-    }
+     * Method called to start the view.
+     *
+     * @param args arguments
+     */
+    public abstract void main(String[] args);
 
     /**
      * Method called to update the view according to received message type.
