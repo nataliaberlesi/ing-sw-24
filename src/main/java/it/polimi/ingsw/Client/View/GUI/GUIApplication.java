@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Client.View.GUI;
 
-import it.polimi.ingsw.Client.Network.Gateway;
 import it.polimi.ingsw.Client.Network.MessageParser;
+import it.polimi.ingsw.Client.Network.MessageDispatcher;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -27,9 +27,9 @@ public class GUIApplication extends Application {
         launch();
     }
 
-    public static void setParserAndDispatcher(MessageParser messageParser, MessageDispatcher messageDispatcher) {
-        GUIApplication.messageParser = messageParser;
-        GUIApplication.messageDispatcher = messageDispatcher;
+    public static void setParserAndDispatcher(MessageParser newMessageParser, MessageDispatcher newMessageDispatcher) {
+        GUIApplication.messageParser = newMessageParser;
+        GUIApplication.messageDispatcher = newMessageDispatcher;
     }
 
     /**

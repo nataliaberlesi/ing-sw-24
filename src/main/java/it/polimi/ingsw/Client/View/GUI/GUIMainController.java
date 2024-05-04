@@ -1,4 +1,5 @@
 package it.polimi.ingsw.Client.View.GUI;
+import it.polimi.ingsw.Client.Network.MessageDispatcher;
 import it.polimi.ingsw.Client.Network.MessageHandlerException;
 import it.polimi.ingsw.Client.Network.MessageParser;
 import it.polimi.ingsw.Client.View.View;
