@@ -8,13 +8,15 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
 
-public class NetworkManager {
+public class NetworkManager implements Runnable{
     private PrintWriter outSocket;
     private BufferedReader inSocket;
     private BufferedReader inKeyboard;
     private Socket socket;
-    private Parser parser;
+    private Gateway gateway;
     private static final String networkManagerSetupAddress="networkManagerSetup.json";
+    private String inMessage;
+    private String outMessage;
 
     /**
      * setups the network manager getting server and port as input
@@ -25,6 +27,7 @@ public class NetworkManager {
     public NetworkManager(String server , int port) throws IOException {
         connect(server, port);
         setupIO();
+        this.gateway=new Gateway(this);
     }
 
     /**
@@ -69,20 +72,30 @@ public class NetworkManager {
         this.inSocket=new BufferedReader(new InputStreamReader(socket.getInputStream()));
         this.inKeyboard=new BufferedReader(new InputStreamReader(System.in));
     }
-    /**
-     * Waits for a String to be received and parses it into a Message
-     * @return The Message received
-     * @throws IOException
-     */
-    public Message receive() throws IOException {
-        return parser.toMessage(inSocket.readLine());
+    public void setOutMessage(String outMessage) {
+        this.outMessage=outMessage;
     }
-    /**
-     * Sends a Message into outSocket
-     * @param message Is the Message to be sent
-     */
-    public void send(Message message) {
-        outSocket.println(parser.toString(message)); //parses a Message into a json string
+    public void threadSendMethod() {
+        while(socket.isConnected()) {
+            if(outMessage!=null) {
+                outSocket.println(outMessage);
+                outMessage=null;
+            }
+        }
+    }
+    public void threadReceiveMethod() {
+        while(socket.isConnected()) {
+            try{
+                inMessage=inSocket.readLine();
+                gateway.buildMessage(inMessage);
+            } catch(IOException ioe) {
+                //TODO
+            }
+        }
+    }
+    public void run() {
+        new Thread(this::threadReceiveMethod).start();
+        new Thread(this::threadSendMethod).start();
     }
 
 }
