@@ -16,6 +16,8 @@ import java.io.IOException;
  */
 public class GUIApplication extends Application {
 
+    private static Gateway gateway;
+
     /**
      * Main method for JavaFX application.
      *
@@ -23,6 +25,10 @@ public class GUIApplication extends Application {
      */
     public static void main(String[] args) {
         launch();
+    }
+
+    public static void setGateway(Gateway gateway) {
+        GUIApplication.gateway = gateway;
     }
 
     /**
@@ -35,7 +41,7 @@ public class GUIApplication extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         FXMLLoader fxmlLoader = new FXMLLoader(GUIApplication.class.getResource("initialScreen.fxml"));
-        GUIMainController controller = new GUIMainController(primaryStage);
+        GUIMainController controller = new GUIMainController(gateway, primaryStage);
         fxmlLoader.setController(controller);
         Parent root = fxmlLoader.load();
         Scene scene = new Scene(root);
