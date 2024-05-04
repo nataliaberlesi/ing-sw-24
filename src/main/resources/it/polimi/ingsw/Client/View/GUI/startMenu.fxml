@@ -9,32 +9,32 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="792.0" prefWidth="1408.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="595.0" prefWidth="1060.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <ImageView fitHeight="792.0" fitWidth="1408.0" opacity="0.4" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="600.0" fitWidth="1060.0" opacity="0.4" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@Images/initialScreenOriginal.jpg" />
          </image>
       </ImageView>
-      <Label layoutX="587.0" layoutY="174.0" prefHeight="87.0" prefWidth="229.0" text="Username" textAlignment="CENTER">
+      <Label layoutX="438.0" layoutY="121.0" prefHeight="61.0" prefWidth="187.0" text="Username" textAlignment="CENTER">
          <font>
-            <Font name="Lao MN Bold" size="45.0" />
+            <Font name="Lao MN Bold" size="36.0" />
          </font>
       </Label>
-      <TextField fx:id="usernameField" alignment="CENTER" layoutX="519.0" layoutY="259.0" prefHeight="85.0" prefWidth="366.0" xmlns:fx="http://javafx.com/fxml">
+      <TextField fx:id="usernameField" alignment="CENTER" layoutX="410.0" layoutY="178.0" prefHeight="59.0" prefWidth="238.0" xmlns:fx="http://javafx.com/fxml">
       <font>
-            <Font name="Lao MN Bold" size="40.0" />
+            <Font name="Lao MN Bold" size="24.0" />
          </font>
       </TextField>
-      <Label fx:id="playersNumberLabel" layoutX="501.0" layoutY="367.0" prefHeight="87.0" prefWidth="408.0" text="Number of players" textAlignment="CENTER" xmlns:fx="http://javafx.com/fxml">
+      <Label fx:id="playersNumberLabel" layoutX="366.0" layoutY="270.0" prefHeight="56.0" prefWidth="326.0" text="Number of players" textAlignment="CENTER" xmlns:fx="http://javafx.com/fxml">
          <font>
-            <Font name="Lao MN Bold" size="45.0" />
+            <Font name="Lao MN Bold" size="36.0" />
          </font>
       </Label>
-      <ChoiceBox fx:id="playersNumberChoice" layoutX="519.0" layoutY="449.0" prefHeight="85.0" prefWidth="366.0" xmlns:fx="http://javafx.com/fxml" />
-      <Button layoutX="1066.0" layoutY="659.0" mnemonicParsing="false" onMouseClicked="#confirmCreateJoin" prefHeight="100.0" prefWidth="287.0" text="Confirm" textAlignment="CENTER">
+      <ChoiceBox fx:id="playersNumberChoice" layoutX="487.0" layoutY="330.0" prefHeight="51.0" prefWidth="81.0" xmlns:fx="http://javafx.com/fxml" />
+      <Button layoutX="852.0" layoutY="485.0" mnemonicParsing="false" onMouseClicked="#confirmCreateJoin" prefHeight="54.0" prefWidth="143.0" text="Confirm" textAlignment="CENTER">
          <font>
-            <Font name="Lao MN Bold" size="45.0" />
+            <Font name="Lao MN Bold" size="24.0" />
          </font>
       </Button>
    </children>
