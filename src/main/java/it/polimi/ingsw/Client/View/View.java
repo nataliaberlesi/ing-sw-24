@@ -1,14 +1,12 @@
 package it.polimi.ingsw.Client.View;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import it.polimi.ingsw.Client.Network.Gateway;
-import it.polimi.ingsw.Client.Network.MessageHandlerException;
+import it.polimi.ingsw.Client.Network.MessageParser;
 import it.polimi.ingsw.Client.Network.MessageType;
 
 public abstract class View {
@@ -57,11 +55,11 @@ public abstract class View {
      */
     protected List<String> winners = Collections.emptyList();
 
-    protected final Gateway gateway;
+    protected final MessageParser gateway;
 
     protected MessageType previousMessageType;
 
-    protected View(Gateway gateway){
+    protected View(MessageParser gateway){
         this.gateway = gateway;
         this.gateway.setView(this);
     }

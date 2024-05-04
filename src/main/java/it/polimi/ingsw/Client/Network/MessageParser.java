@@ -1,16 +1,15 @@
 package it.polimi.ingsw.Client.Network;
 
 import com.google.gson.JsonObject;
-import it.polimi.ingsw.Client.Network.MessageHandler;
 import it.polimi.ingsw.Client.View.View;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * Gateway of communication between client and server to call methods on Model
+ * messageParser of communication between client and server to call methods on Model
  * */
-public class Gateway {
+public class MessageParser {
     private NetworkManager networkManager;
     private MessageHandler messageHandler;
 
@@ -21,7 +20,7 @@ public class Gateway {
     private MessageType messageType;
 
 
-    public Gateway(NetworkManager networkManager) {
+    public MessageParser(NetworkManager networkManager) {
         this.networkManager=networkManager;
         this.parser=Parser.getInstance();
     }
