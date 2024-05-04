@@ -11,7 +11,7 @@ class HandTest {
         Hand hand=new Hand();
         hand.placeCardInHand("RR0");
 
-        assertEquals("RR0", hand.getCardFromHand(0));
+        assertEquals(hand.showCardInHand(0), hand.getCardFromHand(0));
     }
 
     @Test
@@ -21,7 +21,7 @@ class HandTest {
         hand.placeCardInHand("RR1");
         hand.placeCardInHand("RR2");
 
-        assertEquals("RR2", hand.getCardFromHand(2));
+        assertEquals(hand.showCardInHand(2), hand.getCardFromHand(2));
     }
 
     @Test
@@ -30,8 +30,10 @@ class HandTest {
         hand.placeCardInHand("RR0");
         hand.placeCardInHand("RR1");
         hand.placeCardInHand("RR2");
+        hand.getCardFromHand(1);
+        hand.placeCardInHand("RG9");
 
-        assertEquals("RR1", hand.getCardFromHand(1));
+        assertEquals("RG9", hand.getCardFromHand(1));
     }
 
     @Test

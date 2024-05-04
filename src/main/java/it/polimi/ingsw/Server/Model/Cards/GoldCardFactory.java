@@ -147,7 +147,8 @@ public class GoldCardFactory {
      * @return list containing incomplete prerequisites plus the given symbol
      */
     static ArrayList<Symbol> add(ArrayList<Symbol> incompletePrerequisites, Symbol symbol){
-        incompletePrerequisites.add(symbol);
+        ArrayList<Symbol> clone = (ArrayList<Symbol>) incompletePrerequisites.clone();
+        clone.add(symbol);
         return incompletePrerequisites;
     }
 

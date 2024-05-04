@@ -64,7 +64,7 @@ public class ResourceCardFactory {
         put("RP3",()->new ResourceCard("RP3",Symbol.BUTTERFLY,new Symbol[]{Symbol.BUTTERFLY,Symbol.BLANK,Symbol.FULL,Symbol.BUTTERFLY},giveZeroPointsWhenPlaced));
         put("RP4",()->new ResourceCard("RP4",Symbol.BUTTERFLY,new Symbol[]{Symbol.FEATHER,Symbol.FULL,Symbol.WOLF,Symbol.BUTTERFLY},giveZeroPointsWhenPlaced));
         put("RP5",()->new ResourceCard("RP5",Symbol.BUTTERFLY,new Symbol[]{Symbol.BUTTERFLY,Symbol.SCROLL,Symbol.FULL,Symbol.MUSHROOM},giveZeroPointsWhenPlaced));
-        put("RP6",()->new ResourceCard("RP6",Symbol.BUTTERFLY,new Symbol[]{Symbol.LEAF,Symbol.BUTTERFLY,Symbol.SCROLL,Symbol.FULL},giveZeroPointsWhenPlaced));
+        put("RP6",()->new ResourceCard("RP6",Symbol.BUTTERFLY,new Symbol[]{Symbol.LEAF,Symbol.BUTTERFLY,Symbol.INK,Symbol.FULL},giveZeroPointsWhenPlaced));
         put("RP7",()->new ResourceCard("RP7",Symbol.BUTTERFLY,new Symbol[]{Symbol.FULL,Symbol.BUTTERFLY,Symbol.BLANK,Symbol.BLANK},giveOnePointWhenPlaced));
         put("RP8",()->new ResourceCard("RP8",Symbol.BUTTERFLY,new Symbol[]{Symbol.BLANK,Symbol.BLANK,Symbol.FULL,Symbol.BUTTERFLY},giveOnePointWhenPlaced));
         put("RP9",()->new ResourceCard("RP9",Symbol.BUTTERFLY,new Symbol[]{Symbol.BUTTERFLY,Symbol.FULL,Symbol.BLANK,Symbol.BLANK},giveOnePointWhenPlaced));
