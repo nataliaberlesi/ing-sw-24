@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Client.Network;
 
 import it.polimi.ingsw.Client.Network.MessageHandler;
+import it.polimi.ingsw.Client.View.View;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,9 +13,28 @@ public class Gateway {
     private NetworkManager networkManager;
     private MessageHandler messageHandler;
 
+    /**
+     * Client chosen view.
+     */
+    private View view;
+    /**
+     * Received message type.
+     */
+    private MessageType messageType;
+
     public Gateway(NetworkManager networkManager) {
         this.networkManager=networkManager;
     }
+
+    /**
+     * Set client chosen view.
+     *
+     * @param view client chosen view
+     */
+    public void setView(View view) {
+        this.view = view;
+    }
+
     /**
      * dispatches a message
      * @param type
@@ -29,6 +49,7 @@ public class Gateway {
         }
         networkManager.send(message);
     }
+
     public ArrayList<Object> receive(String expectedType, String expectedMethod) throws IOException {
         Message receivedMessage=networkManager.receive();
         messageHandler.handleAndCheck(receivedMessage,expectedType,expectedMethod);
