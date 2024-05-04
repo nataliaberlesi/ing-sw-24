@@ -7,17 +7,22 @@ import it.polimi.ingsw.Client.View.View;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
@@ -27,15 +32,15 @@ import java.util.ResourceBundle;
 
 public class GUIMainController extends View implements Initializable{
 
-    /**
-     * Gateway instance for communicating with server
-     * */
-    private Gateway gateway;
+//    /**
+//     * Gateway instance for communicating with server
+//     * */
+//    private Gateway gateway;
 
     /**
      * Network Manager instance for gateway constructor
      * */
-    private NetworkManager networkManager;
+//    private NetworkManager networkManager;
 
     /**
      * Alert dialog for errors.
@@ -48,10 +53,10 @@ public class GUIMainController extends View implements Initializable{
     private final Stage stage;
 
     private Map<String, Image> tokenImages;
+
     /**
      * Token color ChoiceBox.
      */
-    @FXML
     private ChoiceBox<String> tokenColorChoice;
 
     /**
@@ -74,7 +79,8 @@ public class GUIMainController extends View implements Initializable{
     @FXML
     private Label playersNumberLabel;
 
-    public GUIMainController(Stage stage) {
+    public GUIMainController(Gateway gateway, Stage stage) {
+        super(gateway);
         this.stage = stage;
         this.tokenColorChoice = new ChoiceBox<>();
         this.playersNumberChoice = new ChoiceBox<>();
@@ -106,17 +112,9 @@ public class GUIMainController extends View implements Initializable{
 
     @FXML
     private void connectPlayer() throws IOException{
-        try {
-            this.networkManager = new NetworkManager("localhost", 8600);
-        } catch (IOException e){
-            this.showErrorAlert("Unable to connect to server", "Server is currently unavailable, please try again soon");
-        }
-        if (this.networkManager != null) {
-            this.gateway = new Gateway(networkManager);
-            if (gateway.masterStatus()) {
-                switchToCreate();
-            } else switchToJoin();
-        }
+        if (gateway.masterStatus()) {
+            switchToCreate();
+        } else switchToJoin();
     }
 
     /**
@@ -208,6 +206,51 @@ public class GUIMainController extends View implements Initializable{
         }
     }
 
+    @Override
+    protected void startGame() {
+
+    }
+
+    @Override
+    protected void startShow() {
+
+    }
+
+    @Override
+    protected void updateGame() {
+
+    }
+
+    @Override
+    protected void showAbort(String message) {
+
+    }
+
+    @Override
+    protected void showError(String message) {
+
+    }
+
+    @Override
+    protected void closeGame(List<String> winners) {
+
+    }
+
+    @Override
+    protected void enableActions() {
+
+    }
+
+    @Override
+    protected void waitTurn() {
+
+    }
+
+    @Override
+    protected void returnToMainMenu() {
+
+    }
+
     /** Checks if the information provided by the player is correct
      * @param createMode create vs join flag
      * */
@@ -246,49 +289,6 @@ public class GUIMainController extends View implements Initializable{
      * */
     @Override
     protected void waitForStart() {
-        switchScene("loading.fxml");
-        if (!checkWaitForStart()){
-            try {
-                wait(1000); //wait a second before trying again to not overload server with requests
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-            waitForStart();
-        }
-        else {
-            //stage.close();
-            //guiSecondaryController = new GUISecondaryController(gateway, stage);
-            displayFirstRoundView();
-        }
-    }
-
-    /**
-     * Asks server if game can start
-     * */
-    protected boolean checkWaitForStart() {
-        try {
-            return gateway.checkWaitForStart();
-        } catch (IOException e) {
-            throw new MessageHandlerException("Unable to check wait for start ", e);
-        }
-    }
-
-    protected void displayFirstRoundView(){
-
-        this.tokenImages = new HashMap<>();
-        View.AVAILABLE_TOKEN_COLORS.values().forEach(color -> this.tokenImages.put(color,
-                new Image(String.valueOf(GUIMainController.class.getResource(
-                        String.format("Images/Tokens/%sToken.png", color.toLowerCase()))))));
-
-        Parent root = new ScrollPane();
-        Node grid = new GridPane();
-        Scene scene = new Scene(root);
-        this.stage.setScene(scene);
-
-        try {
-            String initialCard = gateway.getInitialCard(this.username);
-        } catch (IOException e) {
-            throw new MessageHandlerException("Unable to get initial card", e);
-        }
+        this.switchScene("loading.fxml");
     }
 }
