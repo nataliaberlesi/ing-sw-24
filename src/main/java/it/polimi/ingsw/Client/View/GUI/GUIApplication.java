@@ -1,7 +1,6 @@
 package it.polimi.ingsw.Client.View.GUI;
 
-import it.polimi.ingsw.Client.Network.Gateway;
-import it.polimi.ingsw.Client.Network.NetworkManager;
+import it.polimi.ingsw.Client.Network.MessageParser;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -16,7 +15,7 @@ import java.io.IOException;
  */
 public class GUIApplication extends Application {
 
-    private static Gateway gateway;
+    private static MessageParser gateway;
 
     /**
      * Main method for JavaFX application.
@@ -27,7 +26,7 @@ public class GUIApplication extends Application {
         launch();
     }
 
-    public static void setGateway(Gateway gateway) {
+    public static void setGateway(MessageParser gateway) {
         GUIApplication.gateway = gateway;
     }
 

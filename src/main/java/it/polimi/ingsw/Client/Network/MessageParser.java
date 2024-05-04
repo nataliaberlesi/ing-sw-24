@@ -7,12 +7,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 /**
- * messageParser of communication between client and server to call methods on Model
+ * Used to parse data from the incoming message from server
  * */
 public class MessageParser {
     private NetworkManager networkManager;
     private MessageHandler messageHandler;
-
     private View view;
     private Parser parser;
     private JsonObject currentMessage;
@@ -35,21 +34,6 @@ public class MessageParser {
         messageType=MessageType.valueOf(currentMessage.get("type").getAsString());
         messageParams=parser.toJsonObject(currentMessage.get("params").getAsString());
         view.updateView();
-    }
-    /**
-     * dispatches a message
-     * @param type
-     * @param params
-     * @throws IOException
-     */
-    public void dispatch(MessageType type, String username, Object...params) throws IOException{
-        ArrayList<Object> parameters=new ArrayList<>();
-        for(Object param: params) {
-            parameters.add(param);
-        }
-        String param=parser.toString(parameters);
-        Message message=new Message(type, username,param);
-        networkManager.setOutMessage(parser.toString(message));
     }
     /**
      * Dispatches the placeCard message

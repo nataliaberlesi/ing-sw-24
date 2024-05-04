@@ -1,27 +1,19 @@
 package it.polimi.ingsw.Client.View.GUI;
 
-import it.polimi.ingsw.Client.Network.Gateway;
+import it.polimi.ingsw.Client.Network.MessageParser;
 import it.polimi.ingsw.Client.Network.MessageHandlerException;
-import it.polimi.ingsw.Client.Network.NetworkManager;
 import it.polimi.ingsw.Client.View.View;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -33,9 +25,9 @@ import java.util.ResourceBundle;
 public class GUIMainController extends View implements Initializable{
 
 //    /**
-//     * Gateway instance for communicating with server
+//     * messageParser instance for communicating with server
 //     * */
-//    private Gateway gateway;
+//    private messageParser gateway;
 
     /**
      * Network Manager instance for gateway constructor
@@ -79,7 +71,7 @@ public class GUIMainController extends View implements Initializable{
     @FXML
     private Label playersNumberLabel;
 
-    public GUIMainController(Gateway gateway, Stage stage) {
+    public GUIMainController(MessageParser gateway, Stage stage) {
         super(gateway);
         this.stage = stage;
         this.tokenColorChoice = new ChoiceBox<>();
