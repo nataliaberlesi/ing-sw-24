@@ -1,8 +1,15 @@
 package it.polimi.ingsw.Client.View;
 
+import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import it.polimi.ingsw.Client.Network.Gateway;
+import it.polimi.ingsw.Client.Network.MessageHandlerException;
+import it.polimi.ingsw.Client.Network.MessageType;
 
 public abstract class View {
 
@@ -31,15 +38,116 @@ public abstract class View {
      */
     protected String username;
     /**
-     * Chosen player pion color
+     * Chosen player token color
      */
-    protected String pionColor;
+    protected String tokenColor;
 
+    /**
+     * Flag for game creator.
+     */
+    protected boolean isMaster = false;
+
+    /**
+     * Flag for final round.
+     */
+    protected boolean finalRound = false;
+
+    /**
+     * List of winners.
+     */
+    protected List<String> winners = Collections.emptyList();
+
+    protected final Gateway gateway;
+
+    protected MessageType previousMessageType;
+
+    protected View(Gateway gateway){
+        this.gateway = gateway;
+        this.gateway.setView(this);
+    }
+
+    /**
+     * Verifies if chosen username matches provided regex.
+     *
+     * @param username player username
+     * @return true if username is valid, false otherwise
+     */
     protected static boolean correctUsername(String username) {
         Pattern pattern = Pattern.compile(USERNAME_REGEX);
         Matcher matcher = pattern.matcher(username);
         return matcher.matches();
     }
+
+    /**
+     * Resets the view properties.
+     */
+    protected void reset() {
+        this.isMaster = false;
+        this.previousMessageType = null;
+        this.tokenColor = "";
+        this.playersNumber = 0;
+        this.username = "";
+    }
+
+    /**
+     * Check if message params for create or join are valid, and wait for start.
+     *
+     * @param messageParams message params content
+     */
+    protected void checkWaitForStart(String messageParams) {
+        if (!messageParams.equals("OK"))
+            throw new ViewException("Unexpected non-ok message content");
+        this.waitForStart();
+    }
+
+    /**
+     * Check if client has to start the game.
+     *
+     * @param messageContent message content
+     */
+
+    protected void checkStart(String messageContent) {
+        if (messageContent.equals("FULL")) {
+            if (this.isMaster)
+                this.startGame();
+        } else if (this.previousMessageType != MessageType.START)
+            this.checkWaitForStart(messageContent);
+    }
+
+    /**
+     * Update winners after final round.
+     */
+    protected void checkWinners() {
+        this.winners = this.gateway.getWinners();
+    }
+
+    /**
+     * Check if message content is empty.
+     *
+     * @param messageParams message content
+     */
+    protected void checkEmptyContent(String messageParams) {
+        if (messageParams.isEmpty())
+            throw new ViewException("Unexpected empty message content");
+    }
+
+    /**
+     * Continue game if winners is empty.
+     */
+    protected void continueGame() {
+        if (!finalRound) {
+            if (this.gateway.getCurrentPlayer().equals(this.username)) {
+                this.enableActions();
+            } else {
+                this.waitTurn();
+            }
+        }
+    }
+
+    /**
+     * Method called to display loading screen until all players connect to start the game.
+     * */
+    protected abstract void waitForStart();
 
     /**
      * Method called to create the game.
@@ -52,9 +160,110 @@ public abstract class View {
     protected abstract void joinGame();
 
     /**
-     * Method called to wait until all players connect to start the game.
+     * Method called to start the game.
+     */
+    protected abstract void startGame();
+
+    /**
+     * Method called to start showing the game.
+     */
+    protected abstract void startShow();
+
+    /**
+     * Method called to update the view game information.
+     */
+    protected abstract void updateGame();
+
+    /**
+     * Method called to show abort.
+     *
+     * @param message abort message
+     */
+    protected abstract void showAbort(String message);
+
+    /**
+     * Method called to show an error.
+     *
+     * @param message error message
+     */
+    protected abstract void showError(String message);
+
+    /**
+     * Method called to show the game end.
+     *
+     * @param winners list of winners
+     */
+    protected abstract void closeGame(List<String> winners);
+
+    /**
+     * Method called to show actions options.
+     */
+    protected abstract void enableActions();
+
+    /**
+     * Method called to show waiting for turn.
+     */
+    protected abstract void waitTurn();
+
+    /**
+     * Method called to go back to starting choice of create or player.
+     */
+    protected abstract void returnToMainMenu();
+
+    /**
+     * Updates final round flag after action
      * */
-    protected abstract void waitForStart();
+    private void checkFinalRound() {
+        this.finalRound = this.gateway.checkFinalRound();
+    }
+
+    /**
+     * Method called to update the view according to received message type.
+     */
+    public void updateView() {
+        String messageParams = this.gateway.getMessageParams();
+        switch (this.gateway.getMessageType()) {
+            case CREATE -> {
+                this.checkWaitForStart(messageParams);
+                this.isMaster = true;
+            }
+            case JOIN -> this.checkStart(messageParams);
+            case START -> {
+                this.startShow();
+                this.continueGame();
+            }
+            case ACTION -> {
+                this.updateGame();
+                this.checkFinalRound();
+                if(!finalRound)
+                    this.continueGame();
+
+            }
+            case FINAL_ROUND -> {
+                this.updateGame();
+                this.checkWinners();
+                this.closeGame(this.winners);
+                this.returnToMainMenu();
+                this.reset();
+            }
+            case ABORT -> {
+                this.checkEmptyContent(messageParams);
+                this.showAbort(messageParams);
+                this.reset();
+                this.returnToMainMenu();
+            }
+            case ERROR -> {
+                this.checkEmptyContent(messageParams);
+                this.showError(messageParams);
+                if (this.previousMessageType == MessageType.CREATE || this.previousMessageType == MessageType.JOIN) {
+                    this.reset();
+                    this.returnToMainMenu();
+                } else {
+                    this.continueGame();
+                }
+            }
+        }
+    }
 
     /**
      * Runtime exception for errors within any view class.
