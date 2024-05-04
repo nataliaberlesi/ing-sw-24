@@ -1,7 +1,6 @@
 package it.polimi.ingsw.Client.View.GUI;
-
-import it.polimi.ingsw.Client.Network.MessageParser;
 import it.polimi.ingsw.Client.Network.MessageHandlerException;
+import it.polimi.ingsw.Client.Network.MessageParser;
 import it.polimi.ingsw.Client.View.View;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -9,13 +8,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 /**
@@ -24,15 +20,10 @@ import java.util.ResourceBundle;
 
 public class GUIMainController extends View implements Initializable{
 
-//    /**
-//     * messageParser instance for communicating with server
-//     * */
-//    private messageParser gateway;
-
     /**
-     * Network Manager instance for gateway constructor
-     * */
-//    private NetworkManager networkManager;
+     * Main application stage.
+     */
+    private final Stage stage;
 
     /**
      * Alert dialog for errors.
@@ -40,16 +31,9 @@ public class GUIMainController extends View implements Initializable{
     private final Alert errorAlert;
 
     /**
-     * Main application stage.
-     */
-    private final Stage stage;
-
-    private Map<String, Image> tokenImages;
-
-    /**
      * Token color ChoiceBox.
      */
-    private ChoiceBox<String> tokenColorChoice;
+    private final ChoiceBox<String> tokenColorChoice;
 
     /**
      * Players number ChoiceBox.
@@ -71,8 +55,8 @@ public class GUIMainController extends View implements Initializable{
     @FXML
     private Label playersNumberLabel;
 
-    public GUIMainController(MessageParser gateway, Stage stage) {
-        super(gateway);
+    public GUIMainController(MessageParser messageParser, MessageDispatcher messageDispatcher, Stage stage) {
+        super(messageParser, messageDispatcher);
         this.stage = stage;
         this.tokenColorChoice = new ChoiceBox<>();
         this.playersNumberChoice = new ChoiceBox<>();
@@ -104,7 +88,7 @@ public class GUIMainController extends View implements Initializable{
 
     @FXML
     private void connectPlayer() throws IOException{
-        if (gateway.masterStatus()) {
+        if (messageParser.masterStatus()) {
             switchToCreate();
         } else switchToJoin();
     }
@@ -173,7 +157,7 @@ public class GUIMainController extends View implements Initializable{
             this.playersNumber = this.playersNumberChoice.getValue();
             this.username = this.usernameField.getCharacters().toString();
             try {
-                this.gateway.createGame(this.playersNumber, this.username);
+                this.messageDispatcher.createGame(this.playersNumber, this.username);
                 waitForStart();
             } catch (IOException e) {
                 throw new MessageHandlerException("Unable to create game", e);
@@ -190,7 +174,7 @@ public class GUIMainController extends View implements Initializable{
         if (playerGivesCorrectInformation(this.createMode)) {
             this.username = this.usernameField.getCharacters().toString();
             try {
-                this.gateway.joinGame(this.username);
+                this.messageDispatcher.joinGame(this.username);
                 waitForStart();
             } catch (IOException e) {
                 throw new MessageHandlerException("Unable to join game", e);
@@ -243,6 +227,16 @@ public class GUIMainController extends View implements Initializable{
 
     }
 
+    /**
+     * Method called to start the view.
+     * Implemented only in CLI
+     * @param args arguments
+     */
+    @Override
+    public void main(String[] args) {
+        //not used for GUI
+    }
+
     /** Checks if the information provided by the player is correct
      * @param createMode create vs join flag
      * */
@@ -253,7 +247,7 @@ public class GUIMainController extends View implements Initializable{
             return false;
         }
         try {
-            if (gateway.unavailableUsername(usernameField.getCharacters().toString())){
+            if (messageParser.unavailableUsername()){
                 this.showErrorAlert("Invalid username", "Username already taken, please select another one");
             }
         } catch (IOException e) {

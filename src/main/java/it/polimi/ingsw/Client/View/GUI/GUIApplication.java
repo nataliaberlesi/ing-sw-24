@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Client.View.GUI;
 
+import it.polimi.ingsw.Client.Network.Gateway;
 import it.polimi.ingsw.Client.Network.MessageParser;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -7,7 +8,6 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 
 /**
@@ -15,7 +15,8 @@ import java.io.IOException;
  */
 public class GUIApplication extends Application {
 
-    private static MessageParser gateway;
+    private static MessageParser messageParser;
+    private static MessageDispatcher messageDispatcher;
 
     /**
      * Main method for JavaFX application.
@@ -26,8 +27,9 @@ public class GUIApplication extends Application {
         launch();
     }
 
-    public static void setGateway(MessageParser gateway) {
-        GUIApplication.gateway = gateway;
+    public static void setParserAndDispatcher(MessageParser messageParser, MessageDispatcher messageDispatcher) {
+        GUIApplication.messageParser = messageParser;
+        GUIApplication.messageDispatcher = messageDispatcher;
     }
 
     /**
@@ -40,7 +42,7 @@ public class GUIApplication extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         FXMLLoader fxmlLoader = new FXMLLoader(GUIApplication.class.getResource("initialScreen.fxml"));
-        GUIMainController controller = new GUIMainController(gateway, primaryStage);
+        GUIMainController controller = new GUIMainController(messageParser, messageDispatcher, primaryStage);
         fxmlLoader.setController(controller);
         Parent root = fxmlLoader.load();
         Scene scene = new Scene(root);
