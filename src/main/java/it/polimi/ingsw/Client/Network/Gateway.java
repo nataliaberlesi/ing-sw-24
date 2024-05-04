@@ -13,6 +13,7 @@ import java.util.ArrayList;
 public class Gateway {
     private NetworkManager networkManager;
     private MessageHandler messageHandler;
+
     private View view;
     private Parser parser;
     private JsonObject currentMessage;
@@ -99,18 +100,20 @@ public class Gateway {
     }
     //TODO: server side -> returns true when all players for the game have been created
     public boolean checkWaitForStart() throws IOException {
-        //TODO
         return true;
     }
     //TODO: server side -> returns true if chosen username for this player is already used by another player
-    public boolean unavailableUsername(String playerUsername) throws IOException {
-        //TODO
-        return true;
+    public boolean unavailableUsername() throws IOException {
+        return messageParams.get("unavailableUsername").getAsBoolean();
     }
 
-    public String getInitialCard(String playerUsername) throws IOException {
-        //TODO
-        return "";
+    public String getInitialCard(){
+        return messageParams.get("initialCard").getAsString();
     }
-
+    public String getCurrentPlayer() {
+        return messageParams.get("currentPlayer").getAsString();
+    }
+    public void setView(View view) {
+        this.view = view;
+    }
 }

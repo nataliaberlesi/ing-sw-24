@@ -1,6 +1,9 @@
 package it.polimi.ingsw.Client.Network;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import it.polimi.ingsw.Client.Network.Message;
 
 public class Parser {
@@ -11,11 +14,15 @@ public class Parser {
     /**
      * the singleton instance
      */
-    private static final Parser INSTANCE=new Parser();
+    private static Parser instance=null;
     private Parser() {
     }
     public static Parser getInstance() {
-        return INSTANCE;
+        if(instance==null) {
+            instance=new Parser();
+            return instance;
+        }
+        return instance;
     }
 
     /**
@@ -31,8 +38,12 @@ public class Parser {
      * @param message the message to be parsed
      * @return the string
      */
-    public String toString(Message message) {
+    public String toString(Object message) {
         return GSON.toJson(message);
+    }
+    public JsonObject toJsonObject(String message) {
+        JsonElement rootNode=JsonParser.parseString(message);
+        return rootNode.getAsJsonObject();
     }
 
 }
