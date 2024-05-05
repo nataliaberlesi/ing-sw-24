@@ -12,6 +12,6 @@
             </image>
         </ImageView>
 
-        <ImageView fitHeight="72.0" fitWidth="193.0" layoutX="657.0" layoutY="416.0" onMouseClicked="#connectPlayer" opacity="0.0" pickOnBounds="true" preserveRatio="true" />
+        <ImageView fitHeight="192.0" fitWidth="307.0" layoutX="376.0" layoutY="209.0" onMouseClicked="#connectPlayer" opacity="0.0" pickOnBounds="true" preserveRatio="true" />
     </children>
 </AnchorPane>
