@@ -2,7 +2,9 @@ package it.polimi.ingsw.Client.View.GUI;
 import it.polimi.ingsw.Client.Network.MessageDispatcher;
 import it.polimi.ingsw.Client.Network.MessageHandlerException;
 import it.polimi.ingsw.Client.Network.MessageParser;
+import it.polimi.ingsw.Client.Network.MessageType;
 import it.polimi.ingsw.Client.View.View;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -25,6 +27,11 @@ public class GUIMainController extends View implements Initializable{
      * Main application stage.
      */
     private final Stage stage;
+
+    /**
+     * Secondary controller for main game scene.
+     */
+    private final GUISecondaryController secondaryController;
 
     /**
      * Alert dialog for errors.
@@ -62,6 +69,7 @@ public class GUIMainController extends View implements Initializable{
         this.tokenColorChoice = new ChoiceBox<>();
         this.playersNumberChoice = new ChoiceBox<>();
         this.errorAlert = new Alert(Alert.AlertType.ERROR);
+        this.secondaryController = new GUISecondaryController(messageParser, messageDispatcher, this.stage);
 
     }
 
@@ -84,7 +92,8 @@ public class GUIMainController extends View implements Initializable{
         }
     }
 
-    /** Connects player to create or join mode based on server response indicating the master status of the player trying to connect
+    /**
+     * Connects player to create or join mode based on server response indicating the master status of the player trying to connect
      * */
 
     @FXML
@@ -159,7 +168,7 @@ public class GUIMainController extends View implements Initializable{
             this.username = this.usernameField.getCharacters().toString();
             try {
                 this.messageDispatcher.createGame(this.playersNumber, this.username);
-                waitForStart();
+                this.previousMessageType = MessageType.CREATE;
             } catch (IOException e) {
                 throw new MessageHandlerException("Unable to create game", e);
             }
@@ -176,46 +185,68 @@ public class GUIMainController extends View implements Initializable{
             this.username = this.usernameField.getCharacters().toString();
             try {
                 this.messageDispatcher.joinGame(this.username);
-                waitForStart();
+                this.previousMessageType = MessageType.JOIN;
             } catch (IOException e) {
                 throw new MessageHandlerException("Unable to join game", e);
             }
         }
     }
 
+    /**
+     * Calls the start of the game when all players are connected
+     * */
     @Override
     protected void startGame() {
-
+        this.messageDispatcher.startGame(this.username);
     }
 
+    /**
+     * Starts showing the game to players
+     * */
     @Override
     protected void startShow() {
-
+        this.secondaryController.openMainScene();
+        this.secondaryController.displayGame(this.username);
+        this.previousMessageType = MessageType.START;
     }
 
+    /**
+     * Updates game show
+     * */
     @Override
     protected void updateGame() {
-
+        this.secondaryController.displayGame(this.username);
     }
 
+    /**
+     * Popup to show abort message
+     * @param message abort message
+     * */
     @Override
     protected void showAbort(String message) {
-
+        this.showErrorAlert(message, "Please wait to join a new game");
     }
 
+    /**
+     * Popup to show error message
+     * @param message error message
+     */
     @Override
     protected void showError(String message) {
-
+        this.showErrorAlert(message, "Please retry");
     }
 
+    /**
+     * Display endgame and winners and close game
+     * @param winners winners list
+     * */
     @Override
     protected void closeGame(List<String> winners) {
-
+        this.secondaryController.displayEndgame(winners);
     }
 
     @Override
     protected void enableActions() {
-
     }
 
     @Override
@@ -226,6 +257,14 @@ public class GUIMainController extends View implements Initializable{
     @Override
     protected void returnToMainMenu() {
 
+    }
+
+    /**
+     * Main view method override for JavaFX main thread.
+     */
+    @Override
+    public void updateView(){
+        Platform.runLater(super::updateView);
     }
 
     /**
@@ -241,7 +280,6 @@ public class GUIMainController extends View implements Initializable{
     /** Checks if the information provided by the player is correct
      * @param createMode create vs join flag
      * */
-
     private boolean playerGivesCorrectInformation(boolean createMode) {
         if (!View.correctUsername(usernameField.getCharacters().toString())){
             this.showErrorAlert("Invalid username", "Username must contain between 4 and 16 alphanumeric characters");
@@ -271,8 +309,7 @@ public class GUIMainController extends View implements Initializable{
     }
 
     /**
-     * Waits for positive server response to be able to create the secondary controller and display the starting view.
-     * In the meantime shows user a loading screen.
+     * Shows user a loading screen while waiting to start the game.
      * */
     @Override
     protected void waitForStart() {
