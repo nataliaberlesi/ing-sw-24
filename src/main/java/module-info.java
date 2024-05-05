@@ -13,5 +13,5 @@ module it.polimi.ingsw {
     exports it.polimi.ingsw.Client.View.GUI;
     exports it.polimi.ingsw.Client.View;
     opens it.polimi.ingsw.Client.View to javafx.fxml;
-
+    exports it.polimi.ingsw.Client.Network;
 }
