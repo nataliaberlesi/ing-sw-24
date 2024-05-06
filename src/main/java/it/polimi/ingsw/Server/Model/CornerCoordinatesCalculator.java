@@ -37,7 +37,7 @@ public class CornerCoordinatesCalculator {
     }
 
     /**
-     *
+     * used by vertical objective in order to check for pattern.
      * @param coordinates coordinates of card
      * @param rightOrLeft position of the coordinates being calculated relative to coordinates where searching from
      * @return coordinates that are two units below either to the right or left
