@@ -11,7 +11,6 @@ import java.util.ArrayList;
  * */
 public class MessageParser {
     private NetworkManager networkManager;
-    private MessageHandler messageHandler;
     private View view;
     private Parser parser;
     private JsonObject currentMessage;
@@ -72,21 +71,12 @@ public class MessageParser {
         //TODO
         return true;
     }
-
-    //TODO: server side -> returns true at the end of the creation of the game for the master player
-    public void createGame(int playersNumber, String masterUsername) throws IOException,MessageHandlerException {
-        //TODO
-    }
-    //TODO: server side -> returns true at the end of the creation of the game for additional players
-    public void joinGame(String playerUsername) throws IOException {
-        //TODO
-    }
     //TODO: server side -> returns true when all players for the game have been created
     public boolean checkWaitForStart() throws IOException {
         return true;
     }
     //TODO: server side -> returns true if chosen username for this player is already used by another player
-    public boolean unavailableUsername() throws IOException {
+    public Boolean unavailableUsername() throws IOException {
         return messageParams.get("unavailableUsername").getAsBoolean();
     }
 
