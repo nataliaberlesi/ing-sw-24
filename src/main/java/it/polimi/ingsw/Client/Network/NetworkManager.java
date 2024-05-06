@@ -13,7 +13,7 @@ public class NetworkManager implements Runnable{
     private BufferedReader inSocket;
     private BufferedReader inKeyboard;
     private Socket socket;
-    private Gateway gateway;
+    private MessageParser messageParser;
     private static final String networkManagerSetupAddress="networkManagerSetup.json";
     private String inMessage;
     private String outMessage;
@@ -27,7 +27,7 @@ public class NetworkManager implements Runnable{
     public NetworkManager(String server , int port) throws IOException {
         connect(server, port);
         setupIO();
-        this.gateway=new Gateway(this);
+        this.messageParser =new MessageParser(this);
     }
 
     /**
@@ -87,7 +87,7 @@ public class NetworkManager implements Runnable{
         while(socket.isConnected()) {
             try{
                 inMessage=inSocket.readLine();
-                gateway.buildMessage(inMessage);
+                messageParser.buildMessage(inMessage);
             } catch(IOException ioe) {
                 //TODO
             }
