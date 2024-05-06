@@ -24,4 +24,12 @@ public class MessageDispatcher {
         Message message=new Message(type, username,param);
         networkManager.setOutMessage(parser.toString(message));
     }
+    //TODO: server side -> returns true at the end of the creation of the game for the master player
+    public void createGame(int playersNumber, String masterUsername) throws IOException,MessageHandlerException {
+        dispatch(MessageType.CREATE,masterUsername,playersNumber);
+    }
+    //TODO: server side -> returns true at the end of the creation of the game for additional players
+    public void joinGame(String playerUsername) throws IOException {
+        dispatch(MessageType.JOIN,playerUsername);
+    }
 }
