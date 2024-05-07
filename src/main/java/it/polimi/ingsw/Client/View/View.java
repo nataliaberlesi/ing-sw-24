@@ -105,7 +105,6 @@ public abstract class View {
      */
 
     protected void checkStart() {
-
         if (messageParser.getUsername().equals(username) && messageParser.unavailableUsername()){
             this.showErrorAlert("Invalid username", "Username already taken, please select another one");
             switchToJoin();
