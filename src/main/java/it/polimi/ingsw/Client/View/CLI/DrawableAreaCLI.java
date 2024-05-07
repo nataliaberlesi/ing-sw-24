@@ -35,6 +35,7 @@ public class DrawableAreaCLI {
         return getCardCLI(cardIndex, replacementCard, goldCards);
     }
 
+
     /**
      *
      * @param cardIndex index of card being drawn
@@ -47,7 +48,7 @@ public class DrawableAreaCLI {
         CardCLI drawnCard= drawnCards[cardIndex];
         CardCLI faceDownCard= drawnCards[0];
         faceDownCard.flip();
-        if(!replacementCard.isFaceUp()){
+        if(replacementCard.isFaceUp()){
             replacementCard.flip();
         }
         drawnCards[cardIndex]=faceDownCard;
@@ -86,9 +87,9 @@ public class DrawableAreaCLI {
     private void printDrawableCards(CardCLI[] drawableCards) {
         for(int i=0; i<4; i++) {
             for (CardCLI card : drawableCards) {
-                System.out.print(card.getLine());
+                System.out.print(card.getLine()+"         ");
             }
-            System.out.print("         ");
+            System.out.print('\n');
         }
     }
 
@@ -97,6 +98,31 @@ public class DrawableAreaCLI {
         printDrawableCards(resourceCards);
         System.out.print('\n');
         printDrawableCards(goldCards);
+    }
+
+    public void putGoldCard(int cardIndex, CardCLI replacementCard) throws IllegalArgumentException{
+        checkLegalIndex(cardIndex);
+        checkLegalCard(replacementCard,'G');
+        putCard(cardIndex, replacementCard, goldCards);
+    }
+
+    public void putResourceCard(int cardIndex, CardCLI replacementCard) throws IllegalArgumentException{
+        checkLegalIndex(cardIndex);
+        checkLegalCard(replacementCard,'R');
+        putCard(cardIndex, replacementCard, resourceCards);
+    }
+
+    private void putCard(int cardIndex, CardCLI replacementCard, CardCLI[] drawableCards) {
+        cardIndex--;
+        if(cardIndex==0){
+            if(replacementCard.isFaceUp()){
+                replacementCard.flip();
+            }
+        }
+        else if(!replacementCard.isFaceUp()){
+            replacementCard.flip();
+        }
+        drawableCards[cardIndex]=replacementCard;
     }
 
 }
