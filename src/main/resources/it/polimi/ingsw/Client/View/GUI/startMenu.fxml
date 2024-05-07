@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="595.0" prefWidth="1060.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="595.0" prefWidth="1060.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <ImageView fitHeight="600.0" fitWidth="1060.0" opacity="0.4" pickOnBounds="true" preserveRatio="true">
          <image>
@@ -22,7 +22,7 @@
          </font>
       </Label>
       <TextField fx:id="usernameField" alignment="CENTER" layoutX="410.0" layoutY="178.0" prefHeight="59.0" prefWidth="238.0" xmlns:fx="http://javafx.com/fxml">
-      <font>
+         <font>
             <Font name="Lao MN Bold" size="24.0" />
          </font>
       </TextField>
