@@ -1,4 +1,5 @@
 package it.polimi.ingsw.Client.View;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -6,6 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import it.polimi.ingsw.Client.Network.MessageDispatcher;
+import it.polimi.ingsw.Client.Network.MessageHandlerException;
 import it.polimi.ingsw.Client.Network.MessageParser;
 import it.polimi.ingsw.Client.Network.MessageType;
 public abstract class View {
@@ -24,7 +26,7 @@ public abstract class View {
     /**
      * Regex for valid usernames.
      */
-    protected static final String USERNAME_REGEX = "^\\w{4,16}$";
+    protected static final String USERNAME_REGEX = "^\\w{2,8}$";
 
     /**
      * Chosen number of players for the game.
@@ -91,27 +93,28 @@ public abstract class View {
 
     /**
      * Check if message params for create or join are valid, and wait for start.
-     *
-     * @param messageParams message params content
      */
-    protected void checkWaitForStart(String messageParams) {
-        if (!messageParams.equals("OK"))
+    protected void checkWaitForStart() {
+        if (messageParser.checkWaitForStart())
             throw new ViewException("Unexpected non-ok message content");
         this.waitForStart();
     }
 
     /**
      * Check if client has to start the game.
-     *
-     * @param messageContent message content
      */
 
-    protected void checkStart(String messageContent) {
-        if (messageContent.equals("FULL")) {
+    protected void checkStart() {
+
+        if (messageParser.getUsername().equals(username) && messageParser.unavailableUsername()){
+            this.showErrorAlert("Invalid username", "Username already taken, please select another one");
+            switchToJoin();
+        }
+        else if (this.messageParser.checkStart()) {//checks if is full
             if (this.isMaster)
                 this.startGame();
-        } else if (this.previousMessageType != MessageType.START)
-            this.checkWaitForStart(messageContent);
+        } if (this.previousMessageType != MessageType.START)
+            this.checkWaitForStart();
     }
 
     /**
@@ -119,6 +122,26 @@ public abstract class View {
      */
     protected void checkWinners() {
         this.winners = this.messageParser.getWinners();
+    }
+
+    /**
+     * Checks if player entered the information correctly.
+     * @param isMaster master flag
+     * @param playersNumber number of players
+     * @param username username
+     * */
+    protected boolean playerGivesCorrectInformation(boolean isMaster, String username, Integer playersNumber) {
+        if (username == null || !correctUsername(username)){
+            showErrorAlert("Invalid username", "Username must contain between 2 and 8 alphanumeric characters");
+            return false;
+        }
+        if (isMaster){
+            if (playersNumber == null || !(playersNumber >= 2 && playersNumber <= 4)){
+                showErrorAlert("Invalid players number", "Please select a number of players for the game");
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
@@ -149,6 +172,7 @@ public abstract class View {
      * */
     private void checkFinalRound() {
         this.finalRound = this.messageParser.checkFinalRound();
+        //TODO: checkFinalRound() : should return true if it's final round
     }
 
     /**
@@ -175,11 +199,21 @@ public abstract class View {
      * Method called to start showing the game.
      */
     protected abstract void startShow();
+    /**
+     * Method called to switch to create mode in the initial game view.
+     */
+    protected abstract void switchToCreate();
+    /**
+     * Method called to switch to join mode in the initial game view.
+     */
+    protected abstract void switchToJoin();
 
     /**
      * Method called to update the view game information.
      */
     protected abstract void updateGame();
+
+    protected abstract void showErrorAlert(String header, String content);
 
     /**
      * Method called to show abort.
@@ -230,11 +264,14 @@ public abstract class View {
     public void updateView() {
         String messageParams = this.messageParser.getMessageParams();
         switch (this.messageParser.getMessageType()) {
+
             case CREATE -> {
-                this.checkWaitForStart(messageParams);
+                this.checkWaitForStart();
                 this.isMaster = true;
             }
-            case JOIN -> this.checkStart(messageParams);
+            case JOIN -> {
+                this.checkStart();
+            }
             case START -> {
                 this.startShow();
                 this.continueGame();
