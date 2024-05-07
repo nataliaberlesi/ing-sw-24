@@ -34,12 +34,13 @@ public class BoardCLI {
     /**
      *  map that contains the list of cards the Y axis corresponding to the key
      */
-    private HashMap<Integer, ArrayList<CardCLI>> board;
+    private final HashMap<Integer, ArrayList<CardCLI>> board=new HashMap<>();
 
     /**
      * prints current board formation
      */
     public void printBoard(){
+        System.out.println("BOARD:");
         for(int i=maxY;i>=minY;i--){
             ArrayList<CardCLI> cardsInCurrentLine = board.get(i);
             int cursor=minX-1;
@@ -61,7 +62,8 @@ public class BoardCLI {
      * adds card to the board
      * @param card that is being placed on the board
      */
-    public void addCard(CardCLI card){
+    public void addCard(CardCLI card, Coordinates coordinates){
+        card.setCoordinates(coordinates);
         int cardY = card.getY();
         int cardX = card.getX();
         if(cardY<minY){
@@ -103,7 +105,7 @@ public class BoardCLI {
      * @param coordinates of card that is placed and is covering the corners of surrounding cards
      */
     public void coverCorners(Coordinates coordinates){
-        int coveredCardCorner=0;
+        int coveredCardCorner;
         for(int i=0; i<4;i++){
             Coordinates coveredCornerCoordinates= CornerCoordinatesCalculator.cornerCoordinates(coordinates, i);
             CardCLI coveredCard=getCoveredCard(coveredCornerCoordinates);

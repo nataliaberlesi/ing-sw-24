@@ -3,12 +3,26 @@ package it.polimi.ingsw.Client.View.CLI;
 import it.polimi.ingsw.Server.Model.Coordinates;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * card as shown in the CLI
  */
 public class CardCLI implements Comparable<CardCLI>{
 
+    /**
+     * unique ID identifying specific card
+     */
+    private final String cardID;
+
+    /**
+     * ID for empty card
+     */
+    private final static String emptyCardID="EMPTY_CARD";
+    /**
+     * symbols on empty card
+     */
+    private final static char[] emptyCardCorners={'-','-','-','-'};
     /**
      * empty top/bottom card border
      */
@@ -33,7 +47,7 @@ public class CardCLI implements Comparable<CardCLI>{
     /**
      * symbols on the back corners of the card, in resource and gold cards are blank, starting cards have other symbols.
      */
-    private char[] backCorners={'E','E','E','E','E'};
+    private char[] backCorners={'O','O','O','O'};
     /**
      * are only present in gold cards,
      * are shown like this: 3M,B  (three mushrooms and one butterfly)
@@ -70,6 +84,15 @@ public class CardCLI implements Comparable<CardCLI>{
         return isFaceUp;
     }
 
+
+    public CardCLI(String cardID){
+        this.cardID=cardID;
+    }
+
+    public String getCardID(){
+        return cardID;
+    }
+
     /**
      * saves the initial of back symbol
      * @param backSymbol full name of back symbol
@@ -78,6 +101,10 @@ public class CardCLI implements Comparable<CardCLI>{
         this.backSymbol = getProperSpacing(""+backSymbol.charAt(0));
     }
 
+    public CardCLI(){
+        this.cardID=emptyCardID;
+        this.frontCorners=emptyCardCorners;
+    }
     /**
      * saves the initials of the symbols on the front corners
      * @param frontCorners list of front corner symbols
@@ -125,6 +152,12 @@ public class CardCLI implements Comparable<CardCLI>{
     public char[] getInitials(String[] symbols){
         char[] initials=new char[symbols.length];
         for(int i=0; i< symbols.length; i++){
+            if(Objects.equals(symbols[i], "FULL")){
+                initials[i]='-';
+            }
+            else if(Objects.equals(symbols[i], "BLANK")){
+                initials[i]='O';
+            }
             initials[i]=symbols[i].charAt(0);
         }
         return initials;
@@ -141,6 +174,11 @@ public class CardCLI implements Comparable<CardCLI>{
         return backCorners;
     }
 
+    /**
+     *
+     * @param array of characters indicating different symbols
+     * @return a string containing each character from array seperated by a comma
+     */
     public static String arrayToStringWithComma(char[] array) {
         if (array == null || array.length == 0) {
             return "";
@@ -246,6 +284,9 @@ public class CardCLI implements Comparable<CardCLI>{
      * @return coordinates that are spaced so that they are centered inside the card: "  0,0  "
      */
     private String getProperlySpacedCoordinates(){
+        if(coordinates==null){
+            return "       ";
+        }
         String Xcoordinate= String.valueOf(coordinates.getX());
         String Ycoordinate= String.valueOf(coordinates.getY());
         return getProperSpacing(Xcoordinate+","+Ycoordinate);
@@ -350,6 +391,7 @@ public class CardCLI implements Comparable<CardCLI>{
         };
     }
 
+
     /**
      * used to compare cards in order to have them in ascending order
      * @param other the object to be compared.
@@ -362,4 +404,7 @@ public class CardCLI implements Comparable<CardCLI>{
     public int compareTo(CardCLI other) {
         return Integer.compare(this.coordinates.getX(), other.getX());
     }
+
+
+
 }

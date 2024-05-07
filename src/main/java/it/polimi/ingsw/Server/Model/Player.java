@@ -8,7 +8,7 @@ public class Player {
     /**
      * player name is used to identify players, must be unique
      */
-    private final String nickname;
+    private final String username;
 
     /**
      * ara that contains all the cards that can be drawn
@@ -37,8 +37,8 @@ public class Player {
 
 
 
-    public Player(String nickname) {
-        this.nickname = nickname;
+    public Player(String username) {
+        this.username = username;
     }
 
 
@@ -58,8 +58,8 @@ public class Player {
     }
 
 
-    public String getNickname() {
-        return nickname;
+    public String getUsername() {
+        return username;
     }
 
 
