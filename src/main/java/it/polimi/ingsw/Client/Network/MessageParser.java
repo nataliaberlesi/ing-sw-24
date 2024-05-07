@@ -67,16 +67,16 @@ public class MessageParser {
      * @return
      * @throws IOException
      */
-    public boolean masterStatus() throws IOException {
+    public boolean masterStatus(){
         //TODO
         return true;
     }
     //TODO: server side -> returns true when all players for the game have been created
-    public boolean checkWaitForStart() throws IOException {
+    public boolean checkWaitForStart(){
         return true;
     }
     //TODO: server side -> returns true if chosen username for this player is already used by another player
-    public Boolean unavailableUsername() throws IOException {
+    public Boolean unavailableUsername(){
         return messageParams.get("unavailableUsername").getAsBoolean();
     }
 
