@@ -106,8 +106,8 @@ public class GUIMainController extends View implements Initializable{
     /**
      * Show game create menu event.
      */
-
-    private void switchToCreate() {
+    @Override
+    protected void switchToCreate() {
         this.createMode = true;
         switchScene("startMenu.fxml");
     }
@@ -115,8 +115,8 @@ public class GUIMainController extends View implements Initializable{
     /**
      * Show game join menu event.
      */
-
-    private void switchToJoin() {
+    @Override
+    protected void switchToJoin() {
         this.createMode = false;
         this.switchScene("startMenu.fxml");
         this.playersNumberLabel.setVisible(false);
@@ -152,7 +152,8 @@ public class GUIMainController extends View implements Initializable{
      * @param header  header text
      * @param content content text
      */
-    private void showErrorAlert(String header, String content) {
+    @Override
+    protected void showErrorAlert(String header, String content) {
         this.errorAlert.setHeaderText(header);
         this.errorAlert.setContentText(content);
         this.errorAlert.showAndWait();
@@ -163,7 +164,7 @@ public class GUIMainController extends View implements Initializable{
      * */
     @Override
     protected void createGame(){
-        if (playerGivesCorrectInformation(this.createMode)) {
+        if (playerGivesCorrectInformation(this.createMode, this.usernameField.getCharacters().toString(), this.playersNumberChoice.getValue())) {
             this.playersNumber = this.playersNumberChoice.getValue();
             this.username = this.usernameField.getCharacters().toString();
             try {
@@ -181,7 +182,7 @@ public class GUIMainController extends View implements Initializable{
      * */
     @Override
     protected void joinGame(){
-        if (playerGivesCorrectInformation(this.createMode)) {
+        if (playerGivesCorrectInformation(this.createMode, this.usernameField.getCharacters().toString(), this.playersNumberChoice.getValue())) {
             this.username = this.usernameField.getCharacters().toString();
             try {
                 this.messageDispatcher.joinGame(this.username);
@@ -275,37 +276,6 @@ public class GUIMainController extends View implements Initializable{
     @Override
     public void main(String[] args) {
         //not used for GUI
-    }
-
-    /** Checks if the information provided by the player is correct
-     * @param createMode create vs join flag
-     * */
-    private boolean playerGivesCorrectInformation(boolean createMode) {
-        if (!View.correctUsername(usernameField.getCharacters().toString())){
-            this.showErrorAlert("Invalid username", "Username must contain between 4 and 16 alphanumeric characters");
-            return false;
-        }
-        try {
-            if (messageParser.unavailableUsername()){
-                this.showErrorAlert("Invalid username", "Username already taken, please select another one");
-            }
-        } catch (IOException e) {
-            throw new MessageHandlerException("Unable to verify availability of username", e);
-        }
-        if (createMode){
-            if (this.usernameField.getCharacters() == null || this.playersNumberChoice.getValue() == null){
-                this.showErrorAlert("Empty field", "Please provide all required information");
-                return false;
-            }
-        }
-        else {
-            if (this.usernameField.getCharacters() == null){
-                this.showErrorAlert("Empty field", "Please provide all required information");
-                return false;
-            }
-        }
-        return true;
-
     }
 
     /**
