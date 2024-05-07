@@ -1,6 +1,4 @@
-package it.polimi.ingsw.Server.Model.Cards.Objectives;
-
-import it.polimi.ingsw.Client.View.CLI.CardCLI;
+package it.polimi.ingsw.Client.View.CLI;
 
 
 /**
@@ -21,11 +19,9 @@ public class HandCLI {
      * creates a card to represent a missing card in hand
      */
     public HandCLI() {
-        String[] emptyCorners = new String[4];
-        for(int i = 0; i < 4; i++) {
-            emptyCorners[i] = "FULL";
+        for(int i=0; i<3; i++) {
+            hand[i] = new CardCLI();
         }
-        emptyCard.setFrontCorners(emptyCorners);
     }
 
     /**
@@ -34,7 +30,7 @@ public class HandCLI {
      * @return the ID of the card being taken
      */
     public String takeCard(int cardIndex){
-        cardIndex++;
+        cardIndex--;
         String cardID=hand[cardIndex].getCardID();
         hand[cardIndex] = emptyCard;
         return cardID;
@@ -48,6 +44,7 @@ public class HandCLI {
         for(int i=0; i<3; i++){
             if(hand[i].getCardID().equals(emptyCard.getCardID())){
                 hand[i] = card;
+                break;
             }
         }
     }
@@ -58,13 +55,10 @@ public class HandCLI {
      */
     public void printHand(){
         System.out.println("HAND:");
-        for(int i=0; i<4; i++){
-            for(int j=0; j<3; j++){
-                System.out.print(hand[i].getLine());
-            }
-        }
-        System.out.print("\n");
+        CardPrinter.printExactlyThreeCardsInAnArray(hand);
+        System.out.println();
     }
+
 
     /**
      * flips all cards in hand

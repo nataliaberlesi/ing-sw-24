@@ -85,18 +85,16 @@ public class DrawableAreaCLI {
     }
 
     private void printDrawableCards(CardCLI[] drawableCards) {
-        for(int i=0; i<4; i++) {
-            for (CardCLI card : drawableCards) {
-                System.out.print(card.getLine()+"         ");
-            }
-            System.out.print('\n');
-        }
+        CardPrinter.printExactlyThreeCardsInAnArray(drawableCards);
+        System.out.println();
     }
 
     public void printDrawableArea(){
-        System.out.println("Drawable area:");
+        System.out.println("You can draw these cards:\n");
+        System.out.println("RESOURCE CARDS:");
         printDrawableCards(resourceCards);
         System.out.print('\n');
+        System.out.println("GOLD CARDS:");
         printDrawableCards(goldCards);
     }
 
