@@ -43,18 +43,20 @@ public class BoardCLI {
         System.out.println("BOARD:");
         for(int i=maxY;i>=minY;i--){
             ArrayList<CardCLI> cardsInCurrentLine = board.get(i);
-            int cursor=minX-1;
-            for(CardCLI card: cardsInCurrentLine){
-                int cardX=card.getX();
-                if(cardX!=cursor){
-                    for(int j=cursor+1;j>0;j--){
-                        System.out.print(empty);
+
+            for(int k=0; k<4; k++) {
+                int cursor=minX-1;
+                for (CardCLI card : cardsInCurrentLine) {
+                    int cardX = card.getX();
+                    StringBuilder spacing= new StringBuilder();
+                    if (cardX != cursor) {
+                        spacing.append(empty.repeat(Math.max(0, cardX - (cursor + 1))));
                     }
+                    cursor = cardX;
+                    System.out.print(spacing+card.getLine());
                 }
-                cursor=cardX;
-                System.out.print(card.getLine());
+                System.out.println();
             }
-            System.out.print("\n");
         }
     }
 
@@ -76,6 +78,9 @@ public class BoardCLI {
             minX=cardX;
         }
         ArrayList<CardCLI> cards = board.get(cardY);
+        if(cards==null){
+            cards=new ArrayList<>();
+        }
         cards.add(card);
         Collections.sort(cards);
         board.put(cardY, cards);
@@ -100,6 +105,16 @@ public class BoardCLI {
         return null;
     }
 
+
+    private int getCoveredCardCorner(int cornerOfCardThatIsCovering) throws IllegalArgumentException{
+        if(cornerOfCardThatIsCovering==0||cornerOfCardThatIsCovering==1){
+            return cornerOfCardThatIsCovering+2;
+        }
+        if(cornerOfCardThatIsCovering==2||cornerOfCardThatIsCovering==3){
+            return cornerOfCardThatIsCovering-2;
+        }
+        throw new IllegalArgumentException(cornerOfCardThatIsCovering+" is not a valid corner number");
+    }
     /**
      * replaces the covered symbols with '-'
      * @param coordinates of card that is placed and is covering the corners of surrounding cards
@@ -110,7 +125,7 @@ public class BoardCLI {
             Coordinates coveredCornerCoordinates= CornerCoordinatesCalculator.cornerCoordinates(coordinates, i);
             CardCLI coveredCard=getCoveredCard(coveredCornerCoordinates);
             if(coveredCard!=null){
-                coveredCardCorner=Math.abs(i-2);
+                coveredCardCorner=getCoveredCardCorner(i);
                 char[] visibleCorners=coveredCard.getVisibleCorners();
                 visibleCorners[coveredCardCorner]='-';
             }

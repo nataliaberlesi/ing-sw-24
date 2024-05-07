@@ -15,6 +15,8 @@ public class CardCLI implements Comparable<CardCLI>{
      */
     private final String cardID;
 
+    private String cardColor;
+
     /**
      * ID for empty card
      */
@@ -71,7 +73,7 @@ public class CardCLI implements Comparable<CardCLI>{
     /**
      * indicates the orientation of the card
      */
-    private boolean isFaceUp=false;
+    private boolean isFaceUp=true;
 
     /**
      * flips the card
@@ -87,6 +89,7 @@ public class CardCLI implements Comparable<CardCLI>{
 
     public CardCLI(String cardID){
         this.cardID=cardID;
+        setBackSymbol();
     }
 
     public String getCardID(){
@@ -94,11 +97,32 @@ public class CardCLI implements Comparable<CardCLI>{
     }
 
     /**
-     * saves the initial of back symbol
-     * @param backSymbol full name of back symbol
+     * saves the initial of back symbol, indicated by the second letter of the cardID
      */
-    public void setBackSymbol(String backSymbol) {
-        this.backSymbol = getProperSpacing(""+backSymbol.charAt(0));
+    private void setBackSymbol() {
+        char backSymbol=cardID.charAt(1);
+        switch (backSymbol) {
+            case ('R'):
+                backSymbol = 'M';
+                cardColor=ColoredText.ANSI_RED;
+                break;
+            case ('B'):
+                backSymbol='W';
+                cardColor=ColoredText.ANSI_BLUE;
+                break;
+            case ('G'):
+                backSymbol='L';
+                cardColor=ColoredText.ANSI_GREEN;
+                break;
+            case ('P'):
+                backSymbol='B';
+                cardColor=ColoredText.ANSI_PURPLE;
+                break;
+            default:
+                backSymbol=' ';
+                break;
+        }
+        this.backSymbol = getProperSpacing(""+backSymbol);
     }
 
     public CardCLI(){
@@ -198,7 +222,7 @@ public class CardCLI implements Comparable<CardCLI>{
      * @param frontCenterSymbols are present only on gold cards
      */
     public void setFrontCenterSymbols(ArrayList<String> frontCenterSymbols) {
-        String [] symbols=frontCenterSymbols.toArray(new String[frontCenterSymbols.size()]);
+        String [] symbols=frontCenterSymbols.toArray(new String[0]);
         char [] initials =getInitials(symbols);
         String frontSymbols= arrayToStringWithComma(initials);
         prerequisites=getProperSpacing(frontSymbols);
@@ -213,28 +237,35 @@ public class CardCLI implements Comparable<CardCLI>{
         switch (cardObjective){
             case("OnePointObjective"):
                 this.cardObjective="--1pt--";
-
+                break;
             case("ThreePointObjective"):
                 this.cardObjective="--3pts-";
+                break;
 
             case("FivePointObjective"):
                 this.cardObjective="--5pts-";
+                break;
 
             case("FeatherObjective"):
                 this.cardObjective="--1pt--";
                 this.bottomLine="--*F---";
+                break;
 
             case("ScrollObjective"):
                 this.cardObjective="--1pt--";
                 this.bottomLine="--*S---";
+                break;
 
             case("InkObjective"):
                 this.cardObjective="--1pt--";
                 this.bottomLine="--*I---";
+                break;
 
             case("CoveredCornerObjective"):
                 this.cardObjective="--2pts-";
                 this.bottomLine="--*C---";
+                break;
+
             default:
                 throw new RuntimeException(cardObjective+" objective doesn't exist");
 
@@ -334,6 +365,7 @@ public class CardCLI implements Comparable<CardCLI>{
         if(isFaceUp){
             prerequisitesLine.append(getProperSpacing(prerequisites));
             prerequisitesLine.append('|');
+            return prerequisitesLine.toString();
         }
         prerequisitesLine.append(backSymbol);
         prerequisitesLine.append('|');
@@ -365,30 +397,41 @@ public class CardCLI implements Comparable<CardCLI>{
         return bottomLine.toString();
     }
 
+    private String getColoredText(StringBuilder text){
+        if(cardColor==null){
+            return text.toString();
+        }
+        return cardColor+text+ColoredText.ANSI_RESET;
+    }
+
     /**
      *
      * @return current line corresponding to the currentLine
      */
     public String getLine(){
-        return switch (currentLine) {
-            case 0 -> {
+        StringBuilder line=new StringBuilder();
+        switch (currentLine) {
+            case 0 :
                 currentLine++;
-                yield getTopLine();
-            }
-            case 1 -> {
+                line.append(getTopLine());
+                break;
+            case 1 :
                 currentLine++;
-                yield getCoordinatesLine();
-            }
-            case 2 -> {
+                line.append(getCoordinatesLine());
+                break;
+            case 2 :
                 currentLine++;
-                yield getPrerequisitesLine();
-            }
-            case 3 -> {
+                line.append(getPrerequisitesLine());
+                break;
+            case 3 :
                 currentLine = 0;
-                yield getBottomLine();
-            }
-            default -> throw new RuntimeException("ERROR IN VIEW, IMPOSSIBLE LINE WAS QUERIED");
-        };
+                line.append(getBottomLine());
+                break;
+            default :
+                throw new RuntimeException("ERROR IN VIEW, IMPOSSIBLE LINE WAS QUERIED");
+        }
+        return getColoredText(line);
+
     }
 
 
