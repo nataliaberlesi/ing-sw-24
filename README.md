@@ -8,7 +8,7 @@
 | SERVER CONTROLLER  | :stopwatch:  |
 | SERVER NETWORK  | :stopwatch:  |
 | CLIENT NETWORK  | :stopwatch:  |
-| CLIENT CLI  | :no_entry:  |
+| CLIENT CLI  | :stopwatch:  |
 | CLIENT GUI  | :stopwatch:  |
 | MULTI MATCH  | :no_entry: |
 | CHAT  | :no_entry:  |
