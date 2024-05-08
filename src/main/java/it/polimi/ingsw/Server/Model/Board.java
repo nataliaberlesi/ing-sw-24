@@ -357,4 +357,12 @@ public class Board {
         }
            return  card.getBackCorners();
     }
+
+    /**
+     *
+     * @return list of cards that have been placed on board
+     */
+    public ArrayList<PlacedCard> getPlacedCards() {
+        return placedCards;
+    }
 }
