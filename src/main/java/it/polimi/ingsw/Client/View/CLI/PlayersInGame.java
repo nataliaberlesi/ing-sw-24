@@ -15,7 +15,7 @@ public class PlayersInGame {
     public void printScores() {
         System.out.println("SCOREBOARD:");
         for(PlayerCLI player : players) {
-            System.out.println(player.getUsername()+": "+player.getScore());
+            System.out.println(player.getColoredUsername()+": "+player.getScore());
         }
     }
 

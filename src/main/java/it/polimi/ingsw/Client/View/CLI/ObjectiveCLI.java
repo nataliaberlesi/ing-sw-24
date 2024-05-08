@@ -33,10 +33,6 @@ public class ObjectiveCLI {
         }
     }
 
-    /**
-     *
-     * @param specificType is the symbol that will gain points for player
-     */
     private void setSymbolObjective(String specificType) {
         this.objective="Gain 2 points for every ";
         if(specificType.equals("INK")||specificType.equals("SCROLL")||specificType.equals("FEATHER")){
@@ -52,10 +48,7 @@ public class ObjectiveCLI {
 
     }
 
-    /**
-     *
-     * @param specificType is the symbol that specifies which vertica pattern earns points
-     */
+
     private void setVerticalPatternObjective(String specificType) {
         StringBuilder verticalPattern=new StringBuilder();
         String emptySpace=createEmptyString(objective.length()/2);
@@ -68,12 +61,12 @@ public class ObjectiveCLI {
                 verticalPattern.append("C\n");
                 verticalPattern.append(ColoredText.ANSI_GREEN);
                 verticalPattern.append(emptySpace);
-                verticalPattern.append(" C\n");
+                verticalPattern.append("  C\n");
                 verticalPattern.append(ColoredText.ANSI_RESET);
                 break;
             case "WOLF":
                 verticalPattern.append(ColoredText.ANSI_RED);
-                verticalPattern.append(" C\n");
+                verticalPattern.append("  C\n");
                 verticalPattern.append(ColoredText.ANSI_BLUE);
                 verticalPattern.append(emptySpace);
                 verticalPattern.append("C\n");
@@ -86,16 +79,16 @@ public class ObjectiveCLI {
                 verticalPattern.append("C\n");
                 verticalPattern.append(ColoredText.ANSI_PURPLE);
                 verticalPattern.append(emptySpace);
-                verticalPattern.append(" C\n");
+                verticalPattern.append("  C\n");
                 verticalPattern.append(emptySpace);
-                verticalPattern.append(" C\n");
+                verticalPattern.append("  C\n");
                 verticalPattern.append(ColoredText.ANSI_RESET);
                 break;
             case "LEAF":
                 verticalPattern.append(ColoredText.ANSI_GREEN);
-                verticalPattern.append(" C\n");
+                verticalPattern.append("  C\n");
                 verticalPattern.append(emptySpace);
-                verticalPattern.append(" C\n");
+                verticalPattern.append("  C\n");
                 verticalPattern.append(ColoredText.ANSI_PURPLE);
                 verticalPattern.append(emptySpace);
                 verticalPattern.append("C\n");
@@ -107,12 +100,7 @@ public class ObjectiveCLI {
         this.objective+=verticalPattern.toString();
     }
 
-    /**
-     *
-     * @param diagonalPattern is the string that will show the pattern
-     * @param emptySpace correct spacing to show pattern
-     * @param isIncreasing true if it is an increasing pattern
-     */
+
     private void diagonalStringBuilder(StringBuilder diagonalPattern,String emptySpace, boolean isIncreasing){
         if(isIncreasing){
             diagonalPattern.append("    C\n");
@@ -129,11 +117,6 @@ public class ObjectiveCLI {
             diagonalPattern.append("    C\n");
         }
     }
-
-    /**
-     *
-     * @param specificType is the symbol that specifies the type of diagonal pattern
-     */
     private void setDiagonalPatternObjective(String specificType){
         StringBuilder diagonalPattern=new StringBuilder();
         String emptySpace=createEmptyString(objective.length()/2);
@@ -165,18 +148,10 @@ public class ObjectiveCLI {
         this.objective+=diagonalPattern.toString();
     }
 
-    /**
-     *
-     * @param length of string that will be blank
-     * @return blank string of the length given
-     */
     public static String createEmptyString(int length) {
         return " ".repeat(Math.max(0, length));
     }
 
-    /**
-     * prints out the objective
-     */
     public void printObjective(){
         System.out.println(this.objective);
     }

@@ -9,7 +9,7 @@ public class PlayerCLI {
     /**
      * players have a color that can be green, blu, red, yellow.
      */
-    private ColoredText playerColor;
+    private String playerColor="";
     /**
      * points earned by player
      */
@@ -34,6 +34,7 @@ public class PlayerCLI {
     /**
      * constructor used when a player joins game
      * @param username unique name of player
+     * @param isMaster indicates weather player was the one to start the game
      */
     public PlayerCLI(String username, boolean isMaster) {
         this.username = username;
@@ -43,14 +44,19 @@ public class PlayerCLI {
         this.isMaster=isMaster;
     }
 
+
     /**
      *
-     * @return player that controls view
+     * @param isMaster indicates weather player was the one to start the game
      */
-    public PlayerCLI makeMyPlayer(boolean isMyMaster){
+    public PlayerCLI (boolean isMaster){
         isMyPlayer=true;
-        return new PlayerCLI(null, isMyMaster);
+        this.score = 0;
+        this.playerBoard = new BoardCLI();
+        this.playerHand = new HandCLI();
+        this.isMaster=isMaster;
     }
+
 
     /**
      *
@@ -69,8 +75,40 @@ public class PlayerCLI {
         this.score = score;
     }
 
+
+    public void setPlayerColor(String color) throws IllegalArgumentException{
+        switch (color) {
+            case "RED":
+                this.playerColor=ColoredText.ANSI_RED;
+                break;
+            case "BLUE":
+                this.playerColor=ColoredText.ANSI_BLUE;
+                break;
+            case "GREEN":
+                this.playerColor=ColoredText.ANSI_GREEN;
+                break;
+            case "YELLOW":
+                this.playerColor=ColoredText.ANSI_YELLOW;
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid color");
+        }
+    }
+
     public String getUsername() {
         return username;
+    }
+
+
+    public String getColoredUsername(){
+        StringBuilder coloredUsername=new StringBuilder();
+        coloredUsername.append(playerColor);
+        coloredUsername.append(username);
+        coloredUsername.append(ColoredText.ANSI_RESET);
+        if(isMaster){
+            coloredUsername.append("*");
+        }
+        return coloredUsername.toString();
     }
 
     public BoardCLI getPlayerBoard() {
@@ -79,6 +117,10 @@ public class PlayerCLI {
 
     public boolean isMaster() {
         return isMaster;
+    }
+
+    public String getPlayerColor() {
+        return playerColor;
     }
 
     public boolean isMyPlayer() {

@@ -30,6 +30,10 @@ public class Board {
      */
     private int score=0;
     /**
+     * points earned by completing objectives
+     */
+    private int objectivesScore=0;
+    /**
      * list of cards that have been laced on board, where they were placed and in which orientation
      */
     private final ArrayList<PlacedCard> placedCards=new ArrayList<>();
@@ -106,6 +110,14 @@ public class Board {
             }
         }
         addPlacedCard(startingCard, new Coordinates(), isFacingUp);
+    }
+
+    /**
+     *
+     * @return points gained from objectives
+     */
+    public int getObjectivesScore() {
+        return objectivesScore;
     }
 
     /**
@@ -308,15 +320,21 @@ public class Board {
     }
 
     /**
+     * calculates points gained from objectives and updates objectiveScore
+     */
+    private void calculateAndUpdateObjectiveScore(){
+        for(Objective objective:objectives){
+            objectivesScore+=objective.calculatePoints(visibleSymbolCounter);
+        }
+    }
+
+    /**
      *
      * @return the current score plus the points gained from the objectives
      */
     public int getFinalScore(){
-        int finalScore=score;
-        for(Objective objective:objectives){
-            finalScore+=objective.calculatePoints(visibleSymbolCounter);
-        }
-        return finalScore;
+        calculateAndUpdateObjectiveScore();
+        return score+objectivesScore;
     }
 
     /**
