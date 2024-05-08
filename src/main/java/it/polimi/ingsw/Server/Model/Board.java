@@ -30,6 +30,10 @@ public class Board {
      */
     private int score=0;
     /**
+     * list of cards that have been laced on board, where they were placed and in which orientation
+     */
+    private final ArrayList<PlacedCard> placedCards=new ArrayList<>();
+    /**
      * list of all coordinates where cards can't be placed
      */
     private final ArrayList<Coordinates> unplaceableCoordinates = new ArrayList<>();
@@ -101,6 +105,17 @@ public class Board {
                 updateVisibleCounter(centerSymbol);
             }
         }
+        addPlacedCard(startingCard, new Coordinates(), isFacingUp);
+    }
+
+    /**
+     *
+     * @param placedCard card that was placed
+     * @param coordinates where card was placed
+     * @param isFacingUp orientation of card
+     */
+    private void addPlacedCard(Card placedCard, Coordinates coordinates, boolean isFacingUp) {
+        placedCards.add(new PlacedCard(placedCard, coordinates, isFacingUp));
     }
 
 
@@ -145,6 +160,8 @@ public class Board {
                 }
                 //adds card and coordinates to occupiedCoordinates
                 updateBoardObjectives(card.getBackSymbol(), coordinates);
+                //adds card to placedCards
+                addPlacedCard(card, coordinates, isFacingUp);
                 return true;
             }
         }
