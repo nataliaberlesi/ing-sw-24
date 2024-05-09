@@ -11,7 +11,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class Server {
+public class Server implements Runnable{
+    private Parser parser;
     /**
      * The port where the server listens
      */
@@ -20,6 +21,7 @@ public class Server {
      * The server socket that listens for connections
      */
     private ServerSocket serverSocket;
+    private int maxAllowablePlayers;
 
     /**
      * The active connections inside the server
@@ -33,18 +35,7 @@ public class Server {
      */
     public Server(int port) throws IOException {
         this.port = port;
-        waitMaster();
-    }
-    public Server() throws IOException {
-        this.port=getPortFromSettings();
-        waitMaster();
-    }
-    private int getPortFromSettings() throws IOException {
-        Gson gson = new Gson();
-        Reader reader = Files.newBufferedReader(Paths.get(serverSetupAddress));
-        Map<String, String> settings = gson.fromJson(reader, Map.class);
-        reader.close();
-        return Integer.parseInt(settings.get("port"));
+        maxAllowablePlayers=0;
     }
     public ArrayList<PlayerConnection> getConnections() {
         return connections;
@@ -63,6 +54,7 @@ public class Server {
      */
     private void waitMaster() throws IOException {
         this.connections=new ArrayList<PlayerConnection>();
+        this.serverSocket=new ServerSocket(port);
         PlayerConnection master=connectPlayer(true);
         this.connections.add(master);
     }
@@ -83,10 +75,59 @@ public class Server {
      * @throws IOException
      */
     private PlayerConnection connectPlayer(boolean isMaster) throws IOException {
-        openServerSocket();
         Socket Socket=serverSocket.accept();
-        closeServerSocket();
-        return new PlayerConnection(Socket, isMaster);
+        //TODO: thread
+        PlayerConnection playerConnection=new PlayerConnection(Socket, isMaster);
+        new Thread(playerConnection).start();
+        return playerConnection;
+    }
+
+    /**
+     * Get a connection by his nickname
+     * @param nickname
+     * @return
+     */
+    public PlayerConnection getConnection(String nickname) {
+        for(PlayerConnection pc:connections) {
+            if(pc.getPlayer().getUsername().equals(nickname)) {
+                return pc;
+            }
+        }
+        return null;
+    }
+    public void setMaxAllowablePlayers(int maxAllowablePlayers) {
+        this.maxAllowablePlayers=maxAllowablePlayers;
+    }
+    private void sendMasterStatus(String status) {
+        MessageType messageType=MessageType.CONNECTION;
+        String params=status;
+        String outMessage=parser.toString(new Message(messageType,params));
+        connections.getLast().setOutMessage(outMessage);
+    }
+    public void run() {
+        try {
+            waitMaster();
+            MessageType messageType=MessageType.CONNECTION;
+            String params="MASTER";
+            String outMessage=parser.toString(new Message(messageType,params));
+            connections.getLast().setOutMessage(outMessage);
+        } catch (IOException ioe) {
+            throw new RuntimeException(ioe);
+        }
+        while(!serverSocket.isClosed()) {
+            if(connections.size()<maxAllowablePlayers) {
+                try {
+                    waitPlayer();
+                } catch (IOException ioe) {
+                    throw new RuntimeException(ioe);
+                }
+                MessageType messageType=MessageType.CONNECTION;
+                String params="NOTMASTER";
+                String outMessage=parser.toString(new Message(messageType,params));
+                connections.getLast().setOutMessage(outMessage);
+
+            }
+        }
     }
 
 }
