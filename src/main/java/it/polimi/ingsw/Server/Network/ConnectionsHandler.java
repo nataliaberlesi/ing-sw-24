@@ -1,5 +1,6 @@
-package it.polimi.ingsw.Server.Controller;
+package it.polimi.ingsw.Server.Network;
 
+import it.polimi.ingsw.Server.Controller.GameController;
 import it.polimi.ingsw.Server.Network.*;
 
 import java.util.ArrayList;
@@ -13,20 +14,35 @@ public class ConnectionsHandler implements Runnable{
         this.server=server;
         parser=Parser.getInstance();
     }
+
+    /**
+     * Dispatches the message to the GameController
+     * @param inMessage
+     * @return the GameController's answer
+     */
     private Message handleMessage(String inMessage) {
         return gameController.dispatchMessage(inMessage);
     }
+
+    /**
+     * Read every message in input from each playerConnection and then handles it. Then answers back to the Client
+     * @param playerConnections
+     */
     private void handleConnections(ArrayList<PlayerConnection> playerConnections) {
         for(PlayerConnection playerConnection: playerConnections) {
             Message outMessage=handleMessage(playerConnection.getInMessage());
             playerConnection.setOutMessage(parser.toString(outMessage));
         }
     }
+
+    /**
+     * Handles some network logic operations, then handles incoming messages
+     */
     public void run() {
         while(allPlayerConnected) {
             if(gameController.gameIsFull() && !gameController.gameIsStarted()) {
                 for(PlayerConnection pc: server.getConnections()) {
-                    String outMessage=gameController.craftJSONMessage(MessageType.START, gameController.getJSONStartParams());
+                    String outMessage=parser.toString(gameController.craftJSONMessage(MessageType.START, gameController.getJSONStartParams()));
                     pc.setOutMessage(outMessage);
                 }
             }
