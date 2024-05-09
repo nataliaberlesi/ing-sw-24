@@ -1,15 +1,12 @@
 package it.polimi.ingsw.Server.Network;
 
 
-import com.google.gson.Gson;
-import it.polimi.ingsw.Server.Network.Message;
-import it.polimi.ingsw.Server.Network.Parser;
 import it.polimi.ingsw.Server.Model.Player;
 
 import java.io.*;
 import java.net.Socket;
 
-public class PlayerConnection{
+public class PlayerConnection implements Runnable{
     /**
      * Channel used to communicate between a single player and the server
      */
@@ -18,7 +15,7 @@ public class PlayerConnection{
      * States if the player has been the first to connect to the server
      */
     private boolean isMaster;
-    private Gateway gateway;
+    private MessageParser messageParser;
     /**
      * The player instance in the model
      */
@@ -26,6 +23,8 @@ public class PlayerConnection{
     private Parser parser;
     private BufferedReader inSocket;
     private PrintWriter outSocket;
+    private String outMessage;
+    private String inMessage;
 
     /**
      *
@@ -37,7 +36,6 @@ public class PlayerConnection{
         socket=s;
         setUpIO();
         this.isMaster=isMaster;
-        this.gateway=new Gateway(this);
     }
     /**
      * Setups input stream and output stream for the socket
@@ -51,19 +49,28 @@ public class PlayerConnection{
 
     /**
      * Sends a Message into outSocket
-     * @param message Is the Message to be sent
      */
-    public void send(Message message) {
-        outSocket.println(parser.toString(message)); //parses a Message into a json string
+    public void threadSendMethod() {
+        while(socket.isConnected()) {
+            if(outMessage!=null) {
+                outSocket.println(outMessage);
+                outMessage=null;
+            }
+        }
     }
 
     /**
      * Waits for a String to be received and parses it into a Message
-     * @return The Message received
      * @throws IOException
      */
-    public Message receive() throws IOException {
-        return parser.toMessage(inSocket.readLine());
+    public void threadReceiveMethod() {
+        while(socket.isConnected()) {
+            try{
+                inMessage=inSocket.readLine();
+            } catch(IOException ioe) {
+                //TODO
+            }
+        }
     }
     public Player getPlayer() {
         return player;
@@ -76,8 +83,16 @@ public class PlayerConnection{
     public boolean isMaster() {
         return this.isMaster;
     }
-    public Gateway getGateway() {
-        return this.gateway;
+    public String getInMessage() {
+        return this.inMessage;
+    }
+    public synchronized void setOutMessage(String outMessage) {
+        this.outMessage=outMessage;
+    }
+    @Override
+    public void run() {
+        new Thread(this::threadReceiveMethod).start();
+        new Thread(this::threadSendMethod).start();
     }
 }
 
