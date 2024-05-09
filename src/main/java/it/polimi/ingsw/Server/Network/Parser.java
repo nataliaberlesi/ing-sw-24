@@ -1,6 +1,9 @@
 package it.polimi.ingsw.Server.Network;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 public class Parser {
     /**
@@ -32,6 +35,10 @@ public class Parser {
      */
     public String toString(Message message) {
         return GSON.toJson(message);
+    }
+    public JsonObject toJsonObject(String message) {
+        JsonElement rootNode= JsonParser.parseString(message);
+        return rootNode.getAsJsonObject();
     }
 
 }
