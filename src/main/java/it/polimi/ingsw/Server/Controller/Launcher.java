@@ -5,25 +5,18 @@ import it.polimi.ingsw.Server.Network.Server;
 import java.io.IOException;
 
 public class Launcher {
-    public static void main(String[] args) {
-        GameController gameController = new GameController();
-        Server server = null;
+    private static Server server;
+    public static void main(String[] args){
         try {
-            server = new Server();
-        } catch (IOException ioe) {
-            gameController.shutDown();
-        }
-        gameController.setServer(server);
-        try {
-            gameController.createGame();
+            server=new Server(60600);
         } catch(IOException ioe) {
-            gameController.shutDown();
-        }
-        try {
-            gameController.startGame();
-        } catch(IOException ioe){
-            gameController.shutDown();
-        }
 
+        }
+        new Thread(server).start();
+        Launcher.openConnectionsHandler();
+
+    }
+    private static void openConnectionsHandler() {
+        new Thread(new ConnectionsHandler(server));
     }
 }
