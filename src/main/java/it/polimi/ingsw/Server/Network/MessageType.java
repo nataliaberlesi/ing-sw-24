@@ -19,7 +19,7 @@ public enum MessageType {
     /**
      * Game initialization.
      */
-    START,
+    START_FIRSTROUND,
     /**
      * Player action execution.
      */

@@ -1,7 +1,6 @@
 package it.polimi.ingsw.Server.Network;
 
 import it.polimi.ingsw.Server.Controller.GameController;
-import it.polimi.ingsw.Server.Network.*;
 
 import java.util.ArrayList;
 
@@ -42,7 +41,7 @@ public class ConnectionsHandler implements Runnable{
         while(allPlayerConnected) {
             if(gameController.gameIsFull() && !gameController.gameIsStarted()) {
                 for(PlayerConnection pc: server.getConnections()) {
-                    String outMessage=parser.toString(gameController.craftJSONMessage(MessageType.START, gameController.getJSONStartParams()));
+                    String outMessage=parser.toString(gameController.craftJSONMessage(MessageType.START_FIRSTROUND, gameController.getJSONStartParams()));
                     pc.setOutMessage(outMessage);
                 }
             }

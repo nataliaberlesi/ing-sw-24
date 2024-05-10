@@ -97,9 +97,15 @@ public class MessageParser {
     }
 
     public Object getUsername() {
+        return null;
     }
 
     public boolean checkStart() {
         return false;
     }
+
+    public boolean checkFinalRound() {
+        return false;
+    }
 }
+
