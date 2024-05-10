@@ -35,7 +35,7 @@ public class GameController {
                 return joinGame(username,messageParams);
 
             }
-            case START -> {
+            case START_FIRSTROUND -> {
 
             }
             case ACTION -> {
@@ -50,6 +50,7 @@ public class GameController {
 
             }
         }
+
     }
 
     /**
@@ -75,6 +76,7 @@ public class GameController {
             jsonObject.addProperty("unavailableUsername",unavailableUsername);
             return this.craftJSONMessage(MessageType.JOIN, jsonObject.toString());
         }
+        gameInstance.joinPlayer(username);
         JsonObject jsonObject=new JsonObject();
         jsonObject.addProperty("unavailableUsername",unavailableUsername);
         jsonObject.addProperty("full",gameInstance.checkIfGameIsFull());
@@ -87,6 +89,10 @@ public class GameController {
     }
     public boolean gameIsStarted() {
         return this.gameIsStarted();
+    }
+    public String getJSONStartParams() {
+        //TODO
+        return"";
     }
     public Message craftJSONMessage(MessageType messageType, String params) {
         return new Message(messageType, params);

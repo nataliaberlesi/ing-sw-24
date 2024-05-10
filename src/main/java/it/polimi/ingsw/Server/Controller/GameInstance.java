@@ -13,6 +13,7 @@ public class GameInstance {
     private String currentPlayer;
     private int numberOfPlayers;
     private HashMap<String, Player> players;
+    private SetUpGame setUpGame;
     public GameInstance(String masterNickname,int numberOfPlayers) {
         this.numberOfPlayers = numberOfPlayers;
         playersTurnOrder =new ArrayList<String>();
