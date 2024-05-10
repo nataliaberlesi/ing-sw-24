@@ -55,6 +55,7 @@ public class HandCLI {
      */
     public void printHand(){
         System.out.println("HAND:");
+        System.out.println(CardIndexCLI.properlySpacedCardIndex);
         CardPrinter.printExactlyThreeCardsInAnArray(hand);
         System.out.println();
     }

@@ -92,9 +92,11 @@ public class DrawableAreaCLI {
     public void printDrawableArea(){
         System.out.println("You can draw these cards:\n");
         System.out.println("RESOURCE CARDS:");
+        System.out.println(CardIndexCLI.properlySpacedCardIndex);
         printDrawableCards(resourceCards);
         System.out.print('\n');
         System.out.println("GOLD CARDS:");
+        System.out.println(CardIndexCLI.properlySpacedCardIndex);
         printDrawableCards(goldCards);
     }
 

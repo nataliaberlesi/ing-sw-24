@@ -76,6 +76,11 @@ public class PlayerCLI {
     }
 
 
+    /**
+     *
+     * @param color of player
+     * @throws IllegalArgumentException if color does not exist
+     */
     public void setPlayerColor(String color) throws IllegalArgumentException{
         switch (color) {
             case "RED":
@@ -95,11 +100,16 @@ public class PlayerCLI {
         }
     }
 
+
     public String getUsername() {
         return username;
     }
 
 
+    /**
+     *
+     * @return username of the color of the player, if player is the first player then an asterisk will be added at the end of colored username
+     */
     public String getColoredUsername(){
         StringBuilder coloredUsername=new StringBuilder();
         coloredUsername.append(playerColor);
@@ -110,6 +120,32 @@ public class PlayerCLI {
         }
         return coloredUsername.toString();
     }
+
+    /**
+     * prints the board of player
+     */
+    public void printBoard(){
+        playerBoard.printBoard();
+    }
+
+    /**
+     * if player is the one controlling this view then method prints his card face up, otherwise it prints cards face down
+     */
+    public void printHand(){
+        if(isMyPlayer){
+            playerHand.printHand();
+            return;
+        }
+        playerHand.printBackOfHand();
+    }
+
+    /**
+     * prints colored username followed by the players score
+     */
+    public void printScore(){
+        System.out.println(getColoredUsername()+": "+score);
+    }
+
 
     public BoardCLI getPlayerBoard() {
         return playerBoard;

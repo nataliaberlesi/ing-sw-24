@@ -10,12 +10,12 @@ public class PlayersInGame {
     private final ArrayList<PlayerCLI> players =new ArrayList<>();
 
     /**
-     * shows score of each player
+     * prints score of each player
      */
     public void printScores() {
         System.out.println("SCOREBOARD:");
         for(PlayerCLI player : players) {
-            System.out.println(player.getColoredUsername()+": "+player.getScore());
+                player.printScore();
         }
     }
 

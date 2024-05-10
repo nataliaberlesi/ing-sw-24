@@ -26,15 +26,16 @@ public class BoardCLI {
      */
     private int minX=0;
 
-    /**
-     * empty String of the length of a card
-     */
-    private final static String empty="         ";
 
     /**
      *  map that contains the list of cards the Y axis corresponding to the key
      */
     private final HashMap<Integer, ArrayList<CardCLI>> board=new HashMap<>();
+
+    /**
+     * starting card is the first card placed by player, it can only be placed in (0,0).
+     */
+    private CardCLI startingCard;
 
     /**
      * prints current board formation
@@ -50,7 +51,7 @@ public class BoardCLI {
                     int cardX = card.getX();
                     StringBuilder spacing= new StringBuilder();
                     if (cardX != cursor) {
-                        spacing.append(empty.repeat(Math.max(0, cardX - (cursor + 1))));
+                        spacing.append(CardIndexCLI.cardLength.repeat(Math.max(0, cardX - (cursor + 1))));
                     }
                     cursor = cardX;
                     System.out.print(spacing+card.getLine());
@@ -58,6 +59,13 @@ public class BoardCLI {
                 System.out.println();
             }
         }
+    }
+
+    /**
+     * flips starting card, so user can see both sides of card and decide how to place
+     */
+    public void flipStartingCard(){
+        this.startingCard.flip();
     }
 
     /**
