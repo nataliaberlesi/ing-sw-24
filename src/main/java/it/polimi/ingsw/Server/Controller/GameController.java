@@ -35,22 +35,26 @@ public class GameController {
                 return joinGame(username,messageParams);
 
             }
-            case START_FIRSTROUND -> {
-
+            case FIRSTROUND -> {
+                //TODO
             }
-            case ACTION -> {
+            case SECONDROUND -> {
+                //TODO
             }
-            case FINAL_ROUND -> {
-
+            case ACTION_PLACECARD -> {
+                //TODO
+            }
+            case ACTION_DRAWCARD -> {
+                //TODO
             }
             case ABORT -> {
-
+                //TODO
             }
             case ERROR -> {
-
+                //TODO
             }
         }
-
+        return null;
     }
 
     /**
