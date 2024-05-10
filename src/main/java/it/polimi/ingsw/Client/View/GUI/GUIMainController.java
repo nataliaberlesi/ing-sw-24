@@ -31,7 +31,7 @@ public class GUIMainController extends View implements Initializable{
     /**
      * Secondary controller for main game scene.
      */
-    private final GUISecondaryController secondaryController;
+    private SceneController mainSceneController;
 
     /**
      * Alert dialog for errors.
@@ -69,7 +69,6 @@ public class GUIMainController extends View implements Initializable{
         this.tokenColorChoice = new ChoiceBox<>();
         this.playersNumberChoice = new ChoiceBox<>();
         this.errorAlert = new Alert(Alert.AlertType.ERROR);
-        this.secondaryController = new GUISecondaryController(messageParser, messageDispatcher, this.stage);
 
     }
 
@@ -142,7 +141,6 @@ public class GUIMainController extends View implements Initializable{
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        tokenColorChoice.getItems().addAll(View.AVAILABLE_TOKEN_COLORS.values());
         playersNumberChoice.getItems().addAll(2,3,4);
     }
 
@@ -198,7 +196,7 @@ public class GUIMainController extends View implements Initializable{
      * */
     @Override
     protected void startGame() {
-        this.messageDispatcher.startGame(this.username);
+        //this.messageDispatcher.startGame(this.username);
     }
 
     /**
@@ -206,8 +204,8 @@ public class GUIMainController extends View implements Initializable{
      * */
     @Override
     protected void startShow() {
-        this.secondaryController.openMainScene();
-        this.secondaryController.displayGame(this.username);
+        //this.mainSceneController.openMainScene();
+        //this.mainSceneController.displayGame(this.username);
         this.previousMessageType = MessageType.START;
     }
 
@@ -216,7 +214,7 @@ public class GUIMainController extends View implements Initializable{
      * */
     @Override
     protected void updateGame() {
-        this.secondaryController.displayGame(this.username);
+        //this.mainSceneController.displayGame(this.username);
     }
 
     /**
@@ -243,7 +241,7 @@ public class GUIMainController extends View implements Initializable{
      * */
     @Override
     protected void closeGame(List<String> winners) {
-        this.secondaryController.displayEndgame(winners);
+        //this.mainSceneController.displayEndgame(winners);
     }
 
     @Override

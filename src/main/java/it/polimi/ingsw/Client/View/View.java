@@ -13,17 +13,6 @@ import it.polimi.ingsw.Client.Network.MessageType;
 public abstract class View {
 
     /**
-    * Map of available pion colors.
-    */
-    public static final Map<String, String> AVAILABLE_TOKEN_COLORS = Map.of(
-            "B", "BLACK",
-            "b", "BLUE",
-            "g", "GREEN",
-            "r", "RED",
-            "y", "YELLOW"
-        );
-
-    /**
      * Regex for valid usernames.
      */
     protected static final String USERNAME_REGEX = "^\\w{2,8}$";
