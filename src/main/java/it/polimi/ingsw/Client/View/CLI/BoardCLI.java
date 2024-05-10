@@ -12,6 +12,7 @@ import java.util.HashMap;
  * board as shown in the CLI
  */
 public class BoardCLI {
+
     /**
      * Y coordinate of the highest cards
      */
@@ -33,15 +34,11 @@ public class BoardCLI {
     private final HashMap<Integer, ArrayList<CardCLI>> board=new HashMap<>();
 
     /**
-     * starting card is the first card placed by player, it can only be placed in (0,0).
-     */
-    private CardCLI startingCard;
-
-    /**
      * prints current board formation
      */
     public void printBoard(){
         System.out.println("BOARD:");
+        StringBuilder spacing= new StringBuilder();
         for(int i=maxY;i>=minY;i--){
             ArrayList<CardCLI> cardsInCurrentLine = board.get(i);
 
@@ -49,23 +46,16 @@ public class BoardCLI {
                 int cursor=minX-1;
                 for (CardCLI card : cardsInCurrentLine) {
                     int cardX = card.getX();
-                    StringBuilder spacing= new StringBuilder();
                     if (cardX != cursor) {
                         spacing.append(CardIndexCLI.cardLength.repeat(Math.max(0, cardX - (cursor + 1))));
                     }
                     cursor = cardX;
-                    System.out.print(spacing+card.getLine());
+                    System.out.print(spacing+card.getLine(k));
                 }
                 System.out.println();
+                spacing.setLength(0);
             }
         }
-    }
-
-    /**
-     * flips starting card, so user can see both sides of card and decide how to place
-     */
-    public void flipStartingCard(){
-        this.startingCard.flip();
     }
 
     /**
@@ -139,6 +129,7 @@ public class BoardCLI {
             }
         }
     }
+
 
 
 

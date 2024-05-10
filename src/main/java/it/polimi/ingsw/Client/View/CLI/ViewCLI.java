@@ -9,6 +9,14 @@ import java.util.List;
 public class ViewCLI extends View {
 
 
+    private final PlayersInGame playersInGame=new PlayersInGame();
+
+    private final ObjectiveCLI[] objectives= new ObjectiveCLI[3];
+
+
+
+
+
     protected ViewCLI(MessageParser messageParser, MessageDispatcher messageDispatcher) {
         super(messageParser, messageDispatcher);
     }
@@ -87,6 +95,7 @@ public class ViewCLI extends View {
     protected void returnToMainMenu() {
 
     }
+
 
     @Override
     public void main(String[] args) {

@@ -7,30 +7,27 @@ public class ObjectiveCLI {
      */
     private String objective;
 
-    /**
-     *
-     * @param objective generic objective type
-     * @param specificType symbol that specifies the objective
-     */
-    public ObjectiveCLI(String objective, String specificType) throws IllegalArgumentException{
-        switch (objective){
-            case "DiagonalPatternObjective":
-                this.objective="Gain 2 points for each diagonal pattern like this:\n";
-                setDiagonalPatternObjective(specificType);
-                break;
-            case "VerticalPatternObjective":
-                this.objective="Gain 3 points for each vertical pattern like this:\n";
-                setVerticalPatternObjective(specificType);
-                break;
-            case "SymbolObjective":
-                setSymbolObjective(specificType);
-                break;
-            case "MixSymbolObjective":
-                this.objective="Gain 3 points per set of 3 different symbols (FEATHER, SCROLL, INK)\n";
-                break;
-            default:
-                throw new IllegalArgumentException(objective+" is not a valid objective");
+    public ObjectiveCLI(String objectiveID) throws IllegalArgumentException{
+        int objectiveNumber= Integer.parseInt(objectiveID.substring(1));
+        String specificType = getSpecificType(objectiveNumber%4);
+
+        if (objectiveNumber >= 0 && objectiveNumber < 4) {
+            this.objective = "Gain 2 points for each diagonal pattern like this:\n";
+            setDiagonalPatternObjective(specificType);
+        } else if (objectiveNumber >= 4 && objectiveNumber < 8) {
+            this.objective = "Gain 3 points for each vertical pattern like this:\n";
+            setVerticalPatternObjective(specificType);
+        } else if (objectiveNumber == 12) {
+            this.objective = "Gain 3 points per set of 3 different symbols (FEATHER, SCROLL, INK)\n";
+        } else if (objectiveNumber < 16) {
+            if (objectiveNumber > 11) {
+                specificType = getSpecificType(objectiveNumber % 9);
+            }
+            setSymbolObjective(specificType);
+        } else {
+            throw new IllegalArgumentException(objective + " is not a valid objective");
         }
+
     }
 
     private void setSymbolObjective(String specificType) {
@@ -155,4 +152,22 @@ public class ObjectiveCLI {
     public void printObjective(){
         System.out.println(this.objective);
     }
+
+    public String getSpecificType(int i){
+        return switch (i) {
+            case 0 -> "MUSHROOM";
+            case 1 -> "LEAF";
+            case 2 -> "WOLF";
+            case 3 -> "BUTTERFLY";
+            case 4 -> "SCROLL";
+            case 5 -> "INK";
+            case 6 -> "FEATHER";
+            default -> throw new RuntimeException("Invalid specific type");
+        };
+    }
+
+
+
+
+
 }

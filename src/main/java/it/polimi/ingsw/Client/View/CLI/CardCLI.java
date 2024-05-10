@@ -10,11 +10,15 @@ import java.util.Objects;
  */
 public class CardCLI implements Comparable<CardCLI>{
 
+
     /**
      * unique ID identifying specific card
      */
     private final String cardID;
 
+    /**
+     * color of card
+     */
     private String cardColor;
 
     /**
@@ -66,10 +70,7 @@ public class CardCLI implements Comparable<CardCLI>{
      * coordinates of where the card is placed
      */
     private Coordinates coordinates;
-    /**
-     * indicates the current line being printed
-     */
-    private int currentLine=0;
+
     /**
      * indicates the orientation of the card
      */
@@ -121,7 +122,7 @@ public class CardCLI implements Comparable<CardCLI>{
             default:
                 backSymbol=' ';
                 break;
-        }
+        };
         this.backSymbol = getProperSpacing(""+backSymbol);
     }
 
@@ -150,7 +151,7 @@ public class CardCLI implements Comparable<CardCLI>{
      * @param prerequisites list of symbols that are necessary to be on the board in order to place card
      */
     public void setPrerequisites(ArrayList<String> prerequisites) {
-        char firstPrerequisite=prerequisites.getFirst().charAt(0);
+        char firstPrerequisite=prerequisites.get(0).charAt(0);
         char secondPrerequisite='0';
         int firstPrerequisiteCounter=0;
         for(String prerequisite:prerequisites){
@@ -408,23 +409,19 @@ public class CardCLI implements Comparable<CardCLI>{
      *
      * @return current line corresponding to the currentLine
      */
-    public String getLine(){
+    public String getLine(int lineNumber){
         StringBuilder line=new StringBuilder();
-        switch (currentLine) {
+        switch (lineNumber) {
             case 0 :
-                currentLine++;
                 line.append(getTopLine());
                 break;
             case 1 :
-                currentLine++;
                 line.append(getCoordinatesLine());
                 break;
             case 2 :
-                currentLine++;
                 line.append(getPrerequisitesLine());
                 break;
             case 3 :
-                currentLine = 0;
                 line.append(getBottomLine());
                 break;
             default :
@@ -432,6 +429,20 @@ public class CardCLI implements Comparable<CardCLI>{
         }
         return getColoredText(line);
 
+    }
+
+    /**
+     * card becomes face up regardless of previous orientation
+     */
+    public void makeFaceUp(){
+        isFaceUp=true;
+    }
+
+    /**
+     * card becomes face down regardless of previous orientation
+     */
+    public void makeFaceDown(){
+        isFaceUp=false;
     }
 
 
@@ -447,7 +458,5 @@ public class CardCLI implements Comparable<CardCLI>{
     public int compareTo(CardCLI other) {
         return Integer.compare(this.coordinates.getX(), other.getX());
     }
-
-
 
 }
