@@ -5,7 +5,10 @@ package it.polimi.ingsw.Client.Network;
  */
 
 public enum MessageType {
-
+    /**
+     * Game connection.
+     */
+    CONNECT,
     /**
      * Game creation.
      */
@@ -15,17 +18,29 @@ public enum MessageType {
      */
     JOIN,
     /**
-     * Game initialization.
+     * Initializes first round.
      */
-    START,
+    START_FIRSTROUND,
     /**
-     * Player action execution.
+     *
      */
-    ACTION,
+    FIRSTROUND,
     /**
-     * Final round execution.
-     * */
-    FINAL_ROUND,
+     * Initializes second round.
+     */
+    START_SECONDROUND,
+    /**
+     * Initializes player actions.
+     */
+    START_ACTION,
+    /**
+     * A player placed a card.
+     */
+    ACTION_PLACECARD,
+    /**
+     * A player drown a card.
+     */
+    ACTION_DRAWCARD,
     /**
      * Game abort.
      */
