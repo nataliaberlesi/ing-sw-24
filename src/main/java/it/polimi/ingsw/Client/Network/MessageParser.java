@@ -5,6 +5,7 @@ import it.polimi.ingsw.Client.View.View;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Used to parse data from the incoming message from server
@@ -88,5 +89,17 @@ public class MessageParser {
     }
     public void setView(View view) {
         this.view = view;
+    }
+
+    public List<String> getWinners() {
+        //TODO
+        return null;
+    }
+
+    public Object getUsername() {
+    }
+
+    public boolean checkStart() {
+        return false;
     }
 }

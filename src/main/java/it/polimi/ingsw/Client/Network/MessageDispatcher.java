@@ -32,4 +32,7 @@ public class MessageDispatcher {
     public void joinGame(String playerUsername) throws IOException {
         dispatch(MessageType.JOIN,playerUsername);
     }
+
+    public void startGame(String username) {
+    }
 }
