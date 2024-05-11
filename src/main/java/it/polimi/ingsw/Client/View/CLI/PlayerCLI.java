@@ -19,9 +19,9 @@ public class PlayerCLI {
      */
     private final BoardCLI playerBoard;
     /**
-     * the first player to connect is the Master
+     * true if it is the players turn
      */
-    private boolean isMaster=false;
+    private boolean isCurrentPlayer =false;
     /**
      * true if this is the player that is controlling this view
      */
@@ -111,7 +111,7 @@ public class PlayerCLI {
         coloredUsername.append(playerColor);
         coloredUsername.append(username);
         coloredUsername.append(ColoredText.ANSI_RESET);
-        if(isMaster){
+        if(isCurrentPlayer){
             coloredUsername.append("*");
         }
         return coloredUsername.toString();
@@ -158,8 +158,8 @@ public class PlayerCLI {
         return playerBoard;
     }
 
-    public boolean isMaster() {
-        return isMaster;
+    public boolean isCurrentPlayer() {
+        return isCurrentPlayer;
     }
 
     public String getPlayerColor() {
@@ -170,8 +170,11 @@ public class PlayerCLI {
         return isMyPlayer;
     }
 
-    public HandCLI getPlayerHand() {
+    public void setCurrentPlayer(boolean currentPlayer) {
+        isCurrentPlayer = currentPlayer;
+    }
 
+    public HandCLI getPlayerHand() {
         return playerHand;
     }
 

@@ -124,7 +124,7 @@ public abstract class ViewController {
         }
         if (messageParser.masterStatus()){
             if (playersNumber == null || !(playersNumber >= 2 && playersNumber <= 4)){
-                showErrorAlert("Invalid players number", "Please select a number of players for the game");
+                showErrorAlert("Invalid number of players", "Please select a number of players for the game");
                 return false;
             }
         }
