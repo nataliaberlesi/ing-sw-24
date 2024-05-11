@@ -21,7 +21,7 @@ public class ViewControllerCLI extends ViewController {
     }
 
     @Override
-    protected void createPlayer(String username) {
+    protected void createMyPlayer(String username) {
         this.currentPlayerView= new PlayerCLI(username, true);
     }
 
@@ -137,8 +137,13 @@ public class ViewControllerCLI extends ViewController {
 
     @Override
     protected void showScene() {
+        for(PlayerCLI player: playersInGame.getPlayers()){
+            if(!player.isMyPlayer()){
+                player.printPlayerSituation();
+            }
+        }
         playersInGame.printScores();
-        objectivesSection.printCommonObjectives();
+        objectivesSection.printObjectivesSection();
         currentPlayerView.printPlayerSituation();
         drawableArea.printDrawableArea();
     }

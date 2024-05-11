@@ -70,7 +70,7 @@ public abstract class ViewController {
 
 
 
-    protected abstract void createPlayer(String username);
+    protected abstract void createMyPlayer(String username);
     /**
      * If username is already taken then the user ìs notified and brought back to join screen.
      * If not new instance of player is made with approved username.
@@ -81,7 +81,7 @@ public abstract class ViewController {
             switchToJoin();
         }
         else {
-            createPlayer(messageParser.getUsername());
+            createMyPlayer(messageParser.getUsername());
         }
     }
 
@@ -251,10 +251,10 @@ public abstract class ViewController {
             case JOIN -> manageJoinStatus();
 
             case START_FIRSTROUND -> {
-                setUpGame(); //create instance for every player in list
+                setUpGame(); //create instance for every player, fill drawableArea, give first player starting card
                 showScene();
                 if(isMyTurn()){
-                    enableFirstRoundActions();
+                    enableFirstRoundActions(); // player must place starting card and choose color for available colors
                 }
            }
             case FIRSTROUND -> {

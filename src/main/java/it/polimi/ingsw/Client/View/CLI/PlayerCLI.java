@@ -19,7 +19,7 @@ public class PlayerCLI {
      */
     private final BoardCLI playerBoard;
     /**
-     * true if it is the players turn
+     * the first player to connect is the Master
      */
     private boolean isCurrentPlayer =false;
     /**
@@ -31,6 +31,10 @@ public class PlayerCLI {
      */
     private final HandCLI playerHand;
 
+    /**
+     * each player has one private objective that only they can see
+     */
+    private ObjectiveCLI privateObjective;
 
     /**
      * constructor used when a player joins game
@@ -64,6 +68,9 @@ public class PlayerCLI {
         this.score = score;
     }
 
+    public void setPrivateObjective(ObjectiveCLI privateObjective) {
+        this.privateObjective = privateObjective;
+    }
 
     /**
      *
@@ -139,6 +146,9 @@ public class PlayerCLI {
      * prints players board and hand, if player is not myPlayer the method will only print back of hand
      */
     public void printPlayerSituation(){
+        if(isMyPlayer){
+            this.privateObjective.printObjective();
+        }
         this.printBoard();
         this.printHand();
     }
@@ -158,10 +168,6 @@ public class PlayerCLI {
 
     public boolean isMyPlayer() {
         return isMyPlayer;
-    }
-
-    public void setCurrentPlayer(boolean currentPlayer) {
-        isCurrentPlayer = currentPlayer;
     }
 
     public HandCLI getPlayerHand() {

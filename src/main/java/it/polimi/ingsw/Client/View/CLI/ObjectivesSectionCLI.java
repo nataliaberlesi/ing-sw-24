@@ -36,7 +36,7 @@ public class ObjectivesSectionCLI {
     /**
      *
      * @param privateObjective is objective visible only to specific player
-     * @throws RuntimeException
+     * @throws RuntimeException if private objective was already assigned
      */
     public void setPrivateObjective(ObjectiveCLI privateObjective) throws RuntimeException{
         if(!(this.privateObjective == null)){
@@ -47,11 +47,24 @@ public class ObjectivesSectionCLI {
     /**
      * prints objectives common between players
      */
-    public void printCommonObjectives(){
+    private void printCommonObjectives(){
         System.out.println("COMMON OBJECTIVES:");
         for(ObjectiveCLI obj : publicObjectives){
             obj.printObjective();
         }
+    }
+
+    /**
+     * prints objective of player in control of view
+     */
+    private void printPrivateObjective(){
+        System.out.println("PRIVATE OBJECTIVE:");
+        privateObjective.printObjective();
+    }
+
+    public void printObjectivesSection(){
+        printCommonObjectives();
+        printPrivateObjective();
     }
 
 }

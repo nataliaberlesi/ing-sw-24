@@ -145,7 +145,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
 
 
     @Override
-    protected void createPlayer(String username) {
+    protected void createMyPlayer(String username) {
 
     }
 
