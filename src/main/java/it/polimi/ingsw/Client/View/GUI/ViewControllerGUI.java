@@ -24,12 +24,12 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     /**
      * Main application stage.
      */
-    private final Stage stage;
+    private Stage stage;
 
     /**
      * Alert dialog for errors.
      */
-    private final Alert errorAlert;
+    private Alert errorAlert;
 
     private MainSceneController mainSceneController;
 
@@ -49,11 +49,18 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     @FXML
     private Label playersNumberLabel;
 
-    public ViewControllerGUI(MessageParser messageParser, MessageDispatcher messageDispatcher, Stage stage) {
+    public ViewControllerGUI(MessageParser messageParser, MessageDispatcher messageDispatcher) {
         super(messageParser, messageDispatcher);
+        //this.stage = stage;
+    }
+
+    public void setStage (Stage stage){
         this.stage = stage;
         this.playersNumberChoice = new ChoiceBox<>();
         this.errorAlert = new Alert(Alert.AlertType.ERROR);
+    }
+    public Stage getStage(){
+        return stage;
     }
 
     /**
@@ -136,6 +143,11 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     }
 
 
+    @Override
+    protected void createPlayer(String username) {
+
+    }
+
     /**
      * Calls the start of the game when all players are connected
      * */
@@ -208,6 +220,11 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     @Override
     public void updateView(){
         Platform.runLater(super::updateView);
+    }
+
+    @Override
+    protected void connectScene() {
+        switchScene("initialScreen");
     }
 
     @Override
