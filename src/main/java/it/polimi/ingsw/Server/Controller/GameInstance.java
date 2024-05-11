@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Server.Controller;
 
+import it.polimi.ingsw.Server.Model.DrawableArea;
 import it.polimi.ingsw.Server.Model.Player;
 
 import java.util.ArrayList;
@@ -12,8 +13,11 @@ public class GameInstance {
     private ArrayList<String> playersTurnOrder;
     private String currentPlayer;
     private int numberOfPlayers;
+
     private HashMap<String, Player> players;
+    private DrawableArea drawableArea;
     private SetUpGame setUpGame;
+    private boolean gameIsStarted;
     public GameInstance(String masterNickname,int numberOfPlayers) {
         this.numberOfPlayers = numberOfPlayers;
         playersTurnOrder =new ArrayList<String>();
@@ -36,7 +40,7 @@ public class GameInstance {
      * @return
      */
     public boolean unavailableUsername(String username) {
-        return !(playersTurnOrder.contains(username));
+        return playersTurnOrder.contains(username);
     }
 
     /**
@@ -45,5 +49,20 @@ public class GameInstance {
      */
     public boolean checkIfGameIsFull() {
         return this.playersTurnOrder.size()== numberOfPlayers;
+    }
+    public int getNumberOfPlayers() {
+        return numberOfPlayers;
+    }
+    public ArrayList<String> getPlayerTurnOrder() {
+        return playersTurnOrder;
+    }
+    public HashMap<String, Player> getPlayers() {
+        return players;
+    }
+    public void setDrawableArea(DrawableArea drawableArea) {
+        this.drawableArea=drawableArea;
+    }
+    public boolean gameIsStarted() {
+        return this.gameIsStarted;
     }
 }
