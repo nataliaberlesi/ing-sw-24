@@ -42,9 +42,8 @@ public class MessageParser {
      * @param isFlipped
      * @return the response to the message
      * @throws IOException
-     * @throws MessageHandlerException
      */
-    public boolean placeCard(String card, int x, int y, boolean isFlipped) throws IOException,MessageHandlerException {
+    public boolean placeCard(String card, int x, int y, boolean isFlipped){
         //TODO
         return true;
     }
@@ -55,9 +54,8 @@ public class MessageParser {
      * @param drawingSection
      * @return the response to the message
      * @throws IOException
-     * @throws MessageHandlerException
      */
-    public String drawCard(int cardIndex, String drawingSection) throws IOException,MessageHandlerException {
+    public String drawCard(int cardIndex, String drawingSection){
         //TODO
         return "";
     }
