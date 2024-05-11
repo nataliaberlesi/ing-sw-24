@@ -2,14 +2,14 @@ package it.polimi.ingsw.Client.View.CLI;
 
 import it.polimi.ingsw.Client.Network.MessageDispatcher;
 import it.polimi.ingsw.Client.Network.MessageParser;
-import it.polimi.ingsw.Client.View.View;
+import it.polimi.ingsw.Client.View.ViewController;
 
 import java.util.List;
 
-public class ViewCLI extends View {
+public class ViewControllerCLI extends ViewController {
 
 
-    protected ViewCLI(MessageParser messageParser, MessageDispatcher messageDispatcher) {
+    protected ViewControllerCLI(MessageParser messageParser, MessageDispatcher messageDispatcher) {
         super(messageParser, messageDispatcher);
     }
 
@@ -69,7 +69,7 @@ public class ViewCLI extends View {
     }
 
     @Override
-    protected void closeGame(List<String> winners) {
+    protected void displayWinners(List<String> winners) {
 
     }
 
@@ -90,6 +90,36 @@ public class ViewCLI extends View {
 
     @Override
     public void main(String[] args) {
+
+    }
+
+    @Override
+    protected void enableFirstRoundActions() {
+
+    }
+
+    @Override
+    protected void showScene() {
+
+    }
+
+    @Override
+    protected void setAvailableColors() {
+
+    }
+
+    @Override
+    protected void setDrawableArea() {
+
+    }
+
+    @Override
+    protected void giveInitialCards() {
+
+    }
+
+    @Override
+    protected void addPlayers() {
 
     }
 }

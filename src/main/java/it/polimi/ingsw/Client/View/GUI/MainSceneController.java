@@ -6,10 +6,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-public class SceneController {
+public class MainSceneController {
     private MainScene scene;
 
-    public SceneController(MainScene scene){
+    public MainSceneController(MainScene scene){
         this.scene = scene;
     }
 
@@ -28,17 +28,14 @@ public class SceneController {
                 //Put gold card in hand
             }
         }
-
     }
     public void handleHandAreaClicked(MouseEvent event) {
         ImageView clickedImageView = (ImageView) event.getSource();
         CardGUI clickedCard = (CardGUI) clickedImageView.getUserData();
         Node parent = clickedImageView.getParent();
         if(parent instanceof HBox container){
-            if (container == scene.getHandCardsDrawableArea()){
+            if (container == scene.getHandCardsDrawableArea()) {
                 //PlaceCard on board if it's your turn
-            } else if (container == scene.getObjectiveCardsArea()) {
-                //Put gold card in hand
             }
         }
     }

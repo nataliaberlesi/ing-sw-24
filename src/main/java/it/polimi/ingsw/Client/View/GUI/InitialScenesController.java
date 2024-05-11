@@ -3,7 +3,7 @@ import it.polimi.ingsw.Client.Network.MessageDispatcher;
 import it.polimi.ingsw.Client.Network.MessageHandlerException;
 import it.polimi.ingsw.Client.Network.MessageParser;
 import it.polimi.ingsw.Client.Network.MessageType;
-import it.polimi.ingsw.Client.View.View;
+import it.polimi.ingsw.Client.View.ViewController;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,7 +21,7 @@ import java.util.ResourceBundle;
  * Class representing the gui view and acting as main controller for JavaFX application.
  */
 
-public class GUIMainController extends View implements Initializable{
+public class InitialScenesController extends ViewController implements Initializable{
 
     /**
      * Main application stage.
@@ -31,7 +31,7 @@ public class GUIMainController extends View implements Initializable{
     /**
      * Secondary controller for main game scene.
      */
-    private SceneController mainSceneController;
+    private MainSceneController mainSceneController;
 
     /**
      * Alert dialog for errors.
@@ -63,7 +63,7 @@ public class GUIMainController extends View implements Initializable{
     @FXML
     private Label playersNumberLabel;
 
-    public GUIMainController(MessageParser messageParser, MessageDispatcher messageDispatcher, Stage stage) {
+    public InitialScenesController(MessageParser messageParser, MessageDispatcher messageDispatcher, Stage stage) {
         super(messageParser, messageDispatcher);
         this.stage = stage;
         this.tokenColorChoice = new ChoiceBox<>();
@@ -94,12 +94,9 @@ public class GUIMainController extends View implements Initializable{
     /**
      * Connects player to create or join mode based on server response indicating the master status of the player trying to connect
      * */
-
     @FXML
-    private void connectPlayer() throws IOException{
-        if (messageParser.masterStatus()) {
-            switchToCreate();
-        } else switchToJoin();
+    protected void connectPlayer() {
+        super.connectPlayer();
     }
 
     /**
@@ -206,7 +203,6 @@ public class GUIMainController extends View implements Initializable{
     protected void startShow() {
         //this.mainSceneController.openMainScene();
         //this.mainSceneController.displayGame(this.username);
-        this.previousMessageType = MessageType.START;
     }
 
     /**
@@ -240,7 +236,7 @@ public class GUIMainController extends View implements Initializable{
      * @param winners winners list
      * */
     @Override
-    protected void closeGame(List<String> winners) {
+    protected void displayWinners(List<String> winners) {
         //this.mainSceneController.displayEndgame(winners);
     }
 
@@ -264,6 +260,36 @@ public class GUIMainController extends View implements Initializable{
     @Override
     public void updateView(){
         Platform.runLater(super::updateView);
+    }
+
+    @Override
+    protected void enableFirstRoundActions() {
+
+    }
+
+    @Override
+    protected void showScene() {
+
+    }
+
+    @Override
+    protected void setAvailableColors() {
+
+    }
+
+    @Override
+    protected void setDrawableArea() {
+
+    }
+
+    @Override
+    protected void giveInitialCards() {
+
+    }
+
+    @Override
+    protected void addPlayers() {
+
     }
 
     /**

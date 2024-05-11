@@ -1,10 +1,9 @@
 package it.polimi.ingsw.Client.Network;
 
 import com.google.gson.JsonObject;
-import it.polimi.ingsw.Client.View.View;
+import it.polimi.ingsw.Client.View.ViewController;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,7 +11,7 @@ import java.util.List;
  * */
 public class MessageParser {
     private NetworkManager networkManager;
-    private View view;
+    private ViewController viewController;
     private Parser parser;
     private JsonObject currentMessage;
     private JsonObject messageParams;
@@ -33,7 +32,7 @@ public class MessageParser {
         currentMessage=parser.toJsonObject(inMessage);
         messageType=MessageType.valueOf(currentMessage.get("type").getAsString());
         messageParams=parser.toJsonObject(currentMessage.get("params").getAsString());
-        view.updateView();
+        viewController.updateView();
     }
     /**
      * Dispatches the placeCard message
@@ -87,8 +86,8 @@ public class MessageParser {
     public String getCurrentPlayer() {
         return messageParams.get("currentPlayer").getAsString();
     }
-    public void setView(View view) {
-        this.view = view;
+    public void setView(ViewController viewController) {
+        this.viewController = viewController;
     }
 
     public List<String> getWinners() {

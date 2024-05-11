@@ -7,7 +7,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class MainScene extends Scene {
-    private final SceneController mainSceneController;
+    private final MainSceneController mainSceneController;
     private final AnchorPane root;
     private final VBox resourceCardsDrawableArea = new VBox(10);
     private final VBox goldCardsDrawableArea = new VBox(10);
@@ -22,7 +22,7 @@ public class MainScene extends Scene {
     public MainScene() {
         super(new AnchorPane(), 1060, 595);
         root = (AnchorPane)this.getRoot();
-        this.mainSceneController = new SceneController(this);
+        this.mainSceneController = new MainSceneController(this);
         initializeComponents();
     }
 
@@ -64,6 +64,7 @@ public class MainScene extends Scene {
     public VBox getGoldCardsDrawableArea(){
         return goldCardsDrawableArea;
     }
+
     private void setUpHBoxes() {
     handCardsDrawableArea.setLayoutX(266.0);
     handCardsDrawableArea.setLayoutY(489.0);
@@ -88,11 +89,9 @@ public class MainScene extends Scene {
     public HBox getHandCardsDrawableArea() {
         return handCardsDrawableArea;
     }
-
     public HBox getObjectiveCardsArea() {
         return objectiveCardsArea;
     }
-
     private void setUpLabels() {
     }
     private void setUpButtons() {
@@ -100,8 +99,6 @@ public class MainScene extends Scene {
     private void setUpScrollPane() {
     }
     private void setUpGridPane() {
-        AnchorPane Board;
-
     }
 
 }

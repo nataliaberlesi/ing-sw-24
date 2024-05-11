@@ -42,7 +42,7 @@ public class GUIApplication extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         FXMLLoader fxmlLoader = new FXMLLoader(GUIApplication.class.getResource("initialScreen.fxml"));
-        GUIMainController controller = new GUIMainController(messageParser, messageDispatcher, primaryStage);
+        InitialScenesController controller = new InitialScenesController(messageParser, messageDispatcher, primaryStage);
         fxmlLoader.setController(controller);
         Parent root = fxmlLoader.load();
         Scene scene = new Scene(root);

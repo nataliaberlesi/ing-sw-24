@@ -22,13 +22,17 @@ public enum MessageType {
      */
     START_FIRSTROUND,
     /**
-     *
+     * First round
      */
     FIRSTROUND,
     /**
      * Initializes second round.
      */
     START_SECONDROUND,
+    /**
+     * Second round
+     */
+    SECONDROUND,
     /**
      * Initializes player actions.
      */
@@ -41,6 +45,10 @@ public enum MessageType {
      * A player drown a card.
      */
     ACTION_DRAWCARD,
+    /**
+     * Final round
+     */
+    FINALROUND,
     /**
      * Game abort.
      */

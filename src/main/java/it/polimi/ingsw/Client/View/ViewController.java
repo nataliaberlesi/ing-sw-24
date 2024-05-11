@@ -1,21 +1,18 @@
 package it.polimi.ingsw.Client.View;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import it.polimi.ingsw.Client.Network.MessageDispatcher;
-import it.polimi.ingsw.Client.Network.MessageHandlerException;
 import it.polimi.ingsw.Client.Network.MessageParser;
 import it.polimi.ingsw.Client.Network.MessageType;
-public abstract class View {
+public abstract class ViewController {
 
     /**
      * Regex for valid usernames.
      */
-    protected static final String USERNAME_REGEX = "^\\w{2,8}$";
+    protected static final String USERNAME_REGEX = "^\\w{1,8}$";
 
     /**
      * Chosen number of players for the game.
@@ -24,6 +21,7 @@ public abstract class View {
     /**
      * Chosen player username.
      */
+
     protected String username;
     /**
      * Chosen player token color
@@ -51,7 +49,7 @@ public abstract class View {
 
     protected MessageType previousMessageType;
 
-    protected View(MessageParser messageParser, MessageDispatcher messageDispatcher){
+    protected ViewController(MessageParser messageParser, MessageDispatcher messageDispatcher){
         this.messageParser = messageParser;
         this.messageDispatcher = messageDispatcher;
         this.messageParser.setView(this);
@@ -69,41 +67,17 @@ public abstract class View {
         return matcher.matches();
     }
 
-    /**
-     * Resets the view properties.
-     */
-    protected void reset() {
-        this.isMaster = false;
-        this.previousMessageType = null;
-        this.tokenColor = "";
-        this.playersNumber = 0;
-        this.username = "";
-    }
 
     /**
-     * Check if message params for create or join are valid, and wait for start.
+     * If username is already taken then the user ìs notified and brought back to join screen.
      */
-    protected void checkWaitForStart() {
-        if (messageParser.checkWaitForStart())
-            throw new ViewException("Unexpected non-ok message content");
-        this.waitForStart();
-    }
-
-    /**
-     * Check if client has to start the game.
-     */
-
-    protected void checkStart() {
-        if (messageParser.getUsername().equals(username) && messageParser.unavailableUsername()){
+    protected void manageJoinStatus(){
+        if(messageParser.unavailableUsername()){
             this.showErrorAlert("Invalid username", "Username already taken, please select another one");
             switchToJoin();
         }
-        else if (this.messageParser.checkStart()) {//checks if is full
-            if (this.isMaster)
-                this.startGame();
-        } if (this.previousMessageType != MessageType.START)
-            this.checkWaitForStart();
     }
+
 
     /**
      * Update winners after final round.
@@ -222,7 +196,7 @@ public abstract class View {
      *
      * @param winners list of winners
      */
-    protected abstract void closeGame(List<String> winners);
+    protected abstract void displayWinners(List<String> winners);
 
     /**
      * Method called to show actions options.
@@ -246,55 +220,83 @@ public abstract class View {
      */
     public abstract void main(String[] args);
 
+    private boolean isMyTurn(){
+        // in comune facciamo dopo (controlla se  è il turno del giocatore che controlla la view)
+        return false;
+    }
+
     /**
      * Method called to update the view according to received message type.
      */
     public void updateView() {
-        String messageParams = this.messageParser.getMessageParams();
         switch (this.messageParser.getMessageType()) {
 
-            case CREATE -> {
-                this.checkWaitForStart();
-                this.isMaster = true;
+            case CONNECT -> connectPlayer();
+
+            case JOIN -> manageJoinStatus();
+
+            case START_FIRSTROUND -> {
+                setUpGame();
+                showScene();
+                if(isMyTurn()){
+                enableFirstRoundActions();
+                }
+           }
+            case FIRSTROUND -> {
+                //placeStartingCard();
+                //setPlayerColor();
             }
-            case JOIN -> {
-                this.checkStart();
-            }
-            case START -> {
-                this.startShow();
-                this.continueGame();
-            }
-            case ACTION -> {
-                this.updateGame();
-                this.checkFinalRound();
-                if(!finalRound)
-                    this.continueGame();
+            case START_SECONDROUND -> {
 
             }
-            case FINAL_ROUND -> {
-                this.updateGame();
-                this.checkWinners();
-                this.closeGame(this.winners);
-                this.returnToMainMenu();
-                this.reset();
+            case SECONDROUND -> {
+
+            }
+            case START_ACTION -> {
+
+            }
+            case ACTION_PLACECARD -> {
+
+            }
+            case ACTION_DRAWCARD -> {
+
+            }
+
+            case FINALROUND -> {
+
             }
             case ABORT -> {
-                this.checkEmptyContent(messageParams);
-                this.showAbort(messageParams);
-                this.reset();
-                this.returnToMainMenu();
+
             }
             case ERROR -> {
-                this.checkEmptyContent(messageParams);
-                this.showError(messageParams);
-                if (this.previousMessageType == MessageType.CREATE || this.previousMessageType == MessageType.JOIN) {
-                    this.reset();
-                    this.returnToMainMenu();
-                } else {
-                    this.continueGame();
-                }
             }
         }
+    }
+
+    protected abstract void enableFirstRoundActions();
+
+    protected abstract void showScene();
+
+    private void setUpGame() {
+        addPlayers(); // -> create instance players, show usernames and points in scene, set player's hand label, set see other player's game buttons
+        giveInitialCards(); // -> create instance of board with initial card's back
+        setDrawableArea(); // -> create instance of drawable area with given cards
+        setAvailableColors(); // -> put all colors in pop up scene
+
+    }
+
+    protected abstract void setAvailableColors();
+
+    protected abstract void setDrawableArea();
+
+    protected abstract void giveInitialCards();
+
+    protected abstract void addPlayers();
+
+    protected void connectPlayer() {
+        if (messageParser.masterStatus()) {
+            switchToCreate();
+        } else switchToJoin();
     }
 
     /**

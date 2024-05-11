@@ -2,6 +2,7 @@ package it.polimi.ingsw.Client.View.GUI;
 
 import it.polimi.ingsw.Server.Model.Coordinates;
 import javafx.geometry.Point2D;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -13,7 +14,7 @@ import java.util.Objects;
 /**
  * card as shown in the GUI
  */
-public class CardGUI {
+public class CardGUI extends Node {
 
     /**
      * Card's face up resource ID
@@ -141,6 +142,9 @@ public class CardGUI {
         return this.cardImageView;
     }
 
+    public boolean isFirstCard() {
+        return isFirstCard;
+    }
 
     public void putClickableCornersOnCard(CardGUI boardCard){
         ImageView boardCardIV = boardCard.getCardImageView();

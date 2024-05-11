@@ -20,7 +20,7 @@
             <Image url="@Images/initialScreenOriginal.jpg" />
          </image>
       </ImageView>
-      <VBox layoutX="919.0" layoutY="367.0" prefHeight="170.0" prefWidth="77.0" spacing="10.0">
+      <VBox layoutX="920.0" layoutY="367.0" prefHeight="170.0" prefWidth="77.0" spacing="10.0">
          <children>
             <ImageView fx:id="goldCard1" fitHeight="55.0" fitWidth="82.5" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="goldCard2" fitHeight="55.0" fitWidth="82.5" pickOnBounds="true" preserveRatio="true" />
@@ -33,11 +33,11 @@
             <ImageView fx:id="handCard2" fitHeight="55.0" fitWidth="82.5" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="handCard3" fitHeight="55.0" fitWidth="82.5" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="secretObjectiveCard" fitHeight="55.0" fitWidth="82.5" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="commonObjective1" fitHeight="55.0" fitWidth="82.5" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="commonObjective2" fitHeight="55.0" fitWidth="82.5" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="commonObjectiveCard1" fitHeight="55.0" fitWidth="82.5" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="commonObjectiveCard2" fitHeight="55.0" fitWidth="82.5" pickOnBounds="true" preserveRatio="true" />
          </children>
       </HBox>
-      <VBox layoutX="920.0" layoutY="86.0" prefHeight="169.0" prefWidth="76.0" spacing="10.0">
+      <VBox layoutX="920.0" layoutY="86.0" prefHeight="170.0" prefWidth="77.0" spacing="10.0">
          <children>
             <ImageView fx:id="resourceCard1" fitHeight="55.0" fitWidth="82.5" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="resourceCard2" fitHeight="55.0" fitWidth="82.5" pickOnBounds="true" preserveRatio="true" />
