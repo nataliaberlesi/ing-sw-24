@@ -45,6 +45,10 @@ public enum MessageType {
      */
     ACTION_DRAWCARD,
     /**
+     * The game is ended
+     */
+    WINNERS,
+    /**
      * Game abort.
      */
     ABORT,
