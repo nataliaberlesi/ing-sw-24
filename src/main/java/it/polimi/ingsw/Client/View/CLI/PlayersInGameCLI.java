@@ -58,4 +58,8 @@ public class PlayersInGameCLI {
         }
         throw new RuntimeException("Player not found");
     }
+
+    public ArrayList<PlayerCLI> getPlayers() {
+        return players;
+    }
 }
