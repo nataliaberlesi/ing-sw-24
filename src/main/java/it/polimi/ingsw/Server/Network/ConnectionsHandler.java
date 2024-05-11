@@ -30,7 +30,7 @@ public class ConnectionsHandler implements Runnable{
     private void handleConnections(ArrayList<PlayerConnection> playerConnections) {
         for(PlayerConnection playerConnection: playerConnections) {
             Message outMessage=handleMessage(playerConnection.getInMessage());
-            playerConnection.setOutMessage(parser.toString(outMessage));
+            playerConnection.setOutMessage(parser.toJson(outMessage));
         }
     }
 
@@ -41,7 +41,7 @@ public class ConnectionsHandler implements Runnable{
         while(allPlayerConnected) {
             if(gameController.gameIsFull() && !gameController.gameIsStarted()) {
                 for(PlayerConnection pc: server.getConnections()) {
-                    String outMessage=parser.toString(gameController.craftJSONMessage(MessageType.START_FIRSTROUND, gameController.getJSONStartParams()));
+                    String outMessage=parser.toJson(gameController.craftJSONMessage(MessageType.START_FIRSTROUND, gameController.getJSONStartFirstRoundParams()));
                     pc.setOutMessage(outMessage);
                 }
             }
