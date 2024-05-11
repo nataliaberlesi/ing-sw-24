@@ -5,6 +5,7 @@ import it.polimi.ingsw.Client.Network.MessageParser;
 import it.polimi.ingsw.Client.View.ViewController;
 
 import java.util.List;
+import java.util.Scanner;
 
 public class ViewControllerCLI extends ViewController {
 
@@ -38,14 +39,28 @@ public class ViewControllerCLI extends ViewController {
 
     }
 
+    private String askUsername(Scanner scanner){
+        System.out.println("Choose a Username:");
+        return scanner.nextLine();
+    }
+
+    private int askNumberOfPlayers(Scanner scanner){
+        System.out.println("Choose number of players:");
+        return scanner.nextInt();
+    }
+
     @Override
     protected void switchToCreate() {
+        Scanner scanner = new Scanner(System.in);
+        String username=askUsername(scanner);
+        int numberOfPlayers=askNumberOfPlayers(scanner);
+
 
     }
 
     @Override
     protected void switchToJoin() {
-
+        System.out.println("Choose a Username:");
     }
 
     @Override
