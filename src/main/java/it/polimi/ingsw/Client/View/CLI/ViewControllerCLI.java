@@ -3,6 +3,7 @@ package it.polimi.ingsw.Client.View.CLI;
 import it.polimi.ingsw.Client.Network.MessageDispatcher;
 import it.polimi.ingsw.Client.Network.MessageParser;
 import it.polimi.ingsw.Client.View.ViewController;
+import it.polimi.ingsw.Server.Model.Player;
 
 import java.util.List;
 import java.util.Scanner;
@@ -19,6 +20,12 @@ public class ViewControllerCLI extends ViewController {
     public ViewControllerCLI(MessageParser messageParser, MessageDispatcher messageDispatcher) {
         super(messageParser, messageDispatcher);
     }
+
+    @Override
+    protected void createPlayer(String username) {
+        this.currentPlayerView= new PlayerCLI(username, true);
+    }
+
 
     public PlayersInGameCLI getPlayersInGame() {
         return playersInGame;

@@ -39,28 +39,16 @@ public class PlayerCLI {
     /**
      * constructor used when a player joins game
      * @param username unique name of player
-     * @param isMaster indicates weather player was the one to start the game
+     * @param isMyPlayer true if player be initialized is player that controls view
      */
-    public PlayerCLI(String username, boolean isMaster) {
+    public PlayerCLI(String username, boolean isMyPlayer) {
         this.username = username;
         this.score = 0;
         this.playerBoard = new BoardCLI();
         this.playerHand = new HandCLI();
-        this.isMaster=isMaster;
+        this.isMyPlayer=isMyPlayer;
     }
 
-
-    /**
-     *
-     * @param isMaster indicates weather player was the one to start the game
-     */
-    public PlayerCLI (boolean isMaster){
-        isMyPlayer=true;
-        this.score = 0;
-        this.playerBoard = new BoardCLI();
-        this.playerHand = new HandCLI();
-        this.isMaster=isMaster;
-    }
 
 
     /**

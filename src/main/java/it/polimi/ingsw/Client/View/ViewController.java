@@ -18,11 +18,12 @@ public abstract class ViewController {
      * Chosen number of players for the game.
      */
     protected int playersNumber;
+
     /**
      * Chosen player username.
      */
-
     protected String username;
+
     /**
      * Chosen player token color
      */
@@ -68,13 +69,19 @@ public abstract class ViewController {
     }
 
 
+
+    protected abstract void createPlayer(String username);
     /**
      * If username is already taken then the user ìs notified and brought back to join screen.
+     * If not new instance of player is made with approved username.
      */
     protected void manageJoinStatus(){
         if(messageParser.unavailableUsername()){
             this.showErrorAlert("Invalid username", "Username already taken, please select another one");
             switchToJoin();
+        }
+        else {
+            createPlayer(messageParser.getUsername());
         }
     }
 

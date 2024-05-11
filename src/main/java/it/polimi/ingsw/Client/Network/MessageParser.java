@@ -92,7 +92,7 @@ public class MessageParser {
         return null;
     }
 
-    public Object getUsername() {
+    public String getUsername() {
         return null;
     }
 
