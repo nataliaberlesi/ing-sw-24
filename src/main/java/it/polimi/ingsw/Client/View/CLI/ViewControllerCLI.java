@@ -14,20 +14,6 @@ public class ViewControllerCLI extends ViewController {
         super(messageParser, messageDispatcher);
     }
 
-    @Override
-    protected void waitForStart() {
-
-    }
-
-    @Override
-    protected void createGame() {
-
-    }
-
-    @Override
-    protected void joinGame() {
-
-    }
 
     @Override
     protected void startGame() {
@@ -44,7 +30,7 @@ public class ViewControllerCLI extends ViewController {
         return scanner.nextLine();
     }
 
-    private int askNumberOfPlayers(Scanner scanner){
+    private Integer askNumberOfPlayers(Scanner scanner){
         System.out.println("Choose number of players:");
         return scanner.nextInt();
     }
@@ -52,10 +38,16 @@ public class ViewControllerCLI extends ViewController {
     @Override
     protected void switchToCreate() {
         Scanner scanner = new Scanner(System.in);
-        String username=askUsername(scanner);
-        int numberOfPlayers=askNumberOfPlayers(scanner);
+        String username = askUsername(scanner);
+        Integer numberOfPlayers = askNumberOfPlayers(scanner);
+        if (!checkParamsAndSendCreateOrJoinMessage(username, numberOfPlayers)) {
+            switchToCreate();
+        }
+    }
 
-
+    @Override
+    protected void switchToLoading(){
+        System.out.println("Waiting for players...");
     }
 
     @Override
