@@ -26,9 +26,6 @@ public class MessageParser {
     public MessageType getMessageType() {
         return messageType;
     }
-    public String getMessageParams(){
-        return messageParams.get("params").getAsString();
-    }
     public void buildMessage(String inMessage) {
         currentMessage=parser.toJsonObject(inMessage);
         messageType=MessageType.valueOf(currentMessage.get("type").getAsString());
@@ -76,14 +73,14 @@ public class MessageParser {
     }
     //TODO: server side -> returns true if chosen username for this player is already used by another player
     public Boolean unavailableUsername(){
-        return messageParams.get("unavailableUsername").getAsBoolean();
+        return messageParams.getAsBoolean();
     }
 
     public String getInitialCard(){
-        return messageParams.get("initialCard").getAsString();
+        return messageParams.getAsJsonObject().get("initialCard").getAsString();
     }
     public String getCurrentPlayer() {
-        return messageParams.get("currentPlayer").getAsString();
+        return messageParams.getAsJsonObject().get("currentPlayer").getAsString();
     }
     public void setView(ViewController viewController) {
         this.viewController = viewController;
