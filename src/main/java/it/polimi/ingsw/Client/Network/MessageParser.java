@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Client.Network;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.Client.View.ViewController;
 
@@ -14,7 +15,7 @@ public class MessageParser {
     private ViewController viewController;
     private Parser parser;
     private JsonObject currentMessage;
-    private JsonObject messageParams;
+    private JsonElement messageParams;
     private MessageType messageType;
 
 
@@ -31,7 +32,7 @@ public class MessageParser {
     public void buildMessage(String inMessage) {
         currentMessage=parser.toJsonObject(inMessage);
         messageType=MessageType.valueOf(currentMessage.get("type").getAsString());
-        messageParams=parser.toJsonObject(currentMessage.get("params").getAsString());
+        messageParams=currentMessage.get("params");
         viewController.updateView();
     }
     /**
