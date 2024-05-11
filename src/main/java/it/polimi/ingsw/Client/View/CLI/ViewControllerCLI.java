@@ -70,6 +70,11 @@ public class ViewControllerCLI extends ViewController {
     }
 
     @Override
+    protected void connectScene() {
+        connectPlayer();
+    }
+
+    @Override
     protected void switchToJoin() {
         Scanner scanner = new Scanner(System.in);
         String username = askUsername(scanner);
