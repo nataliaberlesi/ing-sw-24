@@ -5,6 +5,7 @@ package it.polimi.ingsw.Client.View.CLI;
  * hand as shown in CLI
  */
 public class HandCLI {
+
     /**
      * a hand contains three cards at a time
      */
@@ -27,13 +28,13 @@ public class HandCLI {
     /**
      *
      * @param cardIndex of card that is being taken from hand, that will be replaced by empty card
-     * @return the ID of the card being taken
+     * @return the card being taken
      */
-    public String takeCard(int cardIndex){
+    public CardCLI takeCard(int cardIndex){
         cardIndex--;
-        String cardID=hand[cardIndex].getCardID();
+        CardCLI cardBeingTaken=hand[cardIndex];
         hand[cardIndex] = emptyCard;
-        return cardID;
+        return cardBeingTaken;
     }
 
     /**
@@ -41,6 +42,7 @@ public class HandCLI {
      * @param card that is being placed in hand, replacing the empty card
      */
     public void putCard(CardCLI card){
+        card.makeFaceUp();
         for(int i=0; i<3; i++){
             if(hand[i].getCardID().equals(emptyCard.getCardID())){
                 hand[i] = card;

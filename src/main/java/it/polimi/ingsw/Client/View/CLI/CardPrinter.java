@@ -11,7 +11,7 @@ public class CardPrinter {
     public static void printExactlyThreeCardsInAnArray(CardCLI[] cards) {
         for(int i=0; i<4; i++) {
             for (CardCLI card : cards) {
-                System.out.print(card.getLine()+CardIndexCLI.cardLength);
+                System.out.print(card.getLine(i)+CardIndexCLI.cardLength);
             }
             System.out.print('\n');
         }
