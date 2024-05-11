@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Client.Network;
 
-public record Message(MessageType type, String nickname, String params) {
+import com.google.gson.JsonObject;
+
+public record Message(MessageType type, String username, JsonObject params) {
 
 }
