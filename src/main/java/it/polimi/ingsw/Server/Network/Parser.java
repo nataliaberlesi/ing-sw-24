@@ -33,8 +33,9 @@ public class Parser {
         return GSON.fromJson(string, Message.class);
     }
     public JsonObject toJsonObject(String message) {
-        JsonElement rootNode= JsonParser.parseString(message);
-        return rootNode.getAsJsonObject();
+
+        JsonObject jsonObject=GSON.fromJson(message,JsonObject.class);
+        return jsonObject;
     }
     public String toJson(Object o) {
         return GSON.toJson(o);
