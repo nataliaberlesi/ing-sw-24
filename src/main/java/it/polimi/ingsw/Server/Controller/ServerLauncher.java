@@ -14,10 +14,7 @@ public class ServerLauncher {
 
         }
         new Thread(server).start();
-        ServerLauncher.openConnectionsHandler();
 
     }
-    private static void openConnectionsHandler() {
-        new Thread(new ConnectionsHandler(server));
-    }
+
 }
