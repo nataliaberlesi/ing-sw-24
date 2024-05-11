@@ -246,7 +246,7 @@ public abstract class ViewController {
     public void updateView() {
         switch (this.messageParser.getMessageType()) {
 
-            case CONNECT -> connectPlayer();
+            case CONNECT -> connectScene();
 
             case JOIN -> manageJoinStatus();
 
@@ -287,6 +287,9 @@ public abstract class ViewController {
             }
         }
     }
+
+    protected abstract void connectScene();
+
 
     protected abstract void enableFirstRoundActions();
 

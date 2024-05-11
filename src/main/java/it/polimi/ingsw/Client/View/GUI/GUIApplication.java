@@ -18,6 +18,8 @@ public class GUIApplication extends Application {
     private static MessageParser messageParser;
     private static MessageDispatcher messageDispatcher;
 
+    private static ViewControllerGUI viewControllerGUI;
+
     /**
      * Main method for JavaFX application.
      *
@@ -31,6 +33,9 @@ public class GUIApplication extends Application {
         GUIApplication.messageParser = newMessageParser;
         GUIApplication.messageDispatcher = newMessageDispatcher;
     }
+    public static void setViewControllerGUI(ViewControllerGUI viewControllerGUI){
+        GUIApplication.viewControllerGUI = viewControllerGUI;
+    }
 
     /**
      * Start method for JavaFX application.
@@ -40,17 +45,14 @@ public class GUIApplication extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
-
-        FXMLLoader fxmlLoader = new FXMLLoader(GUIApplication.class.getResource("initialScreen.fxml"));
-        ViewControllerGUI controller = new ViewControllerGUI(messageParser, messageDispatcher, primaryStage);
-        fxmlLoader.setController(controller);
-        Parent root = fxmlLoader.load();
-        Scene scene = new Scene(root);
+        //StartingScene startingScene = new StartingScene();
+        viewControllerGUI.setStage(primaryStage);
+        //new ViewControllerGUI(messageParser,messageDispatcher,primaryStage);
+        //primaryStage.setScene(startingScene);
         primaryStage.getIcons().add(new Image(String.valueOf(GUIApplication.class.getResource("Images/cranioLogo.png"))));
         primaryStage.setFullScreen(false);
         primaryStage.setResizable(false);
         primaryStage.setTitle("Codex Naturalis");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        //primaryStage.show();
     }
 }

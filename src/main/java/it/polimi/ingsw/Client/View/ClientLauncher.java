@@ -5,7 +5,7 @@ import it.polimi.ingsw.Client.Network.MessageParser;
 import it.polimi.ingsw.Client.Network.NetworkManager;
 import it.polimi.ingsw.Client.View.CLI.ViewControllerCLI;
 import it.polimi.ingsw.Client.View.GUI.GUIApplication;
-import it.polimi.ingsw.Client.View.GUI.InitialScenesController;
+import it.polimi.ingsw.Client.View.GUI.ViewControllerGUI;
 
 import java.io.IOException;
 
@@ -18,14 +18,13 @@ public class ClientLauncher {
             MessageParser messageParser=new MessageParser(networkManager);
             MessageDispatcher messageDispatcher=new MessageDispatcher(networkManager);
             networkManager.setMessageParser(messageParser);
-            ViewControllerCLI viewControllerCLI=new ViewControllerCLI(messageParser, messageDispatcher);
-            /*GUIApplication.setParserAndDispatcher(messageParser,messageDispatcher);
-            new Thread(()-> GUIApplication.main()).start();
-            sleep(5000);*/
+            //ViewControllerCLI viewControllerCLI=new ViewControllerCLI(messageParser, messageDispatcher);
+            ViewControllerGUI viewControllerGUI = new ViewControllerGUI(messageParser, messageDispatcher);
+            GUIApplication.setViewControllerGUI(viewControllerGUI);
+            GUIApplication.setParserAndDispatcher(messageParser, messageDispatcher);
+            new Thread(GUIApplication::main).start();
+            while(viewControllerGUI.getStage() == null){}
             new Thread(networkManager).start();
-            while(true) {
-
-            }
 
         } catch(IOException ioe) {
             System.out.println(ioe);
