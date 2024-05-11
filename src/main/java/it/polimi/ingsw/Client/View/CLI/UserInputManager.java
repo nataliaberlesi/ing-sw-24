@@ -13,11 +13,10 @@ public class UserInputManager {
             NUMBER OF PLAYERS
         DOORING GAME:
             SHOW "USERNAME"
-        FIRST ROUND ANYTIME:
+        FIRST ROUND ANYTIME BEFORE PLACE:
             FLIP
         FIRST ROUND DOORING TURN:
-            1)PLACE
-            2)"COLOR"
+            2)COLOR "color"
         SECOND ROUND:
             #OBJECTIVE (1/2)
          NORMAL ROUND:
@@ -35,8 +34,34 @@ public class UserInputManager {
 
             }
             case "show"->{
+                PlayersInGameCLI playersInGameCLI= viewController.getPlayersInGame();
+                try{
+                    PlayerCLI newCurrentPlayerView=playersInGameCLI.getPlayer(args[1]);
+                    viewController.setCurrentPlayerView(newCurrentPlayerView);
+                }
+                catch (Exception e){
+                    viewController.showErrorAlert(args[1]+ " not found", "try another username");
+                }
+                viewController.showScene();
+            }
+            case "exit"->{
 
             }
+            case "flip"->{
+                viewController.getPlayersInGame().getMyPlayer().getPlayerBoard().getStartingCard().flip();
+                viewController.showScene();
+            }
+            case "color"->{
+
+            }
+            case "place"->{
+
+            }
+            case "objective"->{
+
+            }
+
+
 
         }
     }

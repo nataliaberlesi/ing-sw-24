@@ -20,6 +20,13 @@ public class ViewControllerCLI extends ViewController {
         super(messageParser, messageDispatcher);
     }
 
+    public PlayersInGameCLI getPlayersInGame() {
+        return playersInGame;
+    }
+
+    public void setCurrentPlayerView(PlayerCLI currentPlayerView) {
+        this.currentPlayerView = currentPlayerView;
+    }
 
     @Override
     protected void startGame() {
@@ -72,7 +79,8 @@ public class ViewControllerCLI extends ViewController {
 
     @Override
     protected void showErrorAlert(String header, String content) {
-
+        System.out.println(header);
+        System.out.println(content);
     }
 
     @Override

@@ -9,7 +9,6 @@ public class PlayersInGameCLI {
      */
     private final ArrayList<PlayerCLI> players =new ArrayList<>();
 
-    private PlayerCLI myPlayer;
 
     /**
      * prints score of each player
@@ -21,6 +20,18 @@ public class PlayersInGameCLI {
         }
     }
 
+    /**
+     *
+     * @return player in control of view
+     */
+    public PlayerCLI getMyPlayer() throws RuntimeException{
+        for(PlayerCLI player : players) {
+            if(player.isMyPlayer()){
+                return player;
+            }
+        }
+        throw new RuntimeException("No myPlayer found");
+    }
     /**
      *
      * @param playerCLI new player that has joined
