@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Server.Network;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -104,7 +105,9 @@ public class Server implements Runnable{
      */
     private void sendMasterStatus(Boolean masterStatus) {
         MessageType messageType=MessageType.CONNECT;
-        String params=parser.toJson(masterStatus);
+        JsonObject jsonObject=new JsonObject();
+        jsonObject.addProperty("masterStatus",masterStatus);
+        String params=parser.toJson(jsonObject);
         String outMessage=parser.toJson(new Message(messageType,params));
         connections.getLast().setOutMessage(outMessage);
     }
