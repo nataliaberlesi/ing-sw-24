@@ -5,7 +5,7 @@ import it.polimi.ingsw.Server.Network.Server;
 
 import java.io.IOException;
 
-public class Launcher {
+public class ServerLauncher {
     private static Server server;
     public static void main(String[] args){
         try {
@@ -14,7 +14,7 @@ public class Launcher {
 
         }
         new Thread(server).start();
-        Launcher.openConnectionsHandler();
+        ServerLauncher.openConnectionsHandler();
 
     }
     private static void openConnectionsHandler() {

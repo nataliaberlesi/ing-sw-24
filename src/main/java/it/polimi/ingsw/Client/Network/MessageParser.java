@@ -66,8 +66,8 @@ public class MessageParser {
      * @throws IOException
      */
     public boolean masterStatus(){
-        //TODO
-        return true;
+        //TODO: To do exception if masterstatus==null
+        return messageParams.getAsBoolean();
     }
     //TODO: server side -> returns true when all players for the game have been created
     public boolean checkWaitForStart(){

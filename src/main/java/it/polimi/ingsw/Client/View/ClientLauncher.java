@@ -7,7 +7,7 @@ import it.polimi.ingsw.Client.View.GUI.GUIApplication;
 
 import java.io.IOException;
 
-public class Launcher {
+public class ClientLauncher {
     public static void main(String[] args) {
         try {
             NetworkManager networkManager=new NetworkManager("localhost",60600);
