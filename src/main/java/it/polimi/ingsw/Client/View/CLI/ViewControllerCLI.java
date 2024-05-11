@@ -52,7 +52,11 @@ public class ViewControllerCLI extends ViewController {
 
     @Override
     protected void switchToJoin() {
-        System.out.println("Choose a Username:");
+        Scanner scanner = new Scanner(System.in);
+        String username = askUsername(scanner);
+        if (!checkParamsAndSendCreateOrJoinMessage(username, null)) {
+            switchToJoin();
+        }
     }
 
     @Override
