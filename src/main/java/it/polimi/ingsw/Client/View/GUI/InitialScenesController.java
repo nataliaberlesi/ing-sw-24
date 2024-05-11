@@ -1,8 +1,6 @@
 package it.polimi.ingsw.Client.View.GUI;
 import it.polimi.ingsw.Client.Network.MessageDispatcher;
-import it.polimi.ingsw.Client.Network.MessageHandlerException;
 import it.polimi.ingsw.Client.Network.MessageParser;
-import it.polimi.ingsw.Client.Network.MessageType;
 import it.polimi.ingsw.Client.View.ViewController;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -29,29 +27,15 @@ public class InitialScenesController extends ViewController implements Initializ
     private final Stage stage;
 
     /**
-     * Secondary controller for main game scene.
-     */
-    private MainSceneController mainSceneController;
-
-    /**
      * Alert dialog for errors.
      */
     private final Alert errorAlert;
-
-    /**
-     * Token color ChoiceBox.
-     */
-    private final ChoiceBox<String> tokenColorChoice;
 
     /**
      * Players number ChoiceBox.
      */
     @FXML
     private ChoiceBox<Integer> playersNumberChoice;
-    /**
-     * Create vs join flag.
-     */
-    private boolean createMode;
     /**
      * Username TextField.
      */
@@ -66,14 +50,12 @@ public class InitialScenesController extends ViewController implements Initializ
     public InitialScenesController(MessageParser messageParser, MessageDispatcher messageDispatcher, Stage stage) {
         super(messageParser, messageDispatcher);
         this.stage = stage;
-        this.tokenColorChoice = new ChoiceBox<>();
         this.playersNumberChoice = new ChoiceBox<>();
         this.errorAlert = new Alert(Alert.AlertType.ERROR);
-
     }
 
     /**
-     * Method for switching to a new scene in application.
+     * Method for switching to a new FXML scene in application.
      *
      * @param resourceName fxml file resource to load
      */
@@ -104,7 +86,6 @@ public class InitialScenesController extends ViewController implements Initializ
      */
     @Override
     protected void switchToCreate() {
-        this.createMode = true;
         switchScene("startMenu.fxml");
     }
 
@@ -113,7 +94,6 @@ public class InitialScenesController extends ViewController implements Initializ
      */
     @Override
     protected void switchToJoin() {
-        this.createMode = false;
         this.switchScene("startMenu.fxml");
         this.playersNumberLabel.setVisible(false);
         this.playersNumberChoice.setVisible(false);
@@ -123,11 +103,11 @@ public class InitialScenesController extends ViewController implements Initializ
      * Confirm create/join event
      */
     @FXML
-    private void confirmCreateJoin() {
-        if (this.createMode)
-            this.createGame();
-        else
-            this.joinGame();
+    protected void confirmCreateJoin() {
+        Integer numberOfPlayers = this.playersNumberChoice.getValue();
+        String username = this.usernameField.getCharacters().toString();
+        if (super.checkParamsAndSendCreateOrJoinMessage(username, numberOfPlayers))
+            switchScene("loading.fxml");
     }
 
     /**
@@ -154,39 +134,6 @@ public class InitialScenesController extends ViewController implements Initializ
         this.errorAlert.showAndWait();
     }
 
-    /**
-     * Send master player's information to server to create game in server
-     * */
-    @Override
-    protected void createGame(){
-        if (playerGivesCorrectInformation(this.createMode, this.usernameField.getCharacters().toString(), this.playersNumberChoice.getValue())) {
-            this.playersNumber = this.playersNumberChoice.getValue();
-            this.username = this.usernameField.getCharacters().toString();
-            try {
-                this.messageDispatcher.createGame(this.playersNumber, this.username);
-                this.previousMessageType = MessageType.CREATE;
-            } catch (IOException e) {
-                throw new MessageHandlerException("Unable to create game", e);
-            }
-
-        }
-
-    }
-    /**
-     * Send player's information to server to join a player to an existing game
-     * */
-    @Override
-    protected void joinGame(){
-        if (playerGivesCorrectInformation(this.createMode, this.usernameField.getCharacters().toString(), this.playersNumberChoice.getValue())) {
-            this.username = this.usernameField.getCharacters().toString();
-            try {
-                this.messageDispatcher.joinGame(this.username);
-                this.previousMessageType = MessageType.JOIN;
-            } catch (IOException e) {
-                throw new MessageHandlerException("Unable to join game", e);
-            }
-        }
-    }
 
     /**
      * Calls the start of the game when all players are connected
@@ -302,11 +249,5 @@ public class InitialScenesController extends ViewController implements Initializ
         //not used for GUI
     }
 
-    /**
-     * Shows user a loading screen while waiting to start the game.
-     * */
-    @Override
-    protected void waitForStart() {
-        this.switchScene("loading.fxml");
-    }
+
 }

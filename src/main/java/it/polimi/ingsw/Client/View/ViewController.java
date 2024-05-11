@@ -87,17 +87,34 @@ public abstract class ViewController {
     }
 
     /**
-     * Checks if player entered the information correctly.
-     * @param isMaster master flag
+     * If player gave correct information, sends a message to the server with player's information and returns true
+     * @param username player's chosen username
+     * @param numberOfPlayers number of players for the game, chosen by master
+     * */
+    protected boolean checkParamsAndSendCreateOrJoinMessage(String username, Integer numberOfPlayers){
+        if (playerGivesCorrectInformation(username, numberOfPlayers)){
+            if (messageParser.masterStatus()) {
+                messageDispatcher.createGame(numberOfPlayers, username);
+            }
+            else {
+                messageDispatcher.joinGame(username);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Checks if player entered the information correctly, display error alerts if not.
      * @param playersNumber number of players
      * @param username username
      * */
-    protected boolean playerGivesCorrectInformation(boolean isMaster, String username, Integer playersNumber) {
+    protected boolean playerGivesCorrectInformation(String username, Integer playersNumber) {
         if (username == null || !correctUsername(username)){
-            showErrorAlert("Invalid username", "Username must contain between 2 and 8 alphanumeric characters");
+            showErrorAlert("Invalid username", "Username must contain between 1 and 8 alphanumeric characters");
             return false;
         }
-        if (isMaster){
+        if (messageParser.masterStatus()){
             if (playersNumber == null || !(playersNumber >= 2 && playersNumber <= 4)){
                 showErrorAlert("Invalid players number", "Please select a number of players for the game");
                 return false;
@@ -105,6 +122,7 @@ public abstract class ViewController {
         }
         return true;
     }
+
 
     /**
      * Check if message content is empty.
@@ -137,20 +155,7 @@ public abstract class ViewController {
         //TODO: checkFinalRound() : should return true if it's final round
     }
 
-    /**
-     * Method called to display loading screen until all players connect to start the game.
-     * */
-    protected abstract void waitForStart();
 
-    /**
-     * Method called to create the game.
-     */
-    protected abstract void createGame();
-
-    /**
-     * Method called to join the game.
-     */
-    protected abstract void joinGame();
 
     /**
      * Method called to start the game.
@@ -293,6 +298,9 @@ public abstract class ViewController {
 
     protected abstract void addPlayers();
 
+    /**
+     * Connects player to create or join mode based on server response indicating the master status of the player trying to connect
+     * */
     protected void connectPlayer() {
         if (messageParser.masterStatus()) {
             switchToCreate();
