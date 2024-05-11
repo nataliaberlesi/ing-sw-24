@@ -13,4 +13,9 @@ public class DeckFactory {
         deck.shuffle();
         return deck;
     }
+    public static Deck createShuffledStartingDeck(){
+        Deck deck=new Deck(StartingCardFactory.makeEveryStartingCardID());
+        deck.shuffle();
+        return deck;
+    }
 }
