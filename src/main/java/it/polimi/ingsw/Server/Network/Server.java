@@ -27,7 +27,6 @@ public class Server implements Runnable{
      * The active connections inside the server
      */
     private ArrayList<PlayerConnection> connections;
-    private static final String serverSetupAddress = "serverSetupInfo.json";
     /**
      * Creates a server using a custom port, then waits for a master player to connect
      * @param port
@@ -98,19 +97,21 @@ public class Server implements Runnable{
     public void setMaxAllowablePlayers(int maxAllowablePlayers) {
         this.maxAllowablePlayers=maxAllowablePlayers;
     }
-    private void sendMasterStatus(String status) {
-        MessageType messageType=MessageType.CONNECTION;
-        String params=status;
-        String outMessage=parser.toString(new Message(messageType,params));
+
+    /**
+     *
+     * @param masterStatus
+     */
+    private void sendMasterStatus(Boolean masterStatus) {
+        MessageType messageType=MessageType.CONNECT;
+        String params=parser.toJson(masterStatus);
+        String outMessage=parser.toJson(new Message(messageType,params));
         connections.getLast().setOutMessage(outMessage);
     }
     public void run() {
         try {
             waitMaster();
-            MessageType messageType=MessageType.CONNECTION;
-            String params="MASTER";
-            String outMessage=parser.toString(new Message(messageType,params));
-            connections.getLast().setOutMessage(outMessage);
+            sendMasterStatus(true);
         } catch (IOException ioe) {
             throw new RuntimeException(ioe);
         }
@@ -121,11 +122,7 @@ public class Server implements Runnable{
                 } catch (IOException ioe) {
                     throw new RuntimeException(ioe);
                 }
-                MessageType messageType=MessageType.CONNECTION;
-                String params="NOTMASTER";
-                String outMessage=parser.toString(new Message(messageType,params));
-                connections.getLast().setOutMessage(outMessage);
-
+                sendMasterStatus(false);
             }
         }
     }
