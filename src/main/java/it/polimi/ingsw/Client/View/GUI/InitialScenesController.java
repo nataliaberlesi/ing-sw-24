@@ -107,7 +107,7 @@ public class InitialScenesController extends ViewController implements Initializ
         Integer numberOfPlayers = this.playersNumberChoice.getValue();
         String username = this.usernameField.getCharacters().toString();
         if (super.checkParamsAndSendCreateOrJoinMessage(username, numberOfPlayers))
-            switchScene("loading.fxml");
+           switchToLoading();
     }
 
     /**
@@ -247,6 +247,11 @@ public class InitialScenesController extends ViewController implements Initializ
     @Override
     public void main(String[] args) {
         //not used for GUI
+    }
+
+    @Override
+    protected void switchToLoading() {
+        switchScene("loading.fxml");
     }
 
 

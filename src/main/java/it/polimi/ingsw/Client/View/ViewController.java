@@ -230,6 +230,8 @@ public abstract class ViewController {
         return false;
     }
 
+    protected abstract void switchToLoading();
+
     /**
      * Method called to update the view according to received message type.
      */
