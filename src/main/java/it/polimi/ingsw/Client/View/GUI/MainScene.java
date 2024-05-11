@@ -22,7 +22,7 @@ public class MainScene extends Scene {
     public MainScene() {
         super(new AnchorPane(), 1060, 595);
         root = (AnchorPane)this.getRoot();
-        this.mainSceneController = new MainSceneController(this);
+        this.mainSceneController = new MainSceneController();
         initializeComponents();
     }
 

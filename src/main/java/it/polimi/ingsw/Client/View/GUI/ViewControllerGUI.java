@@ -19,7 +19,7 @@ import java.util.ResourceBundle;
  * Class representing the gui view and acting as main controller for JavaFX application.
  */
 
-public class InitialScenesController extends ViewController implements Initializable{
+public class ViewControllerGUI extends ViewController implements Initializable{
 
     /**
      * Main application stage.
@@ -30,6 +30,8 @@ public class InitialScenesController extends ViewController implements Initializ
      * Alert dialog for errors.
      */
     private final Alert errorAlert;
+
+    private MainSceneController mainSceneController;
 
     /**
      * Players number ChoiceBox.
@@ -47,7 +49,7 @@ public class InitialScenesController extends ViewController implements Initializ
     @FXML
     private Label playersNumberLabel;
 
-    public InitialScenesController(MessageParser messageParser, MessageDispatcher messageDispatcher, Stage stage) {
+    public ViewControllerGUI(MessageParser messageParser, MessageDispatcher messageDispatcher, Stage stage) {
         super(messageParser, messageDispatcher);
         this.stage = stage;
         this.playersNumberChoice = new ChoiceBox<>();
@@ -216,7 +218,9 @@ public class InitialScenesController extends ViewController implements Initializ
 
     @Override
     protected void showScene() {
-
+        mainSceneController = new MainSceneController();
+        mainSceneController.setStage(this.stage);
+        mainSceneController.setScene(new MainScene());
     }
 
     @Override
