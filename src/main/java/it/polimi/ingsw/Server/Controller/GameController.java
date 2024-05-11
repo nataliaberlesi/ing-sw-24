@@ -15,31 +15,32 @@ public class GameController {
     private GameInstance gameInstance;
     private Server server;
     private Parser parser;
-    public GameController() {
+    public GameController(Server server) {
+        this.server=server;
+        this.parser=Parser.getInstance();
         this.messageParser=new MessageParser();
     }
 
     public Message dispatchMessage(String message) {
         MessageType messageType=messageParser.getMessageType(message);
         String username=messageParser.getUsername(message);
-        String messageParams=messageParser.getMessageParams(message);
-        return queryModel(messageType, username, messageParams);
+        JsonObject jsonParams=messageParser.getMessageParams(message);
+        return queryModel(messageType, username, jsonParams);
     }
     /**
      * Given a specific type of message, queries the model to get/change some information
      */
-    public Message queryModel(MessageType messageType,String username, String messageParams) {
-        JsonObject jsonParams=messageParser.getParser().toJsonObject(messageParams);
+    public Message queryModel(MessageType messageType,String username, JsonObject jsonParams) {
         switch (messageType) {
             case CREATE -> {
-                return createGame(username,messageParams);
+                return createGame(username,jsonParams);
             }
             case JOIN -> {
                 return joinGame(username);
 
             }
             case FIRSTROUND -> {
-                return playFirstRound(messageParams);
+                return playFirstRound(jsonParams);
             }
             case SECONDROUND -> {
                 //TODO
@@ -63,13 +64,13 @@ public class GameController {
     /**
      * Creates a game using master player data
      */
-    public Message createGame(String username,String messageParams){
+    public Message createGame(String username,JsonObject jsonParams){
         if(this.gameInstance!=null){
-            MessageType type=MessageType.ERROR;
+            MessageType type=MessageType.ABORT;
             String params="Game is already created";
-            return new Message(type, parser.toJsonObject(params));
+            return new Message(type, null);
         }
-        CreateGame createGame=messageParser.parseCreateGame(username,messageParams);
+        CreateGame createGame=messageParser.parseCreateGame(username,jsonParams);
         this.server.setMaxAllowablePlayers(createGame.numberOfPlayers());
         this.gameInstance=new GameInstance(createGame.username(),createGame.numberOfPlayers());
         MessageType type=MessageType.CREATE;
@@ -86,21 +87,22 @@ public class GameController {
         if(!unavailableUsername){
             gameInstance.joinPlayer(username);
         }
-        String outMessageParams=parser.toJson(unavailableUsername);
-        return this.craftJSONMessage(MessageType.JOIN, outMessageParams);
+        JsonObject jsonParams=new JsonObject();
+        jsonParams.addProperty("unavailableUsername",unavailableUsername);
+        return new Message(MessageType.JOIN,jsonParams);
 
     }
     /**
      * Generates first round parameters and sets DrawableArea for the game instance
      * @return the starting first round parameters in JSON format
      */
-    public String getJSONStartFirstRoundParams() {
+    public JsonObject getJSONStartFirstRoundParams() {
         StartFirstRound startFirstRound=SetUpGame.getStartFirstRoundParams(gameInstance);
         gameInstance.setDrawableArea(startFirstRound.drawableArea());
-        return parser.toJson(startFirstRound);
+        return parser.toJsonObject(parser.toJson(startFirstRound));
     }
-    public Message playFirstRound(String params) {
-        FirstRound firstRound=messageParser.parseFirstRound(params);
+    public Message playFirstRound(JsonObject jsonParams) {
+        FirstRound firstRound=messageParser.parseFirstRound(jsonParams);
 
         return new Message(MessageType.FIRSTROUND,null);
     }
@@ -129,5 +131,9 @@ public class GameController {
     }
     public void shutDown() {
 
+    }
+
+    public GameInstance getGameInstance() {
+        return gameInstance;
     }
 }
