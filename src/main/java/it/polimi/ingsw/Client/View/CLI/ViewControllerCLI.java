@@ -10,6 +10,12 @@ import java.util.Scanner;
 public class ViewControllerCLI extends ViewController {
 
 
+    private PlayersInGameCLI playersInGame;
+    private ObjectivesSectionCLI objectivesSection;
+    private DrawableAreaCLI drawableArea;
+    private PlayerCLI currentPlayerView;
+
+
     public ViewControllerCLI(MessageParser messageParser, MessageDispatcher messageDispatcher) {
         super(messageParser, messageDispatcher);
     }
@@ -109,9 +115,13 @@ public class ViewControllerCLI extends ViewController {
 
     }
 
+
     @Override
     protected void showScene() {
-
+        playersInGame.printScores();
+        objectivesSection.printCommonObjectives();
+        currentPlayerView.printPlayerSituation();
+        drawableArea.printDrawableArea();
     }
 
     @Override

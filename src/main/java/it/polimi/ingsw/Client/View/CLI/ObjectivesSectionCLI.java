@@ -5,10 +5,7 @@ package it.polimi.ingsw.Client.View.CLI;
  */
 public class ObjectivesSectionCLI {
 
-    /**
-     * objective that are specific to player
-     */
-    private ObjectiveCLI privateObjective;
+
 
     /**
      * objectives that are common between players
@@ -17,21 +14,13 @@ public class ObjectivesSectionCLI {
 
     /**
      *
-     * @param objective that is being added
-     * @param isPrivate true if objective specific to player
+     * @param objective that is being added, common amongst all players
      * @throws RuntimeException if objective is null, or if it is trying to take place of objective already in play
      */
-    public void addObjective(ObjectiveCLI objective, boolean isPrivate) throws RuntimeException{
+    public void addObjective(ObjectiveCLI objective) throws RuntimeException{
         if(objective == null){
             throw new RuntimeException("Objective is null");
         }
-        if(isPrivate){
-            if(privateObjective != null){
-                throw new RuntimeException("Player already has a private objective");
-            }
-            privateObjective = objective;
-        }
-        else {
             if(publicObjectives[0] == null){
                 publicObjectives[0] = objective;
             }
@@ -41,7 +30,6 @@ public class ObjectivesSectionCLI {
             else {
                 throw new RuntimeException("Player already has a public objective");
             }
-        }
     }
 
     /**
@@ -54,11 +42,4 @@ public class ObjectivesSectionCLI {
         }
     }
 
-    /**
-     * prints objective specific to player
-     */
-    public void printPrivateObjective(){
-        System.out.println("PRIVATE OBJECTIVES:");
-        privateObjective.printObjective();
-    }
 }
