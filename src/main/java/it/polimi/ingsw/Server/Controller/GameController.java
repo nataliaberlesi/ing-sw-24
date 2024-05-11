@@ -3,9 +3,11 @@ package it.polimi.ingsw.Server.Controller;
 
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.Server.Controller.DTO.CreateGame;
+import it.polimi.ingsw.Server.Controller.DTO.StartFirstRound;
 import it.polimi.ingsw.Server.Network.*;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 public class GameController {
     private MessageParser messageParser;
@@ -32,7 +34,7 @@ public class GameController {
                 return createGame(messageParams);
             }
             case JOIN -> {
-                return joinGame(username,messageParams);
+                return joinGame(username);
 
             }
             case FIRSTROUND -> {
@@ -73,30 +75,30 @@ public class GameController {
         String params="OK";
         return new Message(type, params);
     }
-    public Message joinGame(String username, String messageParams) {
+    public Message joinGame(String username) {
         Boolean unavailableUsername=this.gameInstance.unavailableUsername(username);
-        if(unavailableUsername) {
-            JsonObject jsonObject=new JsonObject();
-            jsonObject.addProperty("unavailableUsername",unavailableUsername);
-            return this.craftJSONMessage(MessageType.JOIN, jsonObject.toString());
+        if(!unavailableUsername){
+            gameInstance.joinPlayer(username);
         }
-        gameInstance.joinPlayer(username);
-        JsonObject jsonObject=new JsonObject();
-        jsonObject.addProperty("unavailableUsername",unavailableUsername);
-        jsonObject.addProperty("full",gameInstance.checkIfGameIsFull());
-        jsonObject.addProperty("username",username);
-        return this.craftJSONMessage(MessageType.JOIN, jsonObject.toString());
+        String outMessageParams=parser.toJson(unavailableUsername);
+        return this.craftJSONMessage(MessageType.JOIN, outMessageParams);
 
     }
     public boolean gameIsFull() {
         return this.gameInstance.checkIfGameIsFull();
     }
     public boolean gameIsStarted() {
-        return this.gameIsStarted();
+        return gameInstance.gameIsStarted();
     }
-    public String getJSONStartParams() {
-        //TODO
-        return"";
+
+    /**
+     * Generates first round parameters and sets DrawableArea for the game instance
+     * @return the starting first round parameters in JSON format
+     */
+    public String getJSONStartFirstRoundParams() {
+        StartFirstRound startFirstRound=SetUpGame.getStartFirstRoundParams(gameInstance);
+        gameInstance.setDrawableArea(startFirstRound.drawableArea());
+        return parser.toJson(startFirstRound);
     }
     public Message craftJSONMessage(MessageType messageType, String params) {
         return new Message(messageType, params);
