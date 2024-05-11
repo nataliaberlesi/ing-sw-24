@@ -251,18 +251,25 @@ public abstract class ViewController {
             case JOIN -> manageJoinStatus();
 
             case START_FIRSTROUND -> {
-                setUpGame();
+                setUpGame(); //create instance for every player in list
                 showScene();
                 if(isMyTurn()){
-                enableFirstRoundActions();
+                    enableFirstRoundActions();
                 }
            }
             case FIRSTROUND -> {
-                //placeStartingCard();
-                //setPlayerColor();
+                /*
+                placeStartingCard();
+                setPlayerColor();
+                if(isMyTurn()){
+                    enableFirstRoundActions();
+                }
+                 */
             }
             case START_SECONDROUND -> {
+                /*
 
+                 */
             }
             case SECONDROUND -> {
 

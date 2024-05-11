@@ -6,6 +6,7 @@ package it.polimi.ingsw.Client.View.CLI;
 public class ObjectivesSectionCLI {
 
 
+    private ObjectiveCLI privateObjective;
 
     /**
      * objectives that are common between players
@@ -32,6 +33,17 @@ public class ObjectivesSectionCLI {
             }
     }
 
+    /**
+     *
+     * @param privateObjective is objective visible only to specific player
+     * @throws RuntimeException
+     */
+    public void setPrivateObjective(ObjectiveCLI privateObjective) throws RuntimeException{
+        if(!(this.privateObjective == null)){
+            throw new RuntimeException("Private Objective already set");
+        }
+        this.privateObjective = privateObjective;
+    }
     /**
      * prints objectives common between players
      */

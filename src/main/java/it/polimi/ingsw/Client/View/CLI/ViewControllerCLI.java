@@ -3,7 +3,6 @@ package it.polimi.ingsw.Client.View.CLI;
 import it.polimi.ingsw.Client.Network.MessageDispatcher;
 import it.polimi.ingsw.Client.Network.MessageParser;
 import it.polimi.ingsw.Client.View.ViewController;
-import it.polimi.ingsw.Server.Model.Player;
 
 import java.util.List;
 import java.util.Scanner;
@@ -158,4 +157,72 @@ public class ViewControllerCLI extends ViewController {
     protected void addPlayers() {
 
     }
+
+    /*
+        ALWAYS VALID:
+            EXIT
+        ALWAYS VALID DOORING GAME:
+            SHOW "NAME_OF_PLAYER"
+        LOGIN:
+            USERNAME
+        LOGIN MASTER:
+            USERNAME
+            NUMBER OF PLAYERS
+        DOORING GAME:
+            SHOW "USERNAME"
+        FIRST ROUND ANYTIME BEFORE PLACE:
+            FLIP
+        FIRST ROUND DOORING TURN:
+            2)COLOR "color"
+        SECOND ROUND:
+            #OBJECTIVE (1/2)
+         NORMAL ROUND:
+            1)PLACE #NUMBER_OF_CARD_IN_HAND FACE_UP/FACE_DOWN
+            2)DRAW RESOURCE_CARD/GOLD_CARD #INDEX_OF_CARD
+     */
+
+
+    public void doAction(String userInput){
+        String[] args = userInput.split(" ");
+
+        switch(args[0].toLowerCase()){
+            case "draw"->{
+
+            }
+            case "show"->{
+                try{
+                    PlayerCLI newCurrentPlayerView=playersInGame.getPlayer(args[1]);
+                    setCurrentPlayerView(newCurrentPlayerView);
+                }
+                catch (Exception e){
+                    showErrorAlert(args[1]+ " not found", "try another username");
+                }
+                showScene();
+            }
+            case "exit"->{
+
+            }
+            case "flip"->{
+                try{
+                    playersInGame.getMyPlayer().getPlayerBoard().getStartingCard().flip();
+                }
+                catch (Exception ignored){
+
+                }
+                showScene();
+            }
+            case "color"->{
+
+            }
+            case "place"->{
+
+            }
+            case "objective"->{
+
+            }
+
+
+        }
+    }
+
 }
