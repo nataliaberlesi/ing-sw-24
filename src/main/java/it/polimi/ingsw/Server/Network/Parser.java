@@ -28,17 +28,15 @@ public class Parser {
     public Message toMessage(String string) {
         return GSON.fromJson(string, Message.class);
     }
-    /**
-     * parses a message into a string
-     * @param message the message to be parsed
-     * @return the string
-     */
-    public String toString(Message message) {
-        return GSON.toJson(message);
-    }
     public JsonObject toJsonObject(String message) {
         JsonElement rootNode= JsonParser.parseString(message);
         return rootNode.getAsJsonObject();
+    }
+    public String toJson(Object o) {
+        return GSON.toJson(o);
+    }
+    public JsonElement toJsonElement(Object o) {
+        return GSON.toJsonTree(o);
     }
 
 }
