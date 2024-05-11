@@ -19,7 +19,7 @@ public class MessageDispatcher {
      * @param params
      * @throws IOException
      */
-    public void dispatch(MessageType type, String username, Object...params) throws IOException{
+    public void dispatch(MessageType type, String username, Object...params){
         ArrayList<Object> parameters=new ArrayList<>();
         for(Object param: params) {
             parameters.add(param);
@@ -29,11 +29,11 @@ public class MessageDispatcher {
         networkManager.setOutMessage(parser.toString(message));
     }
     //TODO: server side -> returns true at the end of the creation of the game for the master player
-    public void createGame(int playersNumber, String masterUsername) throws IOException,MessageHandlerException {
+    public void createGame(int playersNumber, String masterUsername) {
         dispatch(MessageType.CREATE,masterUsername,playersNumber);
     }
     //TODO: server side -> returns true at the end of the creation of the game for additional players
-    public void joinGame(String playerUsername) throws IOException {
+    public void joinGame(String playerUsername) {
         dispatch(MessageType.JOIN,playerUsername);
     }
 
