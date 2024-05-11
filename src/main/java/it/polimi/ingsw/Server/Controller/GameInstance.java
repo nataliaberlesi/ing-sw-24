@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Server.Controller;
 
+import it.polimi.ingsw.Server.Model.Cards.Deck;
 import it.polimi.ingsw.Server.Model.DrawableArea;
 import it.polimi.ingsw.Server.Model.Player;
 
@@ -18,6 +19,8 @@ public class GameInstance {
     private DrawableArea drawableArea;
     private SetUpGame setUpGame;
     private boolean gameIsStarted;
+    private Deck startingDeck;
+
     public GameInstance(String masterNickname,int numberOfPlayers) {
         this.numberOfPlayers = numberOfPlayers;
         playersTurnOrder =new ArrayList<String>();
@@ -64,5 +67,8 @@ public class GameInstance {
     }
     public boolean gameIsStarted() {
         return this.gameIsStarted;
+    }
+    public void setStartingDeck(Deck startingDeck) {
+        this.startingDeck=startingDeck;
     }
 }

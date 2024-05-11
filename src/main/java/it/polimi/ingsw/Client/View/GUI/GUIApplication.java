@@ -21,9 +21,9 @@ public class GUIApplication extends Application {
     /**
      * Main method for JavaFX application.
      *
-     * @param args arguments
+
      */
-    public static void main(String[] args) {
+    public static void main() {
         launch();
     }
 

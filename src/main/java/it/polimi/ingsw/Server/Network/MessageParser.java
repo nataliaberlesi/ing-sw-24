@@ -2,6 +2,7 @@ package it.polimi.ingsw.Server.Network;
 
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.Server.Controller.DTO.CreateGame;
+import it.polimi.ingsw.Server.Controller.DTO.FirstRound;
 import it.polimi.ingsw.Server.Controller.DTO.PlaceCard;
 import it.polimi.ingsw.Server.Controller.GameController;
 import it.polimi.ingsw.Server.Model.Coordinates;
@@ -14,10 +15,9 @@ public class MessageParser {
     public MessageParser() {
         parser=Parser.getInstance();
     }
-    public CreateGame parseCreateGame(String params) {
+    public CreateGame parseCreateGame(String username, String params) {
         JsonObject jsonObject=parser.toJsonObject(params);
         int playersNumber=jsonObject.get("numberOfPlayers").getAsInt();
-        String username=jsonObject.get("username").getAsString();
         return new CreateGame(playersNumber,username);
     }
     public PlaceCard parsePlaceCard(String params) {
@@ -29,6 +29,11 @@ public class MessageParser {
         Coordinates coordinates=new Coordinates(x,y);
         PlaceCard placeCard=new PlaceCard(card,coordinates);
         return placeCard;
+    }
+    public FirstRound parseFirstRound(String params) {
+        JsonObject jsonObject=parser.toJsonObject(params);
+        //TODO
+        return null;
     }
     public String parseDrawCard(String params) {
         JsonObject jsonObject=parser.toJsonObject(params);

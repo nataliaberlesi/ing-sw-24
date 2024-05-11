@@ -76,7 +76,6 @@ public class InitialScenesController extends ViewController implements Initializ
     /**
      * Connects player to create or join mode based on server response indicating the master status of the player trying to connect
      * */
-    @FXML
     protected void connectPlayer() {
         super.connectPlayer();
     }

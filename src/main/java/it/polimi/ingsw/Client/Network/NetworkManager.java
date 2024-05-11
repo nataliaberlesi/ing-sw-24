@@ -27,7 +27,6 @@ public class NetworkManager implements Runnable{
     public NetworkManager(String server , int port) throws IOException {
         connect(server, port);
         setupIO();
-        this.messageParser =new MessageParser(this);
     }
 
     /**
@@ -71,6 +70,9 @@ public class NetworkManager implements Runnable{
         this.outSocket=new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())),true);
         this.inSocket=new BufferedReader(new InputStreamReader(socket.getInputStream()));
         this.inKeyboard=new BufferedReader(new InputStreamReader(System.in));
+    }
+    public void setMessageParser(MessageParser messageParser) {
+        this.messageParser = messageParser;
     }
     public void setOutMessage(String outMessage) {
         this.outMessage=outMessage;

@@ -3,6 +3,7 @@ package it.polimi.ingsw.Server.Controller;
 
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.Server.Controller.DTO.CreateGame;
+import it.polimi.ingsw.Server.Controller.DTO.FirstRound;
 import it.polimi.ingsw.Server.Controller.DTO.StartFirstRound;
 import it.polimi.ingsw.Server.Network.*;
 
@@ -31,14 +32,14 @@ public class GameController {
         JsonObject jsonParams=messageParser.getParser().toJsonObject(messageParams);
         switch (messageType) {
             case CREATE -> {
-                return createGame(messageParams);
+                return createGame(username,messageParams);
             }
             case JOIN -> {
                 return joinGame(username);
 
             }
             case FIRSTROUND -> {
-                //TODO
+                return playFirstRound(messageParams);
             }
             case SECONDROUND -> {
                 //TODO
@@ -60,21 +61,26 @@ public class GameController {
     }
 
     /**
-     * Creates a game
+     * Creates a game using master player data
      */
-    public Message createGame(String messageParams){
+    public Message createGame(String username,String messageParams){
         if(this.gameInstance!=null){
             MessageType type=MessageType.ERROR;
             String params="Game is already created";
-            return new Message(type, params);
+            return new Message(type, parser.toJsonObject(params));
         }
-        CreateGame createGame=messageParser.parseCreateGame(messageParams);
+        CreateGame createGame=messageParser.parseCreateGame(username,messageParams);
         this.server.setMaxAllowablePlayers(createGame.numberOfPlayers());
         this.gameInstance=new GameInstance(createGame.username(),createGame.numberOfPlayers());
         MessageType type=MessageType.CREATE;
-        String params="OK";
-        return new Message(type, params);
+        return new Message(type, null);
     }
+
+    /**
+     * Lets a player join a game if his username is not taken
+     * @param username of the joining player
+     * @return an affermative answer if the username is available, a negative answer otherwise
+     */
     public Message joinGame(String username) {
         Boolean unavailableUsername=this.gameInstance.unavailableUsername(username);
         if(!unavailableUsername){
@@ -84,13 +90,6 @@ public class GameController {
         return this.craftJSONMessage(MessageType.JOIN, outMessageParams);
 
     }
-    public boolean gameIsFull() {
-        return this.gameInstance.checkIfGameIsFull();
-    }
-    public boolean gameIsStarted() {
-        return gameInstance.gameIsStarted();
-    }
-
     /**
      * Generates first round parameters and sets DrawableArea for the game instance
      * @return the starting first round parameters in JSON format
@@ -100,8 +99,19 @@ public class GameController {
         gameInstance.setDrawableArea(startFirstRound.drawableArea());
         return parser.toJson(startFirstRound);
     }
+    public Message playFirstRound(String params) {
+        FirstRound firstRound=messageParser.parseFirstRound(params);
+
+        return new Message(MessageType.FIRSTROUND,null);
+    }
+    public boolean gameIsFull() {
+        return this.gameInstance.checkIfGameIsFull();
+    }
+    public boolean gameIsStarted() {
+        return gameInstance.gameIsStarted();
+    }
     public Message craftJSONMessage(MessageType messageType, String params) {
-        return new Message(messageType, params);
+        return new Message(messageType, parser.toJsonObject(params));
     }
 
     /**

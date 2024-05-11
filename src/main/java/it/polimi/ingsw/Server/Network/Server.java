@@ -34,6 +34,7 @@ public class Server implements Runnable{
      * @throws IOException
      */
     public Server(int port) throws IOException {
+        this.parser=Parser.getInstance();
         this.port = port;
         maxAllowablePlayers=0;
     }
@@ -105,10 +106,11 @@ public class Server implements Runnable{
      */
     private void sendMasterStatus(Boolean masterStatus) {
         MessageType messageType=MessageType.CONNECT;
-        JsonObject jsonObject=new JsonObject();
-        jsonObject.addProperty("masterStatus",masterStatus);
-        String params=parser.toJson(jsonObject);
-        String outMessage=parser.toJson(new Message(messageType,params));
+        JsonObject params=new JsonObject();
+        params.addProperty("masterStatus",masterStatus);
+        Message message=new Message(messageType,params);
+        Gson gson=new Gson();
+        String outMessage=gson.toJson(message);
         connections.getLast().setOutMessage(outMessage);
     }
     public void run() {
