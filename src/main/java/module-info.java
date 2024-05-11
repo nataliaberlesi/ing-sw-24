@@ -9,6 +9,8 @@ module it.polimi.ingsw {
     requires com.google.gson;
 
     opens it.polimi.ingsw.Server.Network to com.google.gson;
+    opens it.polimi.ingsw.Server.Controller.DTO to com.google.gson;
+    opens it.polimi.ingsw.Server.Model to com.google.gson;
 
     // I need to add the path of the directory containing the GUIApplication class to the module for it to work
     opens it.polimi.ingsw.Client.View.GUI to javafx.fxml;

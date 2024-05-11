@@ -74,7 +74,7 @@ public class MessageParser {
     }
     //TODO: server side -> returns true if chosen username for this player is already used by another player
     public Boolean unavailableUsername(){
-        return messageParams.getAsBoolean();
+        return messageParams.get("unavailableUsername").getAsJsonPrimitive().getAsBoolean();
     }
 
     public String getInitialCard(){

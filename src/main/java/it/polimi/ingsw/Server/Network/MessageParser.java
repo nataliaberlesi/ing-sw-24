@@ -15,9 +15,8 @@ public class MessageParser {
     public MessageParser() {
         parser=Parser.getInstance();
     }
-    public CreateGame parseCreateGame(String username, String params) {
-        JsonObject jsonObject=parser.toJsonObject(params);
-        int playersNumber=jsonObject.get("numberOfPlayers").getAsInt();
+    public CreateGame parseCreateGame(String username, JsonObject jsonParams) {
+        int playersNumber=jsonParams.get("numberOfPlayers").getAsJsonPrimitive().getAsInt();
         return new CreateGame(playersNumber,username);
     }
     public PlaceCard parsePlaceCard(String params) {
@@ -30,8 +29,7 @@ public class MessageParser {
         PlaceCard placeCard=new PlaceCard(card,coordinates);
         return placeCard;
     }
-    public FirstRound parseFirstRound(String params) {
-        JsonObject jsonObject=parser.toJsonObject(params);
+    public FirstRound parseFirstRound(JsonObject jsonParams) {
         //TODO
         return null;
     }
@@ -47,13 +45,13 @@ public class MessageParser {
         JsonObject jsonMessage=parser.toJsonObject(message);
         return MessageType.valueOf(jsonMessage.get("type").getAsString());
     }
-    public String getMessageParams(String message) {
+    public JsonObject getMessageParams(String message) {
         JsonObject jsonMessage=parser.toJsonObject(message);
-        return jsonMessage.get("params").getAsString();
+        return jsonMessage.get("params").getAsJsonObject();
     }
     public String getUsername(String message) {
         JsonObject jsonMessage=parser.toJsonObject(message);
-        return jsonMessage.get("username").getAsString();
+        return jsonMessage.get("username").getAsJsonPrimitive().getAsString();
     }
 
 }
