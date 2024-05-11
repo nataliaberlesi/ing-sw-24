@@ -89,7 +89,9 @@ public class NetworkManager implements Runnable{
         while(socket.isConnected()) {
             try{
                 inMessage=inSocket.readLine();
-                messageParser.buildMessage(inMessage);
+                if(inMessage!=null) {
+                    messageParser.buildMessage(inMessage);
+                }
             } catch(IOException ioe) {
                 //TODO
             }
