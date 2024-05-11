@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class ViewControllerCLI extends ViewController {
 
 
-    protected ViewControllerCLI(MessageParser messageParser, MessageDispatcher messageDispatcher) {
+    public ViewControllerCLI(MessageParser messageParser, MessageDispatcher messageDispatcher) {
         super(messageParser, messageDispatcher);
     }
 
