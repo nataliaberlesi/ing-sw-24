@@ -49,8 +49,10 @@ class BoardTest {
 
     @BeforeEach
     void setUp(){
-        board2 =new Board("S5", facingUp);
-        board1 =new Board("S4",facingUp);
+        board2 =new Board("S5");
+        board2.placeStartingCard(facingUp);
+        board1 =new Board("S4");
+        board1.placeStartingCard(facingUp);
         // "O04"=new VerticalPatternObjective(Symbol.MUSHROOM)); "O08"=new SymbolObjective(Symbol.MUSHROOM)); "O13"=
         String[] objectives2=new String[]{"O04", "O08", "O13"};
         // "011"=new SymbolObjective(Symbol.BUTTERFLY)  "O02"=new DiagonalPatternObjective(Symbol.WOLF)  "O07"=new VerticalPatternObjective(Symbol.BUTTERFLY)
@@ -174,7 +176,9 @@ class BoardTest {
 
     @Test
     void realGameScenario(){
-        board1=new Board("S0", facingDown);
+
+        board1=new Board("S0");
+        board1.placeStartingCard(facingDown);
         board1.addObjective("O02");
         board1.addObjective("O12");
         board1.addObjective("O15");
@@ -215,7 +219,8 @@ class BoardTest {
 
     @Test
     void secondRealGameScenario(){
-        board1=new Board("S1", facingUp);
+        board1=new Board("S1");
+        board1.placeStartingCard(facingUp);
         board1.addObjective("O04");
         board1.addObjective("O06");
         board1.addObjective("O09");

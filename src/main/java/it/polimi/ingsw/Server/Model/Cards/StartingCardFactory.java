@@ -38,6 +38,8 @@ public class StartingCardFactory {
 
     }};
 
+    private final static ArrayList<String> everyStartingCardID=makeEveryStartingCardID();
+
     /**
      *
      * @param cardID of starting card
@@ -59,11 +61,15 @@ public class StartingCardFactory {
      * @return list of every starting card ID
      */
     public static ArrayList<String> makeEveryStartingCardID(){
-        String startingCardPrefix="G";
+        String startingCardPrefix="S";
         ArrayList<String> everyStartingCardID = new ArrayList<>();
         for(int i=0; i<6; i++){
             everyStartingCardID.add(startingCardPrefix+i);
         }
         return everyStartingCardID;
+    }
+
+    public static boolean isStartingCardID(String startingCardID){
+        return everyStartingCardID.contains(startingCardID);
     }
 }

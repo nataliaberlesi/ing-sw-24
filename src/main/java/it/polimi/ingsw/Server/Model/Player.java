@@ -11,7 +11,6 @@ public class Player {
     private final String username;
 
 
-
     /**
      * Each player has a unique color that is a visual indicator of player
      */
@@ -47,11 +46,14 @@ public class Player {
     }
 
 
-    public void setPlayerBoard(Board playerBoard) {
-        if(this.playerBoard != null) {
-            throw new RuntimeException("Player board already set");
-        }
-        this.playerBoard = playerBoard;
+
+    /**
+     * initiates player board and adds (not places) starting card
+     * @param startingCardID the first card that will be placed
+     * @throws RuntimeException if startingCardID is not a starting card ID
+     */
+    public void placeStartingCard(String startingCardID) throws RuntimeException {
+        this.playerBoard=new Board(startingCardID);
     }
 
 

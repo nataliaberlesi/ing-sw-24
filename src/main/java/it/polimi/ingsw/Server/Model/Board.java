@@ -5,6 +5,7 @@ import it.polimi.ingsw.Server.Model.Cards.Objectives.Objective;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 /**
  * The Board acts like a dynamic matrix of coordinates where it is legal to place cards (placeable coordinates).
@@ -19,11 +20,7 @@ import java.util.HashMap;
  * and each "hidden" corner will creat a new unplaceable coordinate (if it is not already existing) or "transforms" a placeable coordinate into an unplaceable one.
  */
 public class Board {
-    /*
-    a map and/or list of placed card might be necessary, but if coordinates to place cards arrive from the controller,
-    is it necessary to store an association between a placed card and it's coordinates ?? I think not, in the sense that
-    I don't think anything will interrogate the board on the position of a placed card.
-     */
+
 
     /**
      * score of the player that controls this board
@@ -53,6 +50,8 @@ public class Board {
      */
     private final HashMap<Symbol, Integer> visibleSymbolCounter = new HashMap<>();
 
+    private String startingCardID;
+
     /**
      * array of objectives that will assign points at the end of the game
      * the objectives stay the same throughout the game
@@ -65,15 +64,21 @@ public class Board {
      */
     private final Objective[] objectives=new Objective[3];
 
+
+
     /**
-     * a board is created by placing a starting card, which is very similar to resource and gold cards, but unlike them,
-     * if it is placed facing up then it will show symbols in the center that must be added to the visibleSymbolCounter.
-     * @param startingCardID is the ID of the first card that is placed, it occupies coordinates (0,0).
+     * a board when initiated will save the id of starting card that will be placed in coordinates 0,0 upon command
+     * @param startingCardID id of starting card that will be placed
+     * @throws IllegalArgumentException if id passed is not a starting card id
      */
-    public Board(String startingCardID, boolean isFacingUp) {
-        StartingCard startingCard= StartingCardFactory.makeStartingCard(startingCardID);
-        placeStartingCard(startingCard, isFacingUp);
+    public Board(String startingCardID) throws IllegalArgumentException {
+        if(!StartingCardFactory.isStartingCardID(startingCardID)){
+            throw new IllegalArgumentException("Invalid card ID");
+        }
+        this.startingCardID =startingCardID;
     }
+
+
 
     /**
      * objectives are what give extra points at the end of the game, some objectives calculate points based on patterns on the board,
@@ -93,23 +98,30 @@ public class Board {
         throw new RuntimeException("more than three objectives have been assigned to player board");
     }
     /**
+     * starting card will be placed in (0,0) in the orientation indicated.
      * Each corner of a startingCard creates new placeable or unplaceable coordinates for each corner, unplaceable if it is "hidden"
      * or placeable if it is "visible". If placed facing up it will also contain symbols in its center that are added to the
      * visibleSymbolCounter.
-     * @param startingCard is the first card that is placed, it occupies coordinates (0,0).
+     * @param isFacingUp is the orientation that the starting card will have.
+     * @throws RuntimeException if card has already been placed
      */
-    private void placeStartingCard(StartingCard startingCard, Boolean isFacingUp) {
+    public void placeStartingCard(Boolean isFacingUp) {
+        if(Objects.equals(startingCardID, "CARD_ALREADY_BEEN_PLACED")){
+            throw new RuntimeException("The card has already been placed");
+        }
+        StartingCard startingCard =StartingCardFactory.makeStartingCard(this.startingCardID);
         Symbol[] corners=getVisibleCorners(startingCard, isFacingUp);
         // place starting card in coordinates (0,0) and creates new placeable and unplaceable coordinates
         placeCornerSymbolsSurroundingCoordinates(corners, new Coordinates());
         // add center symbols to visible counter if card is facing up
         if(isFacingUp){
-            ArrayList<Symbol> centerSymbols=startingCard.getFrontCenterSymbols();
+            ArrayList<Symbol> centerSymbols= startingCard.getFrontCenterSymbols();
             for(Symbol centerSymbol: centerSymbols){
                 updateVisibleCounter(centerSymbol);
             }
         }
         addPlacedCard(startingCard, new Coordinates(), isFacingUp);
+        startingCardID="CARD_ALREADY_BEEN_PLACED";
     }
 
     /**
