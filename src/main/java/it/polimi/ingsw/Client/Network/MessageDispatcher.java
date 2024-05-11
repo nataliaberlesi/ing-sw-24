@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Client.Network;
 
+import com.google.gson.JsonObject;
+
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -19,24 +21,19 @@ public class MessageDispatcher {
      * @param params
      * @throws IOException
      */
-    public void dispatch(MessageType type, String username, Object...params){
-        ArrayList<Object> parameters=new ArrayList<>();
-        for(Object param: params) {
-            parameters.add(param);
-        }
-        String param=parser.toString(parameters);
-        Message message=new Message(type, username,param);
+    public void dispatch(MessageType type, String username, JsonObject params){
+        Message message=new Message(type, username,params);
         networkManager.setOutMessage(parser.toString(message));
     }
     //TODO: server side -> returns true at the end of the creation of the game for the master player
-    public void createGame(int playersNumber, String masterUsername) {
-        dispatch(MessageType.CREATE,masterUsername,playersNumber);
+    public void createGame(int numberOfPlayer, String username) {
+        JsonObject params=new JsonObject();
+        params.addProperty("numberOfPlayers",numberOfPlayer);
+        dispatch(MessageType.CREATE,username,params);
     }
     //TODO: server side -> returns true at the end of the creation of the game for additional players
     public void joinGame(String playerUsername) {
-        dispatch(MessageType.JOIN,playerUsername);
-    }
-
-    public void startGame(String username) {
+        JsonObject params=new JsonObject();
+        dispatch(MessageType.JOIN,playerUsername, params);
     }
 }
