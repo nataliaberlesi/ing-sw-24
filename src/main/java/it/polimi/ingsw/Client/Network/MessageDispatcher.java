@@ -9,6 +9,10 @@ import java.util.ArrayList;
 public class MessageDispatcher {
     private NetworkManager networkManager;
     private Parser parser;
+    public MessageDispatcher(NetworkManager networkManager) {
+        this.networkManager=networkManager;
+        this.parser=Parser.getInstance();
+    }
     /**
      * dispatches a message
      * @param type
