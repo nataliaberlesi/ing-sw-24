@@ -2,6 +2,7 @@ package it.polimi.ingsw.Server.Network;
 
 import it.polimi.ingsw.Server.Controller.GameController;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class ConnectionsHandler implements Runnable{
@@ -12,6 +13,8 @@ public class ConnectionsHandler implements Runnable{
     public ConnectionsHandler(Server server) {
         this.server=server;
         parser=Parser.getInstance();
+        this.gameController=new GameController(server);
+        allPlayerConnected=true;
     }
 
     /**
@@ -29,8 +32,18 @@ public class ConnectionsHandler implements Runnable{
      */
     private void handleConnections(ArrayList<PlayerConnection> playerConnections) {
         for(PlayerConnection playerConnection: playerConnections) {
-            Message outMessage=handleMessage(playerConnection.getInMessage());
-            playerConnection.setOutMessage(parser.toJson(outMessage));
+            String inMessage=playerConnection.getInMessage();
+            if(inMessage!=null) {
+                Message outMessage=handleMessage(playerConnection.getInMessage());
+                playerConnection.setOutMessage(parser.toJson(outMessage));
+                if(outMessage.type().equals(MessageType.ABORT)) {
+                    try{
+                        playerConnection.close();
+                    } catch (IOException e) {
+                        //TODO
+                    }
+                }
+            }
         }
     }
 
@@ -39,10 +52,12 @@ public class ConnectionsHandler implements Runnable{
      */
     public void run() {
         while(allPlayerConnected) {
-            if(gameController.gameIsFull() && !gameController.gameIsStarted()) {
-                for(PlayerConnection pc: server.getConnections()) {
-                    String outMessage=parser.toJson(gameController.craftJSONMessage(MessageType.START_FIRSTROUND, gameController.getJSONStartFirstRoundParams()));
-                    pc.setOutMessage(outMessage);
+            if (gameController.getGameInstance()!=null) {
+                if(gameController.gameIsFull() && !gameController.gameIsStarted()) {
+                    for(PlayerConnection pc: server.getConnections()) {
+                        String outMessage=parser.toJson(new Message(MessageType.START_FIRSTROUND,gameController.getJSONStartFirstRoundParams()));
+                        pc.setOutMessage(outMessage);
+                    }
                 }
             }
             handleConnections(server.getConnections());
