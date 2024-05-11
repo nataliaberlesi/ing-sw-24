@@ -47,6 +47,11 @@ public class PlayerConnection implements Runnable{
         parser= Parser.getInstance();
     }
 
+    public void close() throws IOException {
+        while(outMessage!=null) {}
+        socket.close();
+    }
+
     /**
      * Sends a Message into outSocket
      */
@@ -55,6 +60,7 @@ public class PlayerConnection implements Runnable{
             if(outMessage!=null) {
                 outSocket.println(outMessage);
                 outMessage=null;
+                inMessage=null;
             }
         }
     }
