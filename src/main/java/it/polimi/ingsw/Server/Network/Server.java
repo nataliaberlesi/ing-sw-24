@@ -117,6 +117,7 @@ public class Server implements Runnable{
         try {
             waitMaster();
             sendMasterStatus(true);
+            new Thread(new ConnectionsHandler(this)).start();
         } catch (IOException ioe) {
             throw new RuntimeException(ioe);
         }
