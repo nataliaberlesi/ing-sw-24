@@ -106,8 +106,8 @@ public class InitialScenesController extends ViewController implements Initializ
     protected void confirmCreateJoin() {
         Integer numberOfPlayers = this.playersNumberChoice.getValue();
         String username = this.usernameField.getCharacters().toString();
-        if (super.checkParamsAndSendCreateOrJoinMessage(username, numberOfPlayers))
-           switchToLoading();
+        super.checkParamsAndSendCreateOrJoinMessage(username, numberOfPlayers);
+
     }
 
     /**

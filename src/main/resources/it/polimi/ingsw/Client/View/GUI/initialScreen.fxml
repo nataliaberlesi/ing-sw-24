@@ -11,7 +11,6 @@
                 <Image url="@Images/initialScreen.png" />
             </image>
         </ImageView>
-
         <ImageView fitHeight="192.0" fitWidth="307.0" layoutX="376.0" layoutY="209.0" onMouseClicked="#connectPlayer" opacity="0.0" pickOnBounds="true" preserveRatio="true" />
     </children>
 </AnchorPane>

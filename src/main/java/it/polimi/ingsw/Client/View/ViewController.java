@@ -87,7 +87,7 @@ public abstract class ViewController {
     }
 
     /**
-     * If player gave correct information, sends a message to the server with player's information and returns true
+     * If player gave correct information, sends a message to the server with player's information, sets loading screen and returns true
      * @param username player's chosen username
      * @param numberOfPlayers number of players for the game, chosen by master
      * */
@@ -99,6 +99,7 @@ public abstract class ViewController {
             else {
                 messageDispatcher.joinGame(username);
             }
+            switchToLoading();
             return true;
         }
         return false;
