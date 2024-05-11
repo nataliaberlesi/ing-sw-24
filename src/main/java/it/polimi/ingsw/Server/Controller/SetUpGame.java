@@ -25,17 +25,15 @@ public class SetUpGame {
      */
     public static StartFirstRound getStartFirstRoundParams(GameInstance gameInstance) {
         Deck deck= DeckFactory.createShuffledStartingDeck();
-        HashMap<String, Card> startingCards=new HashMap<>();
+        gameInstance.setStartingDeck(deck);
+        Card firstPlayerStartingCard=StartingCardFactory.makeStartingCard(deck.next());
         Collections.shuffle(gameInstance.getPlayerTurnOrder());
-        for(String player: gameInstance.getPlayerTurnOrder()) {
-            startingCards.put(player, StartingCardFactory.makeStartingCard(deck.next()));
-        }
         DrawableArea drawableArea=getDrawableArea();
         ArrayList<Color> colors=new ArrayList<>();
         for(Color color: Color.values()) {
             colors.add(color);
         }
-        return new StartFirstRound(gameInstance.getPlayerTurnOrder(),startingCards,drawableArea,colors);
+        return new StartFirstRound(gameInstance.getPlayerTurnOrder(),firstPlayerStartingCard,drawableArea,colors);
     }
     public static DrawableArea getDrawableArea() {
         Deck goldDeck=DeckFactory.createShuffledGoldDeck();

@@ -15,7 +15,7 @@ public class MessageParser {
     private ViewController viewController;
     private Parser parser;
     private JsonObject currentMessage;
-    private JsonElement messageParams;
+    private JsonObject messageParams;
     private MessageType messageType;
 
 
@@ -28,8 +28,8 @@ public class MessageParser {
     }
     public void buildMessage(String inMessage) {
         currentMessage=parser.toJsonObject(inMessage);
-        messageType=MessageType.valueOf(currentMessage.get("type").getAsString());
-        messageParams=currentMessage.get("params");
+        messageType=MessageType.valueOf(currentMessage.get("type").getAsJsonPrimitive().getAsString());
+        messageParams=currentMessage.getAsJsonObject("params");
         viewController.updateView();
     }
     /**
@@ -65,7 +65,8 @@ public class MessageParser {
      */
     public boolean masterStatus(){
         //TODO: To do exception if masterstatus==null
-        return messageParams.getAsJsonPrimitive().getAsBoolean();
+        Boolean masterStatus=messageParams.get("masterStatus").getAsBoolean();
+        return masterStatus;
     }
     //TODO: server side -> returns true when all players for the game have been created
     public boolean checkWaitForStart(){

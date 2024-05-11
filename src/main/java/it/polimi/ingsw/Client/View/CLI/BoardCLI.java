@@ -27,6 +27,11 @@ public class BoardCLI {
      */
     private int minX=0;
 
+    /**
+     * first card that is placed on the board
+     */
+    private CardCLI startingCard;
+
 
     /**
      *  map that contains the list of cards the Y axis corresponding to the key
@@ -83,6 +88,20 @@ public class BoardCLI {
         Collections.sort(cards);
         board.put(cardY, cards);
         coverCorners(card.getCoordinates());
+    }
+
+    /**
+     *
+     * @param startingCard first card to place
+     */
+    public void addStartingCard(CardCLI startingCard){
+        this.startingCard=startingCard;
+        addCard(startingCard, new Coordinates());
+    }
+
+
+    public CardCLI getStartingCard() {
+        return startingCard;
     }
 
     /**

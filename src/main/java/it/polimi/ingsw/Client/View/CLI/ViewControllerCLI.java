@@ -10,10 +10,23 @@ import java.util.Scanner;
 public class ViewControllerCLI extends ViewController {
 
 
+    private PlayersInGameCLI playersInGame;
+    private ObjectivesSectionCLI objectivesSection;
+    private DrawableAreaCLI drawableArea;
+    private PlayerCLI currentPlayerView;
+
+
     public ViewControllerCLI(MessageParser messageParser, MessageDispatcher messageDispatcher) {
         super(messageParser, messageDispatcher);
     }
 
+    public PlayersInGameCLI getPlayersInGame() {
+        return playersInGame;
+    }
+
+    public void setCurrentPlayerView(PlayerCLI currentPlayerView) {
+        this.currentPlayerView = currentPlayerView;
+    }
 
     @Override
     protected void startGame() {
@@ -66,7 +79,8 @@ public class ViewControllerCLI extends ViewController {
 
     @Override
     protected void showErrorAlert(String header, String content) {
-
+        System.out.println(header);
+        System.out.println(content);
     }
 
     @Override
@@ -109,9 +123,13 @@ public class ViewControllerCLI extends ViewController {
 
     }
 
+
     @Override
     protected void showScene() {
-
+        playersInGame.printScores();
+        objectivesSection.printCommonObjectives();
+        currentPlayerView.printPlayerSituation();
+        drawableArea.printDrawableArea();
     }
 
     @Override

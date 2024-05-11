@@ -9,15 +9,19 @@ public class Parser {
     /**
      * the gson object used to parse
      */
-    private static final Gson GSON=new Gson();
+    private final Gson GSON;
     /**
      * the singleton instance
      */
-    private static final Parser INSTANCE=new Parser();
+    private static Parser instance;
     private Parser() {
+        GSON=new Gson();
     }
     public static Parser getInstance() {
-        return INSTANCE;
+        if(instance==null) {
+            instance=new Parser();
+        }
+        return instance;
     }
 
     /**

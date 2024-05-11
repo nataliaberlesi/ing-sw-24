@@ -32,6 +32,11 @@ public class PlayerCLI {
     private final HandCLI playerHand;
 
     /**
+     * each player has one private objective that only they can see
+     */
+    private ObjectiveCLI privateObjective;
+
+    /**
      * constructor used when a player joins game
      * @param username unique name of player
      * @param isMaster indicates weather player was the one to start the game
@@ -75,6 +80,9 @@ public class PlayerCLI {
         this.score = score;
     }
 
+    public void setPrivateObjective(ObjectiveCLI privateObjective) {
+        this.privateObjective = privateObjective;
+    }
 
     /**
      *
@@ -146,6 +154,17 @@ public class PlayerCLI {
         System.out.println(getColoredUsername()+": "+score);
     }
 
+    /**
+     * prints players board and hand, if player is not myPlayer the method will only print back of hand
+     */
+    public void printPlayerSituation(){
+        if(isMyPlayer){
+            this.privateObjective.printObjective();
+        }
+        this.printBoard();
+        this.printHand();
+    }
+
 
     public BoardCLI getPlayerBoard() {
         return playerBoard;
@@ -164,6 +183,7 @@ public class PlayerCLI {
     }
 
     public HandCLI getPlayerHand() {
+
         return playerHand;
     }
 
