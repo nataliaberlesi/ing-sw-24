@@ -85,6 +85,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     /**
      * Connects player to create or join mode based on server response indicating the master status of the player trying to connect
      * */
+    @FXML
     protected void connectPlayer() {
         super.connectPlayer();
     }
@@ -224,7 +225,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
 
     @Override
     protected void connectScene() {
-        switchScene("initialScreen");
+        switchScene("initialScreen.fxml");
     }
 
     @Override
