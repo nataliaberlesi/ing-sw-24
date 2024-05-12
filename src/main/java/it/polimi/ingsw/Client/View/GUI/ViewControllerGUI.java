@@ -158,6 +158,11 @@ public class ViewControllerGUI extends ViewController implements Initializable{
 
     }
 
+    @Override
+    protected void switchWaitingServerResponse() {
+
+    }
+
     /**
      * Calls the start of the game when all players are connected
      * */
