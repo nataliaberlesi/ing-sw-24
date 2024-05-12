@@ -30,9 +30,6 @@ public class ViewControllerCLI extends ViewController {
         return playersInGame;
     }
 
-    public void setCurrentPlayerView(PlayerCLI currentPlayerView) {
-        this.currentPlayerView = currentPlayerView;
-    }
 
     @Override
     protected void startGame() {
@@ -59,7 +56,7 @@ public class ViewControllerCLI extends ViewController {
         Scanner scanner = new Scanner(System.in);
         String username = askUsername(scanner);
         Integer numberOfPlayers = askNumberOfPlayers(scanner);
-        if (!checkParamsAndSendCreateOrJoinMessage(username, numberOfPlayers)) {
+        if(!checkParamsAndSendCreate(username, numberOfPlayers)){
             switchToCreate();
         }
     }
@@ -78,7 +75,7 @@ public class ViewControllerCLI extends ViewController {
     protected void switchToJoin() {
         Scanner scanner = new Scanner(System.in);
         String username = askUsername(scanner);
-        if (!checkParamsAndSendCreateOrJoinMessage(username, null)) {
+        if (!checkParamsAndSendJoin(username)) {
             switchToJoin();
         }
     }
@@ -202,7 +199,7 @@ public class ViewControllerCLI extends ViewController {
             case "show"->{
                 try{
                     PlayerCLI newCurrentPlayerView=playersInGame.getPlayer(args[1]);
-                    setCurrentPlayerView(newCurrentPlayerView);
+                    showScene();
                 }
                 catch (Exception e){
                     showErrorAlert(args[1]+ " not found", "try another username");

@@ -17,7 +17,7 @@ public abstract class ViewController {
     /**
      * Chosen number of players for the game.
      */
-    protected int playersNumber;
+    protected int numberOfPlayers;
 
     /**
      * Chosen player username.
@@ -93,11 +93,13 @@ public abstract class ViewController {
         this.winners = this.messageParser.getWinners();
     }
 
+    //DA NON USARE PIU'
     /**
      * If player gave correct information, sends a message to the server with player's information, sets loading screen and returns true
      * @param username player's chosen username
      * @param numberOfPlayers number of players for the game, chosen by master
      * */
+    /*
     protected boolean checkParamsAndSendCreateOrJoinMessage(String username, Integer numberOfPlayers){
         if (playerGivesCorrectInformation(username, numberOfPlayers)){
             if (messageParser.masterStatus()) {
@@ -111,12 +113,54 @@ public abstract class ViewController {
         }
         return false;
     }
+     */
 
+    //....
+    protected boolean checkParamsAndSendCreate(String username, Integer numberOfPlayers){
+        if(correctUsernameShowAlertIfFalse(username)&correctNumberOfPlayersShowAlertIfFalse(numberOfPlayers)){
+            messageDispatcher.createGame(numberOfPlayers, username);
+            switchToLoading();
+            return true;
+        }
+        return false;
+    }
+
+    //....
+    protected boolean correctUsernameShowAlertIfFalse(String username){
+        if (username == null || !correctUsername(username)){
+            showErrorAlert("Invalid username", "Username must contain between 1 and 8 alphanumeric characters");
+            return false;
+        }
+        return true;
+    }
+
+    //....
+    protected boolean correctNumberOfPlayersShowAlertIfFalse(Integer numberOfPlayers){
+        if (numberOfPlayers == null || !(numberOfPlayers >= 2 && numberOfPlayers <= 4)){
+            showErrorAlert("Invalid number of players", "Please select a number of players for the game");
+            return false;
+        }
+        return true;
+    }
+
+    //....
+    protected boolean checkParamsAndSendJoin(String username){
+        if(correctUsernameShowAlertIfFalse(username)){
+            messageDispatcher.joinGame(username);
+            switchToLoading();
+            return true;
+        }
+       return false;
+    }
+
+
+    // DA NON USARE PIU'
     /**
      * Checks if player entered the information correctly, display error alerts if not.
      * @param playersNumber number of players
      * @param username username
      * */
+    /*
     protected boolean playerGivesCorrectInformation(String username, Integer playersNumber) {
         if (username == null || !correctUsername(username)){
             showErrorAlert("Invalid username", "Username must contain between 1 and 8 alphanumeric characters");
@@ -130,6 +174,7 @@ public abstract class ViewController {
         }
         return true;
     }
+    */
 
 
     /**
@@ -246,7 +291,19 @@ public abstract class ViewController {
     public void updateView() {
         switch (this.messageParser.getMessageType()) {
 
-            case CONNECT -> connectScene();
+            case CONNECT -> {
+                connectScene();
+                /*
+                if(messageParser.masterStatus()){
+                    switchToCreate();
+                }
+                else {
+                    switchToJoin();
+                }
+
+                 */
+            }
+
 
             case JOIN -> manageJoinStatus();
 
