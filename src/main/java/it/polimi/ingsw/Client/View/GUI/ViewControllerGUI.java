@@ -76,7 +76,8 @@ public class ViewControllerGUI extends ViewController implements Initializable{
             Parent root = fxmlLoader.load();
             Scene scene = new Scene(root);
             this.stage.setScene(scene);
-            this.stage.show();
+            if (!stage.isShowing())
+                this.stage.show();
         } catch (IOException e){
             throw new ViewException(e.getMessage(), e);
         }
@@ -87,7 +88,9 @@ public class ViewControllerGUI extends ViewController implements Initializable{
      * */
     @FXML
     protected void connectPlayer() {
+
         super.connectPlayer();
+
     }
 
     /**
@@ -95,7 +98,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
      */
     @Override
     protected void switchToCreate() {
-        switchScene("startMenu.fxml");
+        switchScene("startMenuCreate.fxml");
     }
 
     /**
@@ -103,20 +106,26 @@ public class ViewControllerGUI extends ViewController implements Initializable{
      */
     @Override
     protected void switchToJoin() {
-        this.switchScene("startMenu.fxml");
-        this.playersNumberLabel.setVisible(false);
-        this.playersNumberChoice.setVisible(false);
+        this.switchScene("startMenuJoin.fxml");
     }
 
     /**
-     * Confirm create/join event
+     * Confirm create event
      */
     @FXML
-    protected void confirmCreateJoin() {
+    protected void confirmCreate() {
         Integer numberOfPlayers = this.playersNumberChoice.getValue();
         String username = this.usernameField.getCharacters().toString();
-        super.checkParamsAndSendCreateOrJoinMessage(username, numberOfPlayers);
+        super.checkParamsAndSendCreate(username, numberOfPlayers);
+    }
 
+    /**
+     * Confirm join event
+     */
+    @FXML
+    protected void confirmJoin() {
+        String username = this.usernameField.getCharacters().toString();
+        super.checkParamsAndSendJoin(username);
     }
 
     /**
