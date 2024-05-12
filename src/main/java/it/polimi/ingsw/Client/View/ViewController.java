@@ -82,6 +82,7 @@ public abstract class ViewController {
         }
         else {
             createMyPlayer(messageParser.getUsername());
+            switchToLoading();
         }
     }
 
