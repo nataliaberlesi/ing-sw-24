@@ -25,6 +25,11 @@ public class ViewControllerCLI extends ViewController {
         this.currentPlayerView= new PlayerCLI(username, true);
     }
 
+    @Override
+    protected void switchWaitingServerResponse() {
+        System.out.println("Loading...");
+    }
+
 
     public PlayersInGameCLI getPlayersInGame() {
         return playersInGame;
@@ -63,8 +68,10 @@ public class ViewControllerCLI extends ViewController {
 
     @Override
     protected void switchToLoading(){
-        System.out.println("Waiting for players...");
+        System.out.println("Loading...");
     }
+
+
 
     @Override
     protected void connectScene() {

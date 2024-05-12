@@ -117,9 +117,9 @@ public abstract class ViewController {
 
     //....
     protected boolean checkParamsAndSendCreate(String username, Integer numberOfPlayers){
-        if(correctUsernameShowAlertIfFalse(username)&correctNumberOfPlayersShowAlertIfFalse(numberOfPlayers)){
+        if(correctUsernameShowAlertIfFalse(username) && correctNumberOfPlayersShowAlertIfFalse(numberOfPlayers)){
             messageDispatcher.createGame(numberOfPlayers, username);
-            switchToLoading();
+                switchToLoading();
             return true;
         }
         return false;
@@ -147,12 +147,13 @@ public abstract class ViewController {
     protected boolean checkParamsAndSendJoin(String username){
         if(correctUsernameShowAlertIfFalse(username)){
             messageDispatcher.joinGame(username);
-            switchToLoading();
+            switchWaitingServerResponse();
             return true;
         }
        return false;
     }
 
+    protected abstract void switchWaitingServerResponse();
 
     // DA NON USARE PIU'
     /**
