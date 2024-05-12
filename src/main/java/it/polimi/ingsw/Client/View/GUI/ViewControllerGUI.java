@@ -115,8 +115,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     protected void confirmCreateJoin() {
         Integer numberOfPlayers = this.playersNumberChoice.getValue();
         String username = this.usernameField.getCharacters().toString();
-        super.checkParamsAndSendCreateOrJoinMessage(username, numberOfPlayers);
-
+        //super.checkParamsAndSendCreateOrJoinMessage(username, numberOfPlayers);
     }
 
     /**
