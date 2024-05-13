@@ -25,6 +25,7 @@ public class PlayerConnection implements Runnable{
     private PrintWriter outSocket;
     private String outMessage;
     private String inMessage;
+    private String readMessage;
 
     /**
      *
@@ -60,7 +61,6 @@ public class PlayerConnection implements Runnable{
             if(outMessage!=null) {
                 outSocket.println(outMessage);
                 outMessage=null;
-                inMessage=null;
             }
         }
     }
@@ -72,7 +72,11 @@ public class PlayerConnection implements Runnable{
     public void threadReceiveMethod() {
         while(socket.isConnected()) {
             try{
-                inMessage=inSocket.readLine();
+                if(inMessage==null) {
+                    this.readMessage=inSocket.readLine();
+                    getInMessage(true);
+                }
+
             } catch(IOException ioe) {
                 //TODO
             }
@@ -89,10 +93,17 @@ public class PlayerConnection implements Runnable{
     public boolean isMaster() {
         return this.isMaster;
     }
-    public String getInMessage() {
-        return this.inMessage;
+    public synchronized String getInMessage(boolean read) throws IOException {
+        if(read) {
+            this.inMessage=this.readMessage;
+            return inMessage;
+        } else {
+            String consumedMessage=this.inMessage;
+            this.inMessage=null;
+            return consumedMessage;
+        }
     }
-    public synchronized void setOutMessage(String outMessage) {
+    public void setOutMessage(String outMessage) {
         this.outMessage=outMessage;
     }
     @Override
