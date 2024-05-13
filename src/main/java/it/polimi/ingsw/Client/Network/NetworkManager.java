@@ -91,6 +91,7 @@ public class NetworkManager implements Runnable{
                 inMessage=inSocket.readLine();
                 if(inMessage!=null) {
                     messageParser.buildMessage(inMessage);
+                    inMessage=null;
                 }
             } catch(IOException ioe) {
                 //TODO
