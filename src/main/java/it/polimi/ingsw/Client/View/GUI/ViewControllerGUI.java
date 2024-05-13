@@ -47,7 +47,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
      * Players number Label.
      */
     @FXML
-    private Label playersNumberLabel;
+    private Button confirmButton;
 
     public ViewControllerGUI(MessageParser messageParser, MessageDispatcher messageDispatcher) {
         super(messageParser, messageDispatcher);
@@ -158,9 +158,9 @@ public class ViewControllerGUI extends ViewController implements Initializable{
 
     }
 
+
     @Override
     protected void switchWaitingServerResponse() {
-
     }
 
     /**
@@ -235,6 +235,31 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     @Override
     public void updateView(){
         Platform.runLater(super::updateView);
+    }
+
+    @Override
+    protected void enablePlaceCard() {
+
+    }
+
+    @Override
+    protected void enableDrawCard() {
+
+    }
+
+    @Override
+    protected void enableSecondRoundActions() {
+
+    }
+
+    @Override
+    protected void enablePlaceStartingCard() {
+
+    }
+
+    @Override
+    protected void enableChooseColor() {
+
     }
 
     @Override
