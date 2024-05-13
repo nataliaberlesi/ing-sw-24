@@ -96,6 +96,31 @@ public class ViewControllerCLI extends ViewController {
         System.out.println("All good\nWaiting for players...\n\n");
     }
 
+    @Override
+    protected void enablePlaceCard() {
+
+    }
+
+    @Override
+    protected void enableDrawCard() {
+
+    }
+
+    @Override
+    protected void enableSecondRoundActions() {
+
+    }
+
+    @Override
+    protected void enablePlaceStartingCard() {
+
+    }
+
+    @Override
+    protected void enableChooseColor() {
+
+    }
+
 
     /**
      * shows screen for player just connecting
