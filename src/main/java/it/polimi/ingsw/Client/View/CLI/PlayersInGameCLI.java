@@ -14,9 +14,12 @@ public class PlayersInGameCLI {
      * prints score of each player
      */
     public void printScores() {
+        int playerNumber=1;
         System.out.println("SCOREBOARD:");
         for(PlayerCLI player : players) {
-                player.printScore();
+            System.out.print(playerNumber+") ");
+            player.printScore();
+            playerNumber++;
         }
     }
 

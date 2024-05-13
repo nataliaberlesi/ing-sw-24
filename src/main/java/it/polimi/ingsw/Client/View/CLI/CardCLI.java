@@ -90,17 +90,19 @@ public class CardCLI implements Comparable<CardCLI>{
 
     public CardCLI(String cardID){
         this.cardID=cardID;
-        setBackSymbol();
+        setBackSymbolAndColor();
     }
 
     public String getCardID(){
         return cardID;
     }
 
+
+
     /**
-     * saves the initial of back symbol, indicated by the second letter of the cardID
+     * the card ID indicates the color of card and ethe color determines which symbol is on the back of the card
      */
-    private void setBackSymbol() {
+    private void setBackSymbolAndColor() {
         char backSymbol=cardID.charAt(1);
         switch (backSymbol) {
             case ('R'):
@@ -129,6 +131,38 @@ public class CardCLI implements Comparable<CardCLI>{
     public CardCLI(){
         this.cardID=emptyCardID;
         this.frontCorners=emptyCardCorners;
+    }
+
+    /**
+     * constructor called for startingCards
+     * @param cardID unique id of card
+     * @param frontCorners symbols in the corners on the front of card
+     * @param backCorners symbols in the corners on the back of card
+     * @param frontCenterSymbols symbols in the center of the front of card
+     */
+    public CardCLI(String cardID, String[] frontCorners, String[] backCorners, ArrayList<String> frontCenterSymbols){
+        this.cardID=cardID;
+        setFrontCorners(frontCorners);
+        setBackCorners(backCorners);
+        setFrontCenterSymbols(frontCenterSymbols);
+    }
+
+    /**
+     * constructor called for resource and gold cards
+     * @param cardID unique id of card
+     * @param frontCorners symbols in the corners on the front of card
+     * @param backCorners symbols in the corners on the back of card
+     * @param cardObjective objective of cards details how many points are earned when card is placed
+     * @param prerequisites (null for resource cards) are the amount of visible symbols that need to be present on the board in order
+     *                      to place card
+     */
+    public CardCLI(String cardID, String[] frontCorners, String[] backCorners, String cardObjective ,ArrayList<String> prerequisites){
+        this.cardID=cardID;
+        setFrontCorners(frontCorners);
+        setBackCorners(backCorners);
+        setCardObjective(cardObjective);
+        setPrerequisites(prerequisites);
+        setBackSymbolAndColor();
     }
     /**
      * saves the initials of the symbols on the front corners

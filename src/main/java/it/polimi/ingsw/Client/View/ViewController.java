@@ -1,4 +1,5 @@
 package it.polimi.ingsw.Client.View;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -320,7 +321,7 @@ public abstract class ViewController {
             case START_FIRSTROUND -> {
                 setUpGame(); //create instance for every player, fill drawableArea, give first player starting card
                 showScene();
-                if(isMyTurn()){
+                if(isMyTurn()){ // I think this check should be in enableFirstRound
                     enableFirstRoundActions(); // player must place starting card and choose color for available colors
                 }
            }
@@ -380,20 +381,19 @@ public abstract class ViewController {
     protected abstract void showScene();
 
     private void setUpGame() {
-        addPlayers(); // -> create instance players, show usernames and points in scene, set player's hand label, set see other player's game buttons
-        giveInitialCards(); // -> create instance of board with initial card's back
-        setDrawableArea(); // -> create instance of drawable area with given cards
-        setAvailableColors(); // -> put all colors in pop up scene
-
+        addPlayers(messageParser.getPlayers()); // -> create instance players (myPlayer already initialized when join), show usernames and points in scene, set player's hand label, set see other player's game buttons
+        giveInitialCard(messageParser.getPlayers().get(0)); // -> adds the initial card to the first player
+        setDrawableArea(messageParser.getDrawableArea()); // -> create instance of drawable area with given cards
+        setAvailableColors(messageParser.getAvailableColors()); // -> put all colors in pop up scene
     }
 
     protected abstract void setAvailableColors();
 
     protected abstract void setDrawableArea();
 
-    protected abstract void giveInitialCards();
+    protected abstract void giveInitialCard(String username);
 
-    protected abstract void addPlayers();
+    protected abstract void addPlayers(ArrayList<String> playerUsernames);
 
     /**
      * Connects player to create or join mode based on server response indicating the master status of the player trying to connect

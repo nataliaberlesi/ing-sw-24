@@ -4,6 +4,7 @@ import it.polimi.ingsw.Client.Network.MessageDispatcher;
 import it.polimi.ingsw.Client.Network.MessageParser;
 import it.polimi.ingsw.Client.View.ViewController;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -13,7 +14,7 @@ public class ViewControllerCLI extends ViewController {
     private PlayersInGameCLI playersInGame;
     private ObjectivesSectionCLI objectivesSection;
     private DrawableAreaCLI drawableArea;
-
+    private PlayerCLI myPlayer;
 
     public ViewControllerCLI(MessageParser messageParser, MessageDispatcher messageDispatcher) {
         super(messageParser, messageDispatcher);
@@ -29,6 +30,7 @@ public class ViewControllerCLI extends ViewController {
         PlayerCLI myPlayer= new PlayerCLI(username, true);
         playersInGame = new PlayersInGameCLI();
         playersInGame.addPlayer(myPlayer);
+        this.myPlayer=myPlayer;
     }
 
     /**
@@ -86,6 +88,7 @@ public class ViewControllerCLI extends ViewController {
         if(!checkParamsAndSendCreate(username, numberOfPlayers)){
             switchToCreate();
         }
+        createMyPlayer(username);
     }
 
     /**
@@ -131,7 +134,7 @@ public class ViewControllerCLI extends ViewController {
     }
 
     /**
-     * shows screen for player that is joining a game, here player will be asked to chose a username
+     * shows screen for player that is joining a game, here player will be asked to choose a username
      */
     @Override
     protected void switchToJoin() {
@@ -188,14 +191,77 @@ public class ViewControllerCLI extends ViewController {
 
     }
 
+    /**
+     * in the first round the client is given a starting card that he will place on his board in the orientation of his choice,
+     * after that he will have to choose his color from the list of available colors.
+     */
     @Override
     protected void enableFirstRoundActions() {
-
+        Scanner scanner = new Scanner(System.in);
+        dealWithFirstCardPlacement(scanner);
+        String chosenColor=dealWithPlayerColorChoice(scanner);
+        messageDispatcher.dispatch(firstRound, myPlayer.getPlayerBoard().getStartingCard().isFaceUp(), chosenColor);//see with Kevin
     }
+
+    /**
+     * shows client available colors to choose from
+     * @param scanner that reads player input
+     * @return chosen color (if it is one of the available colors)
+     */
+    private String dealWithPlayerColorChoice(Scanner scanner){
+        ArrayList<String> availableColors= messageParser.getAvailableColors();
+        System.out.println("Now it's time to choose your color:\nSimply type one of these colors to choose one");
+        for(String availableColor: availableColors){
+            System.out.println(availableColor);
+        }
+        String chosenColor=scanner.nextLine();
+        if(availableColors.contains(chosenColor)){
+            return chosenColor;
+        }
+        System.out.println("I'm afraid that color is unavailable, let's try again");
+        return dealWithPlayerColorChoice(scanner);
+    }
+
+    /**
+     * explains to client how to flip or place the starting card
+     * @param scanner that reads player input
+     */
+    private void askPlayerToPlaceStartingCard(Scanner scanner){
+        System.out.println("You have been assigned a starting card!");
+        System.out.println("You can flip the card by typing 'F' ");
+        System.out.println("When you are happy with the cards orientation type 'Place'");
+        System.out.println("once placed you can't change card orientation");
+        dealWithFirstCardPlacement(scanner);
+    }
+
+    /**
+     * reads user input and flips card or places it accordingly, if input is not understood the method calls itself
+     * @param scanner that reads player input
+     */
+    private void dealWithFirstCardPlacement(Scanner scanner){
+        String input= scanner.nextLine().toLowerCase();
+        switch (input){
+            case "f"->{
+                myPlayer.getPlayerBoard().getStartingCard().flip();
+                showScene();
+                dealWithFirstCardPlacement(scanner);
+            }
+            case "place"->{
+                System.out.println("Congrats! You have placed your first card");
+            }
+            default -> {
+                showErrorAlert("Command Not Recognized", "Remember 'F' is to flip the card and 'place' is to place the card ");
+                dealWithFirstCardPlacement(scanner);
+            }
+        }
+    }
+
+
 
 
     @Override
     protected void showScene() {
+        System.out.println("\n\n\n-----------------------------------------------------------------------------\n");
         for(PlayerCLI player: playersInGame.getPlayers()){
             if(!player.isMyPlayer()){
                 player.printPlayerSituation();
@@ -218,13 +284,32 @@ public class ViewControllerCLI extends ViewController {
     }
 
     @Override
-    protected void giveInitialCards() {
-
+    protected void giveInitialCard(String username) {
     }
 
+    /**
+     * adds players in order in playersInGame, since my client is already inserted the method makes sure
+     * that the order of players in input is respected in playersInGame
+     * @param playerUsernames of all players in game, the list contains the names in the turn order
+     * @throws RuntimeException if my player is not in the list of players
+     */
     @Override
-    protected void addPlayers() {
-
+    protected void addPlayers(ArrayList<String> playerUsernames) throws RuntimeException{
+        String myPlayerUsername= playersInGame.getMyPlayer().getUsername();
+        if(!playerUsernames.contains(myPlayerUsername)){
+            throw new RuntimeException("Player " + myPlayerUsername + " does not exist");
+        }
+        ArrayList<PlayerCLI> players=playersInGame.getPlayers();
+        int i=0;
+        while(!playerUsernames.get(i).equals(myPlayerUsername)){
+            players.addFirst(new PlayerCLI(myPlayerUsername, false));
+            i++;
+        }
+        i++;
+        while(i<playerUsernames.size()){
+            PlayerCLI newPlayer= new PlayerCLI(playerUsernames.get(i), false);
+            players.add(new PlayerCLI(myPlayerUsername, false));
+        }
     }
 
     /*
