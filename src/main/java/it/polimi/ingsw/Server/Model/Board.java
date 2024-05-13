@@ -103,9 +103,9 @@ public class Board {
      * or placeable if it is "visible". If placed facing up it will also contain symbols in its center that are added to the
      * visibleSymbolCounter.
      * @param isFacingUp is the orientation that the starting card will have.
-     * @throws RuntimeException if card has already been placed
+     * @throws RuntimeException if a starting card has already been placed or if other cards has been placed before
      */
-    public void placeStartingCard(Boolean isFacingUp) {
+    public void placeStartingCard(Boolean isFacingUp) throws RuntimeException {
         if(Objects.equals(startingCardID, "CARD_ALREADY_BEEN_PLACED")){
             throw new RuntimeException("The card has already been placed");
         }
@@ -120,7 +120,10 @@ public class Board {
                 updateVisibleCounter(centerSymbol);
             }
         }
-        addPlacedCard(startingCard, new Coordinates(), isFacingUp);
+        if(!placedCards.isEmpty()){
+            throw new RuntimeException("Cards have been placed before starting card");
+        }
+        addPlacedCard(startingCardID, new Coordinates(), isFacingUp);
         startingCardID="CARD_ALREADY_BEEN_PLACED";
     }
 
@@ -134,12 +137,12 @@ public class Board {
 
     /**
      *
-     * @param placedCard card that was placed
+     * @param placedCardID ID of card that was placed
      * @param coordinates where card was placed
      * @param isFacingUp orientation of card
      */
-    private void addPlacedCard(Card placedCard, Coordinates coordinates, boolean isFacingUp) {
-        placedCards.add(new PlacedCard(placedCard, coordinates, isFacingUp));
+    private void addPlacedCard(String placedCardID, Coordinates coordinates, boolean isFacingUp) {
+        placedCards.add(new PlacedCard(placedCardID, coordinates, isFacingUp));
     }
 
 
@@ -185,7 +188,7 @@ public class Board {
                 //adds card and coordinates to occupiedCoordinates
                 updateBoardObjectives(card.getBackSymbol(), coordinates);
                 //adds card to placedCards
-                addPlacedCard(card, coordinates, isFacingUp);
+                addPlacedCard(cardID, coordinates, isFacingUp);
                 return true;
             }
         }
