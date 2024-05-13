@@ -116,7 +116,12 @@ public abstract class ViewController {
     }
      */
 
-    //....
+    /**
+     *
+     * @param username chosen by player
+     * @param numberOfPlayers allowed in this game, chosen by first player to connect
+     * @return true if parameters pass local screening (if name doesn't go over character limit or if numberOfPlayers is >1 and <5)
+     */
     protected boolean checkParamsAndSendCreate(String username, Integer numberOfPlayers){
         if(correctUsernameShowAlertIfFalse(username) && correctNumberOfPlayersShowAlertIfFalse(numberOfPlayers)){
             messageDispatcher.createGame(numberOfPlayers, username);
@@ -126,7 +131,11 @@ public abstract class ViewController {
         return false;
     }
 
-    //....
+    /**
+     *
+     * @param username chosen by player
+     * @return true if username passes local screening (length >0 and <9), if not it shows the user an error message
+     */
     protected boolean correctUsernameShowAlertIfFalse(String username){
         if (username == null || !correctUsername(username)){
             showErrorAlert("Invalid username", "Username must contain between 1 and 8 alphanumeric characters");
@@ -135,7 +144,11 @@ public abstract class ViewController {
         return true;
     }
 
-    //....
+    /**
+     *
+     * @param numberOfPlayers chosen by master player (aka first one to connect)
+     * @return true if number of players chosen is >1 and <5, if not then it shows the user an error message
+     */
     protected boolean correctNumberOfPlayersShowAlertIfFalse(Integer numberOfPlayers){
         if (numberOfPlayers == null || !(numberOfPlayers >= 2 && numberOfPlayers <= 4)){
             showErrorAlert("Invalid number of players", "Please select a number of players for the game");
@@ -144,7 +157,11 @@ public abstract class ViewController {
         return true;
     }
 
-    //....
+    /**
+     *
+     * @param username chosen by player
+     * @return true if username passes local screening (length >0 or <9), if true it sends params to server to check if username has already been taken
+     */
     protected boolean checkParamsAndSendJoin(String username){
         if(correctUsernameShowAlertIfFalse(username)){
             messageDispatcher.joinGame(username);
@@ -295,15 +312,6 @@ public abstract class ViewController {
 
             case CONNECT -> {
                 connectScene();
-                /*
-                if(messageParser.masterStatus()){
-                    switchToCreate();
-                }
-                else {
-                    switchToJoin();
-                }
-
-                 */
             }
 
 
@@ -353,6 +361,16 @@ public abstract class ViewController {
             }
         }
     }
+
+    protected abstract void enablePlaceCard();
+
+    protected abstract void enableDrawCard();
+
+    protected abstract void enableSecondRoundActions();
+
+    protected abstract void enablePlaceStartingCard();
+
+    protected abstract void enableChooseColor();
 
     protected abstract void connectScene();
 

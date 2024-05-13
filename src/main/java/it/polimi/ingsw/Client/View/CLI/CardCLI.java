@@ -218,6 +218,7 @@ public class CardCLI implements Comparable<CardCLI>{
         }
         return sb.toString();
     }
+
     /**
      * saves the initials of the symbols on the front center of starting card
      * @param frontCenterSymbols are present only on gold cards
@@ -262,7 +263,7 @@ public class CardCLI implements Comparable<CardCLI>{
                 this.bottomLine="--*I---";
                 break;
 
-            case("CoveredCornerObjective"):
+            case("CornerCardObjective"):
                 this.cardObjective="--2pts-";
                 this.bottomLine="--*C---";
                 break;
