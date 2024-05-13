@@ -13,21 +13,30 @@ public class ViewControllerCLI extends ViewController {
     private PlayersInGameCLI playersInGame;
     private ObjectivesSectionCLI objectivesSection;
     private DrawableAreaCLI drawableArea;
-    private PlayerCLI currentPlayerView;
 
 
     public ViewControllerCLI(MessageParser messageParser, MessageDispatcher messageDispatcher) {
         super(messageParser, messageDispatcher);
     }
 
+    /**
+     * creates instance of client player and adds player to playersInGame
+     * @param username of client
+     *
+     */
     @Override
     protected void createMyPlayer(String username) {
-        this.currentPlayerView= new PlayerCLI(username, true);
+        PlayerCLI myPlayer= new PlayerCLI(username, true);
+        playersInGame = new PlayersInGameCLI();
+        playersInGame.addPlayer(myPlayer);
     }
 
+    /**
+     * notifies client that view is awaiting server to check the username
+     */
     @Override
     protected void switchWaitingServerResponse() {
-        System.out.println("Loading...");
+        System.out.println("Waiting for server to check username...");
     }
 
 
@@ -46,16 +55,29 @@ public class ViewControllerCLI extends ViewController {
 
     }
 
+    /**
+     *
+     * @param scanner reading client response
+     * @return client chosen username
+     */
     private String askUsername(Scanner scanner){
         System.out.println("Choose a Username:");
         return scanner.nextLine();
     }
 
+    /**
+     *
+     * @param scanner reading client response
+     * @return client chosen number of players
+     */
     private Integer askNumberOfPlayers(Scanner scanner){
         System.out.println("Choose number of players:");
         return scanner.nextInt();
     }
 
+    /**
+     * shows scene for player to create a game, where he needs to provide his username and number of players that will be playing
+     */
     @Override
     protected void switchToCreate() {
         Scanner scanner = new Scanner(System.in);
@@ -66,18 +88,26 @@ public class ViewControllerCLI extends ViewController {
         }
     }
 
+    /**
+     * loading screen notifying client to attend other players to join the game
+     */
     @Override
     protected void switchToLoading(){
-        System.out.println("Loading...");
+        System.out.println("All good\nWaiting for players...\n\n");
     }
 
 
-
+    /**
+     * shows screen for player just connecting
+     */
     @Override
     protected void connectScene() {
         connectPlayer();
     }
 
+    /**
+     * shows screen for player that is joining a game, here player will be asked to chose a username
+     */
     @Override
     protected void switchToJoin() {
         Scanner scanner = new Scanner(System.in);
@@ -147,9 +177,9 @@ public class ViewControllerCLI extends ViewController {
             }
         }
         playersInGame.printScores();
-        objectivesSection.printObjectivesSection();
-        currentPlayerView.printPlayerSituation();
         drawableArea.printDrawableArea();
+        objectivesSection.printObjectivesSection();
+        playersInGame.getMyPlayer().printPlayerSituation();
     }
 
     @Override
