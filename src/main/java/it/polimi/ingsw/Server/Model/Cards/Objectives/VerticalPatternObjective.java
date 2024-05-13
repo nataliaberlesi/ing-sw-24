@@ -164,7 +164,7 @@ public class VerticalPatternObjective implements Objective {
     @Override
     public int calculatePoints(HashMap<Symbol, Integer> symbolCounter) {
         listOfOutOfLineSymbols.sort(new CoordinatesComparator());
-        int numberOfOccurrences=0;
+        int numberOfOccurrences;
         switch (verticalSymbol){
             case WOLF -> numberOfOccurrences=calculateBlueVerticalPatternOccurrences();
             case LEAF -> numberOfOccurrences=calculateGreenVerticalPatternOccurrences();
@@ -174,5 +174,9 @@ public class VerticalPatternObjective implements Objective {
             default -> throw new InvalidSymbolException(verticalSymbol+" can't be on the center back of a card");
         }
         return POINTS*numberOfOccurrences;
+    }
+
+    public Symbol getSymbol() {
+        return verticalSymbol;
     }
 }

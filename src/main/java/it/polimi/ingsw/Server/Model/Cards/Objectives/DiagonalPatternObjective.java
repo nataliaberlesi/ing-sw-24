@@ -126,4 +126,7 @@ public class DiagonalPatternObjective implements Objective {
     }
 
 
+    public Symbol getSymbol() {
+        return symbolOfInterest;
+    }
 }

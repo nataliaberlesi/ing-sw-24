@@ -93,4 +93,8 @@ public class SymbolObjective implements CardObjective, Objective {
         int numberOfSets=numberOfVisibleVisibleSymbols/numberOfOccurrences;
         return POINTS*numberOfSets;
     }
+
+    public Symbol getSymbol() {
+        return symbolOfInterest;
+    }
 }

@@ -9,6 +9,7 @@ import java.util.HashMap;
  */
 public class PointsCardObjective implements CardObjective {
 
+
     /**
      * points that will be gained when card is placed
      */
@@ -51,5 +52,9 @@ public class PointsCardObjective implements CardObjective {
         public IllegalPointsAssigned(String message){
             super(message);
         }
+    }
+
+    public int getPoints() {
+        return points;
     }
 }
