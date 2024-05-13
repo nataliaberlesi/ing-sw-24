@@ -66,7 +66,9 @@ public class Server implements Runnable{
      */
     public void waitPlayer() throws IOException {
         PlayerConnection player=connectPlayer(false);
-        this.connections.add(player);
+        synchronized (connections) {
+            this.connections.add(player);
+        }
     }
 
     /**

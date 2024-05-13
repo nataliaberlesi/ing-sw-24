@@ -31,20 +31,28 @@ public class ConnectionsHandler implements Runnable{
      * @param playerConnections
      */
     private void handleConnections(ArrayList<PlayerConnection> playerConnections) {
-        for(PlayerConnection playerConnection: playerConnections) {
-            String inMessage=playerConnection.getInMessage();
-            if(inMessage!=null) {
-                Message outMessage=handleMessage(playerConnection.getInMessage());
-                playerConnection.setOutMessage(parser.toJson(outMessage));
-                if(outMessage.type().equals(MessageType.ABORT)) {
-                    try{
-                        playerConnection.close();
-                    } catch (IOException e) {
-                        //TODO
+        synchronized (playerConnections) {
+            for(PlayerConnection playerConnection: playerConnections) {
+                String inMessage=null;
+                try {
+                    inMessage = playerConnection.getInMessage(false);
+                } catch (IOException e) {
+                    throw new RuntimeException(e); //TODO
+                }
+                if(inMessage!=null) {
+                    Message outMessage=handleMessage(inMessage);
+                    playerConnection.setOutMessage(parser.toJson(outMessage));
+                    if(outMessage.type().equals(MessageType.ABORT)) {
+                        try{
+                            playerConnection.close();
+                        } catch (IOException e) {
+                            //TODO
+                        }
                     }
                 }
             }
         }
+
     }
 
     /**
