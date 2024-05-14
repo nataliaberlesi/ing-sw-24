@@ -131,8 +131,13 @@ public class PlayerCLI {
 
     /**
      * prints colored username followed by the players score
+     * if score 20 or above then it is red (to indicate final phase of game)
      */
     public void printScore(){
+        String score=""+this.score;
+        if(this.score>19){
+            score=ColoredText.ANSI_RED+score+ColoredText.ANSI_RESET;
+        }
         System.out.println(getColoredUsername()+": "+score);
     }
 

@@ -15,10 +15,7 @@ public abstract class ViewController {
      */
     protected static final String USERNAME_REGEX = "^\\w{1,8}$";
 
-    /**
-     * Chosen number of players for the game.
-     */
-    protected int numberOfPlayers;
+
 
     /**
      * Chosen player username.
@@ -298,10 +295,7 @@ public abstract class ViewController {
      */
     public abstract void main(String[] args);
 
-    private boolean isMyTurn(){
-        // in comune facciamo dopo (controlla se  è il turno del giocatore che controlla la view)
-        return false;
-    }
+    protected abstract boolean isMyTurn(String usernameOfPlayerWhosTurnItIs);
 
     protected abstract void switchToLoading();
 
@@ -321,7 +315,7 @@ public abstract class ViewController {
             case START_FIRSTROUND -> {
                 setUpGame(); //create instance for every player, fill drawableArea, give first player starting card
                 showScene();
-                if(isMyTurn()){ // I think this check should be in enableFirstRound
+                if(isMyTurn(messageParser.getPlayers().get(0))){  // getPlayers().get(0) restituisce username del primo giocatore, da confrontare con il tuo client
                     enableFirstRoundActions(); // player must place starting card and choose color for available colors
                 }
            }
@@ -383,8 +377,9 @@ public abstract class ViewController {
     private void setUpGame() {
         addPlayers(messageParser.getPlayers()); // -> create instance players (myPlayer already initialized when join), show usernames and points in scene, set player's hand label, set see other player's game buttons
         giveInitialCard(messageParser.getPlayers().get(0)); // -> adds the initial card to the first player
-        setDrawableArea(messageParser.getDrawableArea()); // -> create instance of drawable area with given cards
+        setDrawableArea(); // -> create instance of drawable area with given cards
         setAvailableColors(messageParser.getAvailableColors()); // -> put all colors in pop up scene
+        messageParser.getCardID(0,0);
     }
 
     protected abstract void setAvailableColors();
