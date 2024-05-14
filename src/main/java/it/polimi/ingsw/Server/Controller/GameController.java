@@ -1,11 +1,14 @@
 package it.polimi.ingsw.Server.Controller;
 
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.Server.Controller.DTO.CreateGame;
 import it.polimi.ingsw.Server.Controller.DTO.FirstRound;
 import it.polimi.ingsw.Server.Controller.DTO.StartFirstRound;
+import it.polimi.ingsw.Server.Model.Cards.StartingCardFactory;
 import it.polimi.ingsw.Server.Network.*;
+import it.polimi.ingsw.Server.Model.Color;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -40,7 +43,7 @@ public class GameController {
 
             }
             case FIRSTROUND -> {
-                return playFirstRound(jsonParams);
+                return playFirstRound(username,jsonParams);
             }
             case SECONDROUND -> {
                 //TODO
@@ -100,10 +103,32 @@ public class GameController {
         StartFirstRound startFirstRound=SetUpGame.getStartFirstRoundParams(gameInstance);
         return parser.toJsonObject(parser.toJson(startFirstRound));
     }
-    public Message playFirstRound(JsonObject jsonParams) {
-        FirstRound firstRound=messageParser.parseFirstRound(jsonParams);
 
-        return new Message(MessageType.FIRSTROUND,null);
+    /**
++     * Plays the current player's first round with given parameters
+     * @param username
+     * @param jsonParams
+     * @return
+     */
+    public Message playFirstRound(String username, JsonObject jsonParams) {
+        FirstRound firstRound=messageParser.parseFirstRound(username,jsonParams);
+        gameInstance.chooseColor(username, firstRound.color());
+        gameInstance.placeStartingCard(username, firstRound.flipStartingCard());
+        JsonObject params=new JsonObject();
+        if(gameInstance.nextTurn()<= gameInstance.getNumberOfPlayers()) {
+            params.add("card",parser.toJsonObject(parser.toJson(StartingCardFactory.makeStartingCard(gameInstance.getStartingDeck().next()))));
+        }
+        params.addProperty("currentPlayer", gameInstance.getTurn());
+        JsonArray availableColors= new JsonArray();
+        for(Color availableColor: gameInstance.getAvailableColors()) {
+            availableColors.add(availableColor.toString());
+        }
+        params.add("availableColors", availableColors);
+        params.addProperty("affectedPlayer",username);
+        params.addProperty("flipStartingCard",firstRound.flipStartingCard());
+        params.addProperty("color",firstRound.color());
+
+        return new Message(MessageType.FIRSTROUND,params);
     }
     public boolean gameIsFull() {
         return this.gameInstance.checkIfGameIsFull();

@@ -29,9 +29,11 @@ public class MessageParser {
         PlaceCard placeCard=new PlaceCard(card,coordinates);
         return placeCard;
     }
-    public FirstRound parseFirstRound(JsonObject jsonParams) {
+    public FirstRound parseFirstRound(String username,JsonObject jsonParams) {
         //TODO
-        return null;
+        boolean flipStartingCard=jsonParams.get("flipStartingCard").getAsJsonPrimitive().getAsBoolean();
+        String color=jsonParams.get("color").getAsJsonPrimitive().getAsString();
+        return new FirstRound(flipStartingCard,color);
     }
     public String parseDrawCard(String params) {
         JsonObject jsonObject=parser.toJsonObject(params);

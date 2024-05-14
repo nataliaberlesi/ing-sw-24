@@ -1,6 +1,8 @@
 package it.polimi.ingsw.Server.Controller;
 
+import it.polimi.ingsw.Server.Controller.DTO.FirstRound;
 import it.polimi.ingsw.Server.Model.Cards.Deck;
+import it.polimi.ingsw.Server.Model.Color;
 import it.polimi.ingsw.Server.Model.DrawableArea;
 import it.polimi.ingsw.Server.Model.Player;
 
@@ -12,6 +14,7 @@ import java.util.HashMap;
  */
 public class GameInstance {
     private ArrayList<String> playersTurnOrder;
+    private int currentPlayerIndex;
     private String currentPlayer;
     private int numberOfPlayers;
 
@@ -20,8 +23,10 @@ public class GameInstance {
     private SetUpGame setUpGame;
     private boolean gameIsStarted;
     private Deck startingDeck;
+    private ArrayList<Color> availableColors;
 
     public GameInstance(String masterNickname,int numberOfPlayers) {
+        this.currentPlayerIndex=0;
         this.numberOfPlayers = numberOfPlayers;
         playersTurnOrder =new ArrayList<String>();
         players=new HashMap<String,Player>();
@@ -73,5 +78,35 @@ public class GameInstance {
     }
     public void setStartingDeck(Deck startingDeck) {
         this.startingDeck=startingDeck;
+    }
+    public int getCurrentPlayerIndex() {
+        return currentPlayerIndex;
+    }
+    public String getTurn() {
+        return playersTurnOrder.get(currentPlayerIndex);
+    }
+    public int nextTurn() {
+        if(currentPlayerIndex<playersTurnOrder.size()) {
+            currentPlayerIndex++;
+        }
+        else {
+            currentPlayerIndex=0;
+        }
+        return currentPlayerIndex;
+    }
+
+    public ArrayList<Color> getAvailableColors() {
+        return availableColors;
+    }
+    public Deck getStartingDeck() {
+        return startingDeck;
+    }
+
+    public void chooseColor(String username, String color) {
+        players.get(username).setPlayerColor(Color.valueOf(color));
+    }
+
+    public void placeStartingCard(String username, boolean b) {
+        players.get(username).placeStartingCard();
     }
 }

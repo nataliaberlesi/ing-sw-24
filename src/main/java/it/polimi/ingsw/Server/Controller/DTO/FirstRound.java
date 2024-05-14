@@ -1,4 +1,4 @@
 package it.polimi.ingsw.Server.Controller.DTO;
 
-public record FirstRound() {
+public record FirstRound(boolean flipStartingCard, String color) {
 }
