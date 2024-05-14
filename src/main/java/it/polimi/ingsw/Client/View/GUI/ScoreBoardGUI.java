@@ -90,7 +90,7 @@ public class ScoreBoardGUI extends GridPane {
 
     /**
      * Sets usernames on the scoreBoard
-     * @param usernames
+     * @param usernames usernames of all players in game
      */
     public void setUsernames(ArrayList<String> usernames){
         for (int i = 1; i < 5; i++) {

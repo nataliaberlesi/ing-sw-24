@@ -154,7 +154,6 @@ public class ViewControllerGUI extends ViewController implements Initializable{
 
     @Override
     protected void createMyPlayer(String username) {
-        super.username = username;
     }
 
 
@@ -234,7 +233,6 @@ public class ViewControllerGUI extends ViewController implements Initializable{
             mainSceneController.setScene(new MainScene());
         }
     }
-
 
     @Override
     protected boolean isMyTurn(String usernameOfPlayerWhosTurnItIs) {

@@ -107,6 +107,6 @@ public class GameInstance {
     }
 
     public void placeStartingCard(String username, boolean b) {
-        players.get(username).placeStartingCard();
+        //players.get(username).placeStartingCard();
     }
 }

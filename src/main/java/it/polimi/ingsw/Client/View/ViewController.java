@@ -15,26 +15,6 @@ public abstract class ViewController {
      */
     protected static final String USERNAME_REGEX = "^\\w{1,8}$";
 
-    /**
-     * Chosen player username.
-     */
-    protected String username;
-
-    /**
-     * Chosen player token color
-     */
-    protected String tokenColor;
-
-    /**
-     * Flag for final round.
-     */
-    protected boolean finalRound = false;
-
-    /**
-     * List of winners.
-     */
-    protected List<String> winners = Collections.emptyList();
-
     protected final MessageParser messageParser;
 
     protected final MessageDispatcher messageDispatcher;
@@ -172,7 +152,7 @@ public abstract class ViewController {
                  */
             }
             case START_SECONDROUND -> {
-                
+
             }
             case SECONDROUND -> {
 
@@ -209,7 +189,6 @@ public abstract class ViewController {
     protected abstract void enableChooseColor();
 
     protected abstract void connectScene();
-
 
     protected abstract void enableFirstRoundActions();
 
