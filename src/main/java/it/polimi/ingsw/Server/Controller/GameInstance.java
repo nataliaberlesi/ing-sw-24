@@ -1,6 +1,5 @@
 package it.polimi.ingsw.Server.Controller;
 
-import it.polimi.ingsw.Server.Controller.DTO.FirstRound;
 import it.polimi.ingsw.Server.Model.Cards.Deck;
 import it.polimi.ingsw.Server.Model.Color;
 import it.polimi.ingsw.Server.Model.DrawableArea;
@@ -21,7 +20,8 @@ public class GameInstance {
     private HashMap<String, Player> players;
     private DrawableArea drawableArea;
     private SetUpGame setUpGame;
-    private boolean gameIsStarted;
+    private boolean firstRoundIsStarted;
+    private boolean secondRoundIsStarted;
     private Deck startingDeck;
     private ArrayList<Color> availableColors;
 
@@ -70,11 +70,24 @@ public class GameInstance {
     public void setDrawableArea(DrawableArea drawableArea) {
         this.drawableArea=drawableArea;
     }
-    public boolean gameIsStarted() {
-        return this.gameIsStarted;
+    public boolean firstRoundIsStarted() {
+        return this.firstRoundIsStarted;
     }
-    public void startGame() {
-        this.gameIsStarted=true;
+    public boolean secondRoundIsStarted() {
+        return this.secondRoundIsStarted;
+    }
+    public void startFirstRound() {
+        this.firstRoundIsStarted =true;
+    }
+    public void startSecondRound() {
+        this.secondRoundIsStarted=true;
+    }
+    public boolean allBoardsAreSet() {
+        boolean flag=false;
+        for(String player: playersTurnOrder) {
+            flag=!players.get(player).getPlayerBoard().getPlacedCards().isEmpty();
+        }
+        return flag;
     }
     public void setStartingDeck(Deck startingDeck) {
         this.startingDeck=startingDeck;

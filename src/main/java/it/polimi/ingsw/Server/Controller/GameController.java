@@ -6,13 +6,11 @@ import com.google.gson.JsonObject;
 import it.polimi.ingsw.Server.Controller.DTO.CreateGame;
 import it.polimi.ingsw.Server.Controller.DTO.FirstRound;
 import it.polimi.ingsw.Server.Controller.DTO.StartFirstRound;
-import it.polimi.ingsw.Server.Model.Cards.Card;
 import it.polimi.ingsw.Server.Model.Cards.StartingCardFactory;
 import it.polimi.ingsw.Server.Network.*;
 import it.polimi.ingsw.Server.Model.Color;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 public class GameController {
     private MessageParser messageParser;
@@ -136,8 +134,11 @@ public class GameController {
     public boolean gameIsFull() {
         return this.gameInstance.checkIfGameIsFull();
     }
-    public boolean gameIsStarted() {
-        return gameInstance.gameIsStarted();
+    public boolean firstRoundIsStarted() {
+        return gameInstance.firstRoundIsStarted();
+    }
+    public boolean secondRoundIsStarted() {
+        return gameInstance.secondRoundIsStarted();
     }
     public Message craftJSONMessage(MessageType messageType, String params) {
         return new Message(messageType, parser.toJsonObject(params));
@@ -148,7 +149,7 @@ public class GameController {
      * @throws IOException
      */
     public void startGame(){
-        this.gameInstance.startGame();
+        this.gameInstance.startFirstRound();
     }
 
     /**
@@ -163,5 +164,9 @@ public class GameController {
 
     public GameInstance getGameInstance() {
         return gameInstance;
+    }
+
+    public boolean allBoardsAreSet() {
+        return this.gameInstance.allBoardsAreSet();
     }
 }
