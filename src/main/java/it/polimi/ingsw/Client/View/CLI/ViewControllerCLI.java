@@ -200,7 +200,7 @@ public class ViewControllerCLI extends ViewController {
         Scanner scanner = new Scanner(System.in);
         dealWithFirstCardPlacement(scanner);
         String chosenColor=dealWithPlayerColorChoice(scanner);
-        messageDispatcher.dispatch(firstRound, myPlayer.getPlayerBoard().getStartingCard().isFaceUp(), chosenColor);//see with Kevin
+        messageDispatcher.firstRound(myPlayer.getUsername(),myPlayer.getPlayerBoard().getStartingCard().isFaceUp(), chosenColor);//see with Kevin
     }
 
     /**

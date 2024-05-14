@@ -1,10 +1,12 @@
 package it.polimi.ingsw.Client.Network;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.Client.View.ViewController;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -102,6 +104,24 @@ public class MessageParser {
 
     public boolean checkFinalRound() {
         return false;
+    }
+
+    public ArrayList<String> getPlayers() {
+        JsonArray jsonArray=messageParams.getAsJsonObject().get("players").getAsJsonArray();
+        ArrayList<String> players=new ArrayList<>();
+        for(JsonElement jsonElement:jsonArray) {
+            players.add(jsonElement.getAsJsonPrimitive().getAsString());
+        }
+        return players;
+    }
+
+    public ArrayList<String> getAvailableColors() {
+        JsonArray jsonArray=messageParams.getAsJsonObject().get("colors").getAsJsonArray();
+        ArrayList<String> colors=new ArrayList<>();
+        for(JsonElement jsonElement:jsonArray) {
+            colors.add(jsonElement.getAsJsonPrimitive().getAsString());
+        }
+        return colors;
     }
 }
 

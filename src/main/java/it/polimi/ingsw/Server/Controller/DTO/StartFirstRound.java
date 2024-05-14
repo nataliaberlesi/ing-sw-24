@@ -7,6 +7,6 @@ import it.polimi.ingsw.Server.Model.DrawableArea;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public record StartFirstRound(ArrayList<String> players, Card firstPlayerStartingCard, DrawableArea drawableArea, ArrayList<Color> colors) {
+public record StartFirstRound(ArrayList<String> players, Card firstPlayerStartingCard, Card[] resourceDrawableArea,Card[] goldDrawableArea, ArrayList<Color> colors) {
 
 }

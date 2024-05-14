@@ -98,7 +98,6 @@ public class GameController {
      */
     public JsonObject getJSONStartFirstRoundParams() {
         StartFirstRound startFirstRound=SetUpGame.getStartFirstRoundParams(gameInstance);
-        gameInstance.setDrawableArea(startFirstRound.drawableArea());
         return parser.toJsonObject(parser.toJson(startFirstRound));
     }
     public Message playFirstRound(JsonObject jsonParams) {

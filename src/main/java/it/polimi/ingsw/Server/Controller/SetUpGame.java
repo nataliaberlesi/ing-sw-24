@@ -1,10 +1,7 @@
 package it.polimi.ingsw.Server.Controller;
 
 import it.polimi.ingsw.Server.Controller.DTO.StartFirstRound;
-import it.polimi.ingsw.Server.Model.Cards.Card;
-import it.polimi.ingsw.Server.Model.Cards.Deck;
-import it.polimi.ingsw.Server.Model.Cards.DeckFactory;
-import it.polimi.ingsw.Server.Model.Cards.StartingCardFactory;
+import it.polimi.ingsw.Server.Model.Cards.*;
 import it.polimi.ingsw.Server.Model.Color;
 import it.polimi.ingsw.Server.Model.DrawableArea;
 import it.polimi.ingsw.Server.Model.DrawableCards;
@@ -29,11 +26,18 @@ public class SetUpGame {
         Card firstPlayerStartingCard=StartingCardFactory.makeStartingCard(deck.next());
         Collections.shuffle(gameInstance.getPlayerTurnOrder());
         DrawableArea drawableArea=getDrawableArea();
+        Card[] resourceDrawableArea= new Card[3];
+        Card[] goldDrawableArea=new Card[3];
+        for(int i=0;i<3;i++) {
+            resourceDrawableArea[i]= ResourceCardFactory.makeResourceCard(drawableArea.getResourceDrawingSection().seeCard(i));
+            goldDrawableArea[i]=GoldCardFactory.makeGoldCard(drawableArea.getGoldDrawingSection().seeCard(i));
+        }
+        gameInstance.setDrawableArea(drawableArea);
         ArrayList<Color> colors=new ArrayList<>();
         for(Color color: Color.values()) {
             colors.add(color);
         }
-        return new StartFirstRound(gameInstance.getPlayerTurnOrder(),firstPlayerStartingCard,drawableArea,colors);
+        return new StartFirstRound(gameInstance.getPlayerTurnOrder(),firstPlayerStartingCard,resourceDrawableArea,goldDrawableArea,colors);
     }
     public static DrawableArea getDrawableArea() {
         Deck goldDeck=DeckFactory.createShuffledGoldDeck();

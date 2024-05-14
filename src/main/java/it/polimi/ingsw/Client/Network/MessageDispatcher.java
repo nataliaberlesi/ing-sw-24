@@ -32,8 +32,14 @@ public class MessageDispatcher {
         dispatch(MessageType.CREATE,username,params);
     }
     //TODO: server side -> returns true at the end of the creation of the game for additional players
-    public void joinGame(String playerUsername) {
+    public void joinGame(String username) {
         JsonObject params=new JsonObject();
-        dispatch(MessageType.JOIN,playerUsername, params);
+        dispatch(MessageType.JOIN,username, params);
+    }
+    public void firstRound(String username, boolean flipStartingCard, String color) {
+        JsonObject params=new JsonObject();
+        params.addProperty("flipStartingCard",flipStartingCard);
+        params.addProperty("color",color);
+        dispatch(MessageType.CREATE,username,params);
     }
 }
