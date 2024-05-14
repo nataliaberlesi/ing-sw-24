@@ -18,7 +18,7 @@ public class VerticalPatternObjective implements Objective {
     /**
      * symbol of the cards that form the vertical column of the pattern
      */
-    private final Symbol verticalSymbol;
+    private final Symbol symbolOfInterest;
 
     /**
      * symbol of the card that deviates from the column
@@ -38,16 +38,16 @@ public class VerticalPatternObjective implements Objective {
 
     /**
      *
-     * @param verticalSymbol symbol of the cards that form the vertical column of the pattern
+     * @param symbolOfInterest symbol of the cards that form the vertical column of the pattern
      */
-    public VerticalPatternObjective(Symbol verticalSymbol) throws InvalidSymbolException {
-        this.verticalSymbol = verticalSymbol;
-        switch (verticalSymbol){
+    public VerticalPatternObjective(Symbol symbolOfInterest) throws InvalidSymbolException {
+        this.symbolOfInterest = symbolOfInterest;
+        switch (symbolOfInterest){
             case WOLF -> this.outOfLineSymbol=Symbol.MUSHROOM;
             case LEAF -> this.outOfLineSymbol=Symbol.BUTTERFLY;
             case MUSHROOM -> this.outOfLineSymbol=Symbol.LEAF;
             case BUTTERFLY -> this.outOfLineSymbol=Symbol.WOLF;
-            default -> throw new InvalidSymbolException(verticalSymbol+" can't be on the center back of a card");
+            default -> throw new InvalidSymbolException(symbolOfInterest +" can't be on the center back of a card");
         }
     }
 
@@ -77,7 +77,7 @@ public class VerticalPatternObjective implements Objective {
      */
     @Override
     public void updateObjective(Symbol cardBackSymbol, Coordinates coordinates) {
-            if(cardBackSymbol==verticalSymbol){
+            if(cardBackSymbol== symbolOfInterest){
                 listOfVerticalSymbols.add(coordinates);
             }
             else if(cardBackSymbol==outOfLineSymbol){
@@ -165,18 +165,18 @@ public class VerticalPatternObjective implements Objective {
     public int calculatePoints(HashMap<Symbol, Integer> symbolCounter) {
         listOfOutOfLineSymbols.sort(new CoordinatesComparator());
         int numberOfOccurrences;
-        switch (verticalSymbol){
+        switch (symbolOfInterest){
             case WOLF -> numberOfOccurrences=calculateBlueVerticalPatternOccurrences();
             case LEAF -> numberOfOccurrences=calculateGreenVerticalPatternOccurrences();
             case MUSHROOM -> numberOfOccurrences=calculateRedVerticalPatternOccurrences();
             case BUTTERFLY -> numberOfOccurrences=calculatePurpleVerticalPatternOccurrences();
             //it should be impossible to call this exception
-            default -> throw new InvalidSymbolException(verticalSymbol+" can't be on the center back of a card");
+            default -> throw new InvalidSymbolException(symbolOfInterest +" can't be on the center back of a card");
         }
         return POINTS*numberOfOccurrences;
     }
 
     public Symbol getSymbol() {
-        return verticalSymbol;
+        return symbolOfInterest;
     }
 }

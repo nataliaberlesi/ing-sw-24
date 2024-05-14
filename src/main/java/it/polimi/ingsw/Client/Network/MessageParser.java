@@ -3,6 +3,7 @@ package it.polimi.ingsw.Client.Network;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import it.polimi.ingsw.Client.View.CLI.CardCLI;
 import it.polimi.ingsw.Client.View.ViewController;
 import kotlin.NotImplementedError;
 
@@ -214,7 +215,7 @@ public class MessageParser {
         return jsonCard
                 .get("cardObjective").getAsJsonObject()
                 .get("data").getAsJsonObject()
-                .get("POINTS").getAsJsonPrimitive().getAsInt();
+                .get("points").getAsJsonPrimitive().getAsInt();
     }
     public Integer getCardObjectivePOINTS() {
         return this.getCardObjectivePOINTS(currentCard);
@@ -249,5 +250,6 @@ public class MessageParser {
         }
 
     }
+
 }
 

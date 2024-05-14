@@ -16,7 +16,7 @@ public class CornerCardObjective implements CardObjective {
     /**
      * points assigned per covered corner
      */
-    private final static int POINTS=2;
+    private final static int points =2;
 
     /**
      *
@@ -38,7 +38,7 @@ public class CornerCardObjective implements CardObjective {
            throw new CornerOutOfBoundException("IMPOSSIBLE TO COVER MORE THAN 4 CORNERS");
        }
        //returns two points per corner covered during card placement
-       return coveredCorners*POINTS;
+       return coveredCorners* points;
     }
 
     /**

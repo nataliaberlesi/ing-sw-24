@@ -28,6 +28,7 @@ public class Server implements Runnable{
      * The active connections inside the server
      */
     private ArrayList<PlayerConnection> connections;
+    private boolean masterIsConnected;
     /**
      * Creates a server using a custom port, then waits for a master player to connect
      * @param port
@@ -36,7 +37,8 @@ public class Server implements Runnable{
     public Server(int port) throws IOException {
         this.parser=Parser.getInstance();
         this.port = port;
-        maxAllowablePlayers=0;
+        maxAllowablePlayers=1;
+        masterIsConnected=false;
     }
     public ArrayList<PlayerConnection> getConnections() {
         return connections;
@@ -116,19 +118,21 @@ public class Server implements Runnable{
         connections.getLast().setOutMessage(outMessage);
     }
     public void run() {
-        try {
-            waitMaster();
-            sendMasterStatus(true);
-            new Thread(new ConnectionsHandler(this)).start();
-        } catch (IOException ioe) {
-            throw new RuntimeException(ioe);
+        if(!masterIsConnected) {
+            try {
+                waitMaster();
+                sendMasterStatus(true);
+                new Thread(new ConnectionsHandler(this)).start();
+            } catch (IOException ioe) {
+                System.out.println("LOG: Failed to accept master");
+            }
         }
         while(!serverSocket.isClosed()) {
             if(connections.size()<maxAllowablePlayers) {
                 try {
                     waitPlayer();
                 } catch (IOException ioe) {
-                    throw new RuntimeException(ioe);
+                    System.out.println("LOG: Failed to accept player");
                 }
                 sendMasterStatus(false);
             }

@@ -1,15 +1,15 @@
 package it.polimi.ingsw.Server.Controller;
 
 import it.polimi.ingsw.Server.Controller.DTO.StartFirstRound;
+import it.polimi.ingsw.Server.Controller.DTO.StartSecondRound;
 import it.polimi.ingsw.Server.Model.Cards.*;
+import it.polimi.ingsw.Server.Model.Cards.Objectives.Objective;
 import it.polimi.ingsw.Server.Model.Color;
 import it.polimi.ingsw.Server.Model.DrawableArea;
 import it.polimi.ingsw.Server.Model.DrawableCards;
 import it.polimi.ingsw.Server.Model.Player;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.*;
 
 /**
  * Cards, drawing section and board creation based on how many players connect
@@ -38,6 +38,38 @@ public class SetUpGame {
             colors.add(color);
         }
         return new StartFirstRound(gameInstance.getPlayerTurnOrder(),firstPlayerStartingCard,resourceDrawableArea,goldDrawableArea,colors);
+    }
+    public static StartSecondRound getStartSecondRoundParams(GameInstance gameInstance) {
+        Card[] hand=new Card[3];
+        String currentPlayer=gameInstance.getTurn();
+        for(int i=0;i<2;i++) {
+            gameInstance
+                    .getPlayers()
+                    .get(currentPlayer)
+                    .getPlayerHand()
+                    .placeCardInHand(gameInstance.getDrawableArea().getResourceDrawingSection().drawCard(0));
+        }
+        gameInstance
+                .getPlayers()
+                .get(currentPlayer)
+                .getPlayerHand()
+                .placeCardInHand(gameInstance.getDrawableArea().getGoldDrawingSection().drawCard(0));
+        for(int i=0;i<3;i++) {
+            hand[i]=ResourceCardFactory.makeResourceCard(gameInstance
+                    .getPlayers()
+                    .get(currentPlayer)
+                    .getPlayerHand()
+                    .showCardInHand(i));
+        }
+        ArrayList<String> objectives=ObjectiveFactory.makeEveryObjectiveID();
+        Collections.shuffle(objectives);
+        Iterator<String> objectiveIterator= objectives.iterator();
+        Objective firstPrivateObjective=ObjectiveFactory.makeObjective(objectiveIterator.next());
+        Objective secondPrivateObjective=ObjectiveFactory.makeObjective(objectiveIterator.next());
+        Objective firstPublicObjective=ObjectiveFactory.makeObjective(objectiveIterator.next());
+        Objective secondPublicObjective=ObjectiveFactory.makeObjective(objectiveIterator.next());
+        gameInstance.setPublicObjectives(firstPublicObjective.getID(),secondPublicObjective.getID());
+        return new StartSecondRound(currentPlayer,hand,firstPrivateObjective,secondPrivateObjective,firstPublicObjective,secondPublicObjective);
     }
     public static DrawableArea getDrawableArea() {
         Deck goldDeck=DeckFactory.createShuffledGoldDeck();

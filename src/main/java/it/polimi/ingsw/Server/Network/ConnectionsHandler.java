@@ -63,14 +63,17 @@ public class ConnectionsHandler implements Runnable{
         while(allPlayerConnected) {
             if (gameController.getGameInstance()!=null) {
                 if(gameController.gameIsFull() && !gameController.firstRoundIsStarted()) {
+                    gameController.startFirstRound();
                     for(PlayerConnection pc: server.getConnections()) {
                         String outMessage=parser.toJson(new Message(MessageType.START_FIRSTROUND,gameController.getJSONStartFirstRoundParams()));
-                        gameController.startGame();
                         pc.setOutMessage(outMessage);
                     }
                 }
                 if(gameController.allBoardsAreSet() && !gameController.secondRoundIsStarted()) {
-
+                    gameController.startSecondRound();
+                    for(PlayerConnection pc:server.getConnections()) {
+                        String outMessage=parser.toJson(new Message(MessageType.START_SECONDROUND,gameController.getJSONStartSecondRoundParams()));
+                    }
                 }
             }
             handleConnections(server.getConnections());

@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import it.polimi.ingsw.Server.Controller.DTO.CreateGame;
 import it.polimi.ingsw.Server.Controller.DTO.FirstRound;
 import it.polimi.ingsw.Server.Controller.DTO.StartFirstRound;
+import it.polimi.ingsw.Server.Controller.DTO.StartSecondRound;
 import it.polimi.ingsw.Server.Model.Cards.StartingCardFactory;
 import it.polimi.ingsw.Server.Network.*;
 import it.polimi.ingsw.Server.Model.Color;
@@ -128,8 +129,12 @@ public class GameController {
         params.addProperty("affectedPlayer",username);
         params.addProperty("flip",firstRound.flip());
         params.addProperty("color",firstRound.color());
-
+        gameInstance.checkIfAllBoardsAreSet();
         return new Message(MessageType.FIRSTROUND,params);
+    }
+    public JsonObject getJSONStartSecondRoundParams() {
+        StartSecondRound startSecondRound=SetUpGame.getStartSecondRoundParams(gameInstance);
+        return parser.toJsonObject(parser.toJson(startSecondRound));
     }
     public boolean gameIsFull() {
         return this.gameInstance.checkIfGameIsFull();
@@ -148,10 +153,12 @@ public class GameController {
      * Starts a game when all user are joined
      * @throws IOException
      */
-    public void startGame(){
+    public void startFirstRound(){
         this.gameInstance.startFirstRound();
     }
-
+    public void startSecondRound() {
+        this.gameInstance.startSecondRound();
+    }
     /**
      *
      * @throws IOException
