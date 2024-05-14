@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import it.polimi.ingsw.Server.Controller.DTO.CreateGame;
 import it.polimi.ingsw.Server.Controller.DTO.FirstRound;
 import it.polimi.ingsw.Server.Controller.DTO.StartFirstRound;
+import it.polimi.ingsw.Server.Model.Cards.Card;
 import it.polimi.ingsw.Server.Model.Cards.StartingCardFactory;
 import it.polimi.ingsw.Server.Network.*;
 import it.polimi.ingsw.Server.Model.Color;
@@ -113,10 +114,12 @@ public class GameController {
     public Message playFirstRound(String username, JsonObject jsonParams) {
         FirstRound firstRound=messageParser.parseFirstRound(username,jsonParams);
         gameInstance.chooseColor(username, firstRound.color());
-        gameInstance.placeStartingCard(username, firstRound.flipStartingCard());
+        gameInstance.placeStartingCard(username, firstRound.flip());
         JsonObject params=new JsonObject();
         if(gameInstance.nextTurn()<= gameInstance.getNumberOfPlayers()) {
-            params.add("card",parser.toJsonObject(parser.toJson(StartingCardFactory.makeStartingCard(gameInstance.getStartingDeck().next()))));
+            String startingCardID=gameInstance.getStartingDeck().next();
+            params.add("card",parser.toJsonObject(parser.toJson(StartingCardFactory.makeStartingCard(startingCardID))));
+            gameInstance.saveStartingCard(username,startingCardID);
         }
         params.addProperty("currentPlayer", gameInstance.getTurn());
         JsonArray availableColors= new JsonArray();
@@ -125,7 +128,7 @@ public class GameController {
         }
         params.add("availableColors", availableColors);
         params.addProperty("affectedPlayer",username);
-        params.addProperty("flipStartingCard",firstRound.flipStartingCard());
+        params.addProperty("flip",firstRound.flip());
         params.addProperty("color",firstRound.color());
 
         return new Message(MessageType.FIRSTROUND,params);

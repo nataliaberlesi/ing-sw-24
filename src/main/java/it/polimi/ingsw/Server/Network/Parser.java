@@ -3,6 +3,7 @@ package it.polimi.ingsw.Server.Network;
 import com.google.gson.*;
 import it.polimi.ingsw.Server.Model.Cards.Card;
 import it.polimi.ingsw.Server.Model.Cards.Objectives.CardObjective;
+import it.polimi.ingsw.Server.Model.Cards.Objectives.Objective;
 
 public class Parser {
     /**
@@ -15,6 +16,7 @@ public class Parser {
     private static Parser instance;
     private Parser() {
         GSON = new GsonBuilder().registerTypeAdapter(CardObjective.class, new InterfaceAdapter<CardObjective>())
+                .registerTypeAdapter(Objective.class,new InterfaceAdapter<Objective>())
                 .create();
     }
     public static Parser getInstance() {

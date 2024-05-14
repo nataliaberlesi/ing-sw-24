@@ -40,6 +40,7 @@ public class ConnectionsHandler implements Runnable{
                     throw new RuntimeException(e); //TODO
                 }
                 if(inMessage!=null) {
+                    System.out.println("IN | "+inMessage);
                     Message outMessage=handleMessage(inMessage);
                     playerConnection.setOutMessage(parser.toJson(outMessage));
                     if(outMessage.type().equals(MessageType.ABORT)) {

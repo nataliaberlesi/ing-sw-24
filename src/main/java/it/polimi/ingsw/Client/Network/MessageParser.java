@@ -4,10 +4,12 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.Client.View.ViewController;
+import kotlin.NotImplementedError;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * Used to parse data from the incoming message from server
@@ -19,6 +21,9 @@ public class MessageParser {
     private JsonObject currentMessage;
     private JsonObject messageParams;
     private MessageType messageType;
+    private JsonObject currentCard;
+    private JsonArray currentResourceDrawableArea;
+    private JsonArray currentGoldDrawableArea;
 
 
     public MessageParser(NetworkManager networkManager) {
@@ -32,36 +37,13 @@ public class MessageParser {
         currentMessage=parser.toJsonObject(inMessage);
         messageType=MessageType.valueOf(currentMessage.get("type").getAsJsonPrimitive().getAsString());
         messageParams=currentMessage.getAsJsonObject("params");
+        currentCard=messageParams.get("card").getAsJsonObject();
+        currentResourceDrawableArea=messageParams.get("resourceDrawableArea").getAsJsonArray();
+        currentGoldDrawableArea=messageParams.get("goldDrawableArea").getAsJsonArray();
         viewController.updateView();
     }
     /**
-     * Dispatches the placeCard message
-     * @param card
-     * @param x
-     * @param y
-     * @param isFlipped
-     * @return the response to the message
-     * @throws IOException
-     */
-    public boolean placeCard(String card, int x, int y, boolean isFlipped){
-        //TODO
-        return true;
-    }
-
-    /**
-     * Dispatches the drawCard message
-     * @param cardIndex
-     * @param drawingSection
-     * @return the response to the message
-     * @throws IOException
-     */
-    public String drawCard(int cardIndex, String drawingSection){
-        //TODO
-        return "";
-    }
-
-    /**
-     * receives the master status
+     * Parses the master status from server
      * @return
      * @throws IOException
      */
@@ -70,20 +52,27 @@ public class MessageParser {
         Boolean masterStatus=messageParams.get("masterStatus").getAsBoolean();
         return masterStatus;
     }
-    //TODO: server side -> returns true when all players for the game have been created
-    public boolean checkWaitForStart(){
-        return true;
-    }
-    //TODO: server side -> returns true if chosen username for this player is already used by another player
+
+    /**
+     * Parses if the given username is unavailable
+     * @return
+     */
     public Boolean unavailableUsername(){
-        return messageParams.get("unavailableUsername").getAsJsonPrimitive().getAsBoolean();
+        return messageParams
+                .get("unavailableUsername").getAsJsonPrimitive().getAsBoolean();
     }
 
-    public String getInitialCard(){
-        return messageParams.getAsJsonObject().get("initialCard").getAsString();
-    }
+    /**
+     * Parses the current player username
+     * @return
+     */
     public String getCurrentPlayer() {
-        return messageParams.getAsJsonObject().get("currentPlayer").getAsString();
+        return messageParams
+                .get("currentPlayer").getAsJsonPrimitive().getAsString();
+    }
+    public String getAffectedPlayer() {
+        return messageParams
+                .get("affectedPlayer").getAsJsonPrimitive().getAsString();
     }
     public void setView(ViewController viewController) {
         this.viewController = viewController;
@@ -91,10 +80,6 @@ public class MessageParser {
 
     public List<String> getWinners() {
         //TODO
-        return null;
-    }
-
-    public String getUsername() {
         return null;
     }
 
@@ -107,7 +92,8 @@ public class MessageParser {
     }
 
     public ArrayList<String> getPlayers() {
-        JsonArray jsonArray=messageParams.getAsJsonObject().get("players").getAsJsonArray();
+        JsonArray jsonArray=messageParams.getAsJsonObject()
+                .get("players").getAsJsonArray();
         ArrayList<String> players=new ArrayList<>();
         for(JsonElement jsonElement:jsonArray) {
             players.add(jsonElement.getAsJsonPrimitive().getAsString());
@@ -116,7 +102,8 @@ public class MessageParser {
     }
 
     public ArrayList<String> getAvailableColors() {
-        JsonArray jsonArray=messageParams.getAsJsonObject().get("availableColors").getAsJsonArray();
+        JsonArray jsonArray=messageParams.getAsJsonObject()
+                .get("availableColors").getAsJsonArray();
         ArrayList<String> colors=new ArrayList<>();
         for(JsonElement jsonElement:jsonArray) {
             colors.add(jsonElement.getAsJsonPrimitive().getAsString());
@@ -128,61 +115,139 @@ public class MessageParser {
      * Parses the current card ID
      * @return
      */
+    private String getCardID(JsonObject jsonCard) {
+        return jsonCard
+                .get("cardID").getAsJsonPrimitive().getAsString();
+    }
     public String getCardID() {
-        return messageParams.get("card").getAsJsonObject().get("cardID").getAsJsonPrimitive().getAsString();
+        return this.getCardID(currentCard);
+    }
+    public String getCardID(String drawableArea, int index) {
+        JsonObject jsonCard=getDrawableAreaArray(drawableArea).get(index).getAsJsonObject();
+        return this.getCardID(jsonCard);
     }
 
     /**
      * Parses the current card backSymbol
      * @return
      */
+    private String getCardBackSymbol(JsonObject jsonCard) {
+        return jsonCard
+                .get("backSymbol").getAsJsonPrimitive().getAsString();
+    }
     public String getCardBackSymbol() {
-        return messageParams.get("card").getAsJsonObject().get("backSymbol").getAsJsonPrimitive().getAsString();
+        return this.getCardBackSymbol(currentCard);
+    }
+    public String getCardBackSymbol(String drawableArea, int index) {
+        JsonObject jsonCard=getDrawableAreaArray(drawableArea).get(index).getAsJsonObject();
+        return this.getCardBackSymbol(jsonCard);
     }
 
     /**
      * Parses the current card front corners
      * @return
      */
-    public ArrayList<String> getCardFrontCorners() {
+    private ArrayList<String> getCardFrontCorners(JsonObject jsonCard) {
         ArrayList<String> frontCorners=new ArrayList<>();
-        for(JsonElement corner: messageParams.get("card").getAsJsonObject().get("frontCorners").getAsJsonArray())
+        for(JsonElement corner: jsonCard
+                .get("frontCorners").getAsJsonArray())
         {
             frontCorners.add(corner.getAsJsonPrimitive().getAsString());
         }
         return frontCorners;
+    }
+    public ArrayList<String> getCardFrontCorners() {
+        return this.getCardFrontCorners(currentCard);
+    }
+    public ArrayList<String> getCardFrontCorners(String drawableArea,int index) {
+        JsonObject jsonCard=getDrawableAreaArray(drawableArea).get(index).getAsJsonObject();
+        return this.getCardFrontCorners(jsonCard);
     }
 
     /**
      * Parses the current card back corners
      * @return
      */
-    public ArrayList<String> getCardBackCorners() {
+    private ArrayList<String> getCardBackCorners(JsonObject jsonCard) {
         ArrayList<String> frontCorners=new ArrayList<>();
-        for(JsonElement corner: messageParams.get("card").getAsJsonObject().get("backCorners").getAsJsonArray())
+        for(JsonElement corner: jsonCard
+                .get("backCorners").getAsJsonArray())
         {
             frontCorners.add(corner.getAsJsonPrimitive().getAsString());
         }
         return frontCorners;
     }
+    public ArrayList<String> getCardBackCorners() {
+        return this.getCardBackCorners(currentCard);
+    }
+    public ArrayList<String> getCardBackCorners(String drawableArea, int index) {
+        JsonObject jsonCard=getDrawableAreaArray(drawableArea).get(index).getAsJsonObject();
+        return this.getCardBackCorners(jsonCard);
+    }
+
+    private String getCardObjective(JsonObject jsonCard) {
+        return jsonCard
+                .get("cardObjective").getAsJsonObject()
+                .get("type").getAsJsonPrimitive().getAsString();
+    }
     public String getCardObjective() {
-        return messageParams.get("card").getAsJsonObject().get("cardObjective").getAsJsonObject().get("type").getAsJsonPrimitive().getAsString();
+        return this.getCardObjective(currentCard);
+    }
+    public String getCardObjective(String drawableArea, int index) {
+        JsonObject jsonCard=getDrawableAreaArray(drawableArea).get(index).getAsJsonObject();
+        return this.getCardObjective(jsonCard);
+    }
+    private String getCardObjectiveSymbol(JsonObject jsonCard) {
+        return jsonCard
+                .get("cardObjective").getAsJsonObject()
+                .get("data").getAsJsonObject()
+                .get("symbolOfInterest").getAsJsonPrimitive().getAsString();
     }
     public String getCardObjectiveSymbol() {
-        return messageParams.get("card").getAsJsonObject().get("cardObjective").getAsJsonObject().get("data").getAsJsonObject().get("symbolOfInterest").getAsJsonPrimitive().getAsString();
+        return this.getCardObjectiveSymbol(currentCard);
     }
-    public int getCardObjectivePOINTS() {
-        return messageParams.get("card").getAsJsonObject().get("cardObjective").getAsJsonObject().get("data").getAsJsonObject().get("POINTS").getAsJsonPrimitive().getAsInt();
+    public String getCardObjectiveSymbol(String drawableArea, int index) {
+        JsonObject jsonCard=getDrawableAreaArray(drawableArea).get(index).getAsJsonObject();
+        return this.getCardObjectiveSymbol(jsonCard);
     }
-    public ArrayList<String> getCardPrerequisites() {
+    private int getCardObjectivePOINTS(JsonObject jsonCard) {
+        return jsonCard
+                .get("cardObjective").getAsJsonObject()
+                .get("data").getAsJsonObject()
+                .get("POINTS").getAsJsonPrimitive().getAsInt();
+    }
+    public Integer getCardObjectivePOINTS() {
+        return this.getCardObjectivePOINTS(currentCard);
+    }
+    public Integer getCardObjectivePOINTS(String drawableArea, int index) {
+        JsonObject jsonCard=getDrawableAreaArray(drawableArea).get(index).getAsJsonObject();
+        return this.getCardObjectivePOINTS(jsonCard);
+    }
+    private ArrayList<String> getCardPrerequisites(JsonObject jsonCard) {
         ArrayList<String> prerequisites=new ArrayList<>();
-        for(JsonElement symbol: messageParams.get("card").getAsJsonObject().get("prerequisites").getAsJsonArray())
+        for(JsonElement symbol: jsonCard
+                .get("prerequisites").getAsJsonArray())
         {
             prerequisites.add(symbol.getAsJsonPrimitive().getAsString());
         }
         return prerequisites;
     }
+    public ArrayList<String> getCardPrerequisites(String drawableArea, int index) {
+        JsonObject jsonCard=getDrawableAreaArray(drawableArea).get(index).getAsJsonObject();
+        return this.getCardPrerequisites(jsonCard);
+    }
+    public ArrayList<String> getCardPrerequisites() {
+        return this.getCardPrerequisites(currentCard);
+    }
+    private JsonArray getDrawableAreaArray(String drawableArea) {
+        if(drawableArea.equals("resourceDrawableArea")) {
+            return this.currentResourceDrawableArea;
+        } else if(drawableArea.equals("goldDrawableArea")){
+            return this.currentGoldDrawableArea;
+        } else {
+            throw new NoSuchElementException();
+        }
 
-
+    }
 }
 

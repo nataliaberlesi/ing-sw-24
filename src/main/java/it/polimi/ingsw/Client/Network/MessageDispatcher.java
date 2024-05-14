@@ -38,7 +38,7 @@ public class MessageDispatcher {
     }
     public void firstRound(String username, boolean flipStartingCard, String color) {
         JsonObject params=new JsonObject();
-        params.addProperty("flipStartingCard",flipStartingCard);
+        params.addProperty("flip",flipStartingCard);
         params.addProperty("color",color);
         dispatch(MessageType.CREATE,username,params);
     }

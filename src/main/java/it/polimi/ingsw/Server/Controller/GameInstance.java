@@ -106,7 +106,10 @@ public class GameInstance {
         players.get(username).setPlayerColor(Color.valueOf(color));
     }
 
-    public void placeStartingCard(String username, boolean b) {
-        players.get(username).placeStartingCard();
+    public void placeStartingCard(String username, boolean flipStartingCard) {
+        players.get(username).getPlayerBoard().placeStartingCard(flipStartingCard);
+    }
+    public void saveStartingCard(String username, String cardID) {
+        players.get(username).placeStartingCard(cardID);
     }
 }

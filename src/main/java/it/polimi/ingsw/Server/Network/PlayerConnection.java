@@ -75,7 +75,6 @@ public class PlayerConnection implements Runnable{
             try{
                 if(inMessage==null) {
                     this.readMessage=inSocket.readLine();
-                    System.out.println("IN | "+readMessage);
                     getInMessage(true);
                 }
 
