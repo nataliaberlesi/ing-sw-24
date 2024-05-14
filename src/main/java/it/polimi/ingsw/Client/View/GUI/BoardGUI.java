@@ -4,6 +4,9 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.layout.AnchorPane;
 
 public class BoardGUI extends ScrollPane {
+    /**
+     * Anchor pane that will be used as container of cards inside the scroll pane
+     */
     private final AnchorPane anchorPane;
 
     public BoardGUI(){
@@ -22,6 +25,12 @@ public class BoardGUI extends ScrollPane {
 
     }
 
+    /**
+     * Method to place a card on the board in a certain position and associate an image to it
+     * @param card card to be placed on board
+     * @param guiCoordinates coordinates where to place the card on the anchor pane
+     * @param imageID id of the image associated to the card
+     */
     public void placeCardOnBoard(CardGUI card, Coordinates guiCoordinates, String imageID){
         card.setGuiAndModelCoordinates(guiCoordinates.getX(), guiCoordinates.getY());
         card.setCardImage(imageID);
