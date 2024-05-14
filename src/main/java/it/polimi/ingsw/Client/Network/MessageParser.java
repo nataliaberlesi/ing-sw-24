@@ -116,12 +116,73 @@ public class MessageParser {
     }
 
     public ArrayList<String> getAvailableColors() {
-        JsonArray jsonArray=messageParams.getAsJsonObject().get("colors").getAsJsonArray();
+        JsonArray jsonArray=messageParams.getAsJsonObject().get("availableColors").getAsJsonArray();
         ArrayList<String> colors=new ArrayList<>();
         for(JsonElement jsonElement:jsonArray) {
             colors.add(jsonElement.getAsJsonPrimitive().getAsString());
         }
         return colors;
     }
+
+    /**
+     * Parses the current card ID
+     * @return
+     */
+    public String getCardID() {
+        return messageParams.get("card").getAsJsonObject().get("cardID").getAsJsonPrimitive().getAsString();
+    }
+
+    /**
+     * Parses the current card backSymbol
+     * @return
+     */
+    public String getCardBackSymbol() {
+        return messageParams.get("card").getAsJsonObject().get("backSymbol").getAsJsonPrimitive().getAsString();
+    }
+
+    /**
+     * Parses the current card front corners
+     * @return
+     */
+    public ArrayList<String> getCardFrontCorners() {
+        ArrayList<String> frontCorners=new ArrayList<>();
+        for(JsonElement corner: messageParams.get("card").getAsJsonObject().get("frontCorners").getAsJsonArray())
+        {
+            frontCorners.add(corner.getAsJsonPrimitive().getAsString());
+        }
+        return frontCorners;
+    }
+
+    /**
+     * Parses the current card back corners
+     * @return
+     */
+    public ArrayList<String> getCardBackCorners() {
+        ArrayList<String> frontCorners=new ArrayList<>();
+        for(JsonElement corner: messageParams.get("card").getAsJsonObject().get("backCorners").getAsJsonArray())
+        {
+            frontCorners.add(corner.getAsJsonPrimitive().getAsString());
+        }
+        return frontCorners;
+    }
+    public String getCardObjective() {
+        return messageParams.get("card").getAsJsonObject().get("cardObjective").getAsJsonObject().get("type").getAsJsonPrimitive().getAsString();
+    }
+    public String getCardObjectiveSymbol() {
+        return messageParams.get("card").getAsJsonObject().get("cardObjective").getAsJsonObject().get("data").getAsJsonObject().get("symbolOfInterest").getAsJsonPrimitive().getAsString();
+    }
+    public int getCardObjectivePOINTS() {
+        return messageParams.get("card").getAsJsonObject().get("cardObjective").getAsJsonObject().get("data").getAsJsonObject().get("POINTS").getAsJsonPrimitive().getAsInt();
+    }
+    public ArrayList<String> getCardPrerequisites() {
+        ArrayList<String> prerequisites=new ArrayList<>();
+        for(JsonElement symbol: messageParams.get("card").getAsJsonObject().get("prerequisites").getAsJsonArray())
+        {
+            prerequisites.add(symbol.getAsJsonPrimitive().getAsString());
+        }
+        return prerequisites;
+    }
+
+
 }
 
