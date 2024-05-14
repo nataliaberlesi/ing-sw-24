@@ -15,8 +15,6 @@ public abstract class ViewController {
      */
     protected static final String USERNAME_REGEX = "^\\w{1,8}$";
 
-
-
     /**
      * Chosen player username.
      */
@@ -26,11 +24,6 @@ public abstract class ViewController {
      * Chosen player token color
      */
     protected String tokenColor;
-
-    /**
-     * Flag for game creator.
-     */
-    protected boolean isMaster = false;
 
     /**
      * Flag for final round.
@@ -45,8 +38,6 @@ public abstract class ViewController {
     protected final MessageParser messageParser;
 
     protected final MessageDispatcher messageDispatcher;
-
-    protected MessageType previousMessageType;
 
     protected ViewController(MessageParser messageParser, MessageDispatcher messageDispatcher){
         this.messageParser = messageParser;
@@ -66,8 +57,6 @@ public abstract class ViewController {
         return matcher.matches();
     }
 
-
-
     protected abstract void createMyPlayer(String username);
     /**
      * If username is already taken then the user ìs notified and brought back to join screen.
@@ -83,36 +72,6 @@ public abstract class ViewController {
             switchToLoading();
         }
     }
-
-
-    /**
-     * Update winners after final round.
-     */
-    protected void checkWinners() {
-        this.winners = this.messageParser.getWinners();
-    }
-
-    //DA NON USARE PIU'
-    /**
-     * If player gave correct information, sends a message to the server with player's information, sets loading screen and returns true
-     * @param username player's chosen username
-     * @param numberOfPlayers number of players for the game, chosen by master
-     * */
-    /*
-    protected boolean checkParamsAndSendCreateOrJoinMessage(String username, Integer numberOfPlayers){
-        if (playerGivesCorrectInformation(username, numberOfPlayers)){
-            if (messageParser.masterStatus()) {
-                messageDispatcher.createGame(numberOfPlayers, username);
-            }
-            else {
-                messageDispatcher.joinGame(username);
-            }
-            switchToLoading();
-            return true;
-        }
-        return false;
-    }
-     */
 
     /**
      *
@@ -171,71 +130,6 @@ public abstract class ViewController {
 
     protected abstract void switchWaitingServerResponse();
 
-    // DA NON USARE PIU'
-    /**
-     * Checks if player entered the information correctly, display error alerts if not.
-     * @param playersNumber number of players
-     * @param username username
-     * */
-    /*
-    protected boolean playerGivesCorrectInformation(String username, Integer playersNumber) {
-        if (username == null || !correctUsername(username)){
-            showErrorAlert("Invalid username", "Username must contain between 1 and 8 alphanumeric characters");
-            return false;
-        }
-        if (messageParser.masterStatus()){
-            if (playersNumber == null || !(playersNumber >= 2 && playersNumber <= 4)){
-                showErrorAlert("Invalid number of players", "Please select a number of players for the game");
-                return false;
-            }
-        }
-        return true;
-    }
-    */
-
-
-    /**
-     * Check if message content is empty.
-     *
-     * @param messageParams message content
-     */
-    protected void checkEmptyContent(String messageParams) {
-        if (messageParams.isEmpty())
-            throw new ViewException("Unexpected empty message content");
-    }
-
-    /**
-     * Continue game if winners is empty.
-     */
-    protected void continueGame() {
-        if (!finalRound) {
-            if (this.messageParser.getCurrentPlayer().equals(this.username)) {
-                this.enableActions();
-            } else {
-                this.waitTurn();
-            }
-        }
-    }
-
-    /**
-     * Updates final round flag after action
-     * */
-    private void checkFinalRound() {
-        this.finalRound = this.messageParser.checkFinalRound();
-        //TODO: checkFinalRound() : should return true if it's final round
-    }
-
-
-
-    /**
-     * Method called to start the game.
-     */
-    protected abstract void startGame();
-
-    /**
-     * Method called to start showing the game.
-     */
-    protected abstract void startShow();
     /**
      * Method called to switch to create mode in the initial game view.
      */
@@ -245,57 +139,9 @@ public abstract class ViewController {
      */
     protected abstract void switchToJoin();
 
-    /**
-     * Method called to update the view game information.
-     */
-    protected abstract void updateGame();
-
     protected abstract void showErrorAlert(String header, String content);
 
-    /**
-     * Method called to show abort.
-     *
-     * @param message abort message
-     */
-    protected abstract void showAbort(String message);
-
-    /**
-     * Method called to show an error.
-     *
-     * @param message error message
-     */
-    protected abstract void showError(String message);
-
-    /**
-     * Method called to show the game end.
-     *
-     * @param winners list of winners
-     */
-    protected abstract void displayWinners(List<String> winners);
-
-    /**
-     * Method called to show actions options.
-     */
-    protected abstract void enableActions();
-
-    /**
-     * Method called to show waiting for turn.
-     */
-    protected abstract void waitTurn();
-
-    /**
-     * Method called to go back to starting choice of create or player.
-     */
-    protected abstract void returnToMainMenu();
-
-    /**
-     * Method called to start the view.
-     *
-     * @param args arguments
-     */
-    public abstract void main(String[] args);
-
-    protected abstract boolean isMyTurn(String usernameOfPlayerWhosTurnItIs);
+    protected abstract boolean isMyTurn(String usernameOfPlayerWhoseTurnItIs);
 
     protected abstract void switchToLoading();
 
@@ -305,10 +151,7 @@ public abstract class ViewController {
     public void updateView() {
         switch (this.messageParser.getMessageType()) {
 
-            case CONNECT -> {
-                connectScene();
-            }
-
+            case CONNECT -> connectScene();
 
             case JOIN -> manageJoinStatus();
 
@@ -329,9 +172,7 @@ public abstract class ViewController {
                  */
             }
             case START_SECONDROUND -> {
-                /*
-
-                 */
+                
             }
             case SECONDROUND -> {
 
@@ -378,8 +219,8 @@ public abstract class ViewController {
         addPlayers(messageParser.getPlayers()); // -> create instance players (myPlayer already initialized when join), show usernames and points in scene, set player's hand label, set see other player's game buttons
         giveInitialCard(messageParser.getPlayers().get(0)); // -> adds the initial card to the first player
         setDrawableArea(); // -> create instance of drawable area with given cards
-        setAvailableColors(messageParser.getAvailableColors()); // -> put all colors in pop up scene
-        messageParser.getCardID(0,0);
+        //setAvailableColors(messageParser.getAvailableColors()); // -> put all colors in pop up scene
+        //messageParser.getCardID(0,0);
     }
 
     protected abstract void setAvailableColors();
@@ -398,29 +239,4 @@ public abstract class ViewController {
             switchToCreate();
         } else switchToJoin();
     }
-
-    /**
-     * Runtime exception for errors within any view class.
-     */
-    public static class ViewException extends RuntimeException {
-        /**
-         * ViewException constructor with message.
-         *
-         * @param message message to be shown
-         */
-        public ViewException(String message) {
-            super(message);
-        }
-
-        /**
-         * ViewException constructor with message and cause.
-         *
-         * @param message message to be shown
-         * @param cause   cause of the exception
-         */
-        public ViewException(String message, Throwable cause) {
-            super(message, cause);
-        }
-    }
-
 }
