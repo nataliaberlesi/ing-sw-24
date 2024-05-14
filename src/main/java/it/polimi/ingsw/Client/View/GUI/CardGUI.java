@@ -34,6 +34,10 @@ public class CardGUI extends AnchorPane {
      * */
     private boolean isInitialCard = false;
     /**
+     * Indicates if this is a private objective card
+     */
+    private boolean isPrivateObjective = false;
+    /**
      * Model coordinates of where the card is placed
      */
     private Coordinates modelCoordinates;
@@ -141,6 +145,18 @@ public class CardGUI extends AnchorPane {
      * */
     public void setAsInitialCard() {
         isInitialCard = true;
+    }
+    /**
+     * Verifies if this card is a private objective card
+     * */
+    public boolean isPrivateObjective() {
+        return isPrivateObjective;
+    }
+    /**
+     * Sets this card to be a private objective card
+     * */
+    public void setAsPrivateObjective() {
+        isPrivateObjective = true;
     }
 
     /**

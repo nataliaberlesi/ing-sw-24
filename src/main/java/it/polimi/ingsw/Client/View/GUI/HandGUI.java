@@ -11,6 +11,10 @@ public class HandGUI extends HBox {
         this.setSpacing(10);
         addCardsToHand();
     }
+
+    /**
+     * Adds the hand cards to the container
+     */
     private void addCardsToHand() {
         for (int i = 0; i < 3; i++) {
             handCards[i] = new CardGUI();
@@ -18,6 +22,10 @@ public class HandGUI extends HBox {
         }
     }
 
+    /**
+     * Getter for hand cards
+     * @return hand cards array
+     */
     public CardGUI[] getHandCards() {
         return handCards;
     }
