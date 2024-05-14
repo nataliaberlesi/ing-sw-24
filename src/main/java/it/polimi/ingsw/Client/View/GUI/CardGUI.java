@@ -1,21 +1,21 @@
 package it.polimi.ingsw.Client.View.GUI;
-
 import it.polimi.ingsw.Server.Model.Coordinates;
 import javafx.geometry.Point2D;
-import javafx.scene.Node;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-
-import java.util.HashMap;
-import java.util.Map;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Region;
 import java.util.Objects;
 
-/**
- * card as shown in the GUI
- */
-public class CardGUI extends Node {
-
+public class CardGUI extends AnchorPane {
+    /**
+     * ImageView associated with the card
+     * */
+    private final ImageView imageView = new ImageView();
+    /**
+     * Regions to represent the corners of the card
+     * */
+    private final Region[] corners = new Region[4];
     /**
      * Card's face up resource ID
      */
@@ -24,27 +24,6 @@ public class CardGUI extends Node {
      * Card's face down resource ID
      */
     private String faceDownCardID;
-    /**
-     * Card's associated ImageView
-     */
-    private final ImageView cardImageView;
-    /**
-     * Buttons to represent the card's 4 corners
-     * */
-    private final Button[] corners = new Button[4];
-
-    /**
-     * Model coordinates of where the card is placed
-     */
-    private Coordinates modelCoordinates;
-    /**
-     * GUI coordinates of where the card is placed
-     */
-    private Point2D guiCoordinates;
-    /**
-     * Map of Model-GUI Coordinates
-     */
-    private Map<Point2D, Coordinates> coordinatesMap;
 
     /**
      * Indicates the orientation of the card
@@ -53,10 +32,54 @@ public class CardGUI extends Node {
     /**
      * Indicates if this is a starting card
      * */
-    private boolean isFirstCard = false;
+    private boolean isInitialCard = false;
+    /**
+     * Model coordinates of where the card is placed
+     */
+    private Coordinates modelCoordinates;
+    /**
+     * GUI coordinates of where the card is placed
+     */
+    private Coordinates guiCoordinates;
+
+    public CardGUI(){
+        imageView.setFitHeight(55);
+        imageView.setFitWidth(82.5);
+        imageView.setPickOnBounds(true);
+        imageView.setPreserveRatio(true);
+        initializeCorners();
+    }
 
     /**
-     * flips the card
+     * Puts the corners on the card
+     * */
+    private void initializeCorners() {
+        double cornerWidth = 19.5;
+        double cornerHeight = 23.0;
+
+        double[] xPositions = {0, imageView.getFitWidth() - cornerWidth};
+        double[] yPositions = {0, imageView.getFitHeight() - cornerHeight};
+
+        for (int i = 0; i < corners.length; i++) {
+            corners[i] = new Region();
+            corners[i].setPrefSize(cornerWidth, cornerHeight);
+            corners[i].setLayoutX(xPositions[i % 2]);
+            corners[i].setLayoutY(yPositions[i / 2]);
+            corners[i].setOpacity(0);
+            this.getChildren().add(corners[i]);
+        }
+    }
+
+    /**
+     * Gets the corners of the card
+     * @return corners
+     */
+    public Region[] getCorners() {
+        return corners;
+    }
+
+    /**
+     * Flips the card
      */
     public void flipCard(){
         if(isFaceUp){
@@ -70,98 +93,82 @@ public class CardGUI extends Node {
         isFaceUp=!isFaceUp;
     }
 
+    /**
+     * Returns the state of the card
+     * */
     public boolean isFaceUp() {
         return isFaceUp;
     }
 
-
-    public CardGUI(){
-        cardImageView = new ImageView();
-        cardImageView.setFitHeight(55);
-        cardImageView.setFitWidth(82.5);
-        cardImageView.setPickOnBounds(true);
-        cardImageView.setPreserveRatio(true);
-    }
-
-    public String getFaceUpCardID(){
-        return faceUpCardID;
-    }
-
-    public void setFaceUpCardID(String faceUpCardID) {
-        this.faceUpCardID = faceUpCardID;
-    }
-
-    /**
-     * Sets the modelCoordinates
-     * @param modelCoordinates of where the card is being placed
-     */
-    public void setModelCoordinates(Coordinates modelCoordinates) {
-        this.modelCoordinates = modelCoordinates;
-    }
-    /**
-     * Gets the modelCoordinates
-     */
-    public Coordinates getModelCoordinates(){
-        return modelCoordinates;
-    }
-    /**
-     * Sets the guiCoordinates to the layouts associated with its ImageView
-     * */
-    public void setGuiCoordinates() {
-        this.guiCoordinates = new Point2D(cardImageView.getLayoutX(), cardImageView.getLayoutY());
-    }
-    /**
-     * Gets the guiCoordinates
-     */
-    public Point2D getGuiCoordinates(){
-        return guiCoordinates;
-    }
-    /**
-     * Sets the coordinatesMap between GUI and Model
-     */
-    public void setCoordinatesMap() {
-        coordinatesMap = new HashMap<>();
-        coordinatesMap.put(guiCoordinates, modelCoordinates);
-    }
-
     /**
      * Sets the card's ImageView to the Image associated with its ID
+     * @param cardID resource string to represent cardID
      * */
     public void setCardImage(String cardID){
         if (isFaceUp)
             this.faceUpCardID = cardID;
         else this.faceDownCardID = cardID;
-
         String imagePath = String.format("Images/%s.png", cardID);
         Image cardImage = new Image(Objects.requireNonNull(GUIApplication.class.getResourceAsStream(imagePath)));
-        this.cardImageView.setImage(cardImage);
-
+        imageView.setImage(cardImage);
     }
 
-    public ImageView getCardImageView() {
-        return this.cardImageView;
+    /**
+     * Gets the ID of the card facing up
+     * @return face up card's ID
+     */
+    public String getFaceUpCardID(){
+        return faceUpCardID;
     }
 
-    public boolean isFirstCard() {
-        return isFirstCard;
+    /**
+     * Sets the face up ID of the card
+     * @param faceUpCardID string to represent the ID of the card facing up
+     * */
+    public void setFaceUpCardID(String faceUpCardID) {
+        this.faceUpCardID = faceUpCardID;
     }
 
-    public void putClickableCornersOnCard(CardGUI boardCard){
-        ImageView boardCardIV = boardCard.getCardImageView();
-        for (int i = 0; i < 4; i++) {
-            corners[i] = new Button();
-            corners[i].prefHeight(23.0);
-            corners[i].prefWidth(19.5);
-            corners[i].setOpacity(0);
-        }
-        corners[0].setLayoutX(boardCardIV.getLayoutX() + 63);
-        corners[0].setLayoutY(boardCardIV.getLayoutY());
-        corners[1].setLayoutX(boardCardIV.getLayoutX());
-        corners[1].setLayoutY(boardCardIV.getLayoutY());
-        corners[2].setLayoutX(boardCardIV.getLayoutX());
-        corners[2].setLayoutY(boardCardIV.getLayoutY()+30);
-        corners[3].setLayoutX(boardCardIV.getLayoutX()+63);
-        corners[3].setLayoutY(boardCardIV.getLayoutY()+30);
+    /**
+     * Verifies if this card is an initial card
+     * */
+    public boolean isInitialCard() {
+        return isInitialCard;
+    }
+
+    /**
+     * Sets this card to be an initialCard
+     * */
+    public void setAsInitialCard() {
+        isInitialCard = true;
+    }
+
+    /**
+     * Sets the guiCoordinates to the layouts associated with its ImageView
+     * */
+    public void setGuiAndModelCoordinates(int x, int y) {
+        this.imageView.setLayoutX(x);
+        this.imageView.setLayoutY(y);
+        guiCoordinates.setX(x);
+        guiCoordinates.setY(y);
+        modelCoordinates.setX((x-1260)/63);
+        modelCoordinates.setY(-(x-640)/32);
+    }
+
+    /**
+     * Gets the guiCoordinates
+     * @return gui coordinates
+     */
+    public Coordinates getGuiCoordinates(){
+        return guiCoordinates;
+    }
+
+    /**
+     * Gets the modelCoordinates
+     * @return model coordinates
+     */
+    public Coordinates getModelCoordinates(){
+        return modelCoordinates;
     }
 
 }
