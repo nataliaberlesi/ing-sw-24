@@ -1,9 +1,8 @@
 package it.polimi.ingsw.Server.Network;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
+import it.polimi.ingsw.Server.Model.Cards.Card;
+import it.polimi.ingsw.Server.Model.Cards.Objectives.CardObjective;
 
 public class Parser {
     /**
@@ -15,7 +14,8 @@ public class Parser {
      */
     private static Parser instance;
     private Parser() {
-        GSON=new Gson();
+        GSON = new GsonBuilder().registerTypeAdapter(CardObjective.class, new InterfaceAdapter<CardObjective>())
+                .create();
     }
     public static Parser getInstance() {
         if(instance==null) {
