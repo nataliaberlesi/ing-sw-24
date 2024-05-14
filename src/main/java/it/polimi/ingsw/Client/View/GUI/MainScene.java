@@ -1,104 +1,146 @@
 package it.polimi.ingsw.Client.View.GUI;
-
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import java.util.ArrayList;
+import java.util.Objects;
 
 public class MainScene extends Scene {
-    private final MainSceneController mainSceneController;
     private final AnchorPane root;
-    private final VBox resourceCardsDrawableArea = new VBox(10);
-    private final VBox goldCardsDrawableArea = new VBox(10);
-    private final HBox handCardsDrawableArea = new HBox(10);
-    private final HBox objectiveCardsArea = new HBox(10);
-    private CardGUI[] resourceCards = new CardGUI[3];
-    private CardGUI[] goldCards = new CardGUI[3];
-    private CardGUI[] handCards = new CardGUI[3];
-    private CardGUI[] objectiveCards = new CardGUI[3];
-    private final CardGUI firstCard = new CardGUI();
+    private final BoardGUI board = new BoardGUI();
+    private final HandGUI hand = new HandGUI();
+    private final ObjectivesSectionGUI objectivesSection = new ObjectivesSectionGUI();
+    private final DrawableAreaGUI drawableArea = new DrawableAreaGUI();
+    private final ScoreBoardGUI scoreBoard = new ScoreBoardGUI();
+    private final Label turnLabel = new Label();
+    private final Label actionLabel = new Label();
+    private final Button flipCardsButton = new Button("Flip your cards");
+    private final Button[] seeOtherPlayersSceneButtons = new Button[3];
 
     public MainScene() {
         super(new AnchorPane(), 1060, 595);
-        root = (AnchorPane)this.getRoot();
-        this.mainSceneController = new MainSceneController();
-        initializeComponents();
-    }
-
-    private void initializeComponents(){
-        setUpVBoxes();
-        setUpHBoxes();
+        root = (AnchorPane) this.getRoot();
+        setUpBackground();
         setUpLabels();
         setUpButtons();
-        setUpScrollPane();
-        setUpGridPane();
+        root.getChildren().add(board);
+        root.getChildren().add(drawableArea);
+        root.getChildren().add(hand);
+        root.getChildren().add(objectivesSection);
+        root.getChildren().add(scoreBoard);
+
     }
 
-    private void setUpVBoxes() {
-        resourceCardsDrawableArea.setLayoutX(920);
-        resourceCardsDrawableArea.setLayoutY(86);
-        resourceCardsDrawableArea.setPrefSize(77, 170);
-        addImageViewsToVBox(resourceCardsDrawableArea, resourceCards);
-        root.getChildren().add(resourceCardsDrawableArea);
-
-        goldCardsDrawableArea.setLayoutX(920);
-        goldCardsDrawableArea.setLayoutY(367);
-        goldCardsDrawableArea.setPrefSize(77, 170);
-        addImageViewsToVBox(goldCardsDrawableArea, goldCards);
-        root.getChildren().add(goldCardsDrawableArea);
+    /**
+     * Sets up background image
+     */
+    private void setUpBackground() {
+        ImageView background = new ImageView();
+        background.setImage(new Image(Objects.requireNonNull(GUIApplication.class.getResourceAsStream("Images/initialScreenOriginal.jpg"))));
+        background.setOpacity(0.1);
+        background.setFitHeight(595);
+        background.setFitWidth(1060);
+        background.setPreserveRatio(true);
+        background.setPickOnBounds(true);
+        root.getChildren().add(background);
     }
 
-    private void addImageViewsToVBox(VBox vbox, CardGUI[] cards) {
-        for (int i = 0; i < 3; i++) {
-            ImageView imageView = cards[i].getCardImageView();
-            imageView.setUserData(cards[i]);
-            imageView.setOnMouseClicked(mainSceneController::handleDrawableAreaClicked);
-            vbox.getChildren().add(imageView);
-        }
+    /**
+     * Sets up all labels for the scene
+     */
+    private void setUpLabels(){
+        Label resourceCardsLabel = new Label("Resource Cards");
+        resourceCardsLabel.setFont(new Font("System Bold Italic", 16));
+        resourceCardsLabel.setAlignment(javafx.geometry.Pos.CENTER);
+        resourceCardsLabel.setLayoutX(912);
+        resourceCardsLabel.setLayoutY(52);
+        this.root.getChildren().add(resourceCardsLabel);
+
+        Label goldCardsLabel = new Label("Gold Cards");
+        goldCardsLabel.setFont(new Font("System Bold Italic", 16));
+        goldCardsLabel.setAlignment(javafx.geometry.Pos.CENTER);
+        goldCardsLabel.setLayoutX(924);
+        goldCardsLabel.setLayoutY(332);
+        this.root.getChildren().add(goldCardsLabel);
+
+        Label handLabel = new Label("Hand");
+        handLabel.setFont(new Font("System Bold Italic", 16));
+        handLabel.setAlignment(javafx.geometry.Pos.CENTER);
+        handLabel.setLayoutX(310);
+        handLabel.setLayoutY(456);
+        this.root.getChildren().add(handLabel);
+
+        Label secretObjectiveLabel = new Label("Secret Objective");
+        secretObjectiveLabel.setFont(new Font("System Bold Italic", 16));
+        secretObjectiveLabel.setAlignment(javafx.geometry.Pos.CENTER);
+        secretObjectiveLabel.setLayoutX(524);
+        secretObjectiveLabel.setLayoutY(456);
+        this.root.getChildren().add(secretObjectiveLabel);
+
+        Label commonObjectivesLabel = new Label("Common Objectives");
+        commonObjectivesLabel.setFont(new Font("System Bold Italic", 16));
+        commonObjectivesLabel.setAlignment(javafx.geometry.Pos.CENTER);
+        commonObjectivesLabel.setLayoutX(656);
+        commonObjectivesLabel.setLayoutY(456);
+        this.root.getChildren().add(commonObjectivesLabel);
+
+        turnLabel.setFont(new Font("System Bold", 18));
+        turnLabel.setAlignment(javafx.geometry.Pos.CENTER);
+        turnLabel.setLayoutX(10);
+        turnLabel.setLayoutY(490);
+        this.root.getChildren().add(turnLabel);
+
+        actionLabel.setFont(new Font("System Bold", 18));
+        actionLabel.setAlignment(javafx.geometry.Pos.CENTER);
+        actionLabel.setLayoutX(10);
+        actionLabel.setLayoutY(525);
+        this.root.getChildren().add(actionLabel);
     }
 
-    public VBox getResourceCardsDrawableArea(){
-        return resourceCardsDrawableArea;
-    }
-    public VBox getGoldCardsDrawableArea(){
-        return goldCardsDrawableArea;
-    }
-
-    private void setUpHBoxes() {
-    handCardsDrawableArea.setLayoutX(266.0);
-    handCardsDrawableArea.setLayoutY(489.0);
-    handCardsDrawableArea.setPrefSize(264.0,56.0);
-    addImageViewsToHBox(handCardsDrawableArea, handCards);
-
-    objectiveCardsArea.setLayoutX(576.0);
-    objectiveCardsArea.setLayoutY(489.0);
-    objectiveCardsArea.setPrefSize(264.0,56.0);
-    addImageViewsToHBox(objectiveCardsArea, objectiveCards);
-    }
-
-    private void addImageViewsToHBox(HBox hbox, CardGUI[] cards) {
-        for (int i = 0; i < 3; i++) {
-            ImageView imageView = cards[i].getCardImageView();
-            imageView.setUserData(cards[i]);
-            imageView.setOnMouseClicked(mainSceneController::handleHandAreaClicked);
-            hbox.getChildren().add(imageView);
-        }
-    }
-
-    public HBox getHandCardsDrawableArea() {
-        return handCardsDrawableArea;
-    }
-    public HBox getObjectiveCardsArea() {
-        return objectiveCardsArea;
-    }
-    private void setUpLabels() {
-    }
+    /**
+     * Sets up all buttons for the scene
+     */
     private void setUpButtons() {
+        flipCardsButton.setLayoutX(350);
+        flipCardsButton.setLayoutY(555);
+        flipCardsButton.setMnemonicParsing(false);
+
+        for (int i = 0; i < 3; i++) {
+            seeOtherPlayersSceneButtons[i] = new Button();
+            seeOtherPlayersSceneButtons[i].setLayoutX(38);
+            seeOtherPlayersSceneButtons[i].setLayoutY(322+45*i);
+            seeOtherPlayersSceneButtons[i].setMnemonicParsing(false);
+        }
     }
-    private void setUpScrollPane() {
+
+    /**
+     * Sets the turn label to a specific text
+     * @param text text
+     */
+    public void setTurnLabel(String text){
+        turnLabel.setText(text);
     }
-    private void setUpGridPane() {
+
+    /**
+     * Sets the action label to a specific text
+     * @param text text
+     */
+    public void setActionLabel(String text){
+        actionLabel.setText(text);
+    }
+
+    /**
+     * Sets the buttons to see other player's scenes to a specific username
+     * @param usernames usernames
+     */
+    public void setSeeOtherPlayersSceneButtons(ArrayList<String> usernames){
+        for (int i = 0; i < 3; i++) {
+            seeOtherPlayersSceneButtons[i].setText("See " + usernames.get(i) + "game");
+        }
     }
 
 }

@@ -10,14 +10,16 @@ public class DrawableAreaGUI extends Group {
     private final CardGUI[] goldCards = new CardGUI[3];
 
     public DrawableAreaGUI(){
+
         resourceCardsContainer.setPrefSize(77,170);
         resourceCardsContainer.setLayoutX(920);
         resourceCardsContainer.setLayoutY(86);
+
         goldCardsContainer.setPrefSize(77,170);
         goldCardsContainer.setLayoutX(920);
         goldCardsContainer.setLayoutY(367);
-        initializeCards();
 
+        initializeCards();
     }
 
     /**

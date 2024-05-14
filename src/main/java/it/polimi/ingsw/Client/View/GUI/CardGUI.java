@@ -40,11 +40,11 @@ public class CardGUI extends AnchorPane {
     /**
      * Model coordinates of where the card is placed
      */
-    private Coordinates modelCoordinates;
+    private final Coordinates modelCoordinates = new Coordinates();
     /**
      * GUI coordinates of where the card is placed
      */
-    private Coordinates guiCoordinates;
+    private final Coordinates guiCoordinates = new Coordinates();
 
     public CardGUI(){
         imageView.setFitHeight(55);

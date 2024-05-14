@@ -12,7 +12,7 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 /**
@@ -37,7 +37,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
      * Players number ChoiceBox.
      */
     @FXML
-    private ChoiceBox<Integer> playersNumberChoice;
+    private ChoiceBox<Integer> numberOfPlayersChoiceBox;
     /**
      * Username TextField.
      */
@@ -51,12 +51,11 @@ public class ViewControllerGUI extends ViewController implements Initializable{
 
     public ViewControllerGUI(MessageParser messageParser, MessageDispatcher messageDispatcher) {
         super(messageParser, messageDispatcher);
-        //this.stage = stage;
     }
 
     public void setStage (Stage stage){
         this.stage = stage;
-        this.playersNumberChoice = new ChoiceBox<>();
+        this.numberOfPlayersChoiceBox = new ChoiceBox<>();
         this.errorAlert = new Alert(Alert.AlertType.ERROR);
     }
     public Stage getStage(){
@@ -79,7 +78,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
             if (!stage.isShowing())
                 this.stage.show();
         } catch (IOException e){
-            throw new ViewException(e.getMessage(), e);
+            throw new RuntimeException("Error while trying to switch scene");
         }
     }
 
@@ -106,7 +105,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
      */
     @Override
     protected void switchToJoin() {
-        this.switchScene("startMenuJoin.fxml");
+        switchScene("startMenuJoin.fxml");
     }
 
     /**
@@ -114,7 +113,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
      */
     @FXML
     protected void confirmCreate() {
-        Integer numberOfPlayers = this.playersNumberChoice.getValue();
+        Integer numberOfPlayers = this.numberOfPlayersChoiceBox.getValue();
         String username = this.usernameField.getCharacters().toString();
         super.checkParamsAndSendCreate(username, numberOfPlayers);
     }
@@ -136,7 +135,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
      */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        playersNumberChoice.getItems().addAll(2,3,4);
+        numberOfPlayersChoiceBox.getItems().addAll(2,3,4);
     }
 
     /**
@@ -155,7 +154,6 @@ public class ViewControllerGUI extends ViewController implements Initializable{
 
     @Override
     protected void createMyPlayer(String username) {
-
     }
 
 
@@ -163,71 +161,6 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     protected void switchWaitingServerResponse() {
     }
 
-    /**
-     * Calls the start of the game when all players are connected
-     * */
-    @Override
-    protected void startGame() {
-        //this.messageDispatcher.startGame(this.username);
-    }
-
-    /**
-     * Starts showing the game to players
-     * */
-    @Override
-    protected void startShow() {
-        //this.mainSceneController.openMainScene();
-        //this.mainSceneController.displayGame(this.username);
-    }
-
-    /**
-     * Updates game show
-     * */
-    @Override
-    protected void updateGame() {
-        //this.mainSceneController.displayGame(this.username);
-    }
-
-    /**
-     * Popup to show abort message
-     * @param message abort message
-     * */
-    @Override
-    protected void showAbort(String message) {
-        this.showErrorAlert(message, "Please wait to join a new game");
-    }
-
-    /**
-     * Popup to show error message
-     * @param message error message
-     */
-    @Override
-    protected void showError(String message) {
-        this.showErrorAlert(message, "Please retry");
-    }
-
-    /**
-     * Display endgame and winners and close game
-     * @param winners winners list
-     * */
-    @Override
-    protected void displayWinners(List<String> winners) {
-        //this.mainSceneController.displayEndgame(winners);
-    }
-
-    @Override
-    protected void enableActions() {
-    }
-
-    @Override
-    protected void waitTurn() {
-
-    }
-
-    @Override
-    protected void returnToMainMenu() {
-
-    }
 
     /**
      * Main view method override for JavaFX main thread.
@@ -274,9 +207,6 @@ public class ViewControllerGUI extends ViewController implements Initializable{
 
     @Override
     protected void showScene() {
-        mainSceneController = new MainSceneController();
-        mainSceneController.setStage(this.stage);
-        mainSceneController.setScene(new MainScene());
     }
 
     @Override
@@ -290,23 +220,23 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     }
 
     @Override
-    protected void giveInitialCards() {
+    protected void giveInitialCard(String username) {
 
     }
 
     @Override
-    protected void addPlayers() {
-
+    protected void addPlayers(ArrayList<String> playerUsernames) {
+        mainSceneController = new MainSceneController();
+        for (String username : playerUsernames){
+            PlayerGUI player = new PlayerGUI(username);
+            mainSceneController.setStage(this.stage);
+            mainSceneController.setScene(new MainScene());
+        }
     }
 
-    /**
-     * Method called to start the view.
-     * Implemented only in CLI
-     * @param args arguments
-     */
     @Override
-    public void main(String[] args) {
-        //not used for GUI
+    protected boolean isMyTurn(String usernameOfPlayerWhosTurnItIs) {
+        return false;
     }
 
     @Override
