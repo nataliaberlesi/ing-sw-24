@@ -120,7 +120,8 @@ public class GameController {
      * Starts a game when all user are joined
      * @throws IOException
      */
-    public void startGame() throws IOException {
+    public void startGame(){
+        this.gameInstance.startGame();
     }
 
     /**

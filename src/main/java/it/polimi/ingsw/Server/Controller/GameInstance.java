@@ -68,6 +68,9 @@ public class GameInstance {
     public boolean gameIsStarted() {
         return this.gameIsStarted;
     }
+    public void startGame() {
+        this.gameIsStarted=true;
+    }
     public void setStartingDeck(Deck startingDeck) {
         this.startingDeck=startingDeck;
     }

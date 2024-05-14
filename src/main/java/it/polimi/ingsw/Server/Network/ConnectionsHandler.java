@@ -64,6 +64,7 @@ public class ConnectionsHandler implements Runnable{
                 if(gameController.gameIsFull() && !gameController.gameIsStarted()) {
                     for(PlayerConnection pc: server.getConnections()) {
                         String outMessage=parser.toJson(new Message(MessageType.START_FIRSTROUND,gameController.getJSONStartFirstRoundParams()));
+                        gameController.startGame();
                         pc.setOutMessage(outMessage);
                     }
                 }
