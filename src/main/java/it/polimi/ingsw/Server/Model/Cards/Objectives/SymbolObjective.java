@@ -13,7 +13,7 @@ public class SymbolObjective implements CardObjective, Objective {
     /**
      * points assigned for each number of occurrences of a symbol on the board
      */
-    private static final int POINTS=2;
+    private static final int points=2;
     /**
      * symbol that will be counted
      */
@@ -91,7 +91,7 @@ public class SymbolObjective implements CardObjective, Objective {
             numberOfVisibleVisibleSymbols=symbolCounter.get(symbolOfInterest);
         }
         int numberOfSets=numberOfVisibleVisibleSymbols/numberOfOccurrences;
-        return POINTS*numberOfSets;
+        return points*numberOfSets;
     }
 
     public Symbol getSymbol() {

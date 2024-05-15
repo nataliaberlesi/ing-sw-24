@@ -14,7 +14,7 @@ public class MixSymbolObjective implements Objective{
      * Points per set of 3 different Symbols (SCROLL, INK, FEATHER)
      * visible on the board of the player.
      */
-    private static final int POINTS=3;
+    private static final int points =3;
     /**
      * this class ignores all updates
      *
@@ -36,7 +36,7 @@ public class MixSymbolObjective implements Objective{
                 numberOfFeathers=symbolCounter.get(Symbol.FEATHER),
                 numberOfInk= symbolCounter.get(Symbol.INK);
         int numberOfsetsOfThree=Math.min(Math.min(numberOfFeathers,numberOfInk),numberOfScrolls);
-        return POINTS*numberOfsetsOfThree;
+        return points *numberOfsetsOfThree;
     }
 
 

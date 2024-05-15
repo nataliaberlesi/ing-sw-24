@@ -13,7 +13,7 @@ public class VerticalPatternObjective implements Objective {
     /**
      * number of points assigned for each occurrence of a vertical pattern
      */
-    private static final int POINTS = 3;
+    private static final int points = 3;
 
     /**
      * symbol of the cards that form the vertical column of the pattern
@@ -173,7 +173,7 @@ public class VerticalPatternObjective implements Objective {
             //it should be impossible to call this exception
             default -> throw new InvalidSymbolException(symbolOfInterest +" can't be on the center back of a card");
         }
-        return POINTS*numberOfOccurrences;
+        return points *numberOfOccurrences;
     }
 
     public Symbol getSymbol() {
