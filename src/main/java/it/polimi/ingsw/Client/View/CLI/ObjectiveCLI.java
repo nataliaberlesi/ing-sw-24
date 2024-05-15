@@ -7,10 +7,16 @@ public class ObjectiveCLI {
      */
     private String objective;
 
-    private final String objectiveID;
 
-    public ObjectiveCLI(String objectiveID, String objectiveClass, int objectivePoints, int numberOfOccurrences, String objectiveSymbol) throws IllegalArgumentException{
-        this.objectiveID = objectiveID;
+    /**
+     *
+     * @param objectiveClass
+     * @param objectivePoints
+     * @param numberOfOccurrences
+     * @param objectiveSymbol
+     * @throws IllegalArgumentException
+     */
+    public ObjectiveCLI(String objectiveClass, int objectivePoints, int numberOfOccurrences, String objectiveSymbol) throws IllegalArgumentException{
         switch (objectiveClass){
             case "DiagonalPatternObjective"->{
                 this.objective = "Gain "+objectivePoints+" points for each diagonal pattern like this:\n";
@@ -29,9 +35,6 @@ public class ObjectiveCLI {
         }
     }
 
-    private String getObjectiveID(){
-        return objectiveID;
-    }
 
     private void setSymbolObjective(String specificType) {
         this.objective="Gain 2 points for every ";
