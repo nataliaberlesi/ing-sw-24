@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.Server.Model.Cards.StartingCardFactory;
 import it.polimi.ingsw.Server.Model.Color;
+import it.polimi.ingsw.Server.Model.PlacedCard;
 
 import java.util.ArrayList;
 
@@ -40,7 +41,7 @@ public class MessageCrafter {
         return new Message(messageType,params);
     }
 
-    public static Message craftFirstRoundMessage(String card, String currentPlayer, ArrayList<Color> availableColors, String affectedPlayer, boolean flip, String color) {
+    public static Message craftFirstRoundMessage(String card, String currentPlayer, ArrayList<Color> availableColors, String affectedPlayer, ArrayList<PlacedCard> placedCards, String color) {
         MessageType messageType=MessageType.FIRSTROUND;
         JsonObject params=new JsonObject();
         if(card!=null) {
@@ -53,7 +54,7 @@ public class MessageCrafter {
         }
         params.add("availableColors", availableColorsArray);
         params.addProperty("affectedPlayer",affectedPlayer);
-        params.addProperty("flip",flip);
+        params.add("placedCards",parser.toJsonTree(placedCards).getAsJsonArray());
         params.addProperty("color",color);
         return new Message(messageType,params);
     }

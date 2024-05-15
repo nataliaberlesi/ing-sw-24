@@ -8,10 +8,12 @@ import it.polimi.ingsw.Server.Controller.DTO.FirstRound;
 import it.polimi.ingsw.Server.Controller.DTO.StartFirstRound;
 import it.polimi.ingsw.Server.Controller.DTO.StartSecondRound;
 import it.polimi.ingsw.Server.Model.Cards.StartingCardFactory;
+import it.polimi.ingsw.Server.Model.PlacedCard;
 import it.polimi.ingsw.Server.Network.*;
 import it.polimi.ingsw.Server.Model.Color;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class GameController {
     private final MessageParser messageParser;
@@ -114,18 +116,18 @@ public class GameController {
      */
     public Message playFirstRound(String username, JsonObject jsonParams) {
         FirstRound firstRound=messageParser.parseFirstRound(jsonParams);
+        String card=null;
         gameInstance.chooseColor(username, firstRound.color());
         gameInstance.placeStartingCard(username, firstRound.flip());
-        String card=null;
+        ArrayList<PlacedCard> placedCards=gameInstance.getPlayers().get(username).getPlayerBoard().getPlacedCards();
         int turn=gameInstance.nextTurn();
         String currentPlayer=gameInstance.getTurn();
         if(turn!=0) {
             card=gameInstance.getStartingDeck().next();
             gameInstance.saveStartingCard(currentPlayer,card);
         }
-
         gameInstance.checkIfAllBoardsAreSet();
-        Message message = MessageCrafter.craftFirstRoundMessage(card,currentPlayer,gameInstance.getAvailableColors(),username,firstRound.flip(),firstRound.color());
+        Message message = MessageCrafter.craftFirstRoundMessage(card,currentPlayer,gameInstance.getAvailableColors(),username,placedCards,firstRound.color());
         previousMessageType=message.type();
         return message;
     }

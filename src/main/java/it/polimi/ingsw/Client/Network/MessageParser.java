@@ -230,6 +230,9 @@ public class MessageParser {
         JsonObject jsonCard=getCard(drawableArea,index);
         return this.getCardID(jsonCard);
     }
+    public String getCardID(int index) {
+        return this.getCardID(getPlacedCard(index));
+    }
 
     /**
      * Parses the current card backSymbol
@@ -249,6 +252,9 @@ public class MessageParser {
     public String getCardBackSymbol(String drawableArea, int index) {
         JsonObject jsonCard=getCard(drawableArea,index);
         return this.getCardBackSymbol(jsonCard);
+    }
+    public String getCardBackSymbol(int index) {
+        return this.getCardBackSymbol(getPlacedCard(index));
     }
 
     /**
@@ -276,20 +282,28 @@ public class MessageParser {
         JsonObject jsonCard=getCard(drawableArea,index);
         return this.getCardFrontCorners(jsonCard);
     }
-
+    public String[] getCardFrontCorners(int index) {
+        return this.getCardFrontCorners(getPlacedCard(index));
+    }
     /**
      * Parses the current card back corners
      * @return
      */
     private String[] getCardBackCorners(JsonObject jsonCard) {
-        String[] frontCorners=new String[4];
+        String[] backCorners=new String[4];
         int i=0;
-        for(JsonElement corner: jsonCard
-                .get("backCorners").getAsJsonArray())
-        {
-            frontCorners[i++]=(corner.getAsJsonPrimitive().getAsString());
+        try{
+            for(JsonElement corner: jsonCard
+                    .get("frontCorners").getAsJsonArray())
+            {
+                backCorners[i++]=corner.getAsJsonPrimitive().getAsString();
+            }
+            return backCorners;
+        } catch(NullPointerException npe) {
+            return backCorners;
+        }catch(IllegalStateException ise) {
+            throw new MessageParserException("frontCorners is not a string");
         }
-        return frontCorners;
     }
     public String[] getCardBackCorners() {
         return this.getCardBackCorners(getCard());
@@ -297,6 +311,9 @@ public class MessageParser {
     public String[] getCardBackCorners(String drawableArea, int index) {
         JsonObject jsonCard=getCard(drawableArea,index);
         return this.getCardBackCorners(jsonCard);
+    }
+    public String[] getCardBackCorners(int index) {
+        return this.getCardBackCorners(getPlacedCard(index));
     }
 
     private String getCardObjective(JsonObject jsonCard) {
@@ -317,6 +334,9 @@ public class MessageParser {
         JsonObject jsonCard=getCard(drawableArea,index);
         return this.getCardObjective(jsonCard);
     }
+    public String getCardObjective(int index) {
+        return this.getCardObjective(getPlacedCard(index));
+    }
     private String getCardObjectiveSymbol(JsonObject jsonCard) {
         try {
             return jsonCard
@@ -335,6 +355,9 @@ public class MessageParser {
     public String getCardObjectiveSymbol(String drawableArea, int index) {
         JsonObject jsonCard=getCard(drawableArea,index);
         return this.getCardObjectiveSymbol(jsonCard);
+    }
+    public String getCardObjectiveSymbol(int index) {
+        return this.getCardObjectiveSymbol(getPlacedCard(index));
     }
     private Integer getCardObjectivePOINTS(JsonObject jsonCard) {
         try {
@@ -355,6 +378,9 @@ public class MessageParser {
     public Integer getCardObjectivePOINTS(String drawableArea, int index) {
         JsonObject jsonCard=getCard(drawableArea,index);
         return this.getCardObjectivePOINTS(jsonCard);
+    }
+    public Integer getCardObjectivePOINTS(int index) {
+        return this.getCardObjectivePOINTS(getPlacedCard(index));
     }
     private ArrayList<String> getCardPrerequisites(JsonObject jsonCard) {
         ArrayList<String> prerequisites=new ArrayList<>();
@@ -378,6 +404,9 @@ public class MessageParser {
     public ArrayList<String> getCardPrerequisites() {
         return this.getCardPrerequisites(getCard());
     }
+    public ArrayList<String> getCardPrerequisites(int index) {
+        return this.getCardPrerequisites(getPlacedCard(index));
+    }
     private JsonArray getDrawableAreaArray(String drawableArea) {
         try {
 
@@ -399,10 +428,37 @@ public class MessageParser {
             } catch (NullPointerException npe) {
                 return null;
             }
-        }catch(IllegalStateException ise) {
+        } catch (IllegalStateException ise) {
             throw new MessageParserException("goldDrawableArea is not an array");
         }
         throw new NoSuchElementException();
+    }
+    public Integer getPlacedCardsSize() {
+        try {
+            return getPlacedCards().size();
+        } catch(NullPointerException npe) {
+            return 0;
+        }
+
+    }
+    private JsonObject getPlacedCard(int index) {
+        try {
+            return getPlacedCards()
+                    .get(index).getAsJsonObject();
+        }catch(NullPointerException npe) {
+            return null;
+        }catch(IllegalStateException ise) {
+            throw new MessageParserException("Card is not a JsonObject");
+        }
+    }
+    private JsonArray getPlacedCards() {
+        try {
+            return messageParams.get("placedCards").getAsJsonArray();
+        } catch(NullPointerException npe) {
+            return null;
+        } catch(IllegalStateException ise) {
+            throw new MessageParserException("placedCards is not an array");
+        }
     }
     public CardCLI getCardCLI() {
         return new CardCLI(
