@@ -5,29 +5,32 @@ public class ObjectiveCLI {
     /**
      * objective as seen in CLI
      */
-    private String objective;
+    private String objective="Earn";
 
 
     /**
-     *
-     * @param objectiveClass
-     * @param objectivePoints
-     * @param numberOfOccurrences
-     * @param objectiveSymbol
-     * @throws IllegalArgumentException
+     * constructs the string that describes the objective
+     * @param objectiveClass indicates what objective will be shown
+     * @param objectivePoints are the points earned by completing objective
+     * @param numberOfOccurrences how many occurrences of a symbol need to be present on a board in order to earn points
+     * @param objectiveSymbol symbol that will be used in the model to calculate points
+     * @throws IllegalArgumentException if the objective class passed doesn't exist
      */
     public ObjectiveCLI(String objectiveClass, int objectivePoints, int numberOfOccurrences, String objectiveSymbol) throws IllegalArgumentException{
         switch (objectiveClass){
             case "DiagonalPatternObjective"->{
-                this.objective = "Gain "+objectivePoints+" points for each diagonal pattern like this:\n";
+                this.objective += objectivePoints+" points for each diagonal pattern like this:\n";
                 setDiagonalPatternObjective(objectiveSymbol);
             }
             case "VerticalPatternObjective"->{
-                this.objective = "Gain "+objectivePoints+" points for each vertical pattern like this:\n";
+                this.objective += objectivePoints+" points for each vertical pattern like this:\n";
                 setVerticalPatternObjective(objectiveSymbol);
             }
             case "SymbolObjective"->{
-                this.objective= "Gain "+objectivePoints+" points for every " + numberOfOccurrences + " " + objectiveSymbol + " symbols visible on your board:\n";
+                this.objective += objectivePoints+" points for every " + numberOfOccurrences + " " + objectiveSymbol + " symbols visible on your board:\n";
+            }
+            case "MixSymbolObjective"->{
+                this.objective += objectivePoints+" points for each set of three different symbols (INK,SCROLL,FEATHER)\n";
             }
             default -> {
                 throw new IllegalArgumentException(objectiveClass + " is not a valid objective");
@@ -36,22 +39,11 @@ public class ObjectiveCLI {
     }
 
 
-    private void setSymbolObjective(String specificType) {
-        this.objective="Gain 2 points for every ";
-        if(specificType.equals("INK")||specificType.equals("SCROLL")||specificType.equals("FEATHER")){
-            this.objective+="2 "+specificType+" symbols\n";
-        }
-        else if(specificType.equals("MUSHROOM")||specificType.equals("BUTTERFLY")||specificType.equals("LEAF")||specificType.equals("WOLF")){
-            this.objective+="3 "+specificType+" symbols\n";
-        }
-        else{
-            throw new IllegalArgumentException(specificType+" is not a valid objective type");
-        }
 
-
-    }
-
-
+    /**
+     * builds string showing the pattern of cards that earns points
+     * @param specificType is the symbol that is used to determine which pattern earns points
+     */
     private void setVerticalPatternObjective(String specificType) {
         StringBuilder verticalPattern=new StringBuilder();
         String emptySpace=createEmptyString(objective.length()/2);
@@ -103,9 +95,14 @@ public class ObjectiveCLI {
         this.objective+=verticalPattern.toString();
     }
 
-
-    private void diagonalStringBuilder(StringBuilder diagonalPattern,String emptySpace, boolean isIncreasing){
-        if(isIncreasing){
+    /**
+     *
+     * @param diagonalPattern is the string that will contain the pattern
+     * @param emptySpace is the spacing that is needed to have a centered pattern
+     * @param isAscending used to indicate weather the pattern is ascending or not
+     */
+    private void diagonalStringBuilder(StringBuilder diagonalPattern,String emptySpace, boolean isAscending){
+        if(isAscending){
             diagonalPattern.append("    C\n");
             diagonalPattern.append(emptySpace);
             diagonalPattern.append("  C\n");
@@ -120,6 +117,11 @@ public class ObjectiveCLI {
             diagonalPattern.append("    C\n");
         }
     }
+
+    /**
+     * builds string showing the pattern of cards that earns points
+     * @param specificType is the symbol that is used to determine which pattern earns points
+     */
     private void setDiagonalPatternObjective(String specificType){
         StringBuilder diagonalPattern=new StringBuilder();
         String emptySpace=createEmptyString(objective.length()/2);
@@ -151,6 +153,11 @@ public class ObjectiveCLI {
         this.objective+=diagonalPattern.toString();
     }
 
+    /**
+     *
+     * @param length of string
+     * @return empty string that is as long as indicated in params
+     */
     public static String createEmptyString(int length) {
         return " ".repeat(Math.max(0, length));
     }
@@ -158,22 +165,5 @@ public class ObjectiveCLI {
     public void printObjective(){
         System.out.println(this.objective);
     }
-
-    public String getSpecificType(int i){
-        return switch (i) {
-            case 0 -> "MUSHROOM";
-            case 1 -> "LEAF";
-            case 2 -> "WOLF";
-            case 3 -> "BUTTERFLY";
-            case 4 -> "SCROLL";
-            case 5 -> "INK";
-            case 6 -> "FEATHER";
-            default -> throw new RuntimeException("Invalid specific type");
-        };
-    }
-
-
-
-
 
 }

@@ -5,32 +5,35 @@ import it.polimi.ingsw.Client.Network.MessageParser;
 import it.polimi.ingsw.Client.View.ViewController;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+
 
 public class ViewControllerCLI extends ViewController {
 
 
-    private PlayersInGameCLI playersInGame;
-    private ObjectivesSectionCLI objectivesSection;
-    private DrawableAreaCLI drawableArea;
+    private final PlayersInGameCLI playersInGame=new PlayersInGameCLI();
+    private final ObjectivesSectionCLI objectivesSection=new ObjectivesSectionCLI();
+    private final DrawableAreaCLI drawableArea=new DrawableAreaCLI();
     private PlayerCLI myPlayer;
+    private PlayerCLI currentPlayerInScene;
+    private final ClientActionsCLI clientActions=new ClientActionsCLI();
 
     public ViewControllerCLI(MessageParser messageParser, MessageDispatcher messageDispatcher) {
         super(messageParser, messageDispatcher);
+        HandleClientInputCLI handleClientInput=new HandleClientInputCLI(this,messageParser, messageDispatcher, clientActions );
+        Thread clientInputHandlerthread=new Thread(handleClientInput);
+        clientInputHandlerthread.start();
     }
 
     /**
      * creates instance of client player and adds player to playersInGame
      * @param username of client
-     *
      */
     @Override
     protected void createMyPlayer(String username) {
-        PlayerCLI myPlayer= new PlayerCLI(username, true);
-        playersInGame = new PlayersInGameCLI();
+        PlayerCLI myPlayer= new PlayerCLI(username);
         playersInGame.addPlayer(myPlayer);
         this.myPlayer=myPlayer;
+        this.currentPlayerInScene=myPlayer;
     }
 
     /**
@@ -38,7 +41,7 @@ public class ViewControllerCLI extends ViewController {
      */
     @Override
     protected void switchWaitingServerResponse() {
-        System.out.println("Waiting for server to check username...");
+        System.out.println("\nWaiting for server to check username...\n");
     }
 
 
@@ -46,26 +49,11 @@ public class ViewControllerCLI extends ViewController {
         return playersInGame;
     }
 
-
-
     /**
-     *
-     * @param scanner reading client response
-     * @return client chosen username
+     * asks player to choose a username
      */
-    private String askUsername(Scanner scanner){
+    private void askUsername(){
         System.out.println("Choose a Username:");
-        return scanner.nextLine();
-    }
-
-    /**
-     *
-     * @param scanner reading client response
-     * @return client chosen number of players
-     */
-    private Integer askNumberOfPlayers(Scanner scanner){
-        System.out.println("Choose number of players:");
-        return scanner.nextInt();
     }
 
     /**
@@ -73,13 +61,8 @@ public class ViewControllerCLI extends ViewController {
      */
     @Override
     protected void switchToCreate() {
-        Scanner scanner = new Scanner(System.in);
-        String username = askUsername(scanner);
-        Integer numberOfPlayers = askNumberOfPlayers(scanner);
-        if(!checkParamsAndSendCreate(username, numberOfPlayers)){
-            switchToCreate();
-        }
-        createMyPlayer(username);
+        clientActions.enableCreate();
+        askUsername();
     }
 
     /**
@@ -88,6 +71,16 @@ public class ViewControllerCLI extends ViewController {
     @Override
     protected void switchToLoading(){
         System.out.println("All good\nWaiting for players...\n\n");
+    }
+
+    @Override
+    protected void updatePlayerBoard(String affectedPlayer) {
+
+    }
+
+    @Override
+    protected void setPlayerColor(String affectedPlayer, String color) {
+        playersInGame.getPlayer(affectedPlayer).setPlayerColor(color);
     }
 
     @Override
@@ -129,11 +122,8 @@ public class ViewControllerCLI extends ViewController {
      */
     @Override
     protected void switchToJoin() {
-        Scanner scanner = new Scanner(System.in);
-        String username = askUsername(scanner);
-        if (!checkParamsAndSendJoin(username)) {
-            switchToJoin();
-        }
+        clientActions.enableJoin();
+        askUsername();
     }
 
 
@@ -143,102 +133,65 @@ public class ViewControllerCLI extends ViewController {
         System.out.println(content);
     }
 
-
     @Override
     protected boolean isMyTurn(String usernameOfPlayerWhosTurnItIs) {
         return usernameOfPlayerWhosTurnItIs.equals(myPlayer.getUsername());
     }
 
-    /**
-     * in the first round the client is given a starting card that he will place on his board in the orientation of his choice,
-     * after that he will have to choose his color from the list of available colors.
-     */
-    @Override
-    protected void enableFirstRoundActions() {
-        Scanner scanner = new Scanner(System.in);
-        dealWithFirstCardPlacement(scanner);
-        String chosenColor=dealWithPlayerColorChoice(scanner);
-        messageDispatcher.firstRound(myPlayer.getUsername(),myPlayer.getPlayerBoard().getStartingCard().isFaceUp(), chosenColor);//see with Kevin
-    }
-
-    /**
-     * shows client available colors to choose from
-     * @param scanner that reads player input
-     * @return chosen color (if it is one of the available colors)
-     */
-    private String dealWithPlayerColorChoice(Scanner scanner){
-        ArrayList<String> availableColors= messageParser.getAvailableColors();
-        System.out.println("Now it's time to choose your color:\nSimply type one of these colors to choose one");
-        for(String availableColor: availableColors){
-            System.out.println(availableColor);
-        }
-        String chosenColor=scanner.nextLine();
-        if(availableColors.contains(chosenColor)){
-            return chosenColor;
-        }
-        System.out.println("I'm afraid that color is unavailable, let's try again");
-        return dealWithPlayerColorChoice(scanner);
-    }
 
     /**
      * explains to client how to flip or place the starting card
-     * @param scanner that reads player input
      */
-    private void askPlayerToPlaceStartingCard(Scanner scanner){
-        System.out.println("You have been assigned a starting card!");
-        System.out.println("You can flip the card by typing 'F' ");
-        System.out.println("When you are happy with the cards orientation type 'Place'");
-        System.out.println("once placed you can't change card orientation");
-        dealWithFirstCardPlacement(scanner);
+    private void askPlayerToPlaceStartingCard(){
+        System.out.println("""
+                You have been assigned a starting card!
+                You can flip the card by typing 'F'
+                When you are happy with the cards orientation type 'Place'
+                once placed you can't change card orientation""");
     }
 
     /**
-     * reads user input and flips card or places it accordingly, if input is not understood the method calls itself
-     * @param scanner that reads player input
+     * in the first round the client is given a starting card that he will place on his board in the orientation of his choice,
+     * after that he will have to choose his color from the list of available colors. This method enables those actions.
      */
-    private void dealWithFirstCardPlacement(Scanner scanner){
-        String input= scanner.nextLine().toLowerCase();
-        switch (input){
-            case "f"->{
-                myPlayer.getPlayerBoard().getStartingCard().flip();
-                showScene();
-                dealWithFirstCardPlacement(scanner);
-            }
-            case "place"->{
-                System.out.println("Congrats! You have placed your first card");
-            }
-            default -> {
-                showErrorAlert("Command Not Recognized", "Remember 'F' is to flip the card and 'place' is to place the card ");
-                dealWithFirstCardPlacement(scanner);
-            }
-        }
+    @Override
+    protected void enableFirstRoundActions() {
+        clientActions.enableFirstRoundActions();
+        askPlayerToPlaceStartingCard();
     }
 
-
-
+    private synchronized void printScene(){
+        System.out.println("\n\n\n-----------------------------------------------------------------------------\n\n\n");
+        playersInGame.printScores();
+        objectivesSection.printObjectivesSection();
+        drawableArea.printDrawableArea();
+        currentPlayerInScene.printBoard();
+        System.out.println("HAND:");
+        if(currentPlayerInScene == myPlayer){
+            System.out.println("hand facing up:");
+            myPlayer.printHand();
+        }
+        System.out.println("hand facing down:");
+        currentPlayerInScene.printBackOfHand();
+    }
 
     @Override
     protected void showScene() {
-        System.out.println("\n\n\n-----------------------------------------------------------------------------\n");
-        for(PlayerCLI player: playersInGame.getPlayers()){
-            if(!player.isMyPlayer()){
-                player.printPlayerSituation();
-            }
+        printScene();
+    }
+
+    @Override
+    protected void updateAvailableColors(ArrayList<String> availableColors) {
+    }
+
+    @Override
+    protected void updateDrawableArea() {
+        String resourceDrawableArea="resourceDrawableArea";
+        String goldDrawableArea="goldDrawableArea";
+        for(int i=0; i<3; i++){
+            drawableArea.putResourceCard(i, messageParser.getCardCLI(resourceDrawableArea, i));
+            drawableArea.drawGoldCard(i, messageParser.getCardCLI(goldDrawableArea, i));
         }
-        playersInGame.printScores();
-        drawableArea.printDrawableArea();
-        objectivesSection.printObjectivesSection();
-        playersInGame.getMyPlayer().printPlayerSituation();
-    }
-
-    @Override
-    protected void setAvailableColors() {
-
-    }
-
-    @Override
-    protected void setDrawableArea() {
-
     }
 
     @Override
@@ -253,23 +206,28 @@ public class ViewControllerCLI extends ViewController {
      */
     @Override
     protected void addPlayers(ArrayList<String> playerUsernames) throws RuntimeException{
-        String myPlayerUsername= playersInGame.getMyPlayer().getUsername();
+        String myPlayerUsername= myPlayer.getUsername();
         if(!playerUsernames.contains(myPlayerUsername)){
             throw new RuntimeException("Player " + myPlayerUsername + " does not exist");
         }
         ArrayList<PlayerCLI> players=playersInGame.getPlayers();
         int i=0;
+        // adds all players that play before my client
         while(!playerUsernames.get(i).equals(myPlayerUsername)){
-            players.addFirst(new PlayerCLI(myPlayerUsername, false));
+            players.addFirst(new PlayerCLI(myPlayerUsername));
             i++;
         }
         i++;
+        // adds all players that play after my client
         while(i<playerUsernames.size()){
-            PlayerCLI newPlayer= new PlayerCLI(playerUsernames.get(i), false);
-            players.add(new PlayerCLI(myPlayerUsername, false));
+            players.add(new PlayerCLI(myPlayerUsername));
+            i++;
         }
     }
 
 
+    public PlayerCLI getMyPlayer() {
+        return myPlayer;
+    }
 
 }

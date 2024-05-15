@@ -5,7 +5,7 @@ public class PlayerCLI {
     /**
      * name of player, no two players have the same name
      */
-    private String username;
+    private final String username;
     /**
      * players have a color that can be green, blu, red, yellow.
      */
@@ -23,10 +23,6 @@ public class PlayerCLI {
      */
     private boolean isCurrentPlayer =false;
     /**
-     * true if this is the player that is controlling this view
-     */
-    private boolean isMyPlayer=false;
-    /**
      * tha hand belonging to player
      */
     private final HandCLI playerHand;
@@ -36,29 +32,14 @@ public class PlayerCLI {
     /**
      * constructor used when a player joins game
      * @param username unique name of player
-     * @param isMyPlayer true if player be initialized is player that controls view
      */
-    public PlayerCLI(String username, boolean isMyPlayer) {
+    public PlayerCLI(String username) {
         this.username = username;
         this.score = 0;
         this.playerBoard = new BoardCLI();
         this.playerHand = new HandCLI();
-        this.isMyPlayer=isMyPlayer;
     }
 
-
-
-    /**
-     *
-     * @param username of player that controls board
-     * @throws RuntimeException if method tries to change the name of another player
-     */
-    public void setUsername(String username) throws RuntimeException{
-        if(!isMyPlayer){
-            throw new RuntimeException("Can't change other player username");
-        }
-        this.username = username;
-    }
 
 
     public void setScore(int score) {
@@ -119,13 +100,16 @@ public class PlayerCLI {
     }
 
     /**
-     * if player is the one controlling this view then method prints his card face up, otherwise it prints cards face down
+     * prints hand all face up
      */
     public void printHand(){
-        if(isMyPlayer){
-            playerHand.printHand();
-            return;
-        }
+        playerHand.printHand();
+    }
+
+    /**
+     * prints hand all face down
+     */
+    public void printBackOfHand(){
         playerHand.printBackOfHand();
     }
 
@@ -162,9 +146,6 @@ public class PlayerCLI {
         return playerColor;
     }
 
-    public boolean isMyPlayer() {
-        return isMyPlayer;
-    }
 
     public HandCLI getPlayerHand() {
         return playerHand;
