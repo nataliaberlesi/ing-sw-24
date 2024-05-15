@@ -111,6 +111,9 @@ public class MessageParser {
         }
         return colors;
     }
+    public String getColor() {
+        return messageParams.get("color").getAsJsonPrimitive().getAsString();
+    }
     private ArrayList<String> getCardFrontCenterSymbols() {
         JsonArray jsonArray=currentCard
                 .get("frontCenterSymbols").getAsJsonArray();
