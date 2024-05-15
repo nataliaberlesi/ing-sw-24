@@ -156,12 +156,16 @@ public class CardCLI implements Comparable<CardCLI>{
      * @param prerequisites (null for resource cards) are the amount of visible symbols that need to be present on the board in order
      *                      to place card
      */
-    public CardCLI(String cardID, String[] frontCorners, String[] backCorners, String cardObjective ,ArrayList<String> prerequisites){
+    public CardCLI(String cardID, String[] frontCorners, String[] backCorners, String cardObjective, String cardObjectiveSymbol, int cardObjectivePoints ,ArrayList<String> prerequisites){
         this.cardID=cardID;
         setFrontCorners(frontCorners);
         setBackCorners(backCorners);
-        setCardObjective(cardObjective);
-        setPrerequisites(prerequisites);
+        if(cardObjective!=null && cardObjectivePoints!=0) {
+            setCardObjective(cardObjective, cardObjectiveSymbol, cardObjectivePoints);
+        }
+        if(prerequisites!=null) {
+            setPrerequisites(prerequisites);
+        }
         setBackSymbolAndColor();
     }
     /**
@@ -269,44 +273,41 @@ public class CardCLI implements Comparable<CardCLI>{
      * @param cardObjective of card
      * @throws RuntimeException if cardObjective doesn't exist
      */
-    public void setCardObjective(String cardObjective) throws RuntimeException{
+    public void setCardObjective(String cardObjective, String cardObjectiveSymbol, int cardObjectivePoints) throws RuntimeException{
+
         switch (cardObjective){
-            case("OnePointObjective"):
-                this.cardObjective="--1pt--";
-                break;
-            case("ThreePointObjective"):
-                this.cardObjective="--3pts-";
-                break;
-
-            case("FivePointObjective"):
-                this.cardObjective="--5pts-";
-                break;
-
-            case("FeatherObjective"):
-                this.cardObjective="--1pt--";
-                this.bottomLine="--*F---";
-                break;
-
-            case("ScrollObjective"):
-                this.cardObjective="--1pt--";
-                this.bottomLine="--*S---";
-                break;
-
-            case("InkObjective"):
-                this.cardObjective="--1pt--";
-                this.bottomLine="--*I---";
-                break;
-
-            case("CornerCardObjective"):
-                this.cardObjective="--2pts-";
-                this.bottomLine="--*C---";
-                break;
-
-            default:
-                throw new RuntimeException(cardObjective+" objective doesn't exist");
+            case("PointsCardObjective")-> {
+                makeCardObjectiveTopLine(cardObjectivePoints);
+            }
+            case("SymbolObjective")-> {
+                makeCardObjectiveBottomLine(cardObjectiveSymbol.toUpperCase().charAt(0));
+            }
+            case("CornerCardObjective")-> {
+                makeCardObjectiveBottomLine('C');
+            }
+            default-> {
+                throw new RuntimeException(cardObjective + " objective doesn't exist");
+            }
 
         }
 
+    }
+
+    private void makeCardObjectiveBottomLine(char cardObjectiveSymbolInitial){
+        StringBuilder objectiveTopLine=new StringBuilder();
+        objectiveTopLine.append("--*");
+        objectiveTopLine.append(cardObjectiveSymbolInitial);
+        objectiveTopLine.append("---");
+        this.bottomLine=objectiveTopLine.toString();
+    }
+
+    private void makeCardObjectiveTopLine(int cardObjectivePoints){
+        StringBuilder objectiveTopLine=new StringBuilder();
+        objectiveTopLine.append("--");
+        objectiveTopLine.append(cardObjectivePoints);
+        objectiveTopLine.append("pts");
+        objectiveTopLine.append("-");
+        this.cardObjective=objectiveTopLine.toString();
     }
 
     /**
