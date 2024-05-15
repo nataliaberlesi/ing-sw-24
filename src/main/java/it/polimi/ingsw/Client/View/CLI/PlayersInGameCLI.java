@@ -52,4 +52,13 @@ public class PlayersInGameCLI {
     public ArrayList<PlayerCLI> getPlayers() {
         return players;
     }
+
+    public PlayerCLI getCurrentPlayer(){
+        for(PlayerCLI player : players) {
+            if(player.isCurrentPlayer()){
+                return player;
+            }
+        }
+        throw new RuntimeException("No current player");
+    }
 }

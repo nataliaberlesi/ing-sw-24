@@ -163,7 +163,7 @@ public class CardCLI implements Comparable<CardCLI>{
         if(cardObjective!=null && cardObjectivePoints!=0) {
             setCardObjective(cardObjective, cardObjectiveSymbol, cardObjectivePoints);
         }
-        if(prerequisites!=null) {
+        if(!prerequisites.isEmpty()) {
             setPrerequisites(prerequisites);
         }
         setBackSymbolAndColor();
@@ -189,7 +189,7 @@ public class CardCLI implements Comparable<CardCLI>{
      * @param prerequisites list of symbols that are necessary to be on the board in order to place card
      */
     public void setPrerequisites(ArrayList<String> prerequisites) {
-        char firstPrerequisite=prerequisites.get(0).charAt(0);
+        char firstPrerequisite=prerequisites.getFirst().charAt(0);
         char secondPrerequisite='0';
         int firstPrerequisiteCounter=0;
         for(String prerequisite:prerequisites){

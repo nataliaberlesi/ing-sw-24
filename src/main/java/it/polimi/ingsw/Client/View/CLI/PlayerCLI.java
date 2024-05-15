@@ -154,4 +154,8 @@ public class PlayerCLI {
     public int getScore() {
         return score;
     }
+
+    public void setCurrentPlayer(boolean currentPlayer) {
+        this.isCurrentPlayer = currentPlayer;
+    }
 }

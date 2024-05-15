@@ -101,6 +101,7 @@ public abstract class ViewController {
         if(correctUsernameShowAlertIfFalse(username)){
             messageDispatcher.joinGame(username);
             switchWaitingServerResponse();
+            return true;
         }
         return false;
     }

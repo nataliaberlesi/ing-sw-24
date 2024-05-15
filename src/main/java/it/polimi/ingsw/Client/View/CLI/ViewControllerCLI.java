@@ -135,6 +135,12 @@ public class ViewControllerCLI extends ViewController {
 
     @Override
     protected boolean isMyTurn(String usernameOfPlayerWhosTurnItIs) {
+        try {
+            playersInGame.getPlayer(usernameOfPlayerWhosTurnItIs);
+        }
+        catch (IllegalArgumentException e){
+            return false;
+        }
         return usernameOfPlayerWhosTurnItIs.equals(myPlayer.getUsername());
     }
 
@@ -190,7 +196,7 @@ public class ViewControllerCLI extends ViewController {
         String goldDrawableArea="goldDrawableArea";
         for(int i=0; i<3; i++){
             drawableArea.putResourceCard(i, messageParser.getCardCLI(resourceDrawableArea, i));
-            drawableArea.drawGoldCard(i, messageParser.getCardCLI(goldDrawableArea, i));
+            drawableArea.putGoldCard(i, messageParser.getCardCLI(goldDrawableArea, i));
         }
     }
 
@@ -214,15 +220,16 @@ public class ViewControllerCLI extends ViewController {
         int i=0;
         // adds all players that play before my client
         while(!playerUsernames.get(i).equals(myPlayerUsername)){
-            players.addFirst(new PlayerCLI(myPlayerUsername));
+            players.addFirst(new PlayerCLI(playerUsernames.get(i)));
             i++;
         }
         i++;
         // adds all players that play after my client
         while(i<playerUsernames.size()){
-            players.add(new PlayerCLI(myPlayerUsername));
+            players.add(new PlayerCLI(playerUsernames.get(i)));
             i++;
         }
+        playersInGame.getPlayer(playerUsernames.getFirst()).setCurrentPlayer(true);
     }
 
 

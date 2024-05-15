@@ -56,12 +56,12 @@ public class HandleClientInputCLI implements Runnable{
 
     private void checkUsernameAsksAgainIfNotOk(){
         String username=getInput();
-        if(!viewController.checkParamsAndSendJoin(username)){
-            viewController.switchToJoin();
-        }
-        else {
+        if(viewController.checkParamsAndSendJoin(username)){
             actionsCLI.disableJoin();
             viewController.createMyPlayer(username);
+        }
+        else {
+            viewController.switchToJoin();
         }
     }
 
@@ -69,12 +69,11 @@ public class HandleClientInputCLI implements Runnable{
     private void checkUsernameAndNumberOfPlayersAsksAgainIfNotOK(){
         String username=getInput();
         Integer numberOfPlayers = askNumberOfPlayers();
-        if(!viewController.checkParamsAndSendCreate(username, numberOfPlayers)){
-            viewController.switchToCreate();
+        if(viewController.checkParamsAndSendCreate(username, numberOfPlayers)){
+            actionsCLI.disableCreate();
         }
         else {
-            actionsCLI.disableCreate();
-            viewController.createMyPlayer(username);
+            viewController.switchToCreate();
         }
     }
 

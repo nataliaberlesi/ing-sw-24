@@ -155,7 +155,7 @@ public class Board {
         if(!placedCards.isEmpty()){
             throw new RuntimeException("Cards have been placed before starting card");
         }
-        addPlacedCard(startingCardID, new Coordinates(), isFacingUp);
+        addPlacedCard(startingCard, new Coordinates(), isFacingUp);
         startingCardID="CARD_ALREADY_BEEN_PLACED";
     }
 
@@ -169,12 +169,12 @@ public class Board {
 
     /**
      *
-     * @param placedCardID ID of card that was placed
+     * @param placedCard  card that was placed
      * @param coordinates where card was placed
      * @param isFacingUp orientation of card
      */
-    private void addPlacedCard(String placedCardID, Coordinates coordinates, boolean isFacingUp) {
-        placedCards.add(new PlacedCard(placedCardID, coordinates, isFacingUp));
+    private void addPlacedCard(Card placedCard, Coordinates coordinates, boolean isFacingUp) {
+        placedCards.add(new PlacedCard(placedCard, coordinates, isFacingUp));
     }
 
 
@@ -220,7 +220,7 @@ public class Board {
                 //adds card and coordinates to occupiedCoordinates
                 updateBoardObjectives(card.getBackSymbol(), coordinates);
                 //adds card to placedCards
-                addPlacedCard(cardID, coordinates, isFacingUp);
+                addPlacedCard(card, coordinates, isFacingUp);
                 return true;
             }
         }

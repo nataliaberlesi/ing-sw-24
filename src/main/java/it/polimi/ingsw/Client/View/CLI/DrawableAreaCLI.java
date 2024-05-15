@@ -44,7 +44,6 @@ public class DrawableAreaCLI {
      * @return card being drawn (facing up)
      */
     private CardCLI getCardCLI(int cardIndex, CardCLI replacementCard, CardCLI[] drawnCards) {
-        cardIndex--;
         CardCLI drawnCard= drawnCards[cardIndex];
         CardCLI faceDownCard= drawnCards[0];
         faceDownCard.flip();
@@ -62,7 +61,7 @@ public class DrawableAreaCLI {
      * @throws IllegalArgumentException if index is bigger than 3 or smaller than 1
      */
     private void checkLegalIndex(int cardIndex) throws IllegalArgumentException{
-        if(cardIndex<1||cardIndex>3){
+        if(cardIndex<0||cardIndex>3){
             throw new ArrayIndexOutOfBoundsException("Card index out of bounds");
         }
     }
@@ -100,6 +99,8 @@ public class DrawableAreaCLI {
         printDrawableCards(goldCards);
     }
 
+
+
     public void putGoldCard(int cardIndex, CardCLI replacementCard) throws IllegalArgumentException{
         checkLegalIndex(cardIndex);
         checkLegalCard(replacementCard,'G');
@@ -113,7 +114,6 @@ public class DrawableAreaCLI {
     }
 
     private void putCard(int cardIndex, CardCLI replacementCard, CardCLI[] drawableCards) {
-        cardIndex--;
         if(cardIndex==0){
             if(replacementCard.isFaceUp()){
                 replacementCard.flip();
