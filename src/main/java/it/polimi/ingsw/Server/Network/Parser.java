@@ -42,8 +42,7 @@ public class Parser {
     public String toJson(Object o) {
         return GSON.toJson(o);
     }
-    public JsonElement toJsonElement(Object o) {
+    public JsonElement toJsonTree(Object o) {
         return GSON.toJsonTree(o);
     }
-
 }

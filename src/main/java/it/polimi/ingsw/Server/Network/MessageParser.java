@@ -4,14 +4,10 @@ import com.google.gson.JsonObject;
 import it.polimi.ingsw.Server.Controller.DTO.CreateGame;
 import it.polimi.ingsw.Server.Controller.DTO.FirstRound;
 import it.polimi.ingsw.Server.Controller.DTO.PlaceCard;
-import it.polimi.ingsw.Server.Controller.GameController;
 import it.polimi.ingsw.Server.Model.Coordinates;
 
-import java.io.IOException;
-import java.util.ArrayList;
-
 public class MessageParser {
-    private Parser parser;
+    private final Parser parser;
     public MessageParser() {
         parser=Parser.getInstance();
     }
@@ -29,7 +25,7 @@ public class MessageParser {
         PlaceCard placeCard=new PlaceCard(card,coordinates);
         return placeCard;
     }
-    public FirstRound parseFirstRound(String username,JsonObject jsonParams) {
+    public FirstRound parseFirstRound(JsonObject jsonParams) {
         //TODO
         boolean flipStartingCard=jsonParams.get("flipStartingCard").getAsJsonPrimitive().getAsBoolean();
         String color=jsonParams.get("color").getAsJsonPrimitive().getAsString();

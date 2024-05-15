@@ -4,16 +4,12 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
 import java.io.IOException;
-import java.io.Reader;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Map;
 
 public class Server implements Runnable{
-    private Parser parser;
+    private final Parser parser;
     /**
      * The port where the server listens
      */
@@ -56,10 +52,11 @@ public class Server implements Runnable{
      * @throws IOException
      */
     private void waitMaster() throws IOException {
-        this.connections=new ArrayList<PlayerConnection>();
+        this.connections=new ArrayList<>();
         this.serverSocket=new ServerSocket(port);
         PlayerConnection master=connectPlayer(true);
         this.connections.add(master);
+        masterIsConnected=true;
     }
 
     /**
@@ -109,10 +106,7 @@ public class Server implements Runnable{
      * @param masterStatus
      */
     private void sendMasterStatus(Boolean masterStatus) {
-        MessageType messageType=MessageType.CONNECT;
-        JsonObject params=new JsonObject();
-        params.addProperty("masterStatus",masterStatus);
-        Message message=new Message(messageType,params);
+        Message message=MessageCrafter.craftConnectMessage(masterStatus);
         Gson gson=new Gson();
         String outMessage=gson.toJson(message);
         connections.getLast().setOutMessage(outMessage);
