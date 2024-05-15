@@ -38,6 +38,21 @@ public class HandCLI {
     }
 
     /**
+     * replaces all cards in hand with the updated hand sent by server
+     * @param cardsInUpdatedHand is the new hand sent by server
+     */
+    public void updateHand(CardCLI[] cardsInUpdatedHand) {
+        CardCLI updatedCard;
+        for(int i=0; i<3; i++) {
+            updatedCard = cardsInUpdatedHand[i];
+            if(updatedCard == null) {
+                updatedCard = emptyCard;
+            }
+            hand[i] = updatedCard;
+        }
+    }
+
+    /**
      *
      * @param card that is being placed in hand, replacing the empty card
      */
@@ -56,7 +71,6 @@ public class HandCLI {
      * prints out cards in hand
      */
     public void printHand(){
-        System.out.println("HAND:");
         System.out.println(CardIndexCLI.properlySpacedCardIndex);
         CardPrinter.printExactlyThreeCardsInAnArray(hand);
         System.out.println();

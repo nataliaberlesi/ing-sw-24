@@ -143,7 +143,7 @@ public abstract class ViewController {
            }
             case FIRSTROUND -> {
                 updatePlayerBoard(messageParser.getAffectedPlayer());
-                setPlayerColor(messageParser.getAffectedPlayer(), messageParser.getChosenColor());
+                setPlayerColor(messageParser.getAffectedPlayer(), messageParser.getColor());
                 updateAvailableColors(messageParser.getAvailableColors());
                 giveInitialCard(messageParser.getCurrentPlayer());
                 if(isMyTurn(messageParser.getCurrentPlayer())){
