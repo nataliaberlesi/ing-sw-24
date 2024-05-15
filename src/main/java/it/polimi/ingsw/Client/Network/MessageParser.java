@@ -111,6 +111,15 @@ public class MessageParser {
         }
         return colors;
     }
+    private ArrayList<String> getCardFrontCenterSymbols() {
+        JsonArray jsonArray=currentCard
+                .get("frontCenterSymbols").getAsJsonArray();
+        ArrayList<String> frontCenterSymbols=new ArrayList<>();
+        for(JsonElement jsonElement:jsonArray) {
+            frontCenterSymbols.add(jsonElement.getAsJsonPrimitive().getAsString());
+        }
+        return frontCenterSymbols;
+    }
 
     /**
      * Parses the current card ID
@@ -148,19 +157,20 @@ public class MessageParser {
      * Parses the current card front corners
      * @return
      */
-    private ArrayList<String> getCardFrontCorners(JsonObject jsonCard) {
-        ArrayList<String> frontCorners=new ArrayList<>();
+    private String[] getCardFrontCorners(JsonObject jsonCard) {
+        String[] frontCorners=new String[4];
+        int i=0;
         for(JsonElement corner: jsonCard
                 .get("frontCorners").getAsJsonArray())
         {
-            frontCorners.add(corner.getAsJsonPrimitive().getAsString());
+            frontCorners[i++]=corner.getAsJsonPrimitive().getAsString();
         }
         return frontCorners;
     }
-    public ArrayList<String> getCardFrontCorners() {
+    public String[] getCardFrontCorners() {
         return this.getCardFrontCorners(currentCard);
     }
-    public ArrayList<String> getCardFrontCorners(String drawableArea,int index) {
+    public String[] getCardFrontCorners(String drawableArea,int index) {
         JsonObject jsonCard=getDrawableAreaArray(drawableArea).get(index).getAsJsonObject();
         return this.getCardFrontCorners(jsonCard);
     }
@@ -169,19 +179,20 @@ public class MessageParser {
      * Parses the current card back corners
      * @return
      */
-    private ArrayList<String> getCardBackCorners(JsonObject jsonCard) {
-        ArrayList<String> frontCorners=new ArrayList<>();
+    private String[] getCardBackCorners(JsonObject jsonCard) {
+        String[] frontCorners=new String[4];
+        int i=0;
         for(JsonElement corner: jsonCard
                 .get("backCorners").getAsJsonArray())
         {
-            frontCorners.add(corner.getAsJsonPrimitive().getAsString());
+            frontCorners[i++]=(corner.getAsJsonPrimitive().getAsString());
         }
         return frontCorners;
     }
-    public ArrayList<String> getCardBackCorners() {
+    public String[] getCardBackCorners() {
         return this.getCardBackCorners(currentCard);
     }
-    public ArrayList<String> getCardBackCorners(String drawableArea, int index) {
+    public String[] getCardBackCorners(String drawableArea, int index) {
         JsonObject jsonCard=getDrawableAreaArray(drawableArea).get(index).getAsJsonObject();
         return this.getCardBackCorners(jsonCard);
     }
@@ -249,6 +260,36 @@ public class MessageParser {
             throw new NoSuchElementException();
         }
 
+    }
+    public CardCLI getCardCLI() {
+        return new CardCLI(
+                getCardID(),
+                getCardFrontCorners(),
+                getCardBackCorners(),
+                getCardObjective(),
+                getCardObjectiveSymbol(),
+                getCardObjectivePOINTS(),
+                getCardPrerequisites()
+        );
+    }
+    public CardCLI getCardCLI(String drawingSection, int index) {
+        return new CardCLI(
+                getCardID(drawingSection,index),
+                getCardFrontCorners(drawingSection,index),
+                getCardBackCorners(drawingSection,index),
+                getCardObjective(drawingSection,index),
+                getCardObjectiveSymbol(drawingSection,index),
+                getCardObjectivePOINTS(drawingSection,index),
+                getCardPrerequisites(drawingSection,index)
+        );
+    }
+    public CardCLI getStartingCardCLI() {
+        return new CardCLI(
+                getCardID(),
+                getCardFrontCorners(),
+                getCardBackCorners(),
+                getCardFrontCenterSymbols()
+        );
     }
 
 }
