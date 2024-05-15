@@ -1,13 +1,11 @@
 package it.polimi.ingsw.Client.View;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import it.polimi.ingsw.Client.Network.MessageDispatcher;
 import it.polimi.ingsw.Client.Network.MessageParser;
-import it.polimi.ingsw.Client.Network.MessageType;
+
 public abstract class ViewController {
 
     /**
@@ -48,7 +46,7 @@ public abstract class ViewController {
             switchToJoin();
         }
         else {
-            createMyPlayer(messageParser.getUsername());
+            createMyPlayer(messageParser.getCurrentPlayer());
             switchToLoading();
         }
     }
@@ -73,7 +71,7 @@ public abstract class ViewController {
      * @param username chosen by player
      * @return true if username passes local screening (length >0 and <9), if not it shows the user an error message
      */
-    public boolean correctUsernameShowAlertIfFalse(String username){
+    protected boolean correctUsernameShowAlertIfFalse(String username){
         if (username == null || !correctUsername(username)){
             showErrorAlert("Invalid username", "Username must contain between 1 and 8 alphanumeric characters");
             return false;
@@ -95,17 +93,15 @@ public abstract class ViewController {
     }
 
     /**
-     *
      * @param username chosen by player
-     * @return true if username passes local screening (length >0 or <9), if true it sends params to server to check if username has already been taken
+     * @return true if username length is >0 and <9, if not then it shows the user an error message
      */
-    protected boolean checkParamsAndSendJoin(String username){
+    public boolean checkParamsAndSendJoin(String username){
         if(correctUsernameShowAlertIfFalse(username)){
             messageDispatcher.joinGame(username);
             switchWaitingServerResponse();
-            return true;
         }
-       return false;
+        return false;
     }
 
     protected abstract void switchWaitingServerResponse();
@@ -125,6 +121,9 @@ public abstract class ViewController {
 
     protected abstract void switchToLoading();
 
+    protected abstract void updatePlayerBoard(String affectedPlayer);
+
+    protected abstract void setPlayerColor(String affectedPlayer, String color);
     /**
      * Method called to update the view according to received message type.
      */
@@ -138,18 +137,18 @@ public abstract class ViewController {
             case START_FIRSTROUND -> {
                 setUpGame(); //create instance for every player, fill drawableArea, give first player starting card
                 showScene();
-                if(isMyTurn(messageParser.getPlayers().get(0))){  // getPlayers().get(0) restituisce username del primo giocatore, da confrontare con il tuo client
+                if(isMyTurn(messageParser.getPlayers().getFirst())){  // getPlayers().get(0) restituisce username del primo giocatore, da confrontare con il tuo client
                     enableFirstRoundActions(); // player must place starting card and choose color for available colors
                 }
            }
             case FIRSTROUND -> {
-                /*
-                placeStartingCard();
-                setPlayerColor();
-                if(isMyTurn()){
+                updatePlayerBoard(messageParser.getAffectedPlayer());
+                setPlayerColor(messageParser.getAffectedPlayer(), messageParser.getChosenColor());
+                updateAvailableColors(messageParser.getAvailableColors());
+                giveInitialCard(messageParser.getCurrentPlayer());
+                if(isMyTurn(messageParser.getCurrentPlayer())){
                     enableFirstRoundActions();
                 }
-                 */
             }
             case START_SECONDROUND -> {
 
@@ -196,15 +195,14 @@ public abstract class ViewController {
 
     private void setUpGame() {
         addPlayers(messageParser.getPlayers()); // -> create instance players (myPlayer already initialized when join), show usernames and points in scene, set player's hand label, set see other player's game buttons
-        giveInitialCard(messageParser.getPlayers().get(0)); // -> adds the initial card to the first player
-        setDrawableArea(); // -> create instance of drawable area with given cards
-        //setAvailableColors(messageParser.getAvailableColors()); // -> put all colors in pop up scene
-        //messageParser.getCardID(0,0);
+        giveInitialCard(messageParser.getPlayers().getFirst()); // -> adds the initial card to the first player
+        updateDrawableArea(); // -> create instance of drawable area with given cards
+        updateAvailableColors(messageParser.getAvailableColors()); // -> put all colors in pop up scene
     }
 
-    protected abstract void setAvailableColors();
+    protected abstract void updateAvailableColors(ArrayList<String> availableColors);
 
-    protected abstract void setDrawableArea();
+    protected abstract void updateDrawableArea();
 
     protected abstract void giveInitialCard(String username);
 
