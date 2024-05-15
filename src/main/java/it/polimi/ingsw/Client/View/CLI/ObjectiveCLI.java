@@ -7,27 +7,30 @@ public class ObjectiveCLI {
      */
     private String objective;
 
-    public ObjectiveCLI(String objectiveID) throws IllegalArgumentException{
-        int objectiveNumber= Integer.parseInt(objectiveID.substring(1));
-        String specificType = getSpecificType(objectiveNumber%4);
+    private final String objectiveID;
 
-        if (objectiveNumber >= 0 && objectiveNumber < 4) {
-            this.objective = "Gain 2 points for each diagonal pattern like this:\n";
-            setDiagonalPatternObjective(specificType);
-        } else if (objectiveNumber >= 4 && objectiveNumber < 8) {
-            this.objective = "Gain 3 points for each vertical pattern like this:\n";
-            setVerticalPatternObjective(specificType);
-        } else if (objectiveNumber == 12) {
-            this.objective = "Gain 3 points per set of 3 different symbols (FEATHER, SCROLL, INK)\n";
-        } else if (objectiveNumber < 16) {
-            if (objectiveNumber > 11) {
-                specificType = getSpecificType(objectiveNumber % 9);
+    public ObjectiveCLI(String objectiveID, String objectiveClass, int objectivePoints, int numberOfOccurrences, String objectiveSymbol) throws IllegalArgumentException{
+        this.objectiveID = objectiveID;
+        switch (objectiveClass){
+            case "DiagonalPatternObjective"->{
+                this.objective = "Gain "+objectivePoints+" points for each diagonal pattern like this:\n";
+                setDiagonalPatternObjective(objectiveSymbol);
             }
-            setSymbolObjective(specificType);
-        } else {
-            throw new IllegalArgumentException(objective + " is not a valid objective");
+            case "VerticalPatternObjective"->{
+                this.objective = "Gain "+objectivePoints+" points for each vertical pattern like this:\n";
+                setVerticalPatternObjective(objectiveSymbol);
+            }
+            case "SymbolObjective"->{
+                this.objective= "Gain "+objectivePoints+" points for every " + numberOfOccurrences + " " + objectiveSymbol + " symbols visible on your board:\n";
+            }
+            default -> {
+                throw new IllegalArgumentException(objectiveClass + " is not a valid objective");
+            }
         }
+    }
 
+    private String getObjectiveID(){
+        return objectiveID;
     }
 
     private void setSymbolObjective(String specificType) {
