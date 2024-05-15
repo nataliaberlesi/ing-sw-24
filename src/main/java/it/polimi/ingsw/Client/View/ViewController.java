@@ -60,7 +60,8 @@ public abstract class ViewController {
     public boolean checkParamsAndSendCreate(String username, Integer numberOfPlayers){
         if(correctUsernameShowAlertIfFalse(username) && correctNumberOfPlayersShowAlertIfFalse(numberOfPlayers)){
             messageDispatcher.createGame(numberOfPlayers, username);
-                switchToLoading();
+            createMyPlayer(username);
+            switchToLoading();
             return true;
         }
         return false;
