@@ -8,7 +8,7 @@ import java.lang.reflect.Type;
 public final class InterfaceAdapter<T> implements JsonSerializer<T>, JsonDeserializer<T> {
         public JsonElement serialize(T object, Type interfaceType, JsonSerializationContext context) {
             final JsonObject wrapper = new JsonObject();
-            wrapper.addProperty("type", object.getClass().getName());
+            wrapper.addProperty("type", object.getClass().getSimpleName());
             wrapper.add("data", context.serialize(object));
             return wrapper;
         }
