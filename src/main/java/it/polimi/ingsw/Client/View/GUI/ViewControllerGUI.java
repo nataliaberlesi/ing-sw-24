@@ -53,7 +53,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
         super(messageParser, messageDispatcher);
     }
 
-    public void setStage (Stage stage){
+    protected void setStage (Stage stage){
         this.stage = stage;
         this.numberOfPlayersChoiceBox = new ChoiceBox<>();
         this.errorAlert = new Alert(Alert.AlertType.ERROR);
@@ -68,7 +68,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
      * @param resourceName fxml file resource to load
      */
 
-    private void switchScene(String resourceName) {
+    private void switchFXMLScene(String resourceName) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(resourceName));
             fxmlLoader.setController(this);
@@ -97,7 +97,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
      */
     @Override
     protected void switchToCreate() {
-        switchScene("startMenuCreate.fxml");
+        switchFXMLScene("startMenuCreate.fxml");
     }
 
     /**
@@ -105,7 +105,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
      */
     @Override
     protected void switchToJoin() {
-        switchScene("startMenuJoin.fxml");
+        switchFXMLScene("startMenuJoin.fxml");
     }
 
     /**
@@ -161,7 +161,6 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     protected void switchWaitingServerResponse() {
     }
 
-
     /**
      * Main view method override for JavaFX main thread.
      */
@@ -197,7 +196,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
 
     @Override
     protected void connectScene() {
-        switchScene("initialScreen.fxml");
+        switchFXMLScene("initialScreen.fxml");
     }
 
     @Override
@@ -210,14 +209,15 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     }
 
     @Override
-    protected void setAvailableColors() {
+    protected void updateAvailableColors(ArrayList<String> availableColors) {
 
     }
 
     @Override
-    protected void setDrawableArea() {
+    protected void updateDrawableArea() {
 
     }
+
 
     @Override
     protected void giveInitialCard(String username) {
@@ -241,7 +241,17 @@ public class ViewControllerGUI extends ViewController implements Initializable{
 
     @Override
     protected void switchToLoading() {
-        switchScene("loading.fxml");
+        switchFXMLScene("loading.fxml");
+    }
+
+    @Override
+    protected void updatePlayerBoard(String affectedPlayer) {
+
+    }
+
+    @Override
+    protected void setPlayerColor(String affectedPlayer, String color) {
+
     }
 
 

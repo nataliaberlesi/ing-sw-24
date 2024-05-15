@@ -137,7 +137,7 @@ public class MainScene extends Scene {
      * Sets the buttons to see other player's scenes to a specific username
      * @param usernames usernames
      */
-    public void setSeeOtherPlayersSceneButtons(ArrayList<String> usernames){
+    public void setSeeOtherPlayersGameButtons(ArrayList<String> usernames){
         for (int i = 0; i < 3; i++) {
             seeOtherPlayersSceneButtons[i].setText("See " + usernames.get(i) + "game");
         }

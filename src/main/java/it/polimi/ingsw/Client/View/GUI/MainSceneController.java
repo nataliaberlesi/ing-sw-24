@@ -19,26 +19,6 @@ public class MainSceneController {
         this.scene = scene;
     }
 
-    public void handleDrawableAreaClicked(MouseEvent event) {
-        ImageView clickedImageView = (ImageView) event.getSource();
-        CardGUI clickedCard = (CardGUI) clickedImageView.getUserData();
-        Node parent = clickedImageView.getParent();
-        if(parent instanceof VBox container){
-            if (container == scene.getResourceCardsDrawableArea()){
-                //Put resource card in hand if it's your turn
-            } else if (container == scene.getGoldCardsDrawableArea()) {
-                //Put gold card in hand
-            }
-        }
-    }
-    public void handleHandAreaClicked(MouseEvent event) {
-        ImageView clickedImageView = (ImageView) event.getSource();
-        CardGUI clickedCard = (CardGUI) clickedImageView.getUserData();
-        Node parent = clickedImageView.getParent();
-        if(parent instanceof HBox container){
-            if (container == scene.getHandCardsDrawableArea()) {
-                //PlaceCard on board if it's your turn
-            }
-        }
+    public static void handleCornerClick(MouseEvent mouseEvent) {
     }
 }
