@@ -49,8 +49,16 @@ public class Board {
      * Useful for objectives and card objectives that assign points based on the number of symbols present in the Board
      */
     private final HashMap<Symbol, Integer> visibleSymbolCounter = new HashMap<>();
-
+    /**
+     * ID used to save the starting card assigned to the player during the first round
+     * When the player chooses to flip it, it becomes CARD_ALREADY_BE_PLACED
+     */
     private String startingCardID;
+    /**
+     * ID used to save the starting card assigned to the player during the second round
+     * When the player chooses which one of the two, they become both OBJECTIVE_ALREADY_CHOSEN
+     */
+    private final String[] startingObjectivesID=new String[2];
 
     /**
      * array of objectives that will assign points at the end of the game
@@ -77,9 +85,21 @@ public class Board {
         }
         this.startingCardID =startingCardID;
     }
-
-
-
+    /**
+     * a board when initiated will save the id of starting card that will be placed in coordinates 0,0 upon command
+     * initializes the public objectives and saves the private objectives to choose from
+     * @param startingCardID id of starting card that will be placed
+     * @throws IllegalArgumentException if id passed is not a starting card id
+     */
+    public Board(String startingCardID, String firstPublicObjectiveID, String secondPublicObjectiveID, String firstPrivateObjectiveID, String secondPrivateObjectiveID) throws IllegalArgumentException {
+        if(!StartingCardFactory.isStartingCardID(startingCardID)){
+            throw new IllegalArgumentException("Invalid card ID");
+        }
+        addObjective(firstPublicObjectiveID);
+        addObjective(secondPublicObjectiveID);
+        setStartingObjectivesID(firstPrivateObjectiveID,secondPrivateObjectiveID);
+        this.startingCardID =startingCardID;
+    }
     /**
      * objectives are what give extra points at the end of the game, some objectives calculate points based on patterns on the board,
      * others based on symbols that are visible on the board at the end of the game.
@@ -96,6 +116,18 @@ public class Board {
             }
         }
         throw new RuntimeException("more than three objectives have been assigned to player board");
+    }
+    public void choosePrivateObjective(int objectiveIndex) throws RuntimeException{
+        String objectiveAlreadyBeenChosen="OBJECTIVE_ALREADY_BEEN_CHOSEN";
+        if(objectiveIndex>1 || objectiveIndex<0) {
+            throw new IndexOutOfBoundsException("There are only 2 starting objectives");
+        }
+        String objective=startingObjectivesID[objectiveIndex];
+        if(Objects.equals(objective,objectiveAlreadyBeenChosen)) {
+            throw new RuntimeException("OBJECTIVE_ALREADY_BEEN_CHOSEN");
+        }
+        addObjective(objective);
+        setStartingObjectivesID(objectiveAlreadyBeenChosen, objectiveAlreadyBeenChosen);
     }
     /**
      * starting card will be placed in (0,0) in the orientation indicated.
@@ -379,5 +411,29 @@ public class Board {
      */
     public ArrayList<PlacedCard> getPlacedCards() {
         return placedCards;
+    }
+    private void setStartingObjectivesID(String firstPrivateObjectiveID, String secondPrivateObjectiveID) {
+        startingObjectivesID[0]=firstPrivateObjectiveID;
+        startingObjectivesID[1]=secondPrivateObjectiveID;
+    }
+
+    public String seeStartingCardID() {
+        return this.startingCardID;
+    }
+
+    public String seeFirstPrivateObjectiveID() {
+        return startingObjectivesID[0];
+    }
+    public String seeSecondPrivateObjectiveID() {
+        return startingObjectivesID[1];
+    }
+    public Objective seeFirstPublicObjective() {
+        return objectives[0];
+    }
+    public Objective seeSecondPublicObjective() {
+        return objectives[1];
+    }
+    public Objective seePrivateObjective() {
+        return objectives[2];
     }
 }

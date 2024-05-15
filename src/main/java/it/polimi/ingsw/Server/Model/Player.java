@@ -55,6 +55,10 @@ public class Player {
     public void placeStartingCard(String startingCardID) throws RuntimeException {
         this.playerBoard=new Board(startingCardID);
     }
+    public void startPlayerBoard(String startingCardID, String firstPublicObjective, String secondPublicObjective, String firstPrivateObjective, String secondPrivateObjective) throws RuntimeException {
+        this.playerBoard=new Board(startingCardID, firstPublicObjective, secondPublicObjective, firstPrivateObjective, secondPrivateObjective);
+    }
+
 
 
     public String getUsername() {

@@ -18,13 +18,13 @@ public class SetUpGame {
     /**
      * Generates first round starting configuration
      * @param gameInstance
-     * @return DTO rapresenting the gameInstance's first round starting configuration
+     * @return DTO representing the gameInstance's first round starting configuration
      */
     public static StartFirstRound getStartFirstRoundParams(GameInstance gameInstance) {
-        Deck deck= DeckFactory.createShuffledStartingDeck();
-        gameInstance.setStartingDeck(deck);
-        Card firstPlayerStartingCard=StartingCardFactory.makeStartingCard(deck.next());
         Collections.shuffle(gameInstance.getPlayerTurnOrder());
+        setupPlayerBoards(gameInstance);
+        String firstPlayerStartingCardID=gameInstance.getPlayers().get(gameInstance.getTurn()).getPlayerBoard().seeStartingCardID();
+        Card firstPlayerStartingCard=StartingCardFactory.makeStartingCard(firstPlayerStartingCardID);
         DrawableArea drawableArea=getDrawableArea();
         Card[] resourceDrawableArea= new Card[3];
         Card[] goldDrawableArea=new Card[3];
@@ -39,43 +39,58 @@ public class SetUpGame {
         }
         return new StartFirstRound(gameInstance.getPlayerTurnOrder(),firstPlayerStartingCard,resourceDrawableArea,goldDrawableArea,colors);
     }
+
+    /**
+     * Generates second round starting configuration
+     * @param gameInstance
+     * @return DTO representing the game instance starting configuration
+     */
     public static StartSecondRound getStartSecondRoundParams(GameInstance gameInstance) {
-        Card[] hand=new Card[3];
-        String currentPlayer=gameInstance.getTurn();
-        for(int i=0;i<2;i++) {
-            gameInstance
-                    .getPlayers()
-                    .get(currentPlayer)
-                    .getPlayerHand()
-                    .placeCardInHand(gameInstance.getDrawableArea().getResourceDrawingSection().drawCard(0));
-        }
-        gameInstance
-                .getPlayers()
-                .get(currentPlayer)
-                .getPlayerHand()
-                .placeCardInHand(gameInstance.getDrawableArea().getGoldDrawingSection().drawCard(0));
-        for(int i=0;i<3;i++) {
-            hand[i]=ResourceCardFactory.makeResourceCard(gameInstance
-                    .getPlayers()
-                    .get(currentPlayer)
-                    .getPlayerHand()
-                    .showCardInHand(i));
-        }
+        Player currentPlayer=gameInstance.getPlayers().get(gameInstance.getTurn());
+        Card[] hand=setupHand(currentPlayer,gameInstance.getDrawableArea());
+        Objective firstPrivateObjective=ObjectiveFactory.makeObjective(currentPlayer.getPlayerBoard().seeFirstPrivateObjectiveID());
+        Objective secondPrivateObjective=ObjectiveFactory.makeObjective(currentPlayer.getPlayerBoard().seeSecondPrivateObjectiveID());
+        Objective firstPublicObjective=currentPlayer.getPlayerBoard().seeFirstPublicObjective();
+        Objective secondPublicObjective=currentPlayer.getPlayerBoard().seeSecondPublicObjective();
+        return new StartSecondRound(currentPlayer.getUsername(),hand,firstPrivateObjective,secondPrivateObjective,firstPublicObjective,secondPublicObjective);
+    }
+
+
+    private static void setupPlayerBoards(GameInstance gameInstance) {
+        Deck deck= DeckFactory.createShuffledStartingDeck();
         ArrayList<String> objectives=ObjectiveFactory.makeEveryObjectiveID();
         Collections.shuffle(objectives);
         Iterator<String> objectiveIterator= objectives.iterator();
-        Objective firstPrivateObjective=ObjectiveFactory.makeObjective(objectiveIterator.next());
-        Objective secondPrivateObjective=ObjectiveFactory.makeObjective(objectiveIterator.next());
-        Objective firstPublicObjective=ObjectiveFactory.makeObjective(objectiveIterator.next());
-        Objective secondPublicObjective=ObjectiveFactory.makeObjective(objectiveIterator.next());
-        gameInstance.setPublicObjectives(firstPublicObjective.getID(),secondPublicObjective.getID());
-        return new StartSecondRound(currentPlayer,hand,firstPrivateObjective,secondPrivateObjective,firstPublicObjective,secondPublicObjective);
+        String firstPublicObjectiveID=objectiveIterator.next();
+        String secondPublicObjectiveID=objectiveIterator.next();
+        String firstPrivateObjectiveID=objectiveIterator.next();
+        String secondPrivateObjectiveID=objectiveIterator.next();
+        for(String player: gameInstance.getPlayerTurnOrder()) {
+            gameInstance.getPlayers().get(player).startPlayerBoard(deck.next(),firstPublicObjectiveID,secondPublicObjectiveID,firstPrivateObjectiveID, secondPrivateObjectiveID);
+        }
     }
-    public static DrawableArea getDrawableArea() {
+    private static DrawableArea getDrawableArea() {
         Deck goldDeck=DeckFactory.createShuffledGoldDeck();
         Deck resourceDeck=DeckFactory.createShuffledResourceDeck();
         DrawableCards goldDrawableCards=new DrawableCards(goldDeck);
         DrawableCards resourceDrawableCards=new DrawableCards(resourceDeck);
         return new DrawableArea(resourceDrawableCards,goldDrawableCards);
+    }
+    private static Card[] setupHand(Player currentPlayer, DrawableArea drawableArea) {
+        Card[] hand=new Card[3];
+        for(int i=0;i<2;i++) {
+            currentPlayer
+                    .getPlayerHand()
+                    .placeCardInHand(drawableArea.getResourceDrawingSection().drawCard(0));
+        }
+        currentPlayer
+                .getPlayerHand()
+                .placeCardInHand(drawableArea.getGoldDrawingSection().drawCard(0));
+        for(int i=0;i<3;i++) {
+            hand[i]=ResourceCardFactory.makeResourceCard(currentPlayer
+                    .getPlayerHand()
+                    .showCardInHand(i));
+        }
+        return hand;
     }
 }
