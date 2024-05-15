@@ -59,7 +59,7 @@ public abstract class ViewController {
      * @param numberOfPlayers allowed in this game, chosen by first player to connect
      * @return true if parameters pass local screening (if name doesn't go over character limit or if numberOfPlayers is >1 and <5)
      */
-    protected boolean checkParamsAndSendCreate(String username, Integer numberOfPlayers){
+    public boolean checkParamsAndSendCreate(String username, Integer numberOfPlayers){
         if(correctUsernameShowAlertIfFalse(username) && correctNumberOfPlayersShowAlertIfFalse(numberOfPlayers)){
             messageDispatcher.createGame(numberOfPlayers, username);
                 switchToLoading();
@@ -73,7 +73,7 @@ public abstract class ViewController {
      * @param username chosen by player
      * @return true if username passes local screening (length >0 and <9), if not it shows the user an error message
      */
-    protected boolean correctUsernameShowAlertIfFalse(String username){
+    public boolean correctUsernameShowAlertIfFalse(String username){
         if (username == null || !correctUsername(username)){
             showErrorAlert("Invalid username", "Username must contain between 1 and 8 alphanumeric characters");
             return false;
