@@ -14,10 +14,11 @@ import it.polimi.ingsw.Server.Model.Color;
 import java.io.IOException;
 
 public class GameController {
-    private MessageParser messageParser;
+    private final MessageParser messageParser;
     private GameInstance gameInstance;
-    private Server server;
-    private Parser parser;
+    private final Server server;
+    private final Parser parser;
+    private MessageType previousMessageType;
     public GameController(Server server) {
         this.server=server;
         this.parser=Parser.getInstance();
@@ -61,7 +62,7 @@ public class GameController {
                 //TODO
             }
         }
-        return null;
+        return MessageCrafter.craftErrorMessage(previousMessageType,username);
     }
 
     /**
@@ -76,8 +77,9 @@ public class GameController {
         CreateGame createGame=messageParser.parseCreateGame(username,jsonParams);
         this.server.setMaxAllowablePlayers(createGame.numberOfPlayers());
         this.gameInstance=new GameInstance(createGame.username(),createGame.numberOfPlayers());
-        MessageType type=MessageType.CREATE;
-        return new Message(type, null);
+        Message message = MessageCrafter.craftCreateMessage(username);
+        previousMessageType=message.type();
+        return message;
     }
 
     /**
@@ -90,9 +92,9 @@ public class GameController {
         if(!unavailableUsername){
             gameInstance.joinPlayer(username);
         }
-        JsonObject jsonParams=new JsonObject();
-        jsonParams.addProperty("unavailableUsername",unavailableUsername);
-        return new Message(MessageType.JOIN,jsonParams);
+        Message message = MessageCrafter.craftJoinMessage(username,unavailableUsername);
+        previousMessageType=message.type();
+        return message;
 
     }
     /**
@@ -101,40 +103,35 @@ public class GameController {
      */
     public JsonObject getJSONStartFirstRoundParams() {
         StartFirstRound startFirstRound=SetUpGame.getStartFirstRoundParams(gameInstance);
-        return parser.toJsonObject(parser.toJson(startFirstRound));
+        return parser.toJsonTree(startFirstRound).getAsJsonObject();
     }
 
     /**
 +     * Plays the current player's first round with given parameters
-     * @param username
-     * @param jsonParams
+     * @param username the player who is playing
+     * @param jsonParams the parameters of his action
      * @return
      */
     public Message playFirstRound(String username, JsonObject jsonParams) {
-        FirstRound firstRound=messageParser.parseFirstRound(username,jsonParams);
+        FirstRound firstRound=messageParser.parseFirstRound(jsonParams);
         gameInstance.chooseColor(username, firstRound.color());
         gameInstance.placeStartingCard(username, firstRound.flip());
-        JsonObject params=new JsonObject();
-        if(gameInstance.nextTurn()<= gameInstance.getNumberOfPlayers()) {
-            String startingCardID=gameInstance.getStartingDeck().next();
-            params.add("card",parser.toJsonObject(parser.toJson(StartingCardFactory.makeStartingCard(startingCardID))));
-            gameInstance.saveStartingCard(username,startingCardID);
+        String card=null;
+        int turn=gameInstance.nextTurn();
+        String currentPlayer=gameInstance.getTurn();
+        if(turn!=0) {
+            card=gameInstance.getStartingDeck().next();
+            gameInstance.saveStartingCard(currentPlayer,card);
         }
-        params.addProperty("currentPlayer", gameInstance.getTurn());
-        JsonArray availableColors= new JsonArray();
-        for(Color availableColor: gameInstance.getAvailableColors()) {
-            availableColors.add(availableColor.toString());
-        }
-        params.add("availableColors", availableColors);
-        params.addProperty("affectedPlayer",username);
-        params.addProperty("flip",firstRound.flip());
-        params.addProperty("color",firstRound.color());
+
         gameInstance.checkIfAllBoardsAreSet();
-        return new Message(MessageType.FIRSTROUND,params);
+        Message message = MessageCrafter.craftFirstRoundMessage(card,currentPlayer,gameInstance.getAvailableColors(),username,firstRound.flip(),firstRound.color());
+        previousMessageType=message.type();
+        return message;
     }
     public JsonObject getJSONStartSecondRoundParams() {
         StartSecondRound startSecondRound=SetUpGame.getStartSecondRoundParams(gameInstance);
-        return parser.toJsonObject(parser.toJson(startSecondRound));
+        return parser.toJsonTree(startSecondRound).getAsJsonObject();
     }
     public boolean gameIsFull() {
         return this.gameInstance.checkIfGameIsFull();
