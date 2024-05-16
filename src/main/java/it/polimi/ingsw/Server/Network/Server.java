@@ -9,7 +9,6 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 public class Server implements Runnable{
-    private final Parser parser;
     /**
      * The port where the server listens
      */
@@ -31,7 +30,6 @@ public class Server implements Runnable{
      * @throws IOException
      */
     public Server(int port) throws IOException {
-        this.parser=Parser.getInstance();
         this.port = port;
         maxAllowablePlayers=1;
         masterIsConnected=false;

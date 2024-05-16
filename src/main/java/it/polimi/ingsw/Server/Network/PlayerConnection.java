@@ -20,7 +20,6 @@ public class PlayerConnection implements Runnable{
      * The player instance in the model
      */
     private Player player;
-    private Parser parser;
     private BufferedReader inSocket;
     private PrintWriter outSocket;
     private String outMessage;
@@ -45,7 +44,6 @@ public class PlayerConnection implements Runnable{
     private void setUpIO() throws IOException {
         inSocket=new BufferedReader(new InputStreamReader(socket.getInputStream()));
         outSocket=new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())),true);
-        parser= Parser.getInstance();
     }
 
     public void close() throws IOException {

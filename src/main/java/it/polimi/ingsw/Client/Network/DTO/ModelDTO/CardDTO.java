@@ -1,4 +1,4 @@
-package it.polimi.ingsw.Client.Network.DTO;
+package it.polimi.ingsw.Client.Network.DTO.ModelDTO;
 
 import java.util.ArrayList;
 
