@@ -9,6 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
@@ -24,14 +25,27 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     /**
      * Main application stage.
      */
-    private Stage stage;
+    private Stage mainStage;
+
+    /**
+     * PopUp application stage.
+     */
+    private final Stage popUpStage = new Stage();
 
     /**
      * Alert dialog for errors.
      */
     private Alert errorAlert;
 
-    private MainSceneController mainSceneController;
+    /**
+     * Instance of player to represent my player
+     */
+    private PlayerGUI myPlayer;
+
+    /**
+     * Array list of players to represent players in game
+     */
+    private final ArrayList<PlayerGUI> playersInGame = new ArrayList<>();
 
     /**
      * Players number ChoiceBox.
@@ -46,20 +60,26 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     /**
      * Players number Label.
      */
-    @FXML
-    private Button confirmButton;
 
     public ViewControllerGUI(MessageParser messageParser, MessageDispatcher messageDispatcher) {
         super(messageParser, messageDispatcher);
+        popUpStage.setResizable(false);
+        popUpStage.setFullScreen(false);
+        popUpStage.setTitle("Codex Naturalis");
+        popUpStage.getIcons().add(new Image(String.valueOf(GUIApplication.class.getResource("Images/cranioLogo.png"))));
     }
 
-    protected void setStage (Stage stage){
-        this.stage = stage;
+    protected void setMainStage(Stage mainStage){
+        this.mainStage = mainStage;
+    }
+
+    protected void setComponents(){
         this.numberOfPlayersChoiceBox = new ChoiceBox<>();
         this.errorAlert = new Alert(Alert.AlertType.ERROR);
     }
-    public Stage getStage(){
-        return stage;
+
+    public Stage getMainStage(){
+        return mainStage;
     }
 
     /**
@@ -74,9 +94,9 @@ public class ViewControllerGUI extends ViewController implements Initializable{
             fxmlLoader.setController(this);
             Parent root = fxmlLoader.load();
             Scene scene = new Scene(root);
-            this.stage.setScene(scene);
-            if (!stage.isShowing())
-                this.stage.show();
+            this.mainStage.setScene(scene);
+            if (!mainStage.isShowing())
+                this.mainStage.show();
         } catch (IOException e){
             throw new RuntimeException("Error while trying to switch scene");
         }
@@ -87,9 +107,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
      * */
     @FXML
     protected void connectPlayer() {
-
         super.connectPlayer();
-
     }
 
     /**
@@ -154,6 +172,8 @@ public class ViewControllerGUI extends ViewController implements Initializable{
 
     @Override
     protected void createMyPlayer(String username) {
+        myPlayer = new PlayerGUI(username);
+        playersInGame.add(myPlayer);
     }
 
 
@@ -201,42 +221,58 @@ public class ViewControllerGUI extends ViewController implements Initializable{
 
     @Override
     protected void enableFirstRoundActions() {
-
     }
 
     @Override
     protected void showScene() {
+
     }
 
     @Override
     protected void updateAvailableColors(ArrayList<String> availableColors) {
-
-    }
-
-    @Override
-    protected void updateDrawableArea() {
-
-    }
-
-
-    @Override
-    protected void giveInitialCard(String username) {
-
-    }
-
-    @Override
-    protected void addPlayers(ArrayList<String> playerUsernames) {
-        mainSceneController = new MainSceneController();
-        for (String username : playerUsernames){
-            PlayerGUI player = new PlayerGUI(username);
-            mainSceneController.setStage(this.stage);
-            mainSceneController.setScene(new MainScene());
+        for (PlayerGUI player : playersInGame){
+            player.setTokenChoicePopUpScene(availableColors);
         }
     }
 
     @Override
-    protected boolean isMyTurn(String usernameOfPlayerWhosTurnItIs) {
-        return false;
+    protected void updateDrawableArea() {
+        String[] resourceDrawableArea = new String[3];
+        String[] goldDrawableArea = new String[3];
+        for (int i = 0; i < 3; i++) {
+            resourceDrawableArea[i] = messageParser.getCardID("resourceDrawableArea", i);
+            goldDrawableArea[i] = messageParser.getCardID("goldDrawableArea", i);
+        }
+        for (PlayerGUI player: playersInGame){
+           player.getScene().getDrawableArea().setResourceCardsDrawableArea(resourceDrawableArea);
+           player.getScene().getDrawableArea().setGoldCardsDrawableArea(goldDrawableArea);
+        }
+    }
+
+    @Override
+    protected void giveInitialCard(String username) {
+        String messageParserCardID = messageParser.getCardID();
+        String initialCard = messageParserCardID.concat("F");
+        for (PlayerGUI player: playersInGame){
+            if (player.getUsername().equals(username)){
+                player.getScene().getBoard().getInitialCard().setCardImage(initialCard);
+            }
+        }
+    }
+
+    @Override
+    protected void addPlayers(ArrayList<String> playerUsernames) {
+        for(String username: playerUsernames){
+            if (!myPlayer.getUsername().equals(username)){
+                PlayerGUI player = new PlayerGUI(username);
+                playersInGame.add(player);
+            }
+        }
+    }
+
+    @Override
+    protected boolean isMyTurn(String usernameOfPlayerWhoseTurnItIs) {
+        return usernameOfPlayerWhoseTurnItIs.equals(myPlayer.getUsername());
     }
 
     @Override
