@@ -69,7 +69,7 @@ public class BoardGUI extends ScrollPane {
             firstPlayerToken.setFitHeight(20);
             firstPlayerToken.setLayoutX(1306);
             firstPlayerToken.setLayoutY(657);
-            firstPlayerToken.setImage(new Image(Objects.requireNonNull(GUIApplication.class.getResourceAsStream("Images/Tokens/blackToken.png"))));
+            firstPlayerToken.setImage(new Image(Objects.requireNonNull(GUIApplication.class.getResourceAsStream("Images/Tokens/BLACK.png"))));
             initialCard.getChildren().add(firstPlayerToken);
         }
     }
@@ -102,5 +102,6 @@ public class BoardGUI extends ScrollPane {
         card.setCardImage(imageID);
         anchorPane.getChildren().add(card);
     }
+
 
 }
