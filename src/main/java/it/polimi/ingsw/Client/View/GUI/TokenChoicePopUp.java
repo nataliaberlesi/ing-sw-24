@@ -1,8 +1,10 @@
 package it.polimi.ingsw.Client.View.GUI;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 
@@ -20,6 +22,8 @@ public class TokenChoicePopUp extends Scene {
         label.setLayoutY(37);
         label.setLayoutY(27);
         label.setFont(new Font("System Bold", 16));
+        label.setAlignment(Pos.CENTER);
+        root.getChildren().add(label);
         addTokensToPopUpScene(tokenColors);
     }
 
@@ -46,6 +50,5 @@ public class TokenChoicePopUp extends Scene {
             root.getChildren().add(imageView);
         }
     }
-
 
 }

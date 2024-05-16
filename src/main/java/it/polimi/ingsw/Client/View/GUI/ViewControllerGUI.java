@@ -23,14 +23,14 @@ import java.util.ResourceBundle;
 public class ViewControllerGUI extends ViewController implements Initializable{
 
     /**
-     * Main application stage.
+     * Initial application stage.
      */
-    private Stage mainStage;
+    private Stage stage;
 
     /**
      * PopUp application stage.
      */
-    private final Stage popUpStage = new Stage();
+    private Stage popUpStage;
 
     /**
      * Alert dialog for errors.
@@ -46,6 +46,8 @@ public class ViewControllerGUI extends ViewController implements Initializable{
      * Array list of players to represent players in game
      */
     private final ArrayList<PlayerGUI> playersInGame = new ArrayList<>();
+
+    protected static int numberOfPlayersInGame;
 
     /**
      * Players number ChoiceBox.
@@ -63,23 +65,25 @@ public class ViewControllerGUI extends ViewController implements Initializable{
 
     public ViewControllerGUI(MessageParser messageParser, MessageDispatcher messageDispatcher) {
         super(messageParser, messageDispatcher);
+    }
+
+    protected void setStage(Stage stage){
+        this.stage = stage;
+        this.numberOfPlayersChoiceBox = new ChoiceBox<>();
+        this.errorAlert = new Alert(Alert.AlertType.ERROR);
+    }
+
+    protected void setPopUpStage(){
+        popUpStage = new Stage();
         popUpStage.setResizable(false);
         popUpStage.setFullScreen(false);
         popUpStage.setTitle("Codex Naturalis");
         popUpStage.getIcons().add(new Image(String.valueOf(GUIApplication.class.getResource("Images/cranioLogo.png"))));
     }
 
-    protected void setMainStage(Stage mainStage){
-        this.mainStage = mainStage;
-    }
 
-    protected void setComponents(){
-        this.numberOfPlayersChoiceBox = new ChoiceBox<>();
-        this.errorAlert = new Alert(Alert.AlertType.ERROR);
-    }
-
-    public Stage getMainStage(){
-        return mainStage;
+    public Stage getStage(){
+        return stage;
     }
 
     /**
@@ -94,9 +98,9 @@ public class ViewControllerGUI extends ViewController implements Initializable{
             fxmlLoader.setController(this);
             Parent root = fxmlLoader.load();
             Scene scene = new Scene(root);
-            this.mainStage.setScene(scene);
-            if (!mainStage.isShowing())
-                this.mainStage.show();
+            this.stage.setScene(scene);
+            if (!stage.isShowing())
+                this.stage.show();
         } catch (IOException e){
             throw new RuntimeException("Error while trying to switch scene");
         }
@@ -173,7 +177,6 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     @Override
     protected void createMyPlayer(String username) {
         myPlayer = new PlayerGUI(username);
-        playersInGame.add(myPlayer);
     }
 
 
@@ -221,11 +224,18 @@ public class ViewControllerGUI extends ViewController implements Initializable{
 
     @Override
     protected void enableFirstRoundActions() {
+        myPlayer.getMainScene().handleFirstCardPlacement();
+        setPopUpStage();
+        popUpStage.setScene(myPlayer.getTokenChoicePopUpScene());
+        popUpStage.hide();
+        popUpStage.show();
     }
 
     @Override
     protected void showScene() {
-
+        stage.setScene(myPlayer.getMainScene());
+        stage.hide();
+        stage.show();
     }
 
     @Override
@@ -244,8 +254,8 @@ public class ViewControllerGUI extends ViewController implements Initializable{
             goldDrawableArea[i] = messageParser.getCardID("goldDrawableArea", i);
         }
         for (PlayerGUI player: playersInGame){
-           player.getScene().getDrawableArea().setResourceCardsDrawableArea(resourceDrawableArea);
-           player.getScene().getDrawableArea().setGoldCardsDrawableArea(goldDrawableArea);
+           player.getMainScene().getDrawableArea().setResourceCardsDrawableArea(resourceDrawableArea);
+           player.getMainScene().getDrawableArea().setGoldCardsDrawableArea(goldDrawableArea);
         }
     }
 
@@ -255,7 +265,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
         String initialCard = messageParserCardID.concat("F");
         for (PlayerGUI player: playersInGame){
             if (player.getUsername().equals(username)){
-                player.getScene().getBoard().getInitialCard().setCardImage(initialCard);
+                player.getMainScene().getBoard().getInitialCard().setCardImage(initialCard);
             }
         }
     }
@@ -267,12 +277,26 @@ public class ViewControllerGUI extends ViewController implements Initializable{
                 PlayerGUI player = new PlayerGUI(username);
                 playersInGame.add(player);
             }
+            else playersInGame.add(myPlayer);
+        }
+        numberOfPlayersInGame = playersInGame.size();
+        for (PlayerGUI player : playersInGame){
+            player.getMainScene().getScoreBoard().setUsernames(playerUsernames);
+            player.getMainScene().getScoreBoard().updatePlayersScores(player, playersInGame.size());
+            player.getMainScene().setSeeOtherPlayersGameButtons(playerUsernames);
         }
     }
 
     @Override
     protected boolean isMyTurn(String usernameOfPlayerWhoseTurnItIs) {
-        return usernameOfPlayerWhoseTurnItIs.equals(myPlayer.getUsername());
+        if (usernameOfPlayerWhoseTurnItIs.equals(myPlayer.getUsername())){
+            myPlayer.getMainScene().setTurnLabel("It's your turn!");
+            return true;
+        }
+        else {
+        myPlayer.getMainScene().setTurnLabel("Wait for your turn!");
+        return false;
+        }
     }
 
     @Override

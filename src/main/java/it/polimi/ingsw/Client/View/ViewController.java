@@ -144,7 +144,7 @@ public abstract class ViewController {
                 }
            }
             case FIRSTROUND -> {
-                updatePlayerBoard(messageParser.getAffectedPlayer());
+                updatePlayerBoard(messageParser.getAffectedPlayer());//update the board of the last player to act (for player in playersingame upadate player with matching username)
                 setPlayerColor(messageParser.getAffectedPlayer(), messageParser.getColor());
                 updateAvailableColors(messageParser.getAvailableColors());
                 giveInitialCard(messageParser.getCurrentPlayer());
