@@ -5,6 +5,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class BoardGUI extends ScrollPane {
@@ -16,6 +17,7 @@ public class BoardGUI extends ScrollPane {
      * Initial card placed in the middle of the board
      */
     private final CardGUI initialCard = new CardGUI();
+    private CardGUI lastCardPlaced = new CardGUI();
     /**
      * Image View to contain the black token
      */
@@ -41,7 +43,7 @@ public class BoardGUI extends ScrollPane {
      * Sets the initial card's characteristics
      */
     private void setInitialCard() {
-        initialCard.setGuiAndModelCoordinates(1260, 640);
+        initialCard.convertCoordinatesFromGUIToModelAndSetImageViewLayout(1260, 640);
         initialCard.setAsInitialCard();
         playerColorToken.setFitWidth(20);
         playerColorToken.setFitHeight(20);
@@ -49,6 +51,7 @@ public class BoardGUI extends ScrollPane {
         playerColorToken.setLayoutY(657);
         initialCard.getChildren().add(playerColorToken);
         anchorPane.getChildren().add(initialCard);
+        lastCardPlaced = initialCard;
     }
 
     /**
@@ -93,15 +96,17 @@ public class BoardGUI extends ScrollPane {
 
     /**
      * Method to place a card on the board in a certain position and associate an image to it
-     * @param card card to be placed on board
-     * @param guiCoordinates coordinates where to place the card on the anchor pane
-     * @param imageID id of the image associated to the card
+     * @param cards card to be placed on board
      */
-    public void placeCardOnBoard(CardGUI card, Coordinates guiCoordinates, String imageID){
-        card.setGuiAndModelCoordinates(guiCoordinates.getX(), guiCoordinates.getY());
-        card.setCardImage(imageID);
-        anchorPane.getChildren().add(card);
+    public void placeCardOnBoard(ArrayList<CardGUI> cards){
+        int i;
+        for (i = cards.size() - 1; i >= 0 ; i--) {
+            if (cards.get(i).equals(lastCardPlaced)){
+                break;
+            }
+        }
+        for (; i < cards.size(); i++) {
+            anchorPane.getChildren().add(cards.get(i));
+        }
     }
-
-
 }

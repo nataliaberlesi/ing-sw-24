@@ -1,6 +1,5 @@
 package it.polimi.ingsw.Client.View.GUI;
 import it.polimi.ingsw.Server.Model.Coordinates;
-import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -53,6 +52,19 @@ public class CardGUI extends AnchorPane {
         imageView.setPreserveRatio(true);
         this.getChildren().add(imageView);
         initializeCorners();
+    }
+
+    public CardGUI(String cardID, Coordinates modelCoordinates, Boolean isFacingUp){
+        imageView.setFitHeight(55);
+        imageView.setFitWidth(82.5);
+        imageView.setPickOnBounds(true);
+        imageView.setPreserveRatio(true);
+        this.getChildren().add(imageView);
+        initializeCorners();
+        this.setCardImage(cardID);
+        this.isFaceUp = isFacingUp;
+        this.convertCoordinatesFromModelToGUIAndSetImageViewLayout(modelCoordinates.getX(), modelCoordinates.getY());
+
     }
 
     /**
@@ -163,14 +175,24 @@ public class CardGUI extends AnchorPane {
     /**
      * Sets the guiCoordinates to the layouts associated with its ImageView
      * */
-    public void setGuiAndModelCoordinates(int x, int y) {
+    public void convertCoordinatesFromGUIToModelAndSetImageViewLayout(int x, int y) {
         this.imageView.setLayoutX(x);
         this.imageView.setLayoutY(y);
         guiCoordinates.setX(x);
         guiCoordinates.setY(y);
         modelCoordinates.setX((x-1260)/63);
-        modelCoordinates.setY(-(x-640)/32);
+        modelCoordinates.setY(-(y-640)/32);
     }
+
+    public void convertCoordinatesFromModelToGUIAndSetImageViewLayout(int x, int y){
+        modelCoordinates.setX(x);
+        modelCoordinates.setY(y);
+        guiCoordinates.setX(63*x + 1260);
+        guiCoordinates.setY(640 - 32*y);
+        this.imageView.setLayoutX(63*x + 1260);
+        this.imageView.setLayoutY(640 - 32*y);
+    }
+
 
     /**
      * Gets the guiCoordinates

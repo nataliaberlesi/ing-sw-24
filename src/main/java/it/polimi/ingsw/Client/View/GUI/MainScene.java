@@ -155,4 +155,7 @@ public class MainScene extends Scene {
 
     public void handleFirstCardPlacement() {
     }
+
+    public void handleTokenColorChoice() {
+    }
 }

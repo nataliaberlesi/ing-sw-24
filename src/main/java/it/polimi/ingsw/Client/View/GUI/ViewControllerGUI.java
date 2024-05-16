@@ -229,6 +229,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
         popUpStage.setScene(myPlayer.getTokenChoicePopUpScene());
         popUpStage.hide();
         popUpStage.show();
+        myPlayer.getMainScene().handleTokenColorChoice();
     }
 
     @Override
