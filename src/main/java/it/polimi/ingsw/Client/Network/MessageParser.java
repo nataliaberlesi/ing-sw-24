@@ -237,6 +237,14 @@ public class MessageParser {
         ArrayList<CardCLI> placedCardsCLI=new ArrayList<>();
         for(PlacedCardDTO placedCardDTO: placedCardsDTO) {
             CardDTO cardDTO=placedCardDTO.placedCard();
+            String cardObjectiveType=null;
+            String cardObjectiveSymbolOfInterest=null;
+            Integer cardObjectivePoints=null;
+            if(getCardDTO().cardObjective()==null) {
+                cardObjectiveType= cardDTO.cardObjective().type();
+                cardObjectiveSymbolOfInterest=cardDTO.cardObjective().data().symbolOfInterest();
+                cardObjectivePoints=cardDTO.cardObjective().data().points();
+            }
             Coordinates coordinates= new Coordinates(placedCardDTO.cardCoordinates().x(), placedCardDTO.cardCoordinates().y());
             placedCardsCLI.add(
                     new CardCLI(
