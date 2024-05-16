@@ -21,25 +21,28 @@ public class MessageDispatcher {
      * @param params
      * @throws IOException
      */
-    public void dispatch(MessageType type, String username, JsonObject params){
-        Message message=new Message(type, username,params);
+    public void dispatch(MessageType type, JsonObject params){
+        Message message=new Message(type, params);
         networkManager.setOutMessage(parser.toString(message));
     }
     //TODO: server side -> returns true at the end of the creation of the game for the master player
     public void createGame(int numberOfPlayer, String username) {
         JsonObject params=new JsonObject();
+        params.addProperty("username",username);
         params.addProperty("numberOfPlayers",numberOfPlayer);
-        dispatch(MessageType.CREATE,username,params);
+        dispatch(MessageType.CREATE,params);
     }
     //TODO: server side -> returns true at the end of the creation of the game for additional players
     public void joinGame(String username) {
         JsonObject params=new JsonObject();
-        dispatch(MessageType.JOIN,username, params);
+        params.addProperty("username",username);
+        dispatch(MessageType.JOIN,params);
     }
-    public void firstRound(String username, boolean flipStartingCard, String color) {
+    public void firstRound(String username, boolean isFaceUp, String color) {
         JsonObject params=new JsonObject();
-        params.addProperty("flip",flipStartingCard);
+        params.addProperty("username",username);
+        params.addProperty("isFaceUp",isFaceUp);
         params.addProperty("color",color);
-        dispatch(MessageType.CREATE,username,params);
+        dispatch(MessageType.CREATE,params);
     }
 }

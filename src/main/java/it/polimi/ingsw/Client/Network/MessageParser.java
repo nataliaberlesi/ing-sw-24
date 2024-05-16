@@ -1,8 +1,7 @@
 package it.polimi.ingsw.Client.Network;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
+import it.polimi.ingsw.Client.Network.DTO.CardDTO;
 import it.polimi.ingsw.Client.View.CLI.CardCLI;
 import it.polimi.ingsw.Client.View.ViewController;
 import kotlin.NotImplementedError;
@@ -18,7 +17,7 @@ import java.util.NoSuchElementException;
 public class MessageParser {
     private NetworkManager networkManager;
     private ViewController viewController;
-    private Parser parser;
+    private Gson parser;
     private JsonObject currentMessage;
     private JsonObject messageParams;
     private MessageType messageType;
@@ -26,13 +25,13 @@ public class MessageParser {
 
     public MessageParser(NetworkManager networkManager) {
         this.networkManager=networkManager;
-        this.parser=Parser.getInstance();
+        this.parser=new Gson();
     }
     public MessageType getMessageType() {
         return messageType;
     }
     public void buildMessage(String inMessage) {
-        currentMessage=parser.toJsonObject(inMessage);
+        currentMessage= JsonParser.parseString(inMessage).getAsJsonObject();
         try {
             try {
                 messageType=MessageType.valueOf(currentMessage.get("type").getAsJsonPrimitive().getAsString());
@@ -460,19 +459,34 @@ public class MessageParser {
             throw new MessageParserException("placedCards is not an array");
         }
     }
+    private CardDTO getCardDTO(JsonObject jsonCard) {
+        return parser.fromJson(jsonCard,CardDTO.class);
+    }
+    private CardDTO getCardDTO() {
+        return getCardDTO(getCard());
+    }
+    private CardDTO getCardDTO(String drawingArea, int index) {
+        return getCardDTO(getCard(drawingArea,index));
+    }
+    
     public CardCLI getCardCLI() {
+        CardDTO cardDTO=getCardDTO();
+        ArrayList<String> prerequisites=new ArrayList<>();
+        if (cardDTO.prerequisites()!=null) {
+            prerequisites=cardDTO.prerequisites();
+        }
         return new CardCLI(
-                getCardID(),
-                getCardFrontCorners(),
-                getCardBackCorners(),
-                getCardObjective(),
-                getCardObjectiveSymbol(),
-                getCardObjectivePOINTS(),
-                getCardPrerequisites()
+                cardDTO.cardID(),
+                cardDTO.frontCorners(),
+                cardDTO.backCorners(),
+                cardDTO.cardObjective().type(),
+                cardDTO.cardObjective().data().symbolOfInterest(),
+                cardDTO.cardObjective().data().points(),
+                prerequisites
         );
     }
     public CardCLI getCardCLI(String drawingSection, int index) {
-        return new CardCLI(
+        /*return new CardCLI(
                 getCardID(drawingSection,index),
                 getCardFrontCorners(drawingSection,index),
                 getCardBackCorners(drawingSection,index),
@@ -480,14 +494,35 @@ public class MessageParser {
                 getCardObjectiveSymbol(drawingSection,index),
                 getCardObjectivePOINTS(drawingSection,index),
                 getCardPrerequisites(drawingSection,index)
+        );*/
+        CardDTO cardDTO=getCardDTO(drawingSection,index);
+        ArrayList<String> prerequisites=new ArrayList<>();
+        if (cardDTO.prerequisites()!=null) {
+            prerequisites=cardDTO.prerequisites();
+        }
+        return new CardCLI(
+                cardDTO.cardID(),
+                cardDTO.frontCorners(),
+                cardDTO.backCorners(),
+                cardDTO.cardObjective().type(),
+                cardDTO.cardObjective().data().symbolOfInterest(),
+                cardDTO.cardObjective().data().points(),
+                prerequisites
         );
     }
     public CardCLI getStartingCardCLI() {
-        return new CardCLI(
+        /*return new CardCLI(
                 getCardID(),
                 getCardFrontCorners(),
                 getCardBackCorners(),
                 getCardFrontCenterSymbols()
+        );*/
+        CardDTO cardDTO=getCardDTO();
+        return new CardCLI(
+                cardDTO.cardID(),
+                cardDTO.frontCorners(),
+                cardDTO.backCorners(),
+                cardDTO.frontCenterSymbols()
         );
     }
 

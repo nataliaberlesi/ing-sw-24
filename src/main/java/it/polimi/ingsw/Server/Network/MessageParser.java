@@ -1,55 +1,39 @@
 package it.polimi.ingsw.Server.Network;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.Server.Controller.DTO.CreateGame;
 import it.polimi.ingsw.Server.Controller.DTO.FirstRound;
+import it.polimi.ingsw.Server.Controller.DTO.JoinGame;
 import it.polimi.ingsw.Server.Controller.DTO.PlaceCard;
+import it.polimi.ingsw.Server.Model.Cards.Objectives.CardObjective;
+import it.polimi.ingsw.Server.Model.Cards.Objectives.Objective;
 import it.polimi.ingsw.Server.Model.Coordinates;
 
 public class MessageParser {
-    private final Parser parser;
+    private final Gson parser;
     public MessageParser() {
-        parser=Parser.getInstance();
+        parser=new GsonBuilder().registerTypeAdapter(CardObjective.class, new InterfaceAdapter<CardObjective>())
+                .registerTypeAdapter(Objective.class,new InterfaceAdapter<Objective>())
+                .create();
     }
-    public CreateGame parseCreateGame(String username, JsonObject jsonParams) {
-        int playersNumber=jsonParams.get("numberOfPlayers").getAsJsonPrimitive().getAsInt();
-        return new CreateGame(playersNumber,username);
+    public CreateGame parseCreateGame(JsonObject jsonParams) {
+        return parser.fromJson(jsonParams, CreateGame.class);
     }
     public PlaceCard parsePlaceCard(String params) {
-        JsonObject jsonObject=parser.toJsonObject(params);
-        String card=jsonObject.get("card").getAsString();
-        JsonObject jsonCoordinates=jsonObject.get("coordinates").getAsJsonObject();
-        int x=jsonCoordinates.get("x").getAsInt();
-        int y=jsonCoordinates.get("y").getAsInt();
-        Coordinates coordinates=new Coordinates(x,y);
-        PlaceCard placeCard=new PlaceCard(card,coordinates);
-        return placeCard;
+        return parser.fromJson(params,PlaceCard.class);
     }
     public FirstRound parseFirstRound(JsonObject jsonParams) {
-        //TODO
-        boolean flipStartingCard=jsonParams.get("flipStartingCard").getAsJsonPrimitive().getAsBoolean();
-        String color=jsonParams.get("color").getAsJsonPrimitive().getAsString();
-        return new FirstRound(flipStartingCard,color);
+        return parser.fromJson(jsonParams,FirstRound.class);
     }
     public String parseDrawCard(String params) {
-        JsonObject jsonObject=parser.toJsonObject(params);
-        String card=jsonObject.get("card").getAsString();
-        return card;
+        return null;
     }
-    public Parser getParser() {
-        return parser;
+    public Message parseMessage(String message) {
+        return parser.fromJson(message,Message.class);
     }
-    public MessageType getMessageType(String message) {
-        JsonObject jsonMessage=parser.toJsonObject(message);
-        return MessageType.valueOf(jsonMessage.get("type").getAsString());
+    public JoinGame parseJoinGame(JsonObject jsonParams) {
+        return parser.fromJson(jsonParams, JoinGame.class);
     }
-    public JsonObject getMessageParams(String message) {
-        JsonObject jsonMessage=parser.toJsonObject(message);
-        return jsonMessage.get("params").getAsJsonObject();
-    }
-    public String getUsername(String message) {
-        JsonObject jsonMessage=parser.toJsonObject(message);
-        return jsonMessage.get("username").getAsJsonPrimitive().getAsString();
-    }
-
 }

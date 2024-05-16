@@ -3,10 +3,7 @@ package it.polimi.ingsw.Server.Controller;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import it.polimi.ingsw.Server.Controller.DTO.CreateGame;
-import it.polimi.ingsw.Server.Controller.DTO.FirstRound;
-import it.polimi.ingsw.Server.Controller.DTO.StartFirstRound;
-import it.polimi.ingsw.Server.Controller.DTO.StartSecondRound;
+import it.polimi.ingsw.Server.Controller.DTO.*;
 import it.polimi.ingsw.Server.Model.Cards.StartingCardFactory;
 import it.polimi.ingsw.Server.Model.PlacedCard;
 import it.polimi.ingsw.Server.Network.*;
@@ -28,25 +25,25 @@ public class GameController {
     }
 
     public Message dispatchMessage(String message) {
-        MessageType messageType=messageParser.getMessageType(message);
-        String username=messageParser.getUsername(message);
-        JsonObject jsonParams=messageParser.getMessageParams(message);
-        return queryModel(messageType, username, jsonParams);
+        Message currentMessage=messageParser.parseMessage(message);
+        MessageType messageType=currentMessage.type();
+        JsonObject jsonParams=currentMessage.params();
+        return queryModel(messageType, jsonParams);
     }
     /**
      * Given a specific type of message, queries the model to get/change some information
      */
-    public Message queryModel(MessageType messageType,String username, JsonObject jsonParams) {
+    public Message queryModel(MessageType messageType,JsonObject jsonParams) {
         switch (messageType) {
             case CREATE -> {
-                return createGame(username,jsonParams);
+                return createGame(jsonParams);
             }
             case JOIN -> {
-                return joinGame(username);
+                return joinGame(jsonParams);
 
             }
             case FIRSTROUND -> {
-                return playFirstRound(username,jsonParams);
+                return playFirstRound(jsonParams);
             }
             case SECONDROUND -> {
                 //TODO
@@ -64,37 +61,38 @@ public class GameController {
                 //TODO
             }
         }
-        return MessageCrafter.craftErrorMessage(previousMessageType,username);
+        return null;
     }
 
     /**
      * Creates a game using master player data
      */
-    public Message createGame(String username,JsonObject jsonParams){
+    public Message createGame(JsonObject jsonParams){
         if(this.gameInstance!=null){
             MessageType type=MessageType.ABORT;
             String params="Game is already created";
             return new Message(type, null);
         }
-        CreateGame createGame=messageParser.parseCreateGame(username,jsonParams);
+        CreateGame createGame=messageParser.parseCreateGame(jsonParams);
         this.server.setMaxAllowablePlayers(createGame.numberOfPlayers());
         this.gameInstance=new GameInstance(createGame.username(),createGame.numberOfPlayers());
-        Message message = MessageCrafter.craftCreateMessage(username);
+        Message message = MessageCrafter.craftCreateMessage(createGame.username());
         previousMessageType=message.type();
         return message;
     }
 
     /**
      * Lets a player join a game if his username is not taken
-     * @param username of the joining player
+     * @param jsonParams username of the joining player
      * @return an affermative answer if the username is available, a negative answer otherwise
      */
-    public Message joinGame(String username) {
-        Boolean unavailableUsername=this.gameInstance.unavailableUsername(username);
+    public Message joinGame(JsonObject jsonParams) {
+        JoinGame joinGame=messageParser.parseJoinGame(jsonParams);
+        Boolean unavailableUsername=this.gameInstance.unavailableUsername(joinGame.username());
         if(!unavailableUsername){
-            gameInstance.joinPlayer(username);
+            gameInstance.joinPlayer(joinGame.username());
         }
-        Message message = MessageCrafter.craftJoinMessage(username,unavailableUsername);
+        Message message = MessageCrafter.craftJoinMessage(joinGame.username(),unavailableUsername);
         previousMessageType=message.type();
         return message;
 
@@ -110,16 +108,15 @@ public class GameController {
 
     /**
 +     * Plays the current player's first round with given parameters
-     * @param username the player who is playing
      * @param jsonParams the parameters of his action
      * @return
      */
-    public Message playFirstRound(String username, JsonObject jsonParams) {
+    public Message playFirstRound(JsonObject jsonParams) {
         FirstRound firstRound=messageParser.parseFirstRound(jsonParams);
         String card=null;
-        gameInstance.chooseColor(username, firstRound.color());
-        gameInstance.placeStartingCard(username, firstRound.flip());
-        ArrayList<PlacedCard> placedCards=gameInstance.getPlayers().get(username).getPlayerBoard().getPlacedCards();
+        gameInstance.chooseColor(firstRound.username(), firstRound.color());
+        gameInstance.placeStartingCard(firstRound.username(), firstRound.isFaceUp());
+        ArrayList<PlacedCard> placedCards=gameInstance.getPlayers().get(firstRound.username()).getPlayerBoard().getPlacedCards();
         int turn=gameInstance.nextTurn();
         String currentPlayer=gameInstance.getTurn();
         if(turn!=0) {
@@ -127,7 +124,7 @@ public class GameController {
             gameInstance.saveStartingCard(currentPlayer,card);
         }
         gameInstance.checkIfAllBoardsAreSet();
-        Message message = MessageCrafter.craftFirstRoundMessage(card,currentPlayer,gameInstance.getAvailableColors(),username,placedCards,firstRound.color());
+        Message message = MessageCrafter.craftFirstRoundMessage(card,currentPlayer,gameInstance.getAvailableColors(),firstRound.username(),placedCards,firstRound.color());
         previousMessageType=message.type();
         return message;
     }
