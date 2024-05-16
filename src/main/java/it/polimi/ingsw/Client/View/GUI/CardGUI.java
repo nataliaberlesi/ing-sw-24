@@ -51,6 +51,7 @@ public class CardGUI extends AnchorPane {
         imageView.setFitWidth(82.5);
         imageView.setPickOnBounds(true);
         imageView.setPreserveRatio(true);
+        this.getChildren().add(imageView);
         initializeCorners();
     }
 
