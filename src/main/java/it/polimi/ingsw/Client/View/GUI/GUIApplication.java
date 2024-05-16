@@ -3,9 +3,6 @@ package it.polimi.ingsw.Client.View.GUI;
 import it.polimi.ingsw.Client.Network.MessageParser;
 import it.polimi.ingsw.Client.Network.MessageDispatcher;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import java.io.IOException;
@@ -45,14 +42,11 @@ public class GUIApplication extends Application {
      */
     @Override
     public void start(Stage primaryStage) throws Exception {
-        //StartingScene startingScene = new StartingScene();
-        viewControllerGUI.setStage(primaryStage);
-        //new ViewControllerGUI(messageParser,messageDispatcher,primaryStage);
-        //primaryStage.setScene(startingScene);
+        viewControllerGUI.setMainStage(primaryStage);
+        viewControllerGUI.setComponents();
         primaryStage.getIcons().add(new Image(String.valueOf(GUIApplication.class.getResource("Images/cranioLogo.png"))));
         primaryStage.setFullScreen(false);
         primaryStage.setResizable(false);
         primaryStage.setTitle("Codex Naturalis");
-        //primaryStage.show();
     }
 }
