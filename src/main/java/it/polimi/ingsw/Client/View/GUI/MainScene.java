@@ -143,4 +143,10 @@ public class MainScene extends Scene {
         }
     }
 
+    public BoardGUI getBoard() {
+        return board;
+    }
+    public DrawableAreaGUI getDrawableArea(){
+        return drawableArea;
+    }
 }
