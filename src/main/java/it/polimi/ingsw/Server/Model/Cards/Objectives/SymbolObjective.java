@@ -13,7 +13,7 @@ public class SymbolObjective implements CardObjective, Objective {
     /**
      * points assigned for each number of occurrences of a symbol on the board
      */
-    private static final int points=2;
+    private final int points=2;
     /**
      * symbol that will be counted
      */

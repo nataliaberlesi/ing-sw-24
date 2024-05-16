@@ -16,7 +16,7 @@ public class CornerCardObjective implements CardObjective {
     /**
      * points assigned per covered corner
      */
-    private final static int points =2;
+    private final int points =2;
 
     /**
      *

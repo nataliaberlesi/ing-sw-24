@@ -14,7 +14,7 @@ public class MixSymbolObjective implements Objective{
      * Points per set of 3 different Symbols (SCROLL, INK, FEATHER)
      * visible on the board of the player.
      */
-    private static final int points =3;
+    private final int points =3;
     /**
      * this class ignores all updates
      *

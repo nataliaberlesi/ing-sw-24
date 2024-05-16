@@ -366,7 +366,7 @@ public class MessageParser {
                     .get("data").getAsJsonObject()
                     .get("points").getAsJsonPrimitive().getAsInt();
         } catch(NullPointerException npe) {
-            return null;
+            throw new MessageParserException("points are null");
         } catch(IllegalStateException ise) {
             throw new MessageParserException("points are not an integer");
         }
@@ -448,7 +448,7 @@ public class MessageParser {
         }catch(NullPointerException npe) {
             return null;
         }catch(IllegalStateException ise) {
-            throw new MessageParserException("Card is not a JsonObject");
+            throw new MessageParserException("PlacedCard is not a JsonObject");
         }
     }
     private JsonArray getPlacedCards() {

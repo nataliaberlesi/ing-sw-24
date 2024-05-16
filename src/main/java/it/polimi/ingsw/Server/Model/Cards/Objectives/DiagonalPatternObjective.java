@@ -18,7 +18,7 @@ public class DiagonalPatternObjective implements Objective {
      * number of points assigned for each time descending diagonal pattern of a certain color is found
      *
      */
-    private final static int points =2;
+    private final int points =2;
 
     /**
      * symbolOfInterest indicates the backSymbol of the cards that won't be filtered out in the updateObjective method

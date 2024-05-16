@@ -13,7 +13,7 @@ public class VerticalPatternObjective implements Objective {
     /**
      * number of points assigned for each occurrence of a vertical pattern
      */
-    private static final int points = 3;
+    private final int points = 3;
 
     /**
      * symbol of the cards that form the vertical column of the pattern

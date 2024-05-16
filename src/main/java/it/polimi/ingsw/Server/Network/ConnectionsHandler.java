@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Server.Network;
 
+import com.google.gson.JsonObject;
 import it.polimi.ingsw.Server.Controller.GameController;
 
 import java.io.IOException;
@@ -64,15 +65,17 @@ public class ConnectionsHandler implements Runnable{
             if (gameController.getGameInstance()!=null) {
                 if(gameController.gameIsFull() && !gameController.firstRoundIsStarted()) {
                     gameController.startFirstRound();
+                    JsonObject jsonParams=gameController.getJSONStartFirstRoundParams();
                     for(PlayerConnection pc: server.getConnections()) {
-                        String outMessage=parser.toJson(new Message(MessageType.START_FIRSTROUND,gameController.getJSONStartFirstRoundParams()));
+                        String outMessage=parser.toJson(new Message(MessageType.START_FIRSTROUND,jsonParams));
                         pc.setOutMessage(outMessage);
                     }
                 }
                 if(gameController.allBoardsAreSet() && !gameController.secondRoundIsStarted()) {
+                    JsonObject jsonParams=gameController.getJSONStartSecondRoundParams();
                     gameController.startSecondRound();
                     for(PlayerConnection pc:server.getConnections()) {
-                        String outMessage=parser.toJson(new Message(MessageType.START_SECONDROUND,gameController.getJSONStartSecondRoundParams()));
+                        String outMessage=parser.toJson(new Message(MessageType.START_SECONDROUND,jsonParams));
                     }
                 }
             }
