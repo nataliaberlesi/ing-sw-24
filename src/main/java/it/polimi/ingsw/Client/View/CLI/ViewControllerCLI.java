@@ -150,7 +150,7 @@ public class ViewControllerCLI extends ViewController {
         try {
             playersInGame.getPlayer(usernameOfPlayerWhoseTurnItIs);
         }
-        catch (IllegalArgumentException e){
+        catch (RuntimeException e){
             return false;
         }
         return usernameOfPlayerWhoseTurnItIs.equals(myPlayer.getUsername());
