@@ -82,6 +82,7 @@ public class ConnectionsHandler implements Runnable{
                     gameController.startSecondRound();
                     for(PlayerConnection pc:server.getConnections()) {
                         String outMessage=messageParser.toJson(new Message(MessageType.START_SECONDROUND,jsonParams));
+                        pc.setOutMessage(outMessage);
                     }
                 }
             }

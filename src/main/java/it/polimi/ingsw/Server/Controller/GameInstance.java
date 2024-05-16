@@ -27,6 +27,9 @@ public class GameInstance {
 
     public GameInstance(String masterNickname,int numberOfPlayers) {
         this.currentPlayerIndex=0;
+        allBoardsAreSet=false;
+        firstRoundIsStarted=false;
+        secondRoundIsStarted=false;
         this.numberOfPlayers = numberOfPlayers;
         playersTurnOrder =new ArrayList<String>();
         availableColors=new ArrayList<Color>();
@@ -91,9 +94,11 @@ public class GameInstance {
         return allBoardsAreSet;
     }
     public void checkIfAllBoardsAreSet() {
-        boolean flag=false;
+        boolean flag=true;
         for(String player: playersTurnOrder) {
-            flag=!players.get(player).getPlayerBoard().getPlacedCards().isEmpty();
+            if(players.get(player).getPlayerBoard().getPlacedCards().isEmpty()){
+                flag=false;
+            }
         }
         this.allBoardsAreSet=flag;
     }

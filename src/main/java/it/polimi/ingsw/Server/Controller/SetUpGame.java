@@ -74,9 +74,9 @@ public class SetUpGame {
         Iterator<String> objectiveIterator= objectives.iterator();
         String firstPublicObjectiveID=objectiveIterator.next();
         String secondPublicObjectiveID=objectiveIterator.next();
-        String firstPrivateObjectiveID=objectiveIterator.next();
-        String secondPrivateObjectiveID=objectiveIterator.next();
         for(String player: gameInstance.getPlayerTurnOrder()) {
+            String firstPrivateObjectiveID=objectiveIterator.next();
+            String secondPrivateObjectiveID=objectiveIterator.next();
             gameInstance.getPlayers().get(player).startPlayerBoard(deck.next(),firstPublicObjectiveID,secondPublicObjectiveID,firstPrivateObjectiveID, secondPrivateObjectiveID);
         }
     }
