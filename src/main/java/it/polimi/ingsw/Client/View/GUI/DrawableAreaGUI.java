@@ -14,10 +14,12 @@ public class DrawableAreaGUI extends Group {
         resourceCardsContainer.setPrefSize(77,170);
         resourceCardsContainer.setLayoutX(920);
         resourceCardsContainer.setLayoutY(86);
+        this.getChildren().add(resourceCardsContainer);
 
         goldCardsContainer.setPrefSize(77,170);
         goldCardsContainer.setLayoutX(920);
         goldCardsContainer.setLayoutY(367);
+        this.getChildren().add(goldCardsContainer);
 
         initializeCards();
     }
@@ -62,5 +64,6 @@ public class DrawableAreaGUI extends Group {
             goldCards[i].setCardImage(goldCardsIDs[i]);
         }
         goldCards[0].flipCard();
+
     }
 }
