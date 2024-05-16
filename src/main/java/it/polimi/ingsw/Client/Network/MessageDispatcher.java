@@ -14,7 +14,7 @@ public class MessageDispatcher {
     private MessageParser messageParser;
     public MessageDispatcher(NetworkManager networkManager) {
         this.networkManager=networkManager;
-        this.messageParser=MessageParser.getInstance(networkManager);
+        this.messageParser=MessageParser.getInstance();
     }
     /**
      * dispatches a message

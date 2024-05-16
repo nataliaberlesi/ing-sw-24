@@ -11,23 +11,21 @@ import it.polimi.ingsw.Server.Model.PlacedCard;
 import java.util.ArrayList;
 
 public record InParamsDTO(String currentPlayer,
-                           Boolean unavailableUsername,
-                           CardDTO card,
-                           String affectedPlayer,
-                           ArrayList<PlacedCardDTO> placedCards,
-                           Integer score,
-                           String color,
-                           CardDTO[] hand,
-                           ObjectiveDTO firstPrivateObjective,
-                           ObjectiveDTO secondPrivateObjective,
-                           ObjectiveDTO firstPublicObjective,
-                           ObjectiveDTO secondPublicObjective,
-                           ObjectiveDTO chosenPrivateObjective,
-                           ArrayList<String> players,
-                           CardDTO[] resourceDrawableArea,
-                           CardDTO[] goldDrawableArea,
-                           ArrayList<String> availableColors,
-                           ArrayList<String> winners,
-                          Boolean masterStatus
+                           Boolean unavailableUsername, //
+                           CardDTO card, //
+                           String affectedPlayer, //
+                           ArrayList<PlacedCardDTO> placedCards, //
+                           Integer score, //
+                           String color, //
+                           CardDTO[] hand, //
+                           ObjectiveDTO[] privateObjectives,
+                           ObjectiveDTO[] publicObjectives,
+                           ArrayList<String> players, //
+                           CardDTO[] resourceDrawableArea, //?
+                           CardDTO[] goldDrawableArea, //?
+                           ArrayList<String> availableColors, //
+                           ArrayList<String> winners, //
+                          String cause,
+                          Boolean masterStatus //
 ) {
 }

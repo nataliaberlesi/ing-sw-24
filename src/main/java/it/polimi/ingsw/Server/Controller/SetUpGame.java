@@ -55,14 +55,18 @@ public class SetUpGame {
         Card[] hand=setupHand(currentPlayer,gameInstance.getDrawableArea());
         Objective firstPrivateObjective=ObjectiveFactory.makeObjective(currentPlayer.getPlayerBoard().seeFirstPrivateObjectiveID());
         Objective secondPrivateObjective=ObjectiveFactory.makeObjective(currentPlayer.getPlayerBoard().seeSecondPrivateObjectiveID());
+        Objective[] privateObjectives=new Objective[2];
+        privateObjectives[0]=firstPrivateObjective;
+        privateObjectives[1]=secondPrivateObjective;
         Objective firstPublicObjective=currentPlayer.getPlayerBoard().seeFirstPublicObjective();
         Objective secondPublicObjective=currentPlayer.getPlayerBoard().seeSecondPublicObjective();
+        Objective[] publicObjectives=new Objective[2];
+        publicObjectives[0]=firstPublicObjective;
+        publicObjectives[1]=secondPublicObjective;
         return new OutParamsDTO(currentPlayer.getUsername(),
                 hand,
-                firstPrivateObjective,
-                secondPrivateObjective,
-                firstPublicObjective,
-                secondPublicObjective);
+                privateObjectives,
+                publicObjectives);
     }
 
 

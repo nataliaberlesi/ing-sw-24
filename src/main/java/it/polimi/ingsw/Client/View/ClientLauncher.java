@@ -15,7 +15,7 @@ public class ClientLauncher {
     public static void main(String[] args) {
         try {
             NetworkManager networkManager=new NetworkManager("localhost",60600);
-            MessageParser messageParser=MessageParser.getInstance(networkManager);
+            MessageParser messageParser=MessageParser.getInstance();
             MessageDispatcher messageDispatcher=new MessageDispatcher(networkManager);
             networkManager.setMessageParser(messageParser);
             ViewControllerCLI viewControllerCLI=new ViewControllerCLI(messageParser, messageDispatcher);
