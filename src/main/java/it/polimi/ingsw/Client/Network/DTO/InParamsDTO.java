@@ -20,6 +20,7 @@ public record InParamsDTO(String currentPlayer,
                            CardDTO[] hand, //
                            ObjectiveDTO[] privateObjectives,
                            ObjectiveDTO[] publicObjectives,
+                           ObjectiveDTO chosenObjective,
                            ArrayList<String> players, //
                            CardDTO[] resourceDrawableArea, //?
                            CardDTO[] goldDrawableArea, //?

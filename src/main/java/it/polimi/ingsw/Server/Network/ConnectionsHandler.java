@@ -43,7 +43,13 @@ public class ConnectionsHandler implements Runnable{
                 if(inMessage!=null) {
                     System.out.println("IN | "+inMessage);
                     Message outMessage=handleMessage(inMessage);
-                    playerConnection.setOutMessage(messageParser.toJson(outMessage));
+                    if(outMessage.type().equals(MessageType.FIRSTROUND) || outMessage.type().equals(MessageType.SECONDROUND) || outMessage.type().equals(MessageType.ACTION_PLACECARD) || outMessage.type().equals(MessageType.ACTION_DRAWCARD)) {
+                        for(PlayerConnection playerConnection1: playerConnections) {
+                            playerConnection1.setOutMessage(messageParser.toJson(outMessage));
+                        }
+                    } else {
+                        playerConnection.setOutMessage(messageParser.toJson(outMessage));
+                    }
                     if(outMessage.type().equals(MessageType.ABORT)) {
                         try{
                             playerConnection.close();

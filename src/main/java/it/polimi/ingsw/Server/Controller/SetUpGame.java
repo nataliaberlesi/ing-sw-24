@@ -32,17 +32,13 @@ public class SetUpGame {
             goldDrawableArea[i]=GoldCardFactory.makeGoldCard(drawableArea.getGoldDrawingSection().seeCard(i));
         }
         gameInstance.setDrawableArea(drawableArea);
-        ArrayList<Color> colors=new ArrayList<>();
-        for(Color color: Color.values()) {
-            colors.add(color);
-        }
         return new OutParamsDTO(
                 gameInstance.getPlayerTurnOrder().get(0),
                 firstPlayerStartingCard,
                 gameInstance.getPlayerTurnOrder(),
                 resourceDrawableArea,
                 goldDrawableArea,
-                colors);
+                gameInstance.getAvailableColors());
     }
 
     /**
@@ -72,6 +68,7 @@ public class SetUpGame {
 
     private static void setupPlayerBoards(GameInstance gameInstance) {
         Deck deck= DeckFactory.createShuffledStartingDeck();
+        gameInstance.setStartingDeck(deck);
         ArrayList<String> objectives=ObjectiveFactory.makeEveryObjectiveID();
         Collections.shuffle(objectives);
         Iterator<String> objectiveIterator= objectives.iterator();
