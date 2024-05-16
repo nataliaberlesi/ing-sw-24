@@ -239,11 +239,19 @@ public class MessageParser {
             CardDTO cardDTO=placedCardDTO.placedCard();
             String cardObjectiveType=null;
             String cardObjectiveSymbolOfInterest=null;
-            Integer cardObjectivePoints=null;
-            if(getCardDTO().cardObjective()!=null) {
+            Integer cardObjectivePoints=0;
+            if(cardDTO.cardObjective()!=null) {
                 cardObjectiveType= cardDTO.cardObjective().type();
                 cardObjectiveSymbolOfInterest=cardDTO.cardObjective().data().symbolOfInterest();
                 cardObjectivePoints=cardDTO.cardObjective().data().points();
+            }
+            ArrayList<String> prerequisites=new ArrayList<>();
+            if(cardDTO.prerequisites()!=null) {
+                prerequisites=cardDTO.prerequisites();
+            }
+            ArrayList<String> frontCenterSymbols=new ArrayList<>();
+            if(cardDTO.frontCenterSymbols()!=null) {
+                frontCenterSymbols=cardDTO.frontCenterSymbols();
             }
             Coordinates coordinates= new Coordinates(placedCardDTO.cardCoordinates().x(), placedCardDTO.cardCoordinates().y());
             placedCardsCLI.add(
@@ -254,8 +262,8 @@ public class MessageParser {
                             cardObjectiveType,
                             cardObjectiveSymbolOfInterest,
                             cardObjectivePoints,
-                            cardDTO.prerequisites(),
-                            cardDTO.frontCenterSymbols(),
+                            prerequisites,
+                            frontCenterSymbols,
                             coordinates,
                             placedCardDTO.isFacingUp()
                     )
