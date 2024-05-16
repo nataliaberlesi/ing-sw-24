@@ -36,17 +36,31 @@ public class DrawableAreaGUI extends Group {
 
     /**
      * Getter for gold cards
-     * @return gold cards array
+     * @return a gold card in a specific position of the gold cards array
      */
-    public CardGUI[] getGoldCards() {
-        return goldCards;
+    public CardGUI getGoldCards(int position) {
+
+        return goldCards[position];
     }
 
     /**
      * Getter for resource cards
-     * @return resource cards array
+     * @return a resource card in a specific position of the gold cards array
      */
-    public CardGUI[] getResourceCards() {
-        return resourceCards;
+    public CardGUI getResourceCard(int position) {
+        return resourceCards[position];
+    }
+
+    public void setResourceCardsDrawableArea(String[] resourceCardsIDs){
+        for (int i = 0; i < resourceCardsIDs.length; i++) {
+            resourceCards[i].setCardImage(resourceCardsIDs[i]);
+        }
+        resourceCards[0].flipCard();
+    }
+    public void setGoldCardsDrawableArea(String[] goldCardsIDs){
+        for (int i = 0; i < goldCardsIDs.length; i++) {
+            goldCards[i].setCardImage(goldCardsIDs[i]);
+        }
+        goldCards[0].flipCard();
     }
 }
