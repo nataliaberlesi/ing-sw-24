@@ -2,13 +2,16 @@ package it.polimi.ingsw.Client.View.GUI;
 
 import javafx.scene.Scene;
 
+import java.util.ArrayList;
+
 public class PlayerGUI {
     private final String username;
     private int score;
     private boolean isFirstPlayer = false;
-    private Scene scene;
+    private final MainScene scene;
+    private TokenChoicePopUp tokenChoicePopUpScene;
     public PlayerGUI(String username) {
-
+        this.scene = new MainScene();
         this.username = username;
     }
 
@@ -32,4 +35,15 @@ public class PlayerGUI {
         isFirstPlayer = true;
     }
 
+    public MainScene getScene() {
+        return scene;
+    }
+
+    public void setTokenChoicePopUpScene(ArrayList<String> tokenColors) {
+        this.tokenChoicePopUpScene = new TokenChoicePopUp(tokenColors);
+    }
+
+    public TokenChoicePopUp getTokenChoicePopUpScene() {
+        return tokenChoicePopUpScene;
+    }
 }
