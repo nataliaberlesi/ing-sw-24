@@ -38,6 +38,11 @@ public class BoardCLI {
      */
     private final HashMap<Integer, ArrayList<CardCLI>> board=new HashMap<>();
 
+
+    public BoardCLI() {
+        placeCard(new CardCLI(), new Coordinates());
+    }
+
     /**
      * prints current board formation
      */
@@ -96,7 +101,10 @@ public class BoardCLI {
      */
     public void placeStartingCard(CardCLI startingCard){
         this.startingCard=startingCard;
-        placeCard(startingCard, new Coordinates());
+        startingCard.setCoordinates(new Coordinates());
+        ArrayList<CardCLI> cards = new ArrayList<>();
+        cards.add(startingCard);
+        board.put(startingCard.getY(), cards);
     }
 
 

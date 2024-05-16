@@ -31,9 +31,12 @@ public class ViewControllerCLI extends ViewController {
     @Override
     protected void createMyPlayer(String username) {
         PlayerCLI myPlayer= new PlayerCLI(username);
-        playersInGame.addPlayer(myPlayer);
         this.myPlayer=myPlayer;
         this.currentPlayerInScene=myPlayer;
+    }
+
+    public void setCurrentPlayerInScene(PlayerCLI currentPlayerInScene) {
+        this.currentPlayerInScene = currentPlayerInScene;
     }
 
     /**
@@ -202,7 +205,7 @@ public class ViewControllerCLI extends ViewController {
 
     @Override
     protected void giveInitialCard(String username) {
-        myPlayer.getPlayerBoard().placeStartingCard(messageParser.getStartingCardCLI());
+        playersInGame.getPlayer(username).getPlayerBoard().placeStartingCard(messageParser.getStartingCardCLI());
     }
 
     /**
@@ -217,18 +220,15 @@ public class ViewControllerCLI extends ViewController {
         if(!playerUsernames.contains(myPlayerUsername)){
             throw new RuntimeException("Player " + myPlayerUsername + " does not exist");
         }
-        ArrayList<PlayerCLI> players=playersInGame.getPlayers();
-        int i=0;
-        // adds all players that play before my client
-        while(!playerUsernames.get(i).equals(myPlayerUsername)){
-            players.addFirst(new PlayerCLI(playerUsernames.get(i)));
-            i++;
-        }
-        i++;
-        // adds all players that play after my client
-        while(i<playerUsernames.size()){
-            players.add(new PlayerCLI(playerUsernames.get(i)));
-            i++;
+        for(String playerUsername: playerUsernames){
+            PlayerCLI player;
+            if(playerUsername.equals(myPlayerUsername)){
+                player=myPlayer;
+            }
+            else{
+                player=new PlayerCLI(playerUsername);
+            }
+            playersInGame.addPlayer(player);
         }
         playersInGame.getPlayer(playerUsernames.getFirst()).setCurrentPlayer(true);
     }
