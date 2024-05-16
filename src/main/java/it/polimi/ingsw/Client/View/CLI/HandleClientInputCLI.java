@@ -32,8 +32,8 @@ public class HandleClientInputCLI implements Runnable{
                     dealWithFirstCardPlacement();
                     String chosenColor=dealWithPlayerColorChoice();
                     actionsCLI.enableShowOtherPlayerBoardAndBackOFHand();
-                    System.out.println("Great, now at any time if you want to see another players board (and back of hand) " +
-                            "all you need to do is type:\n SHOW 'username'");
+                    System.out.println("Now at any time if you want to see another players board (and back of hand) " +
+                            "all you need to do is type:\nSHOW 'username'");
                     messageDispatcher.firstRound(viewController.getMyPlayer().getUsername(),viewController.getMyPlayer().getPlayerBoard().getStartingCard().isFaceUp(), chosenColor);
                     actionsCLI.disableFirstRoundActions();
                 }
@@ -60,6 +60,7 @@ public class HandleClientInputCLI implements Runnable{
                         }
                     }
                 }
+
             }
         }
     }
@@ -139,9 +140,14 @@ public class HandleClientInputCLI implements Runnable{
         for(String availableColor: availableColors){
             System.out.println(availableColor);
         }
-        String chosenColor=scanner.nextLine();
+        String chosenColor=getInput();
         if(availableColors.contains(chosenColor)){
-            System.out.println("\nGreat choice\n");
+            if(chosenColor.equals("GREEN")){
+                System.out.println("\nGREEN IS NOT A CREATIVE COLOR\n");
+            }
+            else{
+                System.out.println("\nGREAT CHOICE!\n");
+            }
             return chosenColor;
         }
         System.out.println("I'm afraid that color is unavailable, let's try again");

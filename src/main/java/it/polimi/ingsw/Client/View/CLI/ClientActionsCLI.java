@@ -8,7 +8,7 @@ public class ClientActionsCLI {
     private boolean flipHand=false;
     private boolean showOtherPlayerBoardAndBackOFHand=false;
     private boolean drawCard=false;
-    private boolean chooseObjective=false;
+    private boolean secondRoundActions =false;
     private boolean join=false;
     private boolean exit=false;
     private boolean create=false;
@@ -66,7 +66,7 @@ public class ClientActionsCLI {
         drawCard = true;
     }
     public void enableChooseObjective() {
-        chooseObjective = true;
+        secondRoundActions = true;
     }
 
     public boolean isFirstRoundActionsEnabled() {
@@ -86,7 +86,7 @@ public class ClientActionsCLI {
         return drawCard;
     }
     public boolean isChooseObjectiveEnabled() {
-        return chooseObjective;
+        return secondRoundActions;
     }
 
     public void disableFirstRoundActions() {
@@ -106,7 +106,7 @@ public class ClientActionsCLI {
         drawCard = false;
     }
     public void disableChooseObjective() {
-        chooseObjective = false;
+        secondRoundActions = false;
     }
 
 

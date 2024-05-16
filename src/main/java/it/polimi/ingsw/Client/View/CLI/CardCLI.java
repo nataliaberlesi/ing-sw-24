@@ -131,6 +131,31 @@ public class CardCLI implements Comparable<CardCLI>{
     }
 
     /**
+     * constructor called for resource, gold or starting cards
+     * @param cardID unique id of card
+     * @param frontCorners symbols in the corners on the front of card
+     * @param backCorners symbols in the corners on the back of card
+     * @param cardObjective objective of cards details how many points are earned when card is placed
+     * @param prerequisites (null for resource cards) are the amount of visible symbols that need to be present on the board in order
+     *                      to place card
+     * @param frontCenterSymbols symbols in the center of the front of card
+     */
+    public CardCLI(String cardID, String[] frontCorners, String[] backCorners, String cardObjective, String cardObjectiveSymbol, int cardObjectivePoints ,ArrayList<String> prerequisites,ArrayList<String> frontCenterSymbols) {
+        this.cardID=cardID;
+        setFrontCorners(frontCorners);
+        setBackCorners(backCorners);
+        if(cardObjective!=null && cardObjectivePoints!=0) {
+            setCardObjective(cardObjective, cardObjectiveSymbol, cardObjectivePoints);
+        }
+        if(!prerequisites.isEmpty()) {
+            setPrerequisites(prerequisites);
+        }
+        if(!frontCenterSymbols.isEmpty()) {
+            setFrontCenterSymbols(frontCenterSymbols);
+        }
+        setBackSymbolAndColor();
+    }
+    /**
      * constructor called for startingCards
      * @param cardID unique id of card
      * @param frontCorners symbols in the corners on the front of card

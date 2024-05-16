@@ -78,7 +78,7 @@ public class ViewControllerCLI extends ViewController {
 
     @Override
     protected void updatePlayerBoard(String affectedPlayer) {
-
+        //playersInGame.getPlayer(affectedPlayer).getPlayerBoard().updateBoard(messageParser.getPlacedCardsCLI()); //vedi con kevin
     }
 
     @Override
@@ -174,8 +174,10 @@ public class ViewControllerCLI extends ViewController {
         playersInGame.printScores();
         objectivesSection.printObjectivesSection();
         drawableArea.printDrawableArea();
+        String currentPlayerPossessiveForm=currentPlayerInScene.getUsername().toUpperCase()+"'S";
+        System.out.println(currentPlayerPossessiveForm+" BOARD:");
         currentPlayerInScene.printBoard();
-        System.out.println("HAND:");
+        System.out.println(currentPlayerPossessiveForm+" HAND:");
         if(currentPlayerInScene == myPlayer){
             System.out.println("hand facing up:");
             myPlayer.printHand();
