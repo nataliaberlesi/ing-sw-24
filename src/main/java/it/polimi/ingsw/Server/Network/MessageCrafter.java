@@ -2,6 +2,8 @@ package it.polimi.ingsw.Server.Network;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import it.polimi.ingsw.Server.Controller.DTO.OutParamsDTO;
+import it.polimi.ingsw.Server.Model.Cards.Card;
 import it.polimi.ingsw.Server.Model.Cards.StartingCardFactory;
 import it.polimi.ingsw.Server.Model.Color;
 import it.polimi.ingsw.Server.Model.PlacedCard;
@@ -9,7 +11,7 @@ import it.polimi.ingsw.Server.Model.PlacedCard;
 import java.util.ArrayList;
 
 public class MessageCrafter {
-    private static final Parser parser=Parser.getInstance();
+    private static final MessageParser messageParser=MessageParser.getINSTANCE();
     public static Message craftErrorMessage(MessageType messageType, String currentPlayer) {
         JsonObject params=new JsonObject();
         params.addProperty("currentPlayer",currentPlayer);
@@ -35,27 +37,27 @@ public class MessageCrafter {
     }
     public static Message craftJoinMessage(String username,Boolean unavailableUsername) {
         MessageType messageType=MessageType.JOIN;
-        JsonObject params=new JsonObject();
-        params.addProperty("currentPlayer",username);
-        params.addProperty("unavailableUsername",unavailableUsername);
-        return new Message(messageType,params);
+        OutParamsDTO outParamsDTO=
+                new OutParamsDTO(
+                        username,
+                        unavailableUsername
+                );
+        return new Message(messageType,messageParser.toJsonObject(outParamsDTO));
     }
 
-    public static Message craftFirstRoundMessage(String card, String currentPlayer, ArrayList<Color> availableColors, String affectedPlayer, ArrayList<PlacedCard> placedCards, String color) {
+    public static Message craftFirstRoundMessage(String cardID, String currentPlayer, ArrayList<Color> availableColors, String affectedPlayer, ArrayList<PlacedCard> placedCards, String color) {
         MessageType messageType=MessageType.FIRSTROUND;
-        JsonObject params=new JsonObject();
-        if(card!=null) {
-            params.add("card",parser.toJsonTree(StartingCardFactory.makeStartingCard(card)));
+        Card card=null;
+        if(cardID!=null) {
+            card=StartingCardFactory.makeStartingCard(cardID);
         }
-        params.addProperty("currentPlayer", currentPlayer);
-        JsonArray availableColorsArray= new JsonArray();
-        for(Color availableColor: availableColors) {
-            availableColorsArray.add(availableColor.toString());
-        }
-        params.add("availableColors", availableColorsArray);
-        params.addProperty("affectedPlayer",affectedPlayer);
-        params.add("placedCards",parser.toJsonTree(placedCards).getAsJsonArray());
-        params.addProperty("color",color);
-        return new Message(messageType,params);
+        OutParamsDTO outParamsDTO=new OutParamsDTO(
+                currentPlayer,
+                card,
+                affectedPlayer,
+                placedCards,
+                color,
+                availableColors);
+        return new Message(messageType,messageParser.toJsonObject(outParamsDTO));
     }
 }

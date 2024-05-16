@@ -1,13 +1,10 @@
 package it.polimi.ingsw.Server.Controller;
 
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.Server.Controller.DTO.*;
-import it.polimi.ingsw.Server.Model.Cards.StartingCardFactory;
 import it.polimi.ingsw.Server.Model.PlacedCard;
 import it.polimi.ingsw.Server.Network.*;
-import it.polimi.ingsw.Server.Model.Color;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,12 +13,10 @@ public class GameController {
     private final MessageParser messageParser;
     private GameInstance gameInstance;
     private final Server server;
-    private final Parser parser;
     private MessageType previousMessageType;
     public GameController(Server server) {
         this.server=server;
-        this.parser=Parser.getInstance();
-        this.messageParser=new MessageParser();
+        this.messageParser=MessageParser.getINSTANCE();
     }
 
     public Message dispatchMessage(String message) {
@@ -47,6 +42,7 @@ public class GameController {
             }
             case SECONDROUND -> {
                 //TODO
+                return playSecondRound(jsonParams);
             }
             case ACTION_PLACECARD -> {
                 //TODO
@@ -73,10 +69,10 @@ public class GameController {
             String params="Game is already created";
             return new Message(type, null);
         }
-        CreateGame createGame=messageParser.parseCreateGame(jsonParams);
-        this.server.setMaxAllowablePlayers(createGame.numberOfPlayers());
-        this.gameInstance=new GameInstance(createGame.username(),createGame.numberOfPlayers());
-        Message message = MessageCrafter.craftCreateMessage(createGame.username());
+        InParamsDTO inParamsDTO=messageParser.parseInParamsDTO(jsonParams);
+        this.server.setMaxAllowablePlayers(inParamsDTO.numberOfPlayers());
+        this.gameInstance=new GameInstance(inParamsDTO.username(),inParamsDTO.numberOfPlayers());
+        Message message = MessageCrafter.craftCreateMessage(inParamsDTO.username());
         previousMessageType=message.type();
         return message;
     }
@@ -87,12 +83,12 @@ public class GameController {
      * @return an affermative answer if the username is available, a negative answer otherwise
      */
     public Message joinGame(JsonObject jsonParams) {
-        JoinGame joinGame=messageParser.parseJoinGame(jsonParams);
-        Boolean unavailableUsername=this.gameInstance.unavailableUsername(joinGame.username());
+        InParamsDTO inParamsDTO=messageParser.parseInParamsDTO(jsonParams);
+        Boolean unavailableUsername=this.gameInstance.unavailableUsername(inParamsDTO.username());
         if(!unavailableUsername){
-            gameInstance.joinPlayer(joinGame.username());
+            gameInstance.joinPlayer(inParamsDTO.username());
         }
-        Message message = MessageCrafter.craftJoinMessage(joinGame.username(),unavailableUsername);
+        Message message = MessageCrafter.craftJoinMessage(inParamsDTO.username(),unavailableUsername);
         previousMessageType=message.type();
         return message;
 
@@ -102,8 +98,8 @@ public class GameController {
      * @return the starting first round parameters in JSON format
      */
     public JsonObject getJSONStartFirstRoundParams() {
-        StartFirstRound startFirstRound=SetUpGame.getStartFirstRoundParams(gameInstance);
-        return parser.toJsonTree(startFirstRound).getAsJsonObject();
+        OutParamsDTO startFirstRound=SetUpGame.getStartFirstRoundParams(gameInstance);
+        return messageParser.toJsonObject(startFirstRound);
     }
 
     /**
@@ -112,11 +108,11 @@ public class GameController {
      * @return
      */
     public Message playFirstRound(JsonObject jsonParams) {
-        FirstRound firstRound=messageParser.parseFirstRound(jsonParams);
+        InParamsDTO inParamsDTO=messageParser.parseInParamsDTO(jsonParams);
         String card=null;
-        gameInstance.chooseColor(firstRound.username(), firstRound.color());
-        gameInstance.placeStartingCard(firstRound.username(), firstRound.isFaceUp());
-        ArrayList<PlacedCard> placedCards=gameInstance.getPlayers().get(firstRound.username()).getPlayerBoard().getPlacedCards();
+        gameInstance.chooseColor(inParamsDTO.username(), inParamsDTO.color());
+        gameInstance.placeStartingCard(inParamsDTO.username(), inParamsDTO.isFaceUp());
+        ArrayList<PlacedCard> placedCards=gameInstance.getPlayers().get(inParamsDTO.username()).getPlayerBoard().getPlacedCards();
         int turn=gameInstance.nextTurn();
         String currentPlayer=gameInstance.getTurn();
         if(turn!=0) {
@@ -124,13 +120,16 @@ public class GameController {
             gameInstance.saveStartingCard(currentPlayer,card);
         }
         gameInstance.checkIfAllBoardsAreSet();
-        Message message = MessageCrafter.craftFirstRoundMessage(card,currentPlayer,gameInstance.getAvailableColors(),firstRound.username(),placedCards,firstRound.color());
+        Message message = MessageCrafter.craftFirstRoundMessage(card,currentPlayer,gameInstance.getAvailableColors(),inParamsDTO.username(),placedCards,inParamsDTO.color());
         previousMessageType=message.type();
         return message;
     }
     public JsonObject getJSONStartSecondRoundParams() {
-        StartSecondRound startSecondRound=SetUpGame.getStartSecondRoundParams(gameInstance);
-        return parser.toJsonTree(startSecondRound).getAsJsonObject();
+        OutParamsDTO startSecondRound=SetUpGame.getStartSecondRoundParams(gameInstance);
+        return messageParser.toJsonObject(startSecondRound);
+    }
+    public Message playSecondRound(JsonObject jsonParams) {
+        return null;
     }
     public boolean gameIsFull() {
         return this.gameInstance.checkIfGameIsFull();
@@ -140,9 +139,6 @@ public class GameController {
     }
     public boolean secondRoundIsStarted() {
         return gameInstance.secondRoundIsStarted();
-    }
-    public Message craftJSONMessage(MessageType messageType, String params) {
-        return new Message(messageType, parser.toJsonObject(params));
     }
 
     /**

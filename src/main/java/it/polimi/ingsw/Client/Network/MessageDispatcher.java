@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Client.Network;
 
 import com.google.gson.JsonObject;
+import it.polimi.ingsw.Client.Network.DTO.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,10 +11,10 @@ import java.util.ArrayList;
  */
 public class MessageDispatcher {
     private NetworkManager networkManager;
-    private Parser parser;
+    private MessageParser messageParser;
     public MessageDispatcher(NetworkManager networkManager) {
         this.networkManager=networkManager;
-        this.parser=Parser.getInstance();
+        this.messageParser=MessageParser.getInstance(networkManager);
     }
     /**
      * dispatches a message
@@ -23,26 +24,20 @@ public class MessageDispatcher {
      */
     public void dispatch(MessageType type, JsonObject params){
         Message message=new Message(type, params);
-        networkManager.setOutMessage(parser.toString(message));
+        networkManager.setOutMessage(messageParser.toJson(message));
     }
     //TODO: server side -> returns true at the end of the creation of the game for the master player
     public void createGame(int numberOfPlayer, String username) {
-        JsonObject params=new JsonObject();
-        params.addProperty("username",username);
-        params.addProperty("numberOfPlayers",numberOfPlayer);
-        dispatch(MessageType.CREATE,params);
+        OutParamsDTO outParamsDTO=new OutParamsDTO(username,numberOfPlayer);
+        dispatch(MessageType.CREATE,messageParser.toJsonObject(outParamsDTO));
     }
     //TODO: server side -> returns true at the end of the creation of the game for additional players
     public void joinGame(String username) {
-        JsonObject params=new JsonObject();
-        params.addProperty("username",username);
-        dispatch(MessageType.JOIN,params);
+        OutParamsDTO outParamsDTO=new OutParamsDTO(username);
+        dispatch(MessageType.JOIN,messageParser.toJsonObject(outParamsDTO));
     }
-    public void firstRound(String username, boolean isFaceUp, String color) {
-        JsonObject params=new JsonObject();
-        params.addProperty("username",username);
-        params.addProperty("isFaceUp",isFaceUp);
-        params.addProperty("color",color);
-        dispatch(MessageType.CREATE,params);
+    public void firstRound(String username, Boolean isFaceUp, String color) {
+        OutParamsDTO outParamsDTO=new OutParamsDTO(username,isFaceUp,color);
+        dispatch(MessageType.CREATE,messageParser.toJsonObject(outParamsDTO));
     }
 }

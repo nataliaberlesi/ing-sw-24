@@ -53,7 +53,7 @@ public class PlayerCLI {
      * @throws IllegalArgumentException if color does not exist
      */
     public void setPlayerColor(String color) throws IllegalArgumentException{
-        switch (color) {
+        switch (color.toUpperCase()) {
             case "RED":
                 this.playerColor=ColoredText.ANSI_RED;
                 break;

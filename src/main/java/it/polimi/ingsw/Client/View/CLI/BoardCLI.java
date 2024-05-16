@@ -36,18 +36,22 @@ public class BoardCLI {
     /**
      *  map that contains the list of cards the Y axis corresponding to the key
      */
-    private final HashMap<Integer, ArrayList<CardCLI>> board=new HashMap<>();
+    private HashMap<Integer, ArrayList<CardCLI>> board=new HashMap<>();
 
 
+    /**
+     * when board is created, an empty card is placed in coordinates (0,0), this card will later be replaced by startingCard
+     */
     public BoardCLI() {
-        placeCard(new CardCLI(), new Coordinates());
+        CardCLI emptyCard=new CardCLI();
+        emptyCard.setCoordinates(new Coordinates());
+        placeCard(emptyCard);
     }
 
     /**
      * prints current board formation
      */
     public void printBoard(){
-        System.out.println("BOARD:");
         StringBuilder spacing= new StringBuilder();
         for(int i=maxY;i>=minY;i--){
             ArrayList<CardCLI> cardsInCurrentLine = board.get(i);
@@ -69,22 +73,25 @@ public class BoardCLI {
     }
 
     /**
-     * adds card to the board
-     * @param card that is being placed on the board
+     * updates board minX, minY and maxY, adds card to board and covers the corners of surrounding cards
+     * @param card being placed
      */
-    public void placeCard(CardCLI card, Coordinates coordinates){
-        card.setCoordinates(coordinates);
+    private void placeCard(CardCLI card){
         int cardY = card.getY();
         int cardX = card.getX();
-        if(cardY<minY){
-            minY=cardY;
-        }
-        if(cardY>maxY){
-            maxY=cardY;
-        }
-        if(cardX<minX){
-            minX=cardX;
-        }
+        updateMinY(cardY);
+        updateMaxY(cardY);
+        updateMinX(cardX);
+        addCardToBoardMap(card, cardY);
+        coverCorners(card.getCoordinates());
+    }
+
+    /**
+     * adds card to board map
+     * @param card being placed
+     * @param cardY y coordinate of card being placed
+     */
+    private void addCardToBoardMap(CardCLI card, int cardY){
         ArrayList<CardCLI> cards = board.get(cardY);
         if(cards==null){
             cards=new ArrayList<>();
@@ -92,12 +99,42 @@ public class BoardCLI {
         cards.add(card);
         Collections.sort(cards);
         board.put(cardY, cards);
-        coverCorners(card.getCoordinates());
     }
 
     /**
+     * updates y coordinate of the card that is farthest down on the board
+     * @param newY y coordinate of card being placed
+     */
+    private void updateMinY(int newY){
+        if(newY<minY){
+            minY=newY;
+        }
+    }
+
+    /**
+     * updates y coordinate of the card that is farthest up on the board
+     * @param newY y coordinate of card being placed
+     */
+    private void updateMaxY(int newY){
+        if(newY>maxY){
+            maxY=newY;
+        }
+    }
+
+    /**
+     * updates x coordinate farthest to the lest on the board
+     * @param newX x coordinate of card being placed
+     */
+    private void updateMinX(int newX){
+        if(newX<minX){
+            minX=newX;
+        }
+    }
+
+
+    /**
      *
-     * @param startingCard first card to place
+     * @param startingCard first "real" card being placed, takes the spot of the empty card in (0,0)
      */
     public void placeStartingCard(CardCLI startingCard){
         this.startingCard=startingCard;
@@ -131,6 +168,12 @@ public class BoardCLI {
     }
 
 
+    /**
+     *
+     * @param cornerOfCardThatIsCovering int corresponding to corner of the card that has been placed and is covering another corner
+     * @return the int corresponding to the corner being covered
+     * @throws IllegalArgumentException int corresponding to corner doesn't correspond to any existing corner (as corners are numbered from 0 to 3)
+     */
     private int getCoveredCardCorner(int cornerOfCardThatIsCovering) throws IllegalArgumentException{
         if(cornerOfCardThatIsCovering==0||cornerOfCardThatIsCovering==1){
             return cornerOfCardThatIsCovering+2;
@@ -140,6 +183,7 @@ public class BoardCLI {
         }
         throw new IllegalArgumentException(cornerOfCardThatIsCovering+" is not a valid corner number");
     }
+
     /**
      * replaces the covered symbols with '-'
      * @param coordinates of card that is placed and is covering the corners of surrounding cards
@@ -157,7 +201,21 @@ public class BoardCLI {
         }
     }
 
+    /**
+     * each time a player successfully places a card the server sends an updated board containing all the cards that have been placed up to that point
+     * @param cards all cards that have been placed on this board
+     */
+    public void updateBoard(ArrayList<CardCLI> cards){
+        clearBoard();
+        for(CardCLI card:cards){
+            placeCard(card);
+        }
+    }
 
-
-
+    /**
+     * empties board
+     */
+    private void clearBoard(){
+        board=new HashMap<>();
+    }
 }

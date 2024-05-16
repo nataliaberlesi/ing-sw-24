@@ -8,12 +8,12 @@ import java.util.ArrayList;
 
 public class ConnectionsHandler implements Runnable{
     public GameController gameController;
-    public Parser parser;
+    public MessageParser messageParser;
     public Server server;
     public Boolean allPlayerConnected;
     public ConnectionsHandler(Server server) {
         this.server=server;
-        parser=Parser.getInstance();
+        messageParser=MessageParser.getINSTANCE();
         this.gameController=new GameController(server);
         allPlayerConnected=true;
     }
@@ -43,7 +43,7 @@ public class ConnectionsHandler implements Runnable{
                 if(inMessage!=null) {
                     System.out.println("IN | "+inMessage);
                     Message outMessage=handleMessage(inMessage);
-                    playerConnection.setOutMessage(parser.toJson(outMessage));
+                    playerConnection.setOutMessage(messageParser.toJson(outMessage));
                     if(outMessage.type().equals(MessageType.ABORT)) {
                         try{
                             playerConnection.close();
@@ -67,7 +67,7 @@ public class ConnectionsHandler implements Runnable{
                     gameController.startFirstRound();
                     JsonObject jsonParams=gameController.getJSONStartFirstRoundParams();
                     for(PlayerConnection pc: server.getConnections()) {
-                        String outMessage=parser.toJson(new Message(MessageType.START_FIRSTROUND,jsonParams));
+                        String outMessage=messageParser.toJson(new Message(MessageType.START_FIRSTROUND,jsonParams));
                         pc.setOutMessage(outMessage);
                     }
                 }
@@ -75,7 +75,7 @@ public class ConnectionsHandler implements Runnable{
                     JsonObject jsonParams=gameController.getJSONStartSecondRoundParams();
                     gameController.startSecondRound();
                     for(PlayerConnection pc:server.getConnections()) {
-                        String outMessage=parser.toJson(new Message(MessageType.START_SECONDROUND,jsonParams));
+                        String outMessage=messageParser.toJson(new Message(MessageType.START_SECONDROUND,jsonParams));
                     }
                 }
             }
