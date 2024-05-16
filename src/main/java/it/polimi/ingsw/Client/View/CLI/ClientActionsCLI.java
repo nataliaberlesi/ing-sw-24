@@ -65,7 +65,7 @@ public class ClientActionsCLI {
     public void enableDrawCard() {
         drawCard = true;
     }
-    public void enableChooseObjective() {
+    public void enableSecondRoundActions() {
         secondRoundActions = true;
     }
 
@@ -85,7 +85,7 @@ public class ClientActionsCLI {
     public boolean isDrawCardEnabled() {
         return drawCard;
     }
-    public boolean isChooseObjectiveEnabled() {
+    public boolean isSecondRoundActionsEnabled() {
         return secondRoundActions;
     }
 
@@ -105,7 +105,7 @@ public class ClientActionsCLI {
     public void disableDrawCard() {
         drawCard = false;
     }
-    public void disableChooseObjective() {
+    public void disableSecondRoundActions() {
         secondRoundActions = false;
     }
 
