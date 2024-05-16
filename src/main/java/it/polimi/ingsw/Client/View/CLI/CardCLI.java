@@ -127,6 +127,7 @@ public class CardCLI implements Comparable<CardCLI>{
     public CardCLI(){
         this.cardID=emptyCardID;
         this.frontCorners=emptyCardCorners;
+        this.backCorners=emptyCardCorners;
     }
 
     /**
