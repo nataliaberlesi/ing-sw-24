@@ -31,7 +31,7 @@
             <Font name="Lao MN Bold" size="36.0" />
          </font>
       </Label>
-      <ChoiceBox fx:id="playersNumberChoice" layoutX="487.0" layoutY="330.0" prefHeight="51.0" prefWidth="81.0" xmlns:fx="http://javafx.com/fxml" />
+      <ChoiceBox fx:id="numberOfPlayersChoiceBox" layoutX="487.0" layoutY="330.0" prefHeight="51.0" prefWidth="81.0" xmlns:fx="http://javafx.com/fxml" />
       <Button layoutX="852.0" layoutY="485.0" mnemonicParsing="false" onMouseClicked="#confirmCreate" prefHeight="54.0" prefWidth="143.0" text="Confirm" textAlignment="CENTER">
          <font>
             <Font name="Lao MN Bold" size="24.0" />
