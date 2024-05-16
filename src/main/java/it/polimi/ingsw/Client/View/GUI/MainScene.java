@@ -26,7 +26,7 @@ public class MainScene extends Scene {
         root = (AnchorPane) this.getRoot();
         setUpBackground();
         setUpLabels();
-        setUpButtons();
+        setUpFlipButton();
         root.getChildren().add(board);
         root.getChildren().add(drawableArea);
         root.getChildren().add(hand);
@@ -104,17 +104,11 @@ public class MainScene extends Scene {
     /**
      * Sets up all buttons for the scene
      */
-    private void setUpButtons() {
+    private void setUpFlipButton() {
         flipCardsButton.setLayoutX(350);
         flipCardsButton.setLayoutY(555);
         flipCardsButton.setMnemonicParsing(false);
-
-        for (int i = 0; i < 3; i++) {
-            seeOtherPlayersSceneButtons[i] = new Button();
-            seeOtherPlayersSceneButtons[i].setLayoutX(38);
-            seeOtherPlayersSceneButtons[i].setLayoutY(322+45*i);
-            seeOtherPlayersSceneButtons[i].setMnemonicParsing(false);
-        }
+        this.root.getChildren().add(flipCardsButton);
     }
 
     /**
@@ -138,8 +132,13 @@ public class MainScene extends Scene {
      * @param usernames usernames
      */
     public void setSeeOtherPlayersGameButtons(ArrayList<String> usernames){
-        for (int i = 0; i < 3; i++) {
-            seeOtherPlayersSceneButtons[i].setText("See " + usernames.get(i) + "game");
+        for (int i = 0; i < ViewControllerGUI.numberOfPlayersInGame; i++) {
+            seeOtherPlayersSceneButtons[i] = new Button();
+            seeOtherPlayersSceneButtons[i].setLayoutX(38);
+            seeOtherPlayersSceneButtons[i].setLayoutY(322+45*i);
+            seeOtherPlayersSceneButtons[i].setMnemonicParsing(false);
+            seeOtherPlayersSceneButtons[i].setText("See " + usernames.get(i) + "'s game");
+            this.root.getChildren().add(seeOtherPlayersSceneButtons[i]);
         }
     }
 
@@ -148,5 +147,12 @@ public class MainScene extends Scene {
     }
     public DrawableAreaGUI getDrawableArea(){
         return drawableArea;
+    }
+
+    public ScoreBoardGUI getScoreBoard() {
+        return scoreBoard;
+    }
+
+    public void handleFirstCardPlacement() {
     }
 }
