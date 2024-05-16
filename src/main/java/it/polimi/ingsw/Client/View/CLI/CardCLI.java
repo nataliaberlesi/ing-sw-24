@@ -140,7 +140,9 @@ public class CardCLI implements Comparable<CardCLI>{
      *                      to place card
      * @param frontCenterSymbols symbols in the center of the front of card
      */
-    public CardCLI(String cardID, String[] frontCorners, String[] backCorners, String cardObjective, String cardObjectiveSymbol, int cardObjectivePoints ,ArrayList<String> prerequisites,ArrayList<String> frontCenterSymbols) {
+    public CardCLI(String cardID, String[] frontCorners, String[] backCorners, String cardObjective, String cardObjectiveSymbol, int cardObjectivePoints ,ArrayList<String> prerequisites,ArrayList<String> frontCenterSymbols,Coordinates coordinates,boolean isFaceUp) {
+        this.coordinates=coordinates;
+        this.isFaceUp=isFaceUp;
         this.cardID=cardID;
         setFrontCorners(frontCorners);
         setBackCorners(backCorners);
