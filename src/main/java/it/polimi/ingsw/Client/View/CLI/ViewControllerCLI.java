@@ -39,6 +39,15 @@ public class ViewControllerCLI extends ViewController {
         this.currentPlayerInScene = currentPlayerInScene;
     }
 
+    private void showCardObjectiveChoices(){
+        clientActions.enableSecondRoundActions();
+        System.out.println("""
+                You have been given two objectives,
+                these objectives only apply to you,
+                only you can theme, but you can only keep one.
+                Choose one by typing 1 (if you want the first one) or 2 (if you want the second one)""");
+    }
+
     /**
      * notifies client that view is awaiting server to check the username
      */
@@ -78,7 +87,7 @@ public class ViewControllerCLI extends ViewController {
 
     @Override
     protected void updatePlayerBoard(String affectedPlayer) {
-        //playersInGame.getPlayer(affectedPlayer).getPlayerBoard().updateBoard(messageParser.getPlacedCardsCLI()); //vedi con kevin
+        playersInGame.getPlayer(affectedPlayer).getPlayerBoard().updateBoard(messageParser.getPlacedCardsCLI());
     }
 
     @Override
@@ -137,14 +146,14 @@ public class ViewControllerCLI extends ViewController {
     }
 
     @Override
-    protected boolean isMyTurn(String usernameOfPlayerWhosTurnItIs) {
+    protected boolean isMyTurn(String usernameOfPlayerWhoseTurnItIs) {
         try {
-            playersInGame.getPlayer(usernameOfPlayerWhosTurnItIs);
+            playersInGame.getPlayer(usernameOfPlayerWhoseTurnItIs);
         }
         catch (IllegalArgumentException e){
             return false;
         }
-        return usernameOfPlayerWhosTurnItIs.equals(myPlayer.getUsername());
+        return usernameOfPlayerWhoseTurnItIs.equals(myPlayer.getUsername());
     }
 
 
@@ -207,7 +216,12 @@ public class ViewControllerCLI extends ViewController {
 
     @Override
     protected void giveInitialCard(String username) {
-        playersInGame.getPlayer(username).getPlayerBoard().placeStartingCard(messageParser.getStartingCardCLI());
+        try {
+            playersInGame.getPlayer(username).getPlayerBoard().placeStartingCard(messageParser.getStartingCardCLI());
+        }
+        catch (RuntimeException e){
+            //this happens at end of first round, when server doesn't give a new startingCard and a new currentPlayer
+        }
     }
 
     /**
