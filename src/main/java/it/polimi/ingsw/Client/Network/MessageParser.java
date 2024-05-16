@@ -240,7 +240,7 @@ public class MessageParser {
             String cardObjectiveType=null;
             String cardObjectiveSymbolOfInterest=null;
             Integer cardObjectivePoints=null;
-            if(getCardDTO().cardObjective()==null) {
+            if(getCardDTO().cardObjective()!=null) {
                 cardObjectiveType= cardDTO.cardObjective().type();
                 cardObjectiveSymbolOfInterest=cardDTO.cardObjective().data().symbolOfInterest();
                 cardObjectivePoints=cardDTO.cardObjective().data().points();
