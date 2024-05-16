@@ -38,6 +38,6 @@ public class MessageDispatcher {
     }
     public void firstRound(String username, Boolean isFaceUp, String color) {
         OutParamsDTO outParamsDTO=new OutParamsDTO(username,isFaceUp,color);
-        dispatch(MessageType.CREATE,messageParser.toJsonObject(outParamsDTO));
+        dispatch(MessageType.FIRSTROUND,messageParser.toJsonObject(outParamsDTO));
     }
 }
