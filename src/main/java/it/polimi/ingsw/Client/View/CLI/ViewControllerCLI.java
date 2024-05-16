@@ -202,6 +202,7 @@ public class ViewControllerCLI extends ViewController {
 
     @Override
     protected void giveInitialCard(String username) {
+        myPlayer.getPlayerBoard().placeStartingCard(messageParser.getStartingCardCLI());
     }
 
     /**

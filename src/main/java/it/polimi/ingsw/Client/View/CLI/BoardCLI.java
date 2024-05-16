@@ -67,7 +67,7 @@ public class BoardCLI {
      * adds card to the board
      * @param card that is being placed on the board
      */
-    public void addCard(CardCLI card, Coordinates coordinates){
+    public void placeCard(CardCLI card, Coordinates coordinates){
         card.setCoordinates(coordinates);
         int cardY = card.getY();
         int cardX = card.getX();
@@ -94,9 +94,9 @@ public class BoardCLI {
      *
      * @param startingCard first card to place
      */
-    public void addStartingCard(CardCLI startingCard){
+    public void placeStartingCard(CardCLI startingCard){
         this.startingCard=startingCard;
-        addCard(startingCard, new Coordinates());
+        placeCard(startingCard, new Coordinates());
     }
 
 

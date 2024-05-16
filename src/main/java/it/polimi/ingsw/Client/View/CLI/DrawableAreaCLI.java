@@ -77,7 +77,7 @@ public class DrawableAreaCLI {
             throw new IllegalArgumentException("Card cannot be null");
         }
         if(card.getCardID().charAt(0)!=typeOfCard){
-            if(card.getCardID().charAt(0)!='E') {
+            if(card.getCardID().charAt(0)!='E') { // 'E' is ID of emptyCard
                 throw new IllegalArgumentException("Card does not have the correct type");
             }
         }
@@ -115,12 +115,10 @@ public class DrawableAreaCLI {
 
     private void putCard(int cardIndex, CardCLI replacementCard, CardCLI[] drawableCards) {
         if(cardIndex==0){
-            if(replacementCard.isFaceUp()){
-                replacementCard.flip();
-            }
+            replacementCard.makeFaceDown();
         }
-        else if(!replacementCard.isFaceUp()){
-            replacementCard.flip();
+        else {
+            replacementCard.makeFaceUp();
         }
         drawableCards[cardIndex]=replacementCard;
     }

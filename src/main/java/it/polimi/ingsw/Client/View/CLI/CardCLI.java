@@ -53,7 +53,7 @@ public class CardCLI implements Comparable<CardCLI>{
     /**
      * symbols on the back corners of the card, in resource and gold cards are blank, starting cards have other symbols.
      */
-    private char[] backCorners={'O','O','O','O'};
+    private char[] backCorners;
     /**
      * are only present in gold cards,
      * are shown like this: 3M,B  (three mushrooms and one butterfly)
@@ -88,10 +88,6 @@ public class CardCLI implements Comparable<CardCLI>{
     }
 
 
-    public CardCLI(String cardID){
-        this.cardID=cardID;
-        setBackSymbolAndColor();
-    }
 
     public String getCardID(){
         return cardID;
@@ -124,7 +120,7 @@ public class CardCLI implements Comparable<CardCLI>{
             default:
                 backSymbol=' ';
                 break;
-        };
+        }
         this.backSymbol = getProperSpacing(""+backSymbol);
     }
 
@@ -202,10 +198,12 @@ public class CardCLI implements Comparable<CardCLI>{
             }
         }
         this.prerequisites=this.prerequisites + firstPrerequisiteCounter + firstPrerequisite;
-        if(secondPrerequisite!=0){
+        if(secondPrerequisite!='0'){
             this.prerequisites=this.prerequisites+","+secondPrerequisite;
         }
     }
+
+
 
     /**
      *
@@ -221,7 +219,9 @@ public class CardCLI implements Comparable<CardCLI>{
             else if(Objects.equals(symbols[i], "BLANK")){
                 initials[i]='O';
             }
-            initials[i]=symbols[i].charAt(0);
+            else {
+                initials[i] = symbols[i].charAt(0);
+            }
         }
         return initials;
     }
@@ -264,8 +264,7 @@ public class CardCLI implements Comparable<CardCLI>{
     public void setFrontCenterSymbols(ArrayList<String> frontCenterSymbols) {
         String [] symbols=frontCenterSymbols.toArray(new String[0]);
         char [] initials =getInitials(symbols);
-        String frontSymbols= arrayToStringWithComma(initials);
-        prerequisites=getProperSpacing(frontSymbols);
+        prerequisites= arrayToStringWithComma(initials);
     }
 
     /**
@@ -274,10 +273,9 @@ public class CardCLI implements Comparable<CardCLI>{
      * @throws RuntimeException if cardObjective doesn't exist
      */
     public void setCardObjective(String cardObjective, String cardObjectiveSymbol, int cardObjectivePoints) throws RuntimeException{
-
+        makeCardObjectiveTopLine(cardObjectivePoints);
         switch (cardObjective){
             case("PointsCardObjective")-> {
-                makeCardObjectiveTopLine(cardObjectivePoints);
             }
             case("SymbolObjective")-> {
                 makeCardObjectiveBottomLine(cardObjectiveSymbol.toUpperCase().charAt(0));

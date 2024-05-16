@@ -5,6 +5,8 @@ import it.polimi.ingsw.Server.Model.Cards.Objectives.SymbolController;
 import it.polimi.ingsw.Server.Model.InvalidSymbolException;
 import it.polimi.ingsw.Server.Model.Symbol;
 
+import java.util.ArrayList;
+
 /**
  * Resource is a Card that can be placed during the game after the first round
  * and can always be placed in placeable coordinates
@@ -36,5 +38,9 @@ public class ResourceCard extends Card {
 
     public CardObjective getCardObjective() {
         return cardObjective;
+    }
+
+    public ArrayList<Symbol> getPrerequisites(){
+        return null;
     }
 }

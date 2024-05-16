@@ -44,13 +44,19 @@ public class ObjectivesSectionCLI {
         }
         this.privateObjective = privateObjective;
     }
+
     /**
      * prints objectives common between players
      */
     private void printCommonObjectives(){
         System.out.println("COMMON OBJECTIVES:");
         for(ObjectiveCLI obj : publicObjectives){
-            obj.printObjective();
+            if(obj == null){
+                System.out.println("-");
+            }
+            else {
+                obj.printObjective();
+            }
         }
     }
 
@@ -59,7 +65,12 @@ public class ObjectivesSectionCLI {
      */
     private void printPrivateObjective(){
         System.out.println("PRIVATE OBJECTIVE:");
-        privateObjective.printObjective();
+        if(privateObjective == null){
+            System.out.println("-");
+        }
+        else {
+            privateObjective.printObjective();
+        }
     }
 
     public void printObjectivesSection(){

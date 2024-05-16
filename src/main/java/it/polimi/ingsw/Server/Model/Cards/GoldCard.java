@@ -53,5 +53,9 @@ public class GoldCard extends ResourceCard{
         return true;
     }
 
+    @Override
+    public ArrayList<Symbol> getPrerequisites() {
+        return prerequisites;
+    }
 
 }

@@ -149,7 +149,7 @@ public class GoldCardFactory {
     static ArrayList<Symbol> add(ArrayList<Symbol> incompletePrerequisites, Symbol symbol){
         ArrayList<Symbol> clone = (ArrayList<Symbol>) incompletePrerequisites.clone();
         clone.add(symbol);
-        return incompletePrerequisites;
+        return clone;
     }
 
 }
