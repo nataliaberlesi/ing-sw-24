@@ -12,8 +12,8 @@ public class ScoreBoardGUI extends GridPane {
     private final Label[] scoreLabels = new Label[4];
 
     public ScoreBoardGUI(){
-        this.setLayoutX(19);
-        this.setLayoutY(52);
+        this.setLayoutX(25);
+        this.setLayoutY(50);
         this.setPrefSize(166.0, 154.0);
         columnsContraintsSetUp();
         rowsConstraintsSetUp();
