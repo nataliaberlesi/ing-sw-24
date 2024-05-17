@@ -5,7 +5,7 @@ public class ObjectiveCLI {
     /**
      * objective as seen in CLI
      */
-    private String objective="Earn";
+    private String objective="Earn ";
 
 
     /**
@@ -16,7 +16,7 @@ public class ObjectiveCLI {
      * @param objectiveSymbol symbol that will be used in the model to calculate points
      * @throws IllegalArgumentException if the objective class passed doesn't exist
      */
-    public ObjectiveCLI(String objectiveClass, int objectivePoints, int numberOfOccurrences, String objectiveSymbol) throws IllegalArgumentException{
+    public ObjectiveCLI(String objectiveClass, Integer objectivePoints, Integer numberOfOccurrences, String objectiveSymbol) throws IllegalArgumentException{
         switch (objectiveClass){
             case "DiagonalPatternObjective"->{
                 this.objective += objectivePoints+" points for each diagonal pattern like this:\n";

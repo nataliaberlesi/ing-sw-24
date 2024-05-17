@@ -112,7 +112,7 @@ public class ClientActionsCLI {
                 but each of you can choose a private objective.
                 You can choose from these two:""");
         for (int i = 0; i < privateObjectives.length; i++) {
-            System.out.println(i);
+            System.out.println(i+1+")");
             privateObjectives[i].printObjective();
         }
         System.out.println("Type 1 to choose the first one, type 2 to choose the second one");
@@ -135,7 +135,7 @@ public class ClientActionsCLI {
     public boolean isDrawCardEnabled() {
         return drawCard;
     }
-    public boolean isisChoosePrivateObjectiveEnabledEnabled() {
+    public boolean isisChoosePrivateObjectiveEnabled() {
         return choosePrivateObjective;
     }
 
