@@ -25,6 +25,7 @@ public class SetUpGame {
         String firstPlayerStartingCardID=gameInstance.getPlayers().get(gameInstance.getTurn()).getPlayerBoard().seeStartingCardID();
         Card firstPlayerStartingCard=StartingCardFactory.makeStartingCard(firstPlayerStartingCardID);
         DrawableArea drawableArea=getDrawableArea();
+        setupHands(gameInstance);
         Card[] resourceDrawableArea= new Card[3];
         Card[] goldDrawableArea=new Card[3];
         for(int i=0;i<3;i++) {
@@ -48,7 +49,7 @@ public class SetUpGame {
      */
     public static OutParamsDTO getStartSecondRoundParams(GameInstance gameInstance) {
         Player currentPlayer=gameInstance.getPlayers().get(gameInstance.getTurn());
-        Card[] hand=setupHand(currentPlayer,gameInstance.getDrawableArea());
+        Card[] hand= gameInstance.getHand(gameInstance.getTurn());
         Objective firstPrivateObjective=ObjectiveFactory.makeObjective(currentPlayer.getPlayerBoard().seeFirstPrivateObjectiveID());
         Objective secondPrivateObjective=ObjectiveFactory.makeObjective(currentPlayer.getPlayerBoard().seeSecondPrivateObjectiveID());
         Objective[] privateObjectives=new Objective[2];
@@ -78,6 +79,20 @@ public class SetUpGame {
             String firstPrivateObjectiveID=objectiveIterator.next();
             String secondPrivateObjectiveID=objectiveIterator.next();
             gameInstance.getPlayers().get(player).startPlayerBoard(deck.next(),firstPublicObjectiveID,secondPublicObjectiveID,firstPrivateObjectiveID, secondPrivateObjectiveID);
+        }
+    }
+    private static void setupHands(GameInstance gameInstance) {
+        for(String player: gameInstance.getPlayerTurnOrder()) {
+            Player currentPlayer=gameInstance.getPlayers().get(player);
+            DrawableArea drawableArea=gameInstance.getDrawableArea();
+            for(int i=0;i<2;i++) {
+                currentPlayer
+                        .getPlayerHand()
+                        .placeCardInHand(drawableArea.getResourceDrawingSection().drawCard(0));
+            }
+            currentPlayer
+                    .getPlayerHand()
+                    .placeCardInHand(drawableArea.getGoldDrawingSection().drawCard(0));
         }
     }
     private static DrawableArea getDrawableArea() {
