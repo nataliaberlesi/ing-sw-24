@@ -47,14 +47,13 @@ public class GameController {
             }
             case ACTION_PLACECARD -> {
                 //TODO
+                return placeCard(jsonParams);
             }
             case ACTION_DRAWCARD -> {
                 //TODO
+                return drawCard(jsonParams);
             }
             case ABORT -> {
-                //TODO
-            }
-            case ERROR -> {
                 //TODO
             }
         }
@@ -112,7 +111,7 @@ public class GameController {
         InParamsDTO inParamsDTO=messageParser.parseInParamsDTO(jsonParams);
         String card=null;
         gameInstance.chooseColor(inParamsDTO.username(), inParamsDTO.color());
-        gameInstance.placeStartingCard(inParamsDTO.username(), inParamsDTO.isFacingUp());
+        gameInstance.getPlacedCards(inParamsDTO.username());
         ArrayList<PlacedCard> placedCards=gameInstance.getPlayers().get(inParamsDTO.username()).getPlayerBoard().getPlacedCards();
         int turn=gameInstance.nextTurn();
         String currentPlayer="";
@@ -140,7 +139,7 @@ public class GameController {
         String[] privateObjectivesID=new String[2];
         if(gameInstance.nextTurn()!=0){
             for(int i=0;i<2;i++) {
-                privateObjectivesID[0]=
+                privateObjectivesID[i]=
                         gameInstance.getPlayers().get(inParamsDTO.username()).getPlayerBoard().seeStartingPrivateObjective(i);
             }
         }
@@ -152,6 +151,46 @@ public class GameController {
                 privateObjectivesID,
                 gameInstance.getPlayers().get(currentPlayer).getPlayerBoard().seeObjective(2)
         );
+        this.previousMessageType=message.type();
+        return message;
+    }
+    public Message placeCard(JsonObject jsonParams) {
+        InParamsDTO inParamsDTO=messageParser.parseInParamsDTO(jsonParams);
+        String currentPlayer=inParamsDTO.username();
+        if(!gameInstance.getPlayers().get(inParamsDTO.username()).getPlayerBoard().placeCard(
+                gameInstance.getPlayers().get(inParamsDTO.username()).getPlayerHand().getCardFromHand(inParamsDTO.index()),
+                inParamsDTO.coordinates(),
+                inParamsDTO.isFacingUp()
+        )) {
+            Message message=MessageCrafter.craftDrawCardMessage(
+                    currentPlayer,
+                    currentPlayer,
+                    gameInstance.getHand(currentPlayer),
+                    gameInstance.getResourceDrawableArea(),
+                    gameInstance.getGoldDrawableArea()
+            );
+            this.previousMessageType=message.type();
+            return message;
+        }
+        Message message=MessageCrafter.craftPlaceCardMessage(
+                currentPlayer,
+                gameInstance.getPlacedCards(currentPlayer),
+                gameInstance.getScore(currentPlayer),
+                gameInstance.getHand(currentPlayer)
+        );
+        this.previousMessageType=message.type();
+        return message;
+    }
+    public Message drawCard(JsonObject jsonObject) {
+        InParamsDTO inParamsDTO=messageParser.parseInParamsDTO(jsonObject);
+        String currentPlayer=gameInstance.getTurn();
+        String affectedPlayer=inParamsDTO.username();
+        Message message=MessageCrafter.craftDrawCardMessage(currentPlayer,
+                affectedPlayer,
+                gameInstance.getHand(affectedPlayer),
+                gameInstance.getResourceDrawableArea(),
+                getGameInstance().getGoldDrawableArea()
+                );
         this.previousMessageType=message.type();
         return message;
     }

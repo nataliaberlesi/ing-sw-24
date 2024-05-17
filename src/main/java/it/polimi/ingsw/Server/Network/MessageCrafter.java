@@ -79,4 +79,28 @@ public class MessageCrafter {
             );
             return new Message(messageType,messageParser.toJsonObject(outParamsDTO));
     }
+
+    public static Message craftPlaceCardMessage(String currentPlayer, ArrayList<PlacedCard> placedCards, Integer score, Card[] hand) {
+        MessageType messageType=MessageType.ACTION_PLACECARD;
+        OutParamsDTO outParamsDTO=new OutParamsDTO(
+                currentPlayer,
+                currentPlayer,
+                placedCards,
+                score,
+                hand
+        );
+        return new Message(messageType, messageParser.toJsonObject(outParamsDTO));
+    }
+
+    public static Message craftDrawCardMessage(String currentPlayer, String affectedPlayer, Card[] hand, Card[] resourceDrawableArea, Card[] goldDrawableArea) {
+        MessageType messageType=MessageType.ACTION_DRAWCARD;
+        OutParamsDTO outParamsDTO=new OutParamsDTO(
+                currentPlayer,
+                affectedPlayer,
+                hand,
+                resourceDrawableArea,
+                goldDrawableArea
+        );
+        return new Message(messageType, messageParser.toJsonObject(outParamsDTO));
+    }
 }

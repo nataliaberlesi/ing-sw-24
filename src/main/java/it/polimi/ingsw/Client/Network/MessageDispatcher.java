@@ -2,6 +2,8 @@ package it.polimi.ingsw.Client.Network;
 
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.Client.Network.DTO.*;
+import it.polimi.ingsw.Client.Network.DTO.ModelDTO.CoordinatesDTO;
+import it.polimi.ingsw.Server.Model.Coordinates;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,12 +28,10 @@ public class MessageDispatcher {
         Message message=new Message(type, params);
         networkManager.setOutMessage(messageParser.toJson(message));
     }
-    //TODO: server side -> returns true at the end of the creation of the game for the master player
     public void createGame(int numberOfPlayer, String username) {
         OutParamsDTO outParamsDTO=new OutParamsDTO(username,numberOfPlayer);
         dispatch(MessageType.CREATE,messageParser.toJsonObject(outParamsDTO));
     }
-    //TODO: server side -> returns true at the end of the creation of the game for additional players
     public void joinGame(String username) {
         OutParamsDTO outParamsDTO=new OutParamsDTO(username);
         dispatch(MessageType.JOIN,messageParser.toJsonObject(outParamsDTO));
@@ -43,5 +43,13 @@ public class MessageDispatcher {
     public void secondRound(String username, Integer index) {
         OutParamsDTO outParamsDTO=new OutParamsDTO(index,username);
         dispatch(MessageType.SECONDROUND,messageParser.toJsonObject(outParamsDTO));
+    }
+    public void placeCard(String username, Boolean isFaceUp, Integer index, Coordinates coordinates) {
+        OutParamsDTO outParamsDTO=new OutParamsDTO(username, isFaceUp, index, new CoordinatesDTO(coordinates.getX(), coordinates.getY()));
+        dispatch(MessageType.ACTION_PLACECARD, messageParser.toJsonObject(outParamsDTO));
+    }
+    public void drawCard(String username, Integer index, String drawableSection) {
+        OutParamsDTO outParamsDTO=new OutParamsDTO(username,index,drawableSection);
+        dispatch(MessageType.ACTION_DRAWCARD, messageParser.toJsonObject(outParamsDTO));
     }
 }

@@ -5,6 +5,7 @@ import it.polimi.ingsw.Server.Model.Cards.Deck;
 import it.polimi.ingsw.Server.Model.Cards.ResourceCardFactory;
 import it.polimi.ingsw.Server.Model.Color;
 import it.polimi.ingsw.Server.Model.DrawableArea;
+import it.polimi.ingsw.Server.Model.PlacedCard;
 import it.polimi.ingsw.Server.Model.Player;
 
 import java.util.ArrayList;
@@ -176,5 +177,27 @@ public class GameInstance {
             hand[i]= ResourceCardFactory.makeResourceCard(getPlayers().get(player).getPlayerHand().showCardInHand(i));
         }
         return hand;
+    }
+    public ArrayList<PlacedCard> getPlacedCards(String player) {
+        return getPlayers().get(player).getPlayerBoard().getPlacedCards();
+    }
+
+    public Integer getScore(String currentPlayer) {
+        return getPlayers().get(currentPlayer).getPlayerBoard().getScore();
+    }
+
+    public Card[] getResourceDrawableArea() {
+        Card[] cards=new Card[3];
+        for(int i=0;i<3;i++) {
+            cards[i]=ResourceCardFactory.makeResourceCard(getDrawableArea().getResourceDrawingSection().seeCard(i));
+        }
+        return cards;
+    }
+    public Card[] getGoldDrawableArea() {
+        Card[] cards=new Card[3];
+        for(int i=0;i<3;i++) {
+            cards[i]=ResourceCardFactory.makeResourceCard(getDrawableArea().getGoldDrawingSection().seeCard(i));
+        }
+        return cards;
     }
 }
