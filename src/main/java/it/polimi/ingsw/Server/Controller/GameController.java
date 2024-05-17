@@ -111,6 +111,7 @@ public class GameController {
         InParamsDTO inParamsDTO=messageParser.parseInParamsDTO(jsonParams);
         String card=null;
         gameInstance.chooseColor(inParamsDTO.username(), inParamsDTO.color());
+        gameInstance.placeStartingCard(inParamsDTO.username(),inParamsDTO.isFacingUp());
         ArrayList<PlacedCard> placedCards=gameInstance.getPlacedCards(inParamsDTO.username());
         int turn=gameInstance.nextTurn();
         String currentPlayer="";
