@@ -229,7 +229,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
         popUpStage.setScene(myPlayer.getTokenChoicePopUpScene());
         popUpStage.hide();
         popUpStage.show();
-        myPlayer.getMainScene().handleTokenColorChoice();
+        myPlayer.getTokenChoicePopUpScene().handleTokenColorChoice();
     }
 
     @Override
@@ -285,6 +285,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
             player.getMainScene().getScoreBoard().setUsernames(playerUsernames);
             player.getMainScene().getScoreBoard().updatePlayersScores(player, playersInGame.size());
             player.getMainScene().setSeeOtherPlayersGameButtons(playerUsernames);
+            player.getMainScene().setHelloPlayerLabel(player.getUsername());
         }
     }
 

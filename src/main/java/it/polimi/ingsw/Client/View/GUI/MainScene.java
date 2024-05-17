@@ -1,4 +1,5 @@
 package it.polimi.ingsw.Client.View.GUI;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -18,8 +19,8 @@ public class MainScene extends Scene {
     private final ScoreBoardGUI scoreBoard = new ScoreBoardGUI();
     private final Label turnLabel = new Label();
     private final Label actionLabel = new Label();
-    private final Button flipCardsButton = new Button("Flip your cards");
-    private final Button[] seeOtherPlayersSceneButtons = new Button[3];
+    private final Button flipCardsButton = new Button("Flip your hand");
+    private final ArrayList<Button> seeOtherPlayersSceneButtons = new ArrayList<>();
 
     public MainScene() {
         super(new AnchorPane(), 1060, 595);
@@ -32,7 +33,6 @@ public class MainScene extends Scene {
         root.getChildren().add(hand);
         root.getChildren().add(objectivesSection);
         root.getChildren().add(scoreBoard);
-
     }
 
     /**
@@ -90,13 +90,13 @@ public class MainScene extends Scene {
 
         turnLabel.setFont(new Font("System Bold", 18));
         turnLabel.setAlignment(javafx.geometry.Pos.CENTER);
-        turnLabel.setLayoutX(10);
+        turnLabel.setLayoutX(50);
         turnLabel.setLayoutY(490);
         this.root.getChildren().add(turnLabel);
 
         actionLabel.setFont(new Font("System Bold", 18));
         actionLabel.setAlignment(javafx.geometry.Pos.CENTER);
-        actionLabel.setLayoutX(10);
+        actionLabel.setLayoutX(50);
         actionLabel.setLayoutY(525);
         this.root.getChildren().add(actionLabel);
     }
@@ -127,24 +127,34 @@ public class MainScene extends Scene {
         actionLabel.setText(text);
     }
 
+    public void setHelloPlayerLabel(String username){
+        Label helloPlayerLabel = new Label("Hi "+ username);
+        helloPlayerLabel.setFont(new Font("System Bold", 18));
+        helloPlayerLabel.setAlignment(Pos.CENTER);
+        helloPlayerLabel.setLayoutX(50);
+        helloPlayerLabel.setLayoutY(455);
+        this.root.getChildren().add(helloPlayerLabel);
+    }
+
     /**
      * Sets the buttons to see other player's scenes to a specific username
      * @param usernames usernames
      */
     public void setSeeOtherPlayersGameButtons(ArrayList<String> usernames){
         for (int i = 0; i < ViewControllerGUI.numberOfPlayersInGame; i++) {
-            seeOtherPlayersSceneButtons[i] = new Button();
-            seeOtherPlayersSceneButtons[i].setLayoutX(38);
-            seeOtherPlayersSceneButtons[i].setLayoutY(322+45*i);
-            seeOtherPlayersSceneButtons[i].setMnemonicParsing(false);
-            seeOtherPlayersSceneButtons[i].setText("See " + usernames.get(i) + "'s game");
-            this.root.getChildren().add(seeOtherPlayersSceneButtons[i]);
+            seeOtherPlayersSceneButtons.add(new Button());
+            seeOtherPlayersSceneButtons.get(i).setLayoutX(38);
+            seeOtherPlayersSceneButtons.get(i).setLayoutY(322+45*i);
+            seeOtherPlayersSceneButtons.get(i).setMnemonicParsing(false);
+            seeOtherPlayersSceneButtons.get(i).setText("See " + usernames.get(i) + "'s game");
+            this.root.getChildren().add(seeOtherPlayersSceneButtons.get(i));
         }
     }
 
     public BoardGUI getBoard() {
         return board;
     }
+
     public DrawableAreaGUI getDrawableArea(){
         return drawableArea;
     }
@@ -153,9 +163,12 @@ public class MainScene extends Scene {
         return scoreBoard;
     }
 
-    public void handleFirstCardPlacement() {
+    public HandGUI getHand() {
+        return hand;
     }
 
-    public void handleTokenColorChoice() {
+    public void handleFirstCardPlacement() {
+
     }
+
 }

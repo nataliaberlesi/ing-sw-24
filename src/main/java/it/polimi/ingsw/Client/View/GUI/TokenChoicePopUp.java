@@ -19,7 +19,7 @@ public class TokenChoicePopUp extends Scene {
         super(new AnchorPane(),300,250);
         root = (AnchorPane) this.getRoot();
         Label label = new Label("Choose one of the available colors:");
-        label.setLayoutY(37);
+        label.setLayoutX(37);
         label.setLayoutY(27);
         label.setFont(new Font("System Bold", 16));
         label.setAlignment(Pos.CENTER);
@@ -51,4 +51,6 @@ public class TokenChoicePopUp extends Scene {
         }
     }
 
+    public void handleTokenColorChoice() {
+    }
 }
