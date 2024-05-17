@@ -25,7 +25,6 @@ public class SetUpGame {
         String firstPlayerStartingCardID=gameInstance.getPlayers().get(gameInstance.getTurn()).getPlayerBoard().seeStartingCardID();
         Card firstPlayerStartingCard=StartingCardFactory.makeStartingCard(firstPlayerStartingCardID);
         DrawableArea drawableArea=getDrawableArea();
-        setupHands(gameInstance);
         Card[] resourceDrawableArea= new Card[3];
         Card[] goldDrawableArea=new Card[3];
         for(int i=0;i<3;i++) {
@@ -33,6 +32,7 @@ public class SetUpGame {
             goldDrawableArea[i]=GoldCardFactory.makeGoldCard(drawableArea.getGoldDrawingSection().seeCard(i));
         }
         gameInstance.setDrawableArea(drawableArea);
+        setupHands(gameInstance);
         return new OutParamsDTO(
                 gameInstance.getPlayerTurnOrder().get(0),
                 firstPlayerStartingCard,
