@@ -18,22 +18,22 @@ public class StartingCardFactory {
      */
     private static final HashMap<String, Supplier<StartingCard>> startingCardMaker= new HashMap<>(){{
 
-        put("S0",()->new StartingCard("S0",new Symbol[]{Symbol.LEAF,Symbol.BLANK,Symbol.BUTTERFLY,Symbol.BLANK},
+        put("S00",()->new StartingCard("S00",new Symbol[]{Symbol.LEAF,Symbol.BLANK,Symbol.BUTTERFLY,Symbol.BLANK},
                 new Symbol[]{Symbol.LEAF,Symbol.MUSHROOM,Symbol.BUTTERFLY,Symbol.WOLF},new ArrayList<>(List.of(Symbol.BUTTERFLY))));
 
-        put("S1",()->new StartingCard("S1",new Symbol[]{Symbol.BLANK,Symbol.WOLF,Symbol.BLANK,Symbol.MUSHROOM},
+        put("S11",()->new StartingCard("S11",new Symbol[]{Symbol.BLANK,Symbol.WOLF,Symbol.BLANK,Symbol.MUSHROOM},
                 new Symbol[]{Symbol.WOLF,Symbol.LEAF,Symbol.MUSHROOM,Symbol.BUTTERFLY},new ArrayList<>(List.of(Symbol.MUSHROOM))));
 
-        put("S2",()->new StartingCard("S2",new Symbol[]{Symbol.BLANK,Symbol.BLANK,Symbol.BLANK,Symbol.BLANK},
+        put("S22",()->new StartingCard("S22",new Symbol[]{Symbol.BLANK,Symbol.BLANK,Symbol.BLANK,Symbol.BLANK},
                 new Symbol[]{Symbol.WOLF,Symbol.BUTTERFLY,Symbol.MUSHROOM,Symbol.LEAF},new ArrayList<>(List.of(Symbol.MUSHROOM,Symbol.LEAF))));
 
-        put("S3",()->new StartingCard("S3",new Symbol[]{Symbol.BLANK,Symbol.BLANK,Symbol.BLANK,Symbol.BLANK},
+        put("S33",()->new StartingCard("S33",new Symbol[]{Symbol.BLANK,Symbol.BLANK,Symbol.BLANK,Symbol.BLANK},
                 new Symbol[]{Symbol.BUTTERFLY,Symbol.LEAF,Symbol.WOLF,Symbol.MUSHROOM},new ArrayList<>(List.of(Symbol.BUTTERFLY,Symbol.WOLF))));
 
-        put("S4",()->new StartingCard("S4",new Symbol[]{Symbol.BLANK,Symbol.BLANK,Symbol.FULL,Symbol.FULL},
+        put("S44",()->new StartingCard("S44",new Symbol[]{Symbol.BLANK,Symbol.BLANK,Symbol.FULL,Symbol.FULL},
                 new Symbol[]{Symbol.MUSHROOM,Symbol.BUTTERFLY,Symbol.LEAF,Symbol.WOLF},new ArrayList<>(List.of(Symbol.BUTTERFLY,Symbol.WOLF,Symbol.LEAF))));
 
-        put("S5",()->new StartingCard("S5",new Symbol[]{Symbol.BLANK,Symbol.BLANK,Symbol.FULL,Symbol.FULL},
+        put("S55",()->new StartingCard("S55",new Symbol[]{Symbol.BLANK,Symbol.BLANK,Symbol.FULL,Symbol.FULL},
                 new Symbol[]{Symbol.WOLF,Symbol.MUSHROOM,Symbol.LEAF,Symbol.BUTTERFLY},new ArrayList<>(List.of(Symbol.LEAF,Symbol.WOLF,Symbol.MUSHROOM))));
 
     }};
@@ -64,7 +64,7 @@ public class StartingCardFactory {
         String startingCardPrefix="S";
         ArrayList<String> everyStartingCardID = new ArrayList<>();
         for(int i=0; i<6; i++){
-            everyStartingCardID.add(startingCardPrefix+i);
+            everyStartingCardID.add(startingCardPrefix+i+i);
         }
         return everyStartingCardID;
     }

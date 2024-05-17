@@ -154,19 +154,36 @@ public abstract class ViewController {
                 }
             }
             case START_SECONDROUND -> {
-
+                updatePlayerHand(messageParser.getCurrentPlayer());
+                setPublicObjectives();
+                // non so tu come gestisci i private objective
+                showScene();
+                if(isMyTurn(messageParser.getCurrentPlayer())){
+                    enableSecondRoundActions();
+                }
             }
             case SECONDROUND -> {
-
+                updatePlayerHand(messageParser.getCurrentPlayer());
+                showScene();
+                if(isMyTurn(messageParser.getCurrentPlayer())){
+                    enableSecondRoundActions();
+                }
             }
             case START_ACTION -> {
 
             }
             case ACTION_PLACECARD -> {
-
+                updatePlayerBoardHandScore(messageParser.getAffectedPlayer(), messageParser.getScore());
+                if(isMyTurn(messageParser.getCurrentPlayer())){
+                    enableDrawCard();
+                }
             }
             case ACTION_DRAWCARD -> {
-
+                updatePlayerHand(messageParser.getAffectedPlayer());
+                updateDrawableArea();
+                if(isMyTurn(messageParser.getCurrentPlayer())){
+                    enablePlaceCard();
+                }
             }
 
             case FINALROUND -> {
@@ -179,6 +196,18 @@ public abstract class ViewController {
             }
         }
     }
+
+    private void updatePlayerBoardHandScore(String affectedPlayer, int score){
+        updatePlayerBoard(affectedPlayer);
+        updatePlayerHand(affectedPlayer);
+        updatePlayerScore(affectedPlayer, score);
+    }
+
+    protected abstract void updatePlayerScore(String username, int score);
+
+    protected abstract void setPublicObjectives();
+
+    protected abstract void updatePlayerHand(String username);
 
     protected abstract void enablePlaceCard();
 

@@ -81,6 +81,11 @@ public class ViewControllerCLI extends ViewController {
     }
 
     @Override
+    protected void updatePlayerScore(String username, int score) {
+        playersInGame.getPlayer(username).setScore(score);
+    }
+
+    @Override
     protected void setPublicObjectives() {
         for(ObjectiveCLI objective:messageParser.getPublicObjectivesCLI()){
             objectivesSection.addObjective(objective);
@@ -94,7 +99,7 @@ public class ViewControllerCLI extends ViewController {
 
     @Override
     protected void enablePlaceCard() {
-
+        clientActions.enablePlaceCard();
     }
 
     @Override
