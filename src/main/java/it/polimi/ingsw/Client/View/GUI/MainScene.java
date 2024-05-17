@@ -1,4 +1,6 @@
 package it.polimi.ingsw.Client.View.GUI;
+import it.polimi.ingsw.Client.Network.MessageDispatcher;
+import it.polimi.ingsw.Client.Network.MessageType;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -11,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class MainScene extends Scene {
+
     private final AnchorPane root;
     private final BoardGUI board = new BoardGUI();
     private final HandGUI hand = new HandGUI();
@@ -19,21 +22,42 @@ public class MainScene extends Scene {
     private final ScoreBoardGUI scoreBoard = new ScoreBoardGUI();
     private final Label turnLabel = new Label();
     private final Label actionLabel = new Label();
-    private final Button flipCardsButton = new Button("Flip your hand");
+    private final Button flipYourHandButton = new Button("Flip your hand");
+    private final Button confirmActionButton = new Button("Confirm action");
     private final ArrayList<Button> seeOtherPlayersSceneButtons = new ArrayList<>();
+    private CardGUI chosenCard = board.getInitialCard();
+    private MessageDispatcher messageDispatcher;
+    private MessageType lastMessageToArrive;
+    private PlayerGUI myplayer;
 
     public MainScene() {
         super(new AnchorPane(), 1060, 595);
         root = (AnchorPane) this.getRoot();
         setUpBackground();
         setUpLabels();
-        setUpFlipButton();
+        setUpButtons();
         root.getChildren().add(board);
         root.getChildren().add(drawableArea);
         root.getChildren().add(hand);
         root.getChildren().add(objectivesSection);
         root.getChildren().add(scoreBoard);
     }
+
+    public MainScene(MessageDispatcher messageDispatcher, PlayerGUI myPlayer) {
+        super(new AnchorPane(), 1060, 595);
+        this.myplayer = myPlayer;
+        this.messageDispatcher = messageDispatcher;
+        root = (AnchorPane) this.getRoot();
+        setUpBackground();
+        setUpLabels();
+        setUpButtons();
+        root.getChildren().add(board);
+        root.getChildren().add(drawableArea);
+        root.getChildren().add(hand);
+        root.getChildren().add(objectivesSection);
+        root.getChildren().add(scoreBoard);
+    }
+
 
     /**
      * Sets up background image
@@ -70,45 +94,59 @@ public class MainScene extends Scene {
         Label handLabel = new Label("Hand");
         handLabel.setFont(new Font("System Bold Italic", 16));
         handLabel.setAlignment(javafx.geometry.Pos.CENTER);
-        handLabel.setLayoutX(310);
-        handLabel.setLayoutY(456);
+        handLabel.setLayoutX(370);
+        handLabel.setLayoutY(457);
         this.root.getChildren().add(handLabel);
 
         Label secretObjectiveLabel = new Label("Secret Objective");
         secretObjectiveLabel.setFont(new Font("System Bold Italic", 16));
         secretObjectiveLabel.setAlignment(javafx.geometry.Pos.CENTER);
         secretObjectiveLabel.setLayoutX(524);
-        secretObjectiveLabel.setLayoutY(456);
+        secretObjectiveLabel.setLayoutY(457);
         this.root.getChildren().add(secretObjectiveLabel);
 
         Label commonObjectivesLabel = new Label("Common Objectives");
         commonObjectivesLabel.setFont(new Font("System Bold Italic", 16));
         commonObjectivesLabel.setAlignment(javafx.geometry.Pos.CENTER);
         commonObjectivesLabel.setLayoutX(656);
-        commonObjectivesLabel.setLayoutY(456);
+        commonObjectivesLabel.setLayoutY(457);
         this.root.getChildren().add(commonObjectivesLabel);
+
+        Label confirmActionLabel = new Label("Use the confirm action button to confirm your choice");
+        confirmActionLabel.setFont(new Font("System Bold", 14));
+        confirmActionLabel.setAlignment(javafx.geometry.Pos.CENTER);
+        confirmActionLabel.setLayoutX(30);
+        confirmActionLabel.setLayoutY(547);
+        this.root.getChildren().add(confirmActionLabel);
 
         turnLabel.setFont(new Font("System Bold", 18));
         turnLabel.setAlignment(javafx.geometry.Pos.CENTER);
-        turnLabel.setLayoutX(50);
-        turnLabel.setLayoutY(490);
+        turnLabel.setLayoutX(30);
+        turnLabel.setLayoutY(487);
         this.root.getChildren().add(turnLabel);
 
-        actionLabel.setFont(new Font("System Bold", 18));
+        actionLabel.setFont(new Font("System Bold", 16));
         actionLabel.setAlignment(javafx.geometry.Pos.CENTER);
-        actionLabel.setLayoutX(50);
-        actionLabel.setLayoutY(525);
+        actionLabel.setLayoutX(30);
+        actionLabel.setLayoutY(517);
         this.root.getChildren().add(actionLabel);
     }
 
     /**
-     * Sets up all buttons for the scene
+     * Sets up all standard buttons for the scene
      */
-    private void setUpFlipButton() {
-        flipCardsButton.setLayoutX(350);
-        flipCardsButton.setLayoutY(555);
-        flipCardsButton.setMnemonicParsing(false);
-        this.root.getChildren().add(flipCardsButton);
+    private void setUpButtons() {
+        flipYourHandButton.setLayoutX(350);
+        flipYourHandButton.setLayoutY(555);
+        flipYourHandButton.setMnemonicParsing(false);
+        this.root.getChildren().add(flipYourHandButton);
+
+        confirmActionButton.setLayoutX(38);
+        confirmActionButton.setLayoutY(230);
+        confirmActionButton.setMnemonicParsing(false);
+        confirmActionButton.setFont(new Font("System Bold", 16));
+        confirmActionButton.setDisable(true);
+        this.root.getChildren().add(confirmActionButton);
     }
 
     /**
@@ -131,8 +169,8 @@ public class MainScene extends Scene {
         Label helloPlayerLabel = new Label("Hi "+ username);
         helloPlayerLabel.setFont(new Font("System Bold", 18));
         helloPlayerLabel.setAlignment(Pos.CENTER);
-        helloPlayerLabel.setLayoutX(50);
-        helloPlayerLabel.setLayoutY(455);
+        helloPlayerLabel.setLayoutX(38);
+        helloPlayerLabel.setLayoutY(457);
         this.root.getChildren().add(helloPlayerLabel);
     }
 
@@ -144,7 +182,7 @@ public class MainScene extends Scene {
         for (int i = 0; i < ViewControllerGUI.numberOfPlayersInGame; i++) {
             seeOtherPlayersSceneButtons.add(new Button());
             seeOtherPlayersSceneButtons.get(i).setLayoutX(38);
-            seeOtherPlayersSceneButtons.get(i).setLayoutY(322+45*i);
+            seeOtherPlayersSceneButtons.get(i).setLayoutY(277+45*i);
             seeOtherPlayersSceneButtons.get(i).setMnemonicParsing(false);
             seeOtherPlayersSceneButtons.get(i).setText("See " + usernames.get(i) + "'s game");
             this.root.getChildren().add(seeOtherPlayersSceneButtons.get(i));
@@ -167,8 +205,47 @@ public class MainScene extends Scene {
         return hand;
     }
 
-    public void handleFirstCardPlacement() {
-
+    public ObjectivesSectionGUI getObjectivesSection() {
+        return objectivesSection;
     }
+
+    public void handleFirstCardPlacementAndColorChoice() {
+        setActionLabel("Click on the initial card if you want to flip it");
+        enableConfirmButtonClick();
+    }
+
+    public void enableConfirmButtonClick(){
+        confirmActionButton.setDisable(false);
+        confirmActionButton.setOnMouseClicked(event -> onConfirmButtonClicked());
+    }
+
+    public void onConfirmButtonClicked(){
+        switch (lastMessageToArrive){
+            case START_FIRSTROUND, FIRSTROUND -> {
+                Boolean isFaceUp = board.getInitialCard().isFaceUp();
+                board.getInitialCard().setOnMouseClicked(null);
+                confirmActionButton.setDisable(true);
+
+                setActionLabel("Choose a color by clicking on it");
+                TokenChoicePopUp scene = myplayer.getTokenChoicePopUpScene();
+                scene.setPopUpStage();
+                scene.popUpStage.setScene(scene);
+                scene.popUpStage.show();
+                while (scene.color == null){}
+                messageDispatcher.firstRound(myplayer.getUsername(), isFaceUp, scene.color);
+            }
+
+
+        }
+    }
+
+    public void setChosenCard(CardGUI chosenCard){
+        this.chosenCard = chosenCard;
+    }
+
+    public void setLastMessageToArrive(MessageType lastMessageToArrive) {
+        this.lastMessageToArrive = lastMessageToArrive;
+    }
+
 
 }
