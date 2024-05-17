@@ -174,6 +174,7 @@ public abstract class ViewController {
             }
             case ACTION_PLACECARD -> {
                 updatePlayerBoardHandScore(messageParser.getAffectedPlayer(), messageParser.getScore());
+                showScene();
                 if(isMyTurn(messageParser.getCurrentPlayer())){
                     enableDrawCard();
                 }
@@ -181,6 +182,7 @@ public abstract class ViewController {
             case ACTION_DRAWCARD -> {
                 updatePlayerHand(messageParser.getAffectedPlayer());
                 updateDrawableArea();
+                showScene();
                 if(isMyTurn(messageParser.getCurrentPlayer())){
                     enablePlaceCard();
                 }
