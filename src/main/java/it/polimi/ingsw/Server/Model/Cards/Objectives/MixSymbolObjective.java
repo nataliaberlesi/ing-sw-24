@@ -10,11 +10,25 @@ import java.util.HashMap;
  * visible on the board of the player.
  */
 public class MixSymbolObjective implements Objective{
+
+    private final String objectiveID;
+
+
     /**
      * Points per set of 3 different Symbols (SCROLL, INK, FEATHER)
      * visible on the board of the player.
      */
     private final int points =3;
+
+    public MixSymbolObjective(String objectiveID) {
+        this.objectiveID = objectiveID;
+    }
+
+
+
+    public String getObjectiveID() {
+        return objectiveID;
+    }
     /**
      * this class ignores all updates
      *

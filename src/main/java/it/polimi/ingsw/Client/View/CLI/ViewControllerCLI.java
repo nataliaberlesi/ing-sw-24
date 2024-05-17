@@ -39,14 +39,6 @@ public class ViewControllerCLI extends ViewController {
         this.currentPlayerInScene = currentPlayerInScene;
     }
 
-    private void showCardObjectiveChoices(){
-        clientActions.enableSecondRoundActions();
-        System.out.println("""
-                You have been given two objectives,
-                these objectives only apply to you,
-                only you can theme, but you can only keep one.
-                Choose one by typing 1 (if you want the first one) or 2 (if you want the second one)""");
-    }
 
     /**
      * notifies client that view is awaiting server to check the username
@@ -61,12 +53,6 @@ public class ViewControllerCLI extends ViewController {
         return playersInGame;
     }
 
-    /**
-     * asks player to choose a username
-     */
-    private void askUsername(){
-        System.out.println("Choose a Username:");
-    }
 
     /**
      * shows scene for player to create a game, where he needs to provide his username and number of players that will be playing
@@ -74,7 +60,6 @@ public class ViewControllerCLI extends ViewController {
     @Override
     protected void switchToCreate() {
         clientActions.enableCreate();
-        askUsername();
     }
 
     /**
@@ -96,6 +81,18 @@ public class ViewControllerCLI extends ViewController {
     }
 
     @Override
+    protected void setPublicObjectives() {
+        for(ObjectiveCLI objective:messageParser.getPublicObjectivesCLI()){
+            objectivesSection.addObjective(objective);
+        }
+    }
+
+    @Override
+    protected void updatePlayerHand(String username) {
+        playersInGame.getPlayer(username).updateHand(messageParser.getHandCLI());
+    }
+
+    @Override
     protected void enablePlaceCard() {
 
     }
@@ -107,7 +104,7 @@ public class ViewControllerCLI extends ViewController {
 
     @Override
     protected void enableSecondRoundActions() {
-
+        clientActions.enableChoosePrivateObjective(messageParser.getPrivateObjectivesCLI());
     }
 
     @Override
@@ -135,7 +132,6 @@ public class ViewControllerCLI extends ViewController {
     @Override
     protected void switchToJoin() {
         clientActions.enableJoin();
-        askUsername();
     }
 
 
@@ -145,28 +141,32 @@ public class ViewControllerCLI extends ViewController {
         System.out.println(content);
     }
 
+    /**
+     *
+     * @param usernameOfPlayerWhoseTurnItIs player who needs to play his/her turn
+     * @return true if it is my clients turn
+     */
     @Override
     protected boolean isMyTurn(String usernameOfPlayerWhoseTurnItIs) {
-        try {
-            playersInGame.getPlayer(usernameOfPlayerWhoseTurnItIs);
+        setCurrentPlayer(usernameOfPlayerWhoseTurnItIs);
+        if(usernameOfPlayerWhoseTurnItIs.equals(myPlayer.getUsername())){
+            System.out.println("It's your turn!");
+            return true;
         }
-        catch (RuntimeException e){
-            return false;
-        }
-        return usernameOfPlayerWhoseTurnItIs.equals(myPlayer.getUsername());
+        System.out.println("Wait for your turn...");
+        return false;
     }
-
 
     /**
-     * explains to client how to flip or place the starting card
+     *
+     * @param usernameOfPlayerWhoseTurnItIs is the player whose turn it is, that player is set to current player and everyone else is set to not current player
      */
-    private void askPlayerToPlaceStartingCard(){
-        System.out.println("""
-                You have been assigned a starting card!
-                You can flip the card by typing 'F'
-                When you are happy with the cards orientation type 'Place'
-                once placed you can't change card orientation""");
+    private void setCurrentPlayer(String usernameOfPlayerWhoseTurnItIs) {
+        for(PlayerCLI player: playersInGame.getPlayers()){
+            player.setCurrentPlayer(player.getUsername().equals(usernameOfPlayerWhoseTurnItIs));
+        }
     }
+
 
     /**
      * in the first round the client is given a starting card that he will place on his board in the orientation of his choice,
@@ -174,8 +174,7 @@ public class ViewControllerCLI extends ViewController {
      */
     @Override
     protected void enableFirstRoundActions() {
-        clientActions.enableFirstRoundActions();
-        askPlayerToPlaceStartingCard();
+        clientActions.enablePlaceStartingCard();
     }
 
     private synchronized void printScene(){
@@ -246,7 +245,7 @@ public class ViewControllerCLI extends ViewController {
             }
             playersInGame.addPlayer(player);
         }
-        playersInGame.getPlayer(playerUsernames.getFirst()).setCurrentPlayer(true);
+        setCurrentPlayer(messageParser.getPlayers().getFirst());
     }
 
 
