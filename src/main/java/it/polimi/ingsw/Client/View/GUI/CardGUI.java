@@ -1,7 +1,9 @@
 package it.polimi.ingsw.Client.View.GUI;
 import it.polimi.ingsw.Server.Model.Coordinates;
+import it.polimi.ingsw.Server.Model.CornerCoordinatesCalculator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
 import java.util.Objects;
@@ -61,7 +63,7 @@ public class CardGUI extends AnchorPane {
         imageView.setPreserveRatio(true);
         this.getChildren().add(imageView);
         initializeCorners();
-        this.setCardImage(cardID);
+        this.setCardID(cardID);
         this.isFaceUp = isFacingUp;
         this.convertCoordinatesFromModelToGUIAndSetImageViewLayout(modelCoordinates.getX(), modelCoordinates.getY());
 
@@ -83,8 +85,16 @@ public class CardGUI extends AnchorPane {
             corners[i].setLayoutX(xPositions[i % 2]);
             corners[i].setLayoutY(yPositions[i / 2]);
             corners[i].setOpacity(0);
+            int finalI = i;
+            corners[i].setOnMouseClicked((event -> handleCornerClick(finalI, event)));
             this.getChildren().add(corners[i]);
         }
+    }
+
+    private Coordinates handleCornerClick(int i, MouseEvent event) {
+        Coordinates coordinates = CornerCoordinatesCalculator.cornerCoordinates(this.modelCoordinates, i);
+        event.consume();
+        return coordinates;
     }
 
     /**
@@ -99,15 +109,12 @@ public class CardGUI extends AnchorPane {
      * Flips the card
      */
     public void flipCard(){
-        if(isFaceUp){
-            faceDownCardID = faceUpCardID.substring(0,2);
-            setCardImage(faceDownCardID);
-        }
-        else {
-            setCardImage(this.faceUpCardID);
-        }
-
         isFaceUp=!isFaceUp;
+    }
+
+    public void flipAndShow(){
+        flipCard();
+        setCardImage();
     }
 
     /**
@@ -117,14 +124,21 @@ public class CardGUI extends AnchorPane {
         return isFaceUp;
     }
 
+
+    public void setCardID(String cardID){
+        this.faceUpCardID = cardID;
+        this.faceDownCardID = cardID.substring(0,2);
+        setCardImage();
+    }
     /**
      * Sets the card's ImageView to the Image associated with its ID
-     * @param cardID resource string to represent cardID
      * */
-    public void setCardImage(String cardID){
-        if (isFaceUp)
-            this.faceUpCardID = cardID;
-        else this.faceDownCardID = cardID;
+    public void setCardImage(){
+        String cardID;
+        if (isFaceUp){
+            cardID = faceUpCardID;
+        }
+        else cardID = faceDownCardID;
         String imagePath = String.format("Images/%s.png", cardID);
         Image cardImage = new Image(Objects.requireNonNull(GUIApplication.class.getResourceAsStream(imagePath)));
         imageView.setImage(cardImage);
@@ -132,10 +146,12 @@ public class CardGUI extends AnchorPane {
 
     /**
      * Gets the ID of the card facing up
-     * @return face up card's ID
+     * @return card's ID
      */
-    public String getFaceUpCardID(){
-        return faceUpCardID;
+    public String getCardID(){
+        if (isFaceUp)
+            return faceUpCardID;
+        else return faceDownCardID;
     }
 
     /**
