@@ -433,4 +433,18 @@ public class Board {
     public Objective seeSecondPublicObjective() {
         return objectives[1];
     }
+
+    public String seeStartingPrivateObjective(Integer index) {
+        if(index<=startingObjectivesID.length && index>=0) {
+            return startingObjectivesID[index];
+        }
+        throw new IndexOutOfBoundsException("Not so many starting private objectives");
+    }
+
+    public Objective seeObjective(int index) {
+        if(index<=objectives.length && index>=0) {
+            return objectives[index];
+        }
+        throw new IndexOutOfBoundsException("Not so many objectives");
+    }
 }

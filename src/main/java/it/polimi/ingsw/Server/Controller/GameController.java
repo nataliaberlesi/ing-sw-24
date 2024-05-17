@@ -3,6 +3,7 @@ package it.polimi.ingsw.Server.Controller;
 
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.Server.Controller.DTO.*;
+import it.polimi.ingsw.Server.Model.Cards.Objectives.Objective;
 import it.polimi.ingsw.Server.Model.PlacedCard;
 import it.polimi.ingsw.Server.Network.*;
 
@@ -130,7 +131,29 @@ public class GameController {
         return messageParser.toJsonObject(startSecondRound);
     }
     public Message playSecondRound(JsonObject jsonParams) {
-        return null;
+        InParamsDTO inParamsDTO=messageParser.parseInParamsDTO(jsonParams);
+        gameInstance.getPlayers().get(inParamsDTO.username()).getPlayerBoard().addObjective(
+                gameInstance.getPlayers().get(inParamsDTO.username()).getPlayerBoard().seeStartingPrivateObjective(
+                        inParamsDTO.index()
+                )
+        );
+        String[] privateObjectivesID=new String[2];
+        if(gameInstance.nextTurn()!=0){
+            for(int i=0;i<2;i++) {
+                privateObjectivesID[0]=
+                        gameInstance.getPlayers().get(inParamsDTO.username()).getPlayerBoard().seeStartingPrivateObjective(i);
+            }
+        }
+        String currentPlayer= gameInstance.getTurn();;
+        Message message=MessageCrafter.craftSecondRoundMessage(
+                currentPlayer,
+                inParamsDTO.username(),
+                gameInstance.getHand(currentPlayer),
+                privateObjectivesID,
+                gameInstance.getPlayers().get(currentPlayer).getPlayerBoard().seeObjective(2)
+        );
+        this.previousMessageType=message.type();
+        return message;
     }
     public boolean gameIsFull() {
         return this.gameInstance.checkIfGameIsFull();

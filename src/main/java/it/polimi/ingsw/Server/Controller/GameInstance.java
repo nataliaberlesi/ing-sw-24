@@ -1,6 +1,8 @@
 package it.polimi.ingsw.Server.Controller;
 
+import it.polimi.ingsw.Server.Model.Cards.Card;
 import it.polimi.ingsw.Server.Model.Cards.Deck;
+import it.polimi.ingsw.Server.Model.Cards.ResourceCardFactory;
 import it.polimi.ingsw.Server.Model.Color;
 import it.polimi.ingsw.Server.Model.DrawableArea;
 import it.polimi.ingsw.Server.Model.Player;
@@ -167,5 +169,12 @@ public class GameInstance {
             getPlayers().get(player).getPlayerBoard().addObjective(firstPublicObjective);
             getPlayers().get(player).getPlayerBoard().addObjective(secondPublicObjective);
         }
+    }
+    public Card[] getHand(String player) {
+        Card[] hand=new Card[3];
+        for(int i=0;i<3;i++) {
+            hand[i]= ResourceCardFactory.makeResourceCard(getPlayers().get(player).getPlayerHand().showCardInHand(i));
+        }
+        return hand;
     }
 }

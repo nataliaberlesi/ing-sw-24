@@ -4,6 +4,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.Server.Controller.DTO.OutParamsDTO;
 import it.polimi.ingsw.Server.Model.Cards.Card;
+import it.polimi.ingsw.Server.Model.Cards.ObjectiveFactory;
+import it.polimi.ingsw.Server.Model.Cards.Objectives.Objective;
 import it.polimi.ingsw.Server.Model.Cards.StartingCardFactory;
 import it.polimi.ingsw.Server.Model.Color;
 import it.polimi.ingsw.Server.Model.PlacedCard;
@@ -59,5 +61,22 @@ public class MessageCrafter {
                 color,
                 availableColors);
         return new Message(messageType,messageParser.toJsonObject(outParamsDTO));
+    }
+    public static Message craftSecondRoundMessage(String currentPlayer, String affectedPlayer, Card[] hand, String[] privateObjectivesID, Objective chosenPrivateObjective) {
+            MessageType messageType=MessageType.SECONDROUND;
+            Objective[] privateObjectives= new Objective[2];
+            for(int i=0;i<2;i++) {
+                if(privateObjectivesID[i]!=null) {
+                    privateObjectives[i]=ObjectiveFactory.makeObjective(privateObjectivesID[i]);
+                }
+            }
+            OutParamsDTO outParamsDTO=new OutParamsDTO(
+                    currentPlayer,
+                    affectedPlayer,
+                    hand,
+                    privateObjectives,
+                    chosenPrivateObjective
+            );
+            return new Message(messageType,messageParser.toJsonObject(outParamsDTO));
     }
 }

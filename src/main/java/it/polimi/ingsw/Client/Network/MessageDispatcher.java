@@ -40,4 +40,8 @@ public class MessageDispatcher {
         OutParamsDTO outParamsDTO=new OutParamsDTO(username,isFaceUp,color);
         dispatch(MessageType.FIRSTROUND,messageParser.toJsonObject(outParamsDTO));
     }
+    public void secondRound(String username, Integer index) {
+        OutParamsDTO outParamsDTO=new OutParamsDTO(index,username);
+        dispatch(MessageType.SECONDROUND,messageParser.toJsonObject(outParamsDTO));
+    }
 }
