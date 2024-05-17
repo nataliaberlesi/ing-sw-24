@@ -3,7 +3,6 @@ package it.polimi.ingsw.Client.View.CLI;
 import it.polimi.ingsw.Client.Network.MessageDispatcher;
 import it.polimi.ingsw.Client.Network.MessageParser;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class HandleClientInputCLI implements Runnable{
@@ -28,7 +27,7 @@ public class HandleClientInputCLI implements Runnable{
     public void run() {
         while(true){
             if(scanner.hasNextLine()){
-                String input = getInput();
+                String input = scanner.nextLine().toUpperCase().strip();
                 if(actionsCLI.isShowOtherPlayerBoardAndBackOFHandEnabled()){
                     String[] inputArray=input.split(" ");
                     if(inputArray.length>1 && inputArray[0].equals("SHOW")){
@@ -47,8 +46,8 @@ public class HandleClientInputCLI implements Runnable{
                 if(actionsCLI.isJoinEnabled()){
                     checkUsernameAsksAgainIfNotOk(input);
                 }
-                if(actionsCLI.isisChoosePrivateObjectiveEnabledEnabled()){
-                    int objectiveIndex=Integer.parseInt(getInput())-1;
+                if(actionsCLI.isisChoosePrivateObjectiveEnabled()){
+                    int objectiveIndex=Integer.parseInt(input)-1;
                     if(objectiveIndex==0 || objectiveIndex==1){
                         messageDispatcher.secondRound(viewController.getMyPlayer().getUsername(),objectiveIndex);
                         System.out.println("Hmm that looks like a tough objective, but ok, I'll let the server know");
@@ -160,8 +159,4 @@ public class HandleClientInputCLI implements Runnable{
         messageDispatcher.firstRound(viewController.getMyPlayer().getUsername(),viewController.getMyPlayer().getPlayerBoard().getStartingCard().isFaceUp(), chosenColor);
     }
 
-
-    private String getInput(){
-        return scanner.nextLine().toUpperCase().strip();
-    }
 }
