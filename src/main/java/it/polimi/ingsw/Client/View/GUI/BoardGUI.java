@@ -17,7 +17,7 @@ public class BoardGUI extends ScrollPane {
      * Initial card placed in the middle of the board
      */
     private final CardGUI initialCard = new CardGUI();
-    private CardGUI lastCardPlaced = new CardGUI();
+    private CardGUI lastCardPlaced;
     /**
      * Image View to contain the black token
      */
@@ -50,6 +50,7 @@ public class BoardGUI extends ScrollPane {
         playerColorToken.setLayoutX(1276);
         playerColorToken.setLayoutY(657);
         initialCard.getChildren().add(playerColorToken);
+        initialCard.setOnMouseClicked(event -> initialCard.flipAndShow());
         anchorPane.getChildren().add(initialCard);
         lastCardPlaced = initialCard;
     }
@@ -64,17 +65,15 @@ public class BoardGUI extends ScrollPane {
 
     /**
      * Sets the first player token to black
-     * @param player first player
      */
-    public void setFirstPlayerToken(PlayerGUI player){
-        if (player.isFirstPlayer()){
-            firstPlayerToken.setFitWidth(20);
-            firstPlayerToken.setFitHeight(20);
-            firstPlayerToken.setLayoutX(1306);
-            firstPlayerToken.setLayoutY(657);
-            firstPlayerToken.setImage(new Image(Objects.requireNonNull(GUIApplication.class.getResourceAsStream("Images/Tokens/BLACK.png"))));
-            initialCard.getChildren().add(firstPlayerToken);
-        }
+    public void setFirstPlayerToken(){
+        firstPlayerToken.setFitWidth(20);
+        firstPlayerToken.setFitHeight(20);
+        firstPlayerToken.setLayoutX(1306);
+        firstPlayerToken.setLayoutY(657);
+        firstPlayerToken.setImage(new Image(Objects.requireNonNull(GUIApplication.class.getResourceAsStream("Images/Tokens/BLACK.png"))));
+        initialCard.getChildren().add(firstPlayerToken);
+
     }
 
     /**
@@ -82,7 +81,7 @@ public class BoardGUI extends ScrollPane {
      * @param tokenImage image resource associated with the token color
      */
     public void setPlayerColorToken(String tokenImage){
-        String imagePath = String.format("Images/%s.png", tokenImage);
+        String imagePath = String.format("Images/Tokens/%s.png", tokenImage);
         playerColorToken.setImage(new Image(Objects.requireNonNull(GUIApplication.class.getResourceAsStream(imagePath))));
     }
 
@@ -109,4 +108,5 @@ public class BoardGUI extends ScrollPane {
             anchorPane.getChildren().add(cards.get(i));
         }
     }
+
 }
