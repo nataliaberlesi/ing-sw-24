@@ -332,6 +332,10 @@ public class MessageParser {
         CardCLI[] handCLI=new CardCLI[3];
         CardDTO[] handDTO=inParamsDTO.hand();
         for(int i=0;i<3;i++) {
+            ArrayList<String> prerequisites=new ArrayList<>();
+            if(handDTO[i].prerequisites()!=null) {
+                prerequisites=handDTO[i].prerequisites();
+            }
             handCLI[i]=
                     new CardCLI(
                             handDTO[i].cardID(),
@@ -340,7 +344,7 @@ public class MessageParser {
                             handDTO[i].cardObjective().type(),
                             handDTO[i].cardObjective().data().symbolOfInterest(),
                             handDTO[i].cardObjective().data().points(),
-                            handDTO[i].prerequisites()
+                            prerequisites
                     );
         }
         return handCLI;

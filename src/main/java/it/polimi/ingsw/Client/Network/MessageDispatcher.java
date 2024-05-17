@@ -22,7 +22,7 @@ public class MessageDispatcher {
      * @param params
      * @throws IOException
      */
-    public void dispatch(MessageType type, JsonObject params){
+    private void dispatch(MessageType type, JsonObject params){
         Message message=new Message(type, params);
         networkManager.setOutMessage(messageParser.toJson(message));
     }
