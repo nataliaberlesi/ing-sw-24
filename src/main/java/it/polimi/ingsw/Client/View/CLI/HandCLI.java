@@ -25,6 +25,7 @@ public class HandCLI {
         }
     }
 
+
     /**
      *
      * @param cardIndex of card that is being taken from hand, that will be replaced by empty card

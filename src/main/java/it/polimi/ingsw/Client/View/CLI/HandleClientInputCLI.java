@@ -28,36 +28,34 @@ public class HandleClientInputCLI implements Runnable{
     public void run() {
         while(true){
             if(scanner.hasNextLine()){
-                if(actionsCLI.isFirstRoundActionsEnabled()){
-                    dealWithFirstCardPlacement();
-                    String chosenColor=dealWithPlayerColorChoice();
-                    actionsCLI.enableShowOtherPlayerBoardAndBackOFHand();
-                    System.out.println("Now at any time if you want to see another players board (and back of hand) " +
-                            "all you need to do is type:\nSHOW 'username'");
-                    messageDispatcher.firstRound(viewController.getMyPlayer().getUsername(),viewController.getMyPlayer().getPlayerBoard().getStartingCard().isFaceUp(), chosenColor);
-                    actionsCLI.disableFirstRoundActions();
+                String input = getInput();
+                if(actionsCLI.isShowOtherPlayerBoardAndBackOFHandEnabled()){
+                    String[] inputArray=input.split(" ");
+                    if(inputArray.length>1 && inputArray[0].equals("SHOW")){
+                        showPlayerBoardAndHand(inputArray[1]);
+                    }
+                }
+                if(actionsCLI.isChooseColorEnabled()){
+                    dealWithPlayerColorChoice(input);
+                }
+                if(actionsCLI.isPlaceStartingCardEnabled()){
+                    dealWithFirstCardPlacement(input);
                 }
                 if(actionsCLI.isCreateEnabled()){
-                    checkUsernameAndNumberOfPlayersAsksAgainIfNotOK();
+                    checkUsernameAndNumberOfPlayersAsksAgainIfNotOK(input);
                 }
                 if(actionsCLI.isJoinEnabled()){
-                    checkUsernameAsksAgainIfNotOk();
+                    checkUsernameAsksAgainIfNotOk(input);
                 }
-                if(actionsCLI.isShowOtherPlayerBoardAndBackOFHandEnabled()){
-                    String[] input=getInput().split(" ");
-                    if(input.length>1 && input[0].equals("SHOW")){
-                        boolean playerNotFound=true;
-                        String username=input[1];
-                        for(PlayerCLI player: viewController.getPlayersInGame().getPlayers()){
-                            if(player.getUsername().toUpperCase().equals(username)){
-                                playerNotFound=false;
-                                viewController.setCurrentPlayerInScene(player);
-                                viewController.showScene();
-                            }
-                        }
-                        if(playerNotFound){
-                            System.out.println("Sorry I'm afraid that player is not present");
-                        }
+                if(actionsCLI.isisChoosePrivateObjectiveEnabledEnabled()){
+                    int objectiveIndex=Integer.parseInt(getInput())-1;
+                    if(objectiveIndex==0 || objectiveIndex==1){
+                        messageDispatcher.secondRound(viewController.getMyPlayer().getUsername(),objectiveIndex);
+                        System.out.println("Hmm that looks like a tough objective, but ok, I'll let the server know");
+                        actionsCLI.disableChoosePrivateObjective();
+                    }
+                    else{
+                        System.out.println("try again, accepted indexes are either 1 or 2");
                     }
                 }
 
@@ -65,18 +63,22 @@ public class HandleClientInputCLI implements Runnable{
         }
     }
 
-
-    /**
-     *
-     * @return client chosen number of players
-     */
-    private Integer askNumberOfPlayers(){
-        System.out.println("Choose number of players:");
-        return Integer.valueOf(getInput());
+    private void showPlayerBoardAndHand(String username){
+        boolean playerNotFound=true;
+        for(PlayerCLI player: viewController.getPlayersInGame().getPlayers()){
+            if(player.getUsername().toUpperCase().equals(username)){
+                playerNotFound=false;
+                viewController.setCurrentPlayerInScene(player);
+                viewController.showScene();
+            }
+        }
+        if(playerNotFound){
+            System.out.println("Sorry I'm afraid that player is not present");
+        }
     }
 
-    private void checkUsernameAsksAgainIfNotOk(){
-        String username=getInput();
+
+    private void checkUsernameAsksAgainIfNotOk(String username){
         if(viewController.checkParamsAndSendJoin(username)){
             actionsCLI.disableJoin();
             viewController.createMyPlayer(username);
@@ -87,9 +89,21 @@ public class HandleClientInputCLI implements Runnable{
     }
 
 
-    private void checkUsernameAndNumberOfPlayersAsksAgainIfNotOK(){
-        String username=getInput();
-        Integer numberOfPlayers = askNumberOfPlayers();
+    private void checkUsernameAndNumberOfPlayersAsksAgainIfNotOK(String input){
+        String[] inputArray=input.split(" ");
+        String username=inputArray[0];
+        int numberOfPlayers;
+        if(inputArray.length>1){
+            try {
+                numberOfPlayers = Integer.parseInt(inputArray[1]);
+            }
+            catch (NumberFormatException e) {
+                numberOfPlayers=0;
+            }
+        }
+        else{
+            numberOfPlayers=0;
+        }
         if(viewController.checkParamsAndSendCreate(username, numberOfPlayers)){
             actionsCLI.disableCreate();
         }
@@ -98,7 +112,6 @@ public class HandleClientInputCLI implements Runnable{
         }
     }
 
-
     /**
      * flips the starting card on the board (this can only happen before the starting card is placed)
      */
@@ -106,52 +119,45 @@ public class HandleClientInputCLI implements Runnable{
         viewController.getMyPlayer().getPlayerBoard().getStartingCard().flip();
     }
 
-
-
     /**
      * reads user input and flips card or places it accordingly, if input is not understood the method calls itself
      */
-    private void dealWithFirstCardPlacement(){
-        String input= getInput();
+    private void dealWithFirstCardPlacement(String input){
         switch (input){
             case "F"->{
                 flipStartingCard();
                 viewController.showScene();
-                dealWithFirstCardPlacement();
             }
             case "PLACE"->{
+                actionsCLI.disablePlaceStartingCard();
                 System.out.println("Congrats! You have placed your first card");
+                actionsCLI.enableChooseColor(messageParser.getAvailableColors());
             }
             default -> {
                 viewController.showErrorAlert("Command Not Recognized", "Remember 'F' is to flip the card and 'place' is to place the card\n ");
-                dealWithFirstCardPlacement();
             }
         }
     }
 
-
-    /**
-     * shows client available colors to choose from
-     * @return chosen color (if it is one of the available colors)
-     */
-    private String dealWithPlayerColorChoice(){
-        ArrayList<String> availableColors= messageParser.getAvailableColors();
-        System.out.println("Now it's time to choose your color:\nSimply type one of these colors to choose one");
-        for(String availableColor: availableColors){
-            System.out.println(availableColor);
-        }
-        String chosenColor=getInput();
-        if(availableColors.contains(chosenColor)){
+    private void dealWithPlayerColorChoice(String chosenColor){
+        if(messageParser.getAvailableColors().contains(chosenColor)){
+            actionsCLI.disableChooseColor();
+            sendStartingCardOrientationAndColorChoice(chosenColor);
             if(chosenColor.equals("GREEN")){
                 System.out.println("\nGREEN IS NOT A CREATIVE COLOR\n");
             }
             else{
                 System.out.println("\nGREAT CHOICE!\n");
             }
-            return chosenColor;
+            actionsCLI.enableShowOtherPlayerBoardAndBackOFHand();
         }
-        System.out.println("I'm afraid that color is unavailable, let's try again");
-        return dealWithPlayerColorChoice();
+        else {
+            System.out.println("I'm afraid that color is unavailable, let's try again");
+        }
+    }
+
+    private void sendStartingCardOrientationAndColorChoice(String chosenColor){
+        messageDispatcher.firstRound(viewController.getMyPlayer().getUsername(),viewController.getMyPlayer().getPlayerBoard().getStartingCard().isFaceUp(), chosenColor);
     }
 
 

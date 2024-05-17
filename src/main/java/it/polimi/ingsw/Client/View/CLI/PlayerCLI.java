@@ -46,6 +46,10 @@ public class PlayerCLI {
         this.score = score;
     }
 
+    public void updateHand(CardCLI[] newHand){
+        this.playerHand.updateHand(newHand);
+    }
+
 
     /**
      *
