@@ -8,17 +8,19 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class VerticalPatternObjectiveTest {
 
+    private final String objectiveID="O01";
+
     private VerticalPatternObjective createColumnWith(Symbol verticalSymbol){
         Coordinates bottomOfColumn=new Coordinates();
         Coordinates topOfColumn=new Coordinates(0,2);
-        VerticalPatternObjective vpo=new VerticalPatternObjective(verticalSymbol);
+        VerticalPatternObjective vpo=new VerticalPatternObjective(objectiveID,verticalSymbol);
         vpo.updateObjective(verticalSymbol, bottomOfColumn);
         vpo.updateObjective(verticalSymbol, topOfColumn);
         return vpo;
     }
 
     private VerticalPatternObjective createLongOverlappingPattern(Symbol verticalSymbol,Symbol oddSymbol){
-        VerticalPatternObjective vpo=new VerticalPatternObjective(verticalSymbol);
+        VerticalPatternObjective vpo=new VerticalPatternObjective(objectiveID,verticalSymbol);
         fillVerticalCoordinates(vpo,verticalSymbol);
         fillOddCoordinates(vpo,oddSymbol);
         return vpo;

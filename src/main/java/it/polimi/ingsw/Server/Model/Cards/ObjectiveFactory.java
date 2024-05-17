@@ -13,22 +13,22 @@ import java.util.function.Supplier;
 public class ObjectiveFactory {
 
     private final static HashMap<String, Supplier<Objective>> objectiveMaker=new HashMap<>(){{
-        put("O00",()->new DiagonalPatternObjective(Symbol.MUSHROOM));
-        put("O01",()->new DiagonalPatternObjective(Symbol.LEAF));
-        put("O02",()->new DiagonalPatternObjective(Symbol.WOLF));
-        put("O03",()->new DiagonalPatternObjective(Symbol.BUTTERFLY));
-        put("O04",()->new VerticalPatternObjective(Symbol.MUSHROOM));
-        put("O05",()->new VerticalPatternObjective(Symbol.LEAF));
-        put("O06",()->new VerticalPatternObjective(Symbol.WOLF));
-        put("O07",()->new VerticalPatternObjective(Symbol.BUTTERFLY));
-        put("O08",()->new SymbolObjective(Symbol.MUSHROOM));
-        put("O09",()->new SymbolObjective(Symbol.LEAF));
-        put("O10",()->new SymbolObjective(Symbol.WOLF));
-        put("O11",()->new SymbolObjective(Symbol.BUTTERFLY));
-        put("O12", MixSymbolObjective::new);
-        put("O13",()->new SymbolObjective(Symbol.SCROLL));
-        put("O14",()->new SymbolObjective(Symbol.INK));
-        put("O15",()->new SymbolObjective(Symbol.FEATHER));
+        put("O00",()->new DiagonalPatternObjective("O00",Symbol.MUSHROOM));
+        put("O01",()->new DiagonalPatternObjective("O01",Symbol.LEAF));
+        put("O02",()->new DiagonalPatternObjective("O02",Symbol.WOLF));
+        put("O03",()->new DiagonalPatternObjective("O03",Symbol.BUTTERFLY));
+        put("O04",()->new VerticalPatternObjective("O04",Symbol.MUSHROOM));
+        put("O05",()->new VerticalPatternObjective("O05",Symbol.LEAF));
+        put("O06",()->new VerticalPatternObjective("O06",Symbol.WOLF));
+        put("O07",()->new VerticalPatternObjective("O07",Symbol.BUTTERFLY));
+        put("O08",()->new SymbolObjective("O08",Symbol.MUSHROOM));
+        put("O09",()->new SymbolObjective("O09",Symbol.LEAF));
+        put("O10",()->new SymbolObjective("O10",Symbol.WOLF));
+        put("O11",()->new SymbolObjective("O11",Symbol.BUTTERFLY));
+        put("O12",()->new MixSymbolObjective("O12"));
+        put("O13",()->new SymbolObjective("O13",Symbol.SCROLL));
+        put("O14",()->new SymbolObjective("O14",Symbol.INK));
+        put("O15",()->new SymbolObjective("O15",Symbol.FEATHER));
     }};
 
     /**

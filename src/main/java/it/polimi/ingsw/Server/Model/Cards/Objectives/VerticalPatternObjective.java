@@ -10,6 +10,8 @@ import java.util.HashMap;
  */
 public class VerticalPatternObjective implements Objective {
 
+    private final String objectiveID;
+
     /**
      * number of points assigned for each occurrence of a vertical pattern
      */
@@ -40,7 +42,8 @@ public class VerticalPatternObjective implements Objective {
      *
      * @param symbolOfInterest symbol of the cards that form the vertical column of the pattern
      */
-    public VerticalPatternObjective(Symbol symbolOfInterest) throws InvalidSymbolException {
+    public VerticalPatternObjective(String objectiveID, Symbol symbolOfInterest) throws InvalidSymbolException {
+        this.objectiveID = objectiveID;
         this.symbolOfInterest = symbolOfInterest;
         switch (symbolOfInterest){
             case WOLF -> this.outOfLineSymbol=Symbol.MUSHROOM;
@@ -178,5 +181,9 @@ public class VerticalPatternObjective implements Objective {
 
     public Symbol getSymbol() {
         return symbolOfInterest;
+    }
+
+    public String getObjectiveID() {
+        return objectiveID;
     }
 }

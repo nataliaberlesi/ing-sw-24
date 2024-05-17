@@ -13,10 +13,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class DiagonalPatternObjectiveTest {
 
+    private final String objectiveID="O01";
+
     private static final ArrayList<Coordinates> descendingCoordinates=new ArrayList<>(Arrays.asList(new Coordinates(2,-2),new Coordinates(3,-3), new Coordinates(4,-4),new Coordinates(), new Coordinates(1,-1)));
     private static final ArrayList<Coordinates> incrementingCoordinates=new ArrayList<>(Arrays.asList(new Coordinates(2,2),new Coordinates(3,3),new Coordinates(4,4),new Coordinates(), new Coordinates(1,1)));
     private DiagonalPatternObjective autoFillDescendingPattern(Symbol symbolOfInterest){
-        DiagonalPatternObjective dpo=new DiagonalPatternObjective(symbolOfInterest);
+        DiagonalPatternObjective dpo=new DiagonalPatternObjective(objectiveID,symbolOfInterest);
         for(Coordinates coordinates: descendingCoordinates){
             dpo.updateObjective(symbolOfInterest, coordinates);
         }
@@ -24,7 +26,7 @@ class DiagonalPatternObjectiveTest {
     }
 
     private DiagonalPatternObjective autoFillIncrementingPattern(Symbol symbolOfInterest){
-        DiagonalPatternObjective dpo=new DiagonalPatternObjective(symbolOfInterest);
+        DiagonalPatternObjective dpo=new DiagonalPatternObjective(objectiveID,symbolOfInterest);
         for(Coordinates coordinates: incrementingCoordinates){
             dpo.updateObjective(symbolOfInterest, coordinates);
         }
@@ -149,7 +151,7 @@ class DiagonalPatternObjectiveTest {
      */
     @Test
     void constructorInvalidParameterThrowException() {
-        assertThrows(InvalidSymbolException.class, () -> new DiagonalPatternObjective(Symbol.SCROLL));
+        assertThrows(InvalidSymbolException.class, () -> new DiagonalPatternObjective(objectiveID,Symbol.SCROLL));
     }
 
 }

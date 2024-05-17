@@ -14,6 +14,8 @@ import java.util.HashMap;
  */
 public class DiagonalPatternObjective implements Objective {
 
+    private final String objectiveID;
+
     /**
      * number of points assigned for each time descending diagonal pattern of a certain color is found
      *
@@ -31,13 +33,18 @@ public class DiagonalPatternObjective implements Objective {
      */
     private final ArrayList<Coordinates> listOfCoordinatesOfInterest=new ArrayList<>();
 
+    public String getObjectiveID() {
+        return objectiveID;
+    }
+
     /**
      *
      * @param symbolOfInterest is the symbol that will be used to filter the cards that will be added
      *                         to the list of coordinates
      * @throws InvalidSymbolException if a symbol that can't be on the center back of a card is passed
      */
-    public DiagonalPatternObjective(Symbol symbolOfInterest) throws InvalidSymbolException {
+    public DiagonalPatternObjective(String objectiveID, Symbol symbolOfInterest) throws InvalidSymbolException {
+        this.objectiveID = objectiveID;
         if(validSymbol(symbolOfInterest)) {
             this.symbolOfInterest = symbolOfInterest;
         }

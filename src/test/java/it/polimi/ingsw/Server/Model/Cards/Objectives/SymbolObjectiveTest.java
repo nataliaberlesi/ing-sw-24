@@ -9,6 +9,9 @@ import java.util.HashMap;
 import static org.junit.jupiter.api.Assertions.*;
 
 class SymbolObjectiveTest {
+
+    private final String objectiveID="O01";
+
     private HashMap<Symbol,Integer> fillHashMapThatWillEarnTwoPointsForInk(){
         HashMap<Symbol,Integer> symbolCounter=new HashMap<>();
         symbolCounter.put(Symbol.INK,5);
@@ -47,13 +50,13 @@ class SymbolObjectiveTest {
     }
     @Test
     void twoSetsOfSymbolsReturnsFourMushroom(){
-        Objective so=new SymbolObjective(Symbol.MUSHROOM);
+        Objective so=new SymbolObjective(objectiveID,Symbol.MUSHROOM);
         assertEquals(4,so.calculatePoints(fillHashMapThatWontEarnPointsForButterfly()));
     }
 
     @Test
     void zeroSetsOfSymbolsReturnsZeroFeather(){
-        Objective so=new SymbolObjective(Symbol.BUTTERFLY);
+        Objective so=new SymbolObjective(objectiveID,Symbol.BUTTERFLY);
         assertEquals(0,so.calculatePoints(fillHashMapThatWontEarnPointsForButterfly()));
     }
     /**

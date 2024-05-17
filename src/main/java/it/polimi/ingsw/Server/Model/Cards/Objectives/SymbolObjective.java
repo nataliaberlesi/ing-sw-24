@@ -10,6 +10,9 @@ import java.util.HashMap;
  * Counts the number of occurrences of a specific symbol on the board and assigns points accordingly
  */
 public class SymbolObjective implements CardObjective, Objective {
+
+    private final String objectiveID;
+
     /**
      * points assigned for each number of occurrences of a symbol on the board
      */
@@ -24,11 +27,12 @@ public class SymbolObjective implements CardObjective, Objective {
     private final int numberOfOccurrences;
 
     /**
-     *
+     * constructor used for objective
      * @param symbolOfInterest symbol that will be counted
      * @throws InvalidSymbolException if a FULL or BLANK symbol is passed, since no cards that count those symbols to assign points exists in the game
      */
-    public SymbolObjective(Symbol symbolOfInterest) throws InvalidSymbolException{
+    public SymbolObjective(String objectiveID, Symbol symbolOfInterest) throws InvalidSymbolException{
+        this.objectiveID = objectiveID;
         if(SymbolController.isEmptySymbol(symbolOfInterest)){
             throw new InvalidSymbolException(symbolOfInterest+" can't be used for SymbolObjective");
         }
@@ -38,6 +42,20 @@ public class SymbolObjective implements CardObjective, Objective {
             numberOfOccurrences=2;
         }
         this.numberOfOccurrences=numberOfOccurrences;
+    }
+
+    /**
+     * constructor used for CardObjective
+     * @param symbolOfInterest symbol that will be counted
+     * @throws InvalidSymbolException if symbol is not a feather, ink or scroll symbol, as those are the only symbols that earn points for gold cards
+     */
+    public SymbolObjective(Symbol symbolOfInterest) throws InvalidSymbolException{
+        this.objectiveID="";
+        if(SymbolController.isEmptySymbol(symbolOfInterest) || SymbolController.isNotGoldenSymbol(symbolOfInterest)){
+            throw new InvalidSymbolException(symbolOfInterest+" can't be used for SymbolObjective");
+        }
+        this.symbolOfInterest = symbolOfInterest;
+        this.numberOfOccurrences= 1;
     }
 
 
@@ -96,5 +114,9 @@ public class SymbolObjective implements CardObjective, Objective {
 
     public Symbol getSymbol() {
         return symbolOfInterest;
+    }
+
+    public String getObjectiveID() {
+        return objectiveID;
     }
 }

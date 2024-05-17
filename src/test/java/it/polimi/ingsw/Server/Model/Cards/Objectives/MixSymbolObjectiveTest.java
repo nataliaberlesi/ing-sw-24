@@ -8,7 +8,10 @@ import java.util.HashMap;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MixSymbolObjectiveTest {
-    private final MixSymbolObjective mso= new MixSymbolObjective();
+
+    private final String objectiveID="O01";
+
+    private final MixSymbolObjective mso= new MixSymbolObjective(objectiveID);
 
     private HashMap<Symbol,Integer> fillHashMapThatWillEarnPoints(){
         HashMap<Symbol,Integer> symbolCounter=new HashMap<>();
