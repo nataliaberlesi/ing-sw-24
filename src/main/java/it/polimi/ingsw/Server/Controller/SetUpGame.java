@@ -32,17 +32,13 @@ public class SetUpGame {
             goldDrawableArea[i]=GoldCardFactory.makeGoldCard(drawableArea.getGoldDrawingSection().seeCard(i));
         }
         gameInstance.setDrawableArea(drawableArea);
-        ArrayList<Color> colors=new ArrayList<>();
-        for(Color color: Color.values()) {
-            colors.add(color);
-        }
         return new OutParamsDTO(
                 gameInstance.getPlayerTurnOrder().get(0),
                 firstPlayerStartingCard,
                 gameInstance.getPlayerTurnOrder(),
                 resourceDrawableArea,
                 goldDrawableArea,
-                colors);
+                gameInstance.getAvailableColors());
     }
 
     /**
@@ -55,27 +51,32 @@ public class SetUpGame {
         Card[] hand=setupHand(currentPlayer,gameInstance.getDrawableArea());
         Objective firstPrivateObjective=ObjectiveFactory.makeObjective(currentPlayer.getPlayerBoard().seeFirstPrivateObjectiveID());
         Objective secondPrivateObjective=ObjectiveFactory.makeObjective(currentPlayer.getPlayerBoard().seeSecondPrivateObjectiveID());
+        Objective[] privateObjectives=new Objective[2];
+        privateObjectives[0]=firstPrivateObjective;
+        privateObjectives[1]=secondPrivateObjective;
         Objective firstPublicObjective=currentPlayer.getPlayerBoard().seeFirstPublicObjective();
         Objective secondPublicObjective=currentPlayer.getPlayerBoard().seeSecondPublicObjective();
+        Objective[] publicObjectives=new Objective[2];
+        publicObjectives[0]=firstPublicObjective;
+        publicObjectives[1]=secondPublicObjective;
         return new OutParamsDTO(currentPlayer.getUsername(),
                 hand,
-                firstPrivateObjective,
-                secondPrivateObjective,
-                firstPublicObjective,
-                secondPublicObjective);
+                privateObjectives,
+                publicObjectives);
     }
 
 
     private static void setupPlayerBoards(GameInstance gameInstance) {
         Deck deck= DeckFactory.createShuffledStartingDeck();
+        gameInstance.setStartingDeck(deck);
         ArrayList<String> objectives=ObjectiveFactory.makeEveryObjectiveID();
         Collections.shuffle(objectives);
         Iterator<String> objectiveIterator= objectives.iterator();
         String firstPublicObjectiveID=objectiveIterator.next();
         String secondPublicObjectiveID=objectiveIterator.next();
-        String firstPrivateObjectiveID=objectiveIterator.next();
-        String secondPrivateObjectiveID=objectiveIterator.next();
         for(String player: gameInstance.getPlayerTurnOrder()) {
+            String firstPrivateObjectiveID=objectiveIterator.next();
+            String secondPrivateObjectiveID=objectiveIterator.next();
             gameInstance.getPlayers().get(player).startPlayerBoard(deck.next(),firstPublicObjectiveID,secondPublicObjectiveID,firstPrivateObjectiveID, secondPrivateObjectiveID);
         }
     }

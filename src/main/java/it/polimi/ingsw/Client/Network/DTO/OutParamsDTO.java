@@ -1,7 +1,6 @@
 package it.polimi.ingsw.Client.Network.DTO;
 
 import it.polimi.ingsw.Client.Network.DTO.ModelDTO.CoordinatesDTO;
-import it.polimi.ingsw.Server.Model.Coordinates;
 
 public record OutParamsDTO(String username,
                           Integer numberOfPlayers,

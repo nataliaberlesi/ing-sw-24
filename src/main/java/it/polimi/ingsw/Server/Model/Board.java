@@ -58,7 +58,7 @@ public class Board {
      * ID used to save the starting card assigned to the player during the second round
      * When the player chooses which one of the two, they become both OBJECTIVE_ALREADY_CHOSEN
      */
-    private final String[] startingObjectivesID=new String[2];
+    private static final String[] startingObjectivesID=new String[2];
 
     /**
      * array of objectives that will assign points at the end of the game
@@ -432,8 +432,5 @@ public class Board {
     }
     public Objective seeSecondPublicObjective() {
         return objectives[1];
-    }
-    public Objective seePrivateObjective() {
-        return objectives[2];
     }
 }

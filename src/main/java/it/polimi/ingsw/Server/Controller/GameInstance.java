@@ -6,6 +6,7 @@ import it.polimi.ingsw.Server.Model.DrawableArea;
 import it.polimi.ingsw.Server.Model.Player;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -26,9 +27,13 @@ public class GameInstance {
 
     public GameInstance(String masterNickname,int numberOfPlayers) {
         this.currentPlayerIndex=0;
+        allBoardsAreSet=false;
+        firstRoundIsStarted=false;
+        secondRoundIsStarted=false;
         this.numberOfPlayers = numberOfPlayers;
         playersTurnOrder =new ArrayList<String>();
         availableColors=new ArrayList<Color>();
+        availableColors.addAll(Arrays.asList(Color.values()));
         players=new HashMap<String,Player>();
         joinPlayer(masterNickname);
     }
@@ -89,9 +94,11 @@ public class GameInstance {
         return allBoardsAreSet;
     }
     public void checkIfAllBoardsAreSet() {
-        boolean flag=false;
+        boolean flag=true;
         for(String player: playersTurnOrder) {
-            flag=!players.get(player).getPlayerBoard().getPlacedCards().isEmpty();
+            if(players.get(player).getPlayerBoard().getPlacedCards().isEmpty()){
+                flag=false;
+            }
         }
         this.allBoardsAreSet=flag;
     }
@@ -111,7 +118,7 @@ public class GameInstance {
      * @return the turn index
      */
     public int nextTurn() {
-        if(currentPlayerIndex<playersTurnOrder.size()) {
+        if(currentPlayerIndex<playersTurnOrder.size()-1) {
             currentPlayerIndex++;
         }
         else {
@@ -132,6 +139,7 @@ public class GameInstance {
      */
     public void chooseColor(String username, String color) {
         players.get(username).setPlayerColor(Color.valueOf(color));
+        this.availableColors.remove(Color.valueOf(color));
     }
     /**
      * Places the saved starting card into the player's board

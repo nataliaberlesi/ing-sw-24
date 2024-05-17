@@ -148,6 +148,7 @@ public abstract class ViewController {
                 setPlayerColor(messageParser.getAffectedPlayer(), messageParser.getColor());
                 updateAvailableColors(messageParser.getAvailableColors());
                 giveInitialCard(messageParser.getCurrentPlayer());
+                showScene();
                 if(isMyTurn(messageParser.getCurrentPlayer())){
                     enableFirstRoundActions();
                 }
