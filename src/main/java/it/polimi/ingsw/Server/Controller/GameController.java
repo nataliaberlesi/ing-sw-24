@@ -131,11 +131,7 @@ public class GameController {
     }
     public Message playSecondRound(JsonObject jsonParams) {
         InParamsDTO inParamsDTO=messageParser.parseInParamsDTO(jsonParams);
-        gameInstance.getPlayers().get(inParamsDTO.username()).getPlayerBoard().addObjective(
-                gameInstance.getPlayers().get(inParamsDTO.username()).getPlayerBoard().seeStartingPrivateObjective(
-                        inParamsDTO.index()
-                )
-        );
+        gameInstance.getPlayers().get(inParamsDTO.username()).getPlayerBoard().choosePrivateObjective(inParamsDTO.index());
         String[] privateObjectivesID=new String[2];
         if(gameInstance.nextTurn()!=0){
             for(int i=0;i<2;i++) {
@@ -183,8 +179,19 @@ public class GameController {
     }
     public Message drawCard(JsonObject jsonObject) {
         InParamsDTO inParamsDTO=messageParser.parseInParamsDTO(jsonObject);
+        gameInstance.nextTurn();
         String currentPlayer=gameInstance.getTurn();
         String affectedPlayer=inParamsDTO.username();
+        if(inParamsDTO.drawableSection().equals("resourceDrawableArea")) {
+            gameInstance.getPlayers().get(affectedPlayer).getPlayerHand().placeCardInHand(
+                    gameInstance.getDrawableArea().getResourceDrawingSection().drawCard(inParamsDTO.index())
+            );
+        }
+        if(inParamsDTO.drawableSection().equals("goldDrawableArea")) {
+            gameInstance.getPlayers().get(affectedPlayer).getPlayerHand().placeCardInHand(
+                    gameInstance.getDrawableArea().getGoldDrawingSection().drawCard(inParamsDTO.index())
+            );
+        }
         Message message=MessageCrafter.craftDrawCardMessage(currentPlayer,
                 affectedPlayer,
                 gameInstance.getHand(affectedPlayer),
@@ -192,6 +199,7 @@ public class GameController {
                 getGameInstance().getGoldDrawableArea()
                 );
         this.previousMessageType=message.type();
+        gameInstance.checkIfAllObjectivesHaveBeenChosen();
         return message;
     }
     public boolean gameIsFull() {
@@ -214,6 +222,9 @@ public class GameController {
     public void startSecondRound() {
         this.gameInstance.startSecondRound();
     }
+    public void startGame() {
+        this.gameInstance.startGame();
+    }
     /**
      *
      * @throws IOException
@@ -230,5 +241,13 @@ public class GameController {
 
     public boolean allBoardsAreSet() {
         return this.gameInstance.allBoardsAreSet();
+    }
+
+    public boolean allObjectivesHaveBeenChosen() {
+        return this.gameInstance.allObjectivesHaveBeenChosen();
+    }
+
+    public boolean gameIsStarted() {
+        return this.gameInstance.gameIsStarted();
     }
 }

@@ -3,6 +3,7 @@ package it.polimi.ingsw.Server.Network;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.Server.Controller.DTO.OutParamsDTO;
+import it.polimi.ingsw.Server.Controller.GameController;
 import it.polimi.ingsw.Server.Model.Cards.Card;
 import it.polimi.ingsw.Server.Model.Cards.ObjectiveFactory;
 import it.polimi.ingsw.Server.Model.Cards.Objectives.Objective;

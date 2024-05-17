@@ -24,15 +24,19 @@ public class GameInstance {
     private DrawableArea drawableArea;
     private boolean firstRoundIsStarted;
     private boolean secondRoundIsStarted;
+    private boolean gameIsStarted;
     private boolean allBoardsAreSet;
+    private boolean allObjectivesHaveBeenChosen;
     private Deck startingDeck;
     private ArrayList<Color> availableColors;
 
     public GameInstance(String masterNickname,int numberOfPlayers) {
         this.currentPlayerIndex=0;
         allBoardsAreSet=false;
+        allObjectivesHaveBeenChosen=false;
         firstRoundIsStarted=false;
         secondRoundIsStarted=false;
+        gameIsStarted=false;
         this.numberOfPlayers = numberOfPlayers;
         playersTurnOrder =new ArrayList<String>();
         availableColors=new ArrayList<Color>();
@@ -92,6 +96,9 @@ public class GameInstance {
     }
     public void startSecondRound() {
         this.secondRoundIsStarted=true;
+    }
+    public void startGame() {
+        this.gameIsStarted=true;
     }
     public boolean allBoardsAreSet() {
         return allBoardsAreSet;
@@ -199,5 +206,22 @@ public class GameInstance {
             cards[i]=ResourceCardFactory.makeResourceCard(getDrawableArea().getGoldDrawingSection().seeCard(i));
         }
         return cards;
+    }
+
+    public boolean allObjectivesHaveBeenChosen() {
+        return this.allObjectivesHaveBeenChosen;
+    }
+
+    public boolean gameIsStarted() {
+        return this.gameIsStarted;
+    }
+    public void checkIfAllObjectivesHaveBeenChosen() {
+        boolean flag=true;
+        for(String player: playersTurnOrder) {
+            if(players.get(player).getPlayerBoard().seeFirstPrivateObjectiveID().equals("OBJECTIVE_ALREADY_BEEN_CHOSEN") && players.get(player).getPlayerBoard().seeFirstPrivateObjectiveID().equals("OBJECTIVE_ALREADY_BEEN_CHOSEN")){
+                flag=false;
+            }
+        }
+        this.allObjectivesHaveBeenChosen=flag;
     }
 }

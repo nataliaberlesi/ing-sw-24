@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Server.Network;
 
 import com.google.gson.JsonObject;
+import it.polimi.ingsw.Client.Network.DTO.OutParamsDTO;
 import it.polimi.ingsw.Server.Controller.GameController;
 
 import java.io.IOException;
@@ -83,6 +84,18 @@ public class ConnectionsHandler implements Runnable{
                     for(PlayerConnection pc:server.getConnections()) {
                         String outMessage=messageParser.toJson(new Message(MessageType.START_SECONDROUND,jsonParams));
                         pc.setOutMessage(outMessage);
+                    }
+                }
+                if(gameController.allObjectivesHaveBeenChosen() && !gameController.gameIsStarted()) {
+                    Message outMessage=MessageCrafter.craftDrawCardMessage(
+                            gameController.getGameInstance().getTurn(),
+                            gameController.getGameInstance().getTurn(),
+                            gameController.getGameInstance().getHand(gameController.getGameInstance().getTurn()),
+                            gameController.getGameInstance().getResourceDrawableArea(),
+                            gameController.getGameInstance().getGoldDrawableArea());
+                    gameController.startGame();
+                    for(PlayerConnection pc: server.getConnections()) {
+                        String outMessageString=messageParser.toJson(outMessage);
                     }
                 }
             }
