@@ -9,7 +9,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
@@ -28,11 +27,6 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     private Stage stage;
 
     /**
-     * PopUp application stage.
-     */
-    private Stage popUpStage;
-
-    /**
      * Alert dialog for errors.
      */
     private Alert errorAlert;
@@ -41,6 +35,8 @@ public class ViewControllerGUI extends ViewController implements Initializable{
      * Instance of player to represent my player
      */
     private PlayerGUI myPlayer;
+
+    private PlayerGUI playerInScene;
 
     /**
      * Array list of players to represent players in game
@@ -73,13 +69,6 @@ public class ViewControllerGUI extends ViewController implements Initializable{
         this.errorAlert = new Alert(Alert.AlertType.ERROR);
     }
 
-    protected void setPopUpStage(){
-        popUpStage = new Stage();
-        popUpStage.setResizable(false);
-        popUpStage.setFullScreen(false);
-        popUpStage.setTitle("Codex Naturalis");
-        popUpStage.getIcons().add(new Image(String.valueOf(GUIApplication.class.getResource("Images/cranioLogo.png"))));
-    }
 
 
     public Stage getStage(){
@@ -176,7 +165,9 @@ public class ViewControllerGUI extends ViewController implements Initializable{
 
     @Override
     protected void createMyPlayer(String username) {
-        myPlayer = new PlayerGUI(username);
+        myPlayer = new PlayerGUI(username, this.messageDispatcher);
+        //myPlayer = new PlayerGUI(username);
+        playerInScene = myPlayer;
     }
 
 
@@ -190,6 +181,21 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     @Override
     public void updateView(){
         Platform.runLater(super::updateView);
+    }
+
+    @Override
+    protected void updatePlayerScore(String username, int score) {
+
+    }
+
+    @Override
+    protected void setPublicObjectives() {
+
+    }
+
+    @Override
+    protected void updatePlayerHand(String username) {
+
     }
 
     @Override
@@ -224,17 +230,13 @@ public class ViewControllerGUI extends ViewController implements Initializable{
 
     @Override
     protected void enableFirstRoundActions() {
-        myPlayer.getMainScene().handleFirstCardPlacement();
-        setPopUpStage();
-        popUpStage.setScene(myPlayer.getTokenChoicePopUpScene());
-        popUpStage.hide();
-        popUpStage.show();
-        myPlayer.getTokenChoicePopUpScene().handleTokenColorChoice();
+        myPlayer.getMainScene().setLastMessageToArrive(messageParser.getMessageType());
+        myPlayer.getMainScene().handleFirstCardPlacementAndColorChoice();
     }
 
     @Override
     protected void showScene() {
-        stage.setScene(myPlayer.getMainScene());
+        stage.setScene(playerInScene.getMainScene());
         stage.hide();
         stage.show();
     }
@@ -262,11 +264,12 @@ public class ViewControllerGUI extends ViewController implements Initializable{
 
     @Override
     protected void giveInitialCard(String username) {
-        String messageParserCardID = messageParser.getCardID();
-        String initialCard = messageParserCardID.concat("F");
+        String initialCardID = messageParser.getCardID();
         for (PlayerGUI player: playersInGame){
             if (player.getUsername().equals(username)){
-                player.getMainScene().getBoard().getInitialCard().setCardImage(initialCard);
+                CardGUI initialCard = player.getMainScene().getBoard().getInitialCard();
+                initialCard.setCardID(initialCardID);
+                initialCard.setCardImage();
             }
         }
     }
@@ -286,6 +289,9 @@ public class ViewControllerGUI extends ViewController implements Initializable{
             player.getMainScene().getScoreBoard().updatePlayersScores(player, playersInGame.size());
             player.getMainScene().setSeeOtherPlayersGameButtons(playerUsernames);
             player.getMainScene().setHelloPlayerLabel(player.getUsername());
+            if (player.getUsername().equals(playerUsernames.getFirst())){
+                player.getMainScene().getBoard().setFirstPlayerToken();
+            }
         }
     }
 
@@ -313,8 +319,11 @@ public class ViewControllerGUI extends ViewController implements Initializable{
 
     @Override
     protected void setPlayerColor(String affectedPlayer, String color) {
-
+        for (PlayerGUI player : playersInGame){
+            if (player.getUsername().equals(affectedPlayer)){
+                player.setColor(color);
+                player.getMainScene().getBoard().setPlayerColorToken(color);
+            }
+        }
     }
-
-
 }

@@ -1,19 +1,24 @@
 package it.polimi.ingsw.Client.View.GUI;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 
 public class TokenChoicePopUp extends Scene {
-    AnchorPane root;
-    ArrayList<ImageView> availableTokens = new ArrayList<>();
+    private AnchorPane root;
+    Stage popUpStage;
+    String color = null;
+    private HashMap<String, ImageView> availableTokens = new HashMap<>();
 
     public TokenChoicePopUp(ArrayList<String> tokenColors) {
         super(new AnchorPane(),300,250);
@@ -34,7 +39,8 @@ public class TokenChoicePopUp extends Scene {
             imageView.setFitHeight(60);
             String imagePath = String.format("Images/Tokens/%s.png", token);
             imageView.setImage(new Image(Objects.requireNonNull(GUIApplication.class.getResourceAsStream(imagePath))));
-            availableTokens.add(imageView);
+            imageView.setOnMouseClicked(event -> handleTokenColorChoice(token));
+            availableTokens.put(token, imageView);
         }
         int xOffset = 70; //Base x position for the first token
         int yOffset = 80; //Base y position for the first token
@@ -44,13 +50,22 @@ public class TokenChoicePopUp extends Scene {
         for (int i = 0; i < tokenColors.size(); i++) {
             int x = xOffset + (i%2) * xStep; // % 2 creates two columns
             int y = yOffset + (i/2) * yStep; // / 2 increments row index every 2 tokens
-            ImageView imageView = availableTokens.get(i);
+            ImageView imageView = availableTokens.get(tokenColors.get(i));
             imageView.setLayoutX(x);
             imageView.setLayoutY(y);
             root.getChildren().add(imageView);
         }
     }
 
-    public void handleTokenColorChoice() {
+    public void handleTokenColorChoice(String color) {
+        this.color = color;
+    }
+
+    protected void setPopUpStage(){
+        popUpStage = new Stage();
+        popUpStage.setResizable(false);
+        popUpStage.setFullScreen(false);
+        popUpStage.setTitle("Codex Naturalis");
+        popUpStage.getIcons().add(new Image(String.valueOf(GUIApplication.class.getResource("Images/cranioLogo.png"))));
     }
 }

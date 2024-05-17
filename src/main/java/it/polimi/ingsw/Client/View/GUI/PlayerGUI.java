@@ -1,15 +1,23 @@
 package it.polimi.ingsw.Client.View.GUI;
 
+import it.polimi.ingsw.Client.Network.MessageDispatcher;
+
 import java.util.ArrayList;
 
 public class PlayerGUI {
     private final String username;
     private int score = 0;
-    private boolean isFirstPlayer = false;
+    private String color;
     private final MainScene mainScene;
     private TokenChoicePopUp tokenChoicePopUpScene;
     public PlayerGUI(String username) {
         this.mainScene = new MainScene();
+        this.username = username;
+    }
+
+    public PlayerGUI(String username, MessageDispatcher messageDispatcher) {
+        this.mainScene = new MainScene(messageDispatcher, this);
+
         this.username = username;
     }
 
@@ -25,14 +33,6 @@ public class PlayerGUI {
         return username;
     }
 
-    public boolean isFirstPlayer() {
-        return isFirstPlayer;
-    }
-
-    public void setAsFirstPlayer() {
-        isFirstPlayer = true;
-    }
-
     public MainScene getMainScene() {
         return mainScene;
     }
@@ -43,5 +43,13 @@ public class PlayerGUI {
 
     public TokenChoicePopUp getTokenChoicePopUpScene() {
         return tokenChoicePopUpScene;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
     }
 }
