@@ -111,11 +111,15 @@ public class HandleClientInputCLI implements Runnable{
                     }
                 }
                 if(input.equals("HELP")){
-                    System.out.println("ACTIONS:\n" +
+                    System.out.println("ACTIONS:\n\n" +
                             "1) PLACE CARD\n" +
                             "to place a card simply type PLACE followed by the index of the card in your hand you want to place,\n" +
                             "followed by the coordinates where you want to place the card (x,y),\n" +
-                            "followed UP/DOWN depending on weather you want the card facing up or facing down");
+                            "followed UP/DOWN depending on weather you want the card facing up or facing down\n" +
+                            "EXAMPLE: PLACE 3 (-4,7) DOWN\n\n" +
+                            "2) DRAW CARD\n" +
+                            "to draw a card simply type DRAW followed by GOLD/RESOURCE and the index of the card you want to draw\n" +
+                            "EXAMPLE: DRAW RESOURCE 2" );
                 }
             }
         }
@@ -182,7 +186,7 @@ public class HandleClientInputCLI implements Runnable{
      * @return string translated to actual coordinates
      */
     private Coordinates getCoordinates(String coordinatesString){
-        coordinatesString=coordinatesString.replace("()","");
+        coordinatesString=coordinatesString.replaceAll("[()]","");
         String[] coordinatesArray=coordinatesString.split(",");
         if(coordinatesArray.length==2){
             try {
