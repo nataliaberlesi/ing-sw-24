@@ -16,7 +16,7 @@ public class SymbolObjective implements CardObjective, Objective {
     /**
      * points assigned for each number of occurrences of a symbol on the board
      */
-    private final int points=2;
+    private final int points;
     /**
      * symbol that will be counted
      */
@@ -32,6 +32,7 @@ public class SymbolObjective implements CardObjective, Objective {
      * @throws InvalidSymbolException if a FULL or BLANK symbol is passed, since no cards that count those symbols to assign points exists in the game
      */
     public SymbolObjective(String objectiveID, Symbol symbolOfInterest) throws InvalidSymbolException{
+        this.points=2;
         this.objectiveID = objectiveID;
         if(SymbolController.isEmptySymbol(symbolOfInterest)){
             throw new InvalidSymbolException(symbolOfInterest+" can't be used for SymbolObjective");
@@ -50,6 +51,7 @@ public class SymbolObjective implements CardObjective, Objective {
      * @throws InvalidSymbolException if symbol is not a feather, ink or scroll symbol, as those are the only symbols that earn points for gold cards
      */
     public SymbolObjective(Symbol symbolOfInterest) throws InvalidSymbolException{
+        this.points=1;
         this.objectiveID="";
         if(SymbolController.isEmptySymbol(symbolOfInterest) || SymbolController.isNotGoldenSymbol(symbolOfInterest)){
             throw new InvalidSymbolException(symbolOfInterest+" can't be used for SymbolObjective");
@@ -57,7 +59,6 @@ public class SymbolObjective implements CardObjective, Objective {
         this.symbolOfInterest = symbolOfInterest;
         this.numberOfOccurrences= 1;
     }
-
 
     /**
      * calculates the points when card is placed by calling other method with same name
@@ -114,9 +115,5 @@ public class SymbolObjective implements CardObjective, Objective {
 
     public Symbol getSymbol() {
         return symbolOfInterest;
-    }
-
-    public String getObjectiveID() {
-        return objectiveID;
     }
 }

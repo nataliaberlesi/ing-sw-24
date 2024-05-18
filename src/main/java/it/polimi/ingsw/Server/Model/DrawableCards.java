@@ -42,7 +42,7 @@ public class DrawableCards {
         if(cardIndex<0 || cardIndex>2){
             throw new IndexOutOfBoundException(cardIndex+" is not a valid index of card in drawing section");
         }
-        return drawCard(cardIndex);
+        return drawableCards[cardIndex];
     }
 
     /**
