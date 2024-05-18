@@ -9,6 +9,7 @@ import it.polimi.ingsw.Client.View.CLI.CardCLI;
 import it.polimi.ingsw.Client.View.CLI.ObjectiveCLI;
 import it.polimi.ingsw.Client.View.GUI.CardGUI;
 import it.polimi.ingsw.Client.View.ViewController;
+import it.polimi.ingsw.Server.Model.Cards.Card;
 import it.polimi.ingsw.Server.Model.Coordinates;
 import java.util.ArrayList;
 import java.util.List;
@@ -384,15 +385,12 @@ public class MessageParser {
      * @return
      */
     public String getCardID(String drawableArea, int index) {
-        switch (drawableArea) {
-            case("resourceDrawableArea")->{
-                return inParamsDTO.resourceDrawableArea()[index].cardID();
-            }
-            case("goldDrawableArea")->{
-                return inParamsDTO.goldDrawableArea()[index].cardID();
-            }
+        CardDTO cardDTO=getCardDTO(drawableArea,index);
+        if(cardDTO!=null) {
+            return cardDTO.cardID();
+        } else {
+            return null;
         }
-        throw new MessageParserException("Not such case exception: "+drawableArea);
     }
 
     /**
