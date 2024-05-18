@@ -3,6 +3,7 @@ package it.polimi.ingsw.Server.Controller;
 
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.Server.Controller.DTO.*;
+import it.polimi.ingsw.Server.Model.Cards.Card;
 import it.polimi.ingsw.Server.Model.Cards.ObjectiveFactory;
 import it.polimi.ingsw.Server.Model.Cards.Objectives.Objective;
 import it.polimi.ingsw.Server.Model.PlacedCard;
@@ -132,20 +133,23 @@ public class GameController {
     public Message playSecondRound(JsonObject jsonParams) {
         InParamsDTO inParamsDTO=messageParser.parseInParamsDTO(jsonParams);
         Objective[] privateObjectives=new Objective[2];
+        String currentPlayer= "";
+        Card[] hand=new Card[3];
         if(gameInstance.nextTurn()!=0){
             for(int i=0;i<2;i++) {
                 privateObjectives[i]=
                         ObjectiveFactory.makeObjective(gameInstance.getPlayers().get(gameInstance.getTurn()).getPlayerBoard().seeStartingPrivateObjective(i));
             }
+            currentPlayer= gameInstance.getTurn();
+            hand=gameInstance.getHand(currentPlayer);
         }
         gameInstance.getPlayers().get(inParamsDTO.username()).getPlayerBoard().choosePrivateObjective(inParamsDTO.index());
-        String currentPlayer= gameInstance.getTurn();
         Message message=MessageCrafter.craftSecondRoundMessage(
                 currentPlayer,
                 inParamsDTO.username(),
                 gameInstance.getHand(currentPlayer),
                 privateObjectives,
-                gameInstance.getPlayers().get(currentPlayer).getPlayerBoard().seeObjective(2)
+                gameInstance.getPlayers().get(inParamsDTO.username()).getPlayerBoard().seeObjective(2)
         );
         this.previousMessageType=message.type();
         return message;
