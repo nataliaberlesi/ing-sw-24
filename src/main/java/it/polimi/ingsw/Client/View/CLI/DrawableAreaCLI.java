@@ -102,12 +102,18 @@ public class DrawableAreaCLI {
 
 
     public void putGoldCard(int cardIndex, CardCLI replacementCard) throws IllegalArgumentException{
+        if(replacementCard==null){
+            replacementCard=new CardCLI();
+        }
         checkLegalIndex(cardIndex);
         checkLegalCard(replacementCard,'G');
         putCard(cardIndex, replacementCard, goldCards);
     }
 
     public void putResourceCard(int cardIndex, CardCLI replacementCard) throws IllegalArgumentException{
+        if(replacementCard==null){
+            replacementCard=new CardCLI();
+        }
         checkLegalIndex(cardIndex);
         checkLegalCard(replacementCard,'R');
         putCard(cardIndex, replacementCard, resourceCards);

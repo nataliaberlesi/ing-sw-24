@@ -12,8 +12,6 @@ public class Hand {
      */
     private final String[] cards = new String[3];
 
-
-
     /**
      *
      * @param resourceCard that is being drawn and will be added to hand

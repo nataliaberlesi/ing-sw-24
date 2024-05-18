@@ -1,5 +1,8 @@
 package it.polimi.ingsw.Client.View.CLI;
 
+/**
+ * stores graphic information about player, such as players board, hand and score
+ */
 public class PlayerCLI {
 
     /**

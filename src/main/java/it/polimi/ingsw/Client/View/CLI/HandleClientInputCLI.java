@@ -163,7 +163,7 @@ public class HandleClientInputCLI implements Runnable{
      */
     private boolean drawCard(String[] inputArray){
         boolean success=false;
-        int index = getIndex(inputArray[0]);
+        int index = getIndex(inputArray[1]);
         if (index >= 0 && index <= 2) {
             switch (inputArray[0]) {
                 case "GOLD" -> {

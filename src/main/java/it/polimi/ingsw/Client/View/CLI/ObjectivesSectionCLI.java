@@ -6,6 +6,9 @@ package it.polimi.ingsw.Client.View.CLI;
 public class ObjectivesSectionCLI {
 
 
+    /**
+     * clients private objective, only client can view it
+     */
     private ObjectiveCLI privateObjective;
 
     /**
