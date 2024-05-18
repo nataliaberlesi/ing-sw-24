@@ -113,7 +113,7 @@ public class ViewControllerCLI extends ViewController {
 
     @Override
     protected void enableDrawCard() {
-
+        clientActions.enableDrawCard();
     }
 
     @Override
