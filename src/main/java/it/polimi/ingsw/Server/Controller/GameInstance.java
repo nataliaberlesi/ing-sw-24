@@ -179,7 +179,12 @@ public class GameInstance {
     public Card[] getHand(String player) {
         Card[] hand=new Card[3];
         for(int i=0;i<3;i++) {
-            hand[i]= ResourceCardFactory.makeResourceCard(getPlayers().get(player).getPlayerHand().showCardInHand(i));
+            String cardID=getPlayers().get(player).getPlayerHand().showCardInHand(i);
+            if(cardID!=null) {
+                hand[i]= ResourceCardFactory.makeResourceCard(cardID);
+            } else {
+                hand[i]=null;
+            }
         }
         return hand;
     }

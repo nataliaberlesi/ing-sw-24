@@ -159,7 +159,7 @@ public class GameController {
         InParamsDTO inParamsDTO=messageParser.parseInParamsDTO(jsonParams);
         String currentPlayer=inParamsDTO.username();
         if(!gameInstance.getPlayers().get(inParamsDTO.username()).getPlayerBoard().placeCard(
-                gameInstance.getPlayers().get(inParamsDTO.username()).getPlayerHand().getCardFromHand(inParamsDTO.index()),
+                gameInstance.getPlayers().get(inParamsDTO.username()).getPlayerHand().showCardInHand(inParamsDTO.index()),
                 inParamsDTO.coordinates(),
                 inParamsDTO.isFacingUp()
         )) {
@@ -173,6 +173,7 @@ public class GameController {
             this.previousMessageType=message.type();
             return message;
         }
+        gameInstance.getPlayers().get(inParamsDTO.username()).getPlayerHand().getCardFromHand(inParamsDTO.index());
         Message message=MessageCrafter.craftPlaceCardMessage(
                 currentPlayer,
                 gameInstance.getPlacedCards(currentPlayer),

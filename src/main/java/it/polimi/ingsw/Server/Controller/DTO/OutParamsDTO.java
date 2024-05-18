@@ -99,7 +99,7 @@ public record OutParamsDTO(String currentPlayer,
      * Constructor used for ACTION_PLACECARD params
      */
     public OutParamsDTO(String currentPlayer, String affectedPlayer, ArrayList<PlacedCard> placedCards, Integer score, Card[] hand){
-        this(currentPlayer, null, null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null);
+        this(currentPlayer, null, null,affectedPlayer,placedCards,score,null,hand,null,null,null,null,null,null,null,null,null,null);
     }
 
     /**
