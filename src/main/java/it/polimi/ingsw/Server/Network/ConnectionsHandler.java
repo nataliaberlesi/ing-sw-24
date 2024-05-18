@@ -94,6 +94,7 @@ public class ConnectionsHandler implements Runnable{
             gameController.startGame();
             for(PlayerConnection pc: server.getConnections()) {
                 String outMessageString=messageParser.toJson(outMessage);
+                pc.setOutMessage(outMessageString);
             }
         }
     }

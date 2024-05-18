@@ -151,6 +151,7 @@ public class GameController {
                 privateObjectives,
                 gameInstance.getPlayers().get(inParamsDTO.username()).getPlayerBoard().seeObjective(2)
         );
+        gameInstance.checkIfAllObjectivesHaveBeenChosen();
         this.previousMessageType=message.type();
         return message;
     }
@@ -203,7 +204,6 @@ public class GameController {
                 getGameInstance().getGoldDrawableArea()
                 );
         this.previousMessageType=message.type();
-        gameInstance.checkIfAllObjectivesHaveBeenChosen();
         return message;
     }
     public boolean gameIsFull() {
