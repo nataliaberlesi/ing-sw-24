@@ -300,19 +300,22 @@ public class MessageParser {
      */
     public CardCLI getCardCLI(String drawingSection, int index) {
         CardDTO cardDTO=getCardDTO(drawingSection,index);
-        ArrayList<String> prerequisites=new ArrayList<>();
-        if (cardDTO.prerequisites()!=null) {
-            prerequisites=cardDTO.prerequisites();
+        if(cardDTO!=null) {
+            ArrayList<String> prerequisites=new ArrayList<>();
+            if (cardDTO.prerequisites()!=null) {
+                prerequisites=cardDTO.prerequisites();
+            }
+            return new CardCLI(
+                    cardDTO.cardID(),
+                    cardDTO.frontCorners(),
+                    cardDTO.backCorners(),
+                    cardDTO.cardObjective().type(),
+                    cardDTO.cardObjective().data().symbolOfInterest(),
+                    cardDTO.cardObjective().data().points(),
+                    prerequisites
+            );
         }
-        return new CardCLI(
-                cardDTO.cardID(),
-                cardDTO.frontCorners(),
-                cardDTO.backCorners(),
-                cardDTO.cardObjective().type(),
-                cardDTO.cardObjective().data().symbolOfInterest(),
-                cardDTO.cardObjective().data().points(),
-                prerequisites
-        );
+        return null;
     }
 
     /**
@@ -332,20 +335,24 @@ public class MessageParser {
         CardCLI[] handCLI=new CardCLI[3];
         CardDTO[] handDTO=inParamsDTO.hand();
         for(int i=0;i<3;i++) {
-            ArrayList<String> prerequisites=new ArrayList<>();
-            if(handDTO[i].prerequisites()!=null) {
-                prerequisites=handDTO[i].prerequisites();
+            if(handDTO[i]!=null) {
+                ArrayList<String> prerequisites=new ArrayList<>();
+                if(handDTO[i].prerequisites()!=null) {
+                    prerequisites=handDTO[i].prerequisites();
+                }
+                handCLI[i]=
+                        new CardCLI(
+                                handDTO[i].cardID(),
+                                handDTO[i].frontCorners(),
+                                handDTO[i].backCorners(),
+                                handDTO[i].cardObjective().type(),
+                                handDTO[i].cardObjective().data().symbolOfInterest(),
+                                handDTO[i].cardObjective().data().points(),
+                                prerequisites
+                        );
+            } else {
+                handCLI[i]=null;
             }
-            handCLI[i]=
-                    new CardCLI(
-                            handDTO[i].cardID(),
-                            handDTO[i].frontCorners(),
-                            handDTO[i].backCorners(),
-                            handDTO[i].cardObjective().type(),
-                            handDTO[i].cardObjective().data().symbolOfInterest(),
-                            handDTO[i].cardObjective().data().points(),
-                            prerequisites
-                    );
         }
         return handCLI;
     }
