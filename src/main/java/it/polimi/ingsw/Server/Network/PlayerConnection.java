@@ -50,6 +50,9 @@ public class PlayerConnection implements Runnable{
         while(outMessage!=null) {}
         socket.close();
     }
+    public boolean isConnected() {
+        return socket.isConnected();
+    }
 
     /**
      * Sends a Message into outSocket

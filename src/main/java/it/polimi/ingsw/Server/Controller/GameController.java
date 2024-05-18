@@ -3,6 +3,7 @@ package it.polimi.ingsw.Server.Controller;
 
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.Server.Controller.DTO.*;
+import it.polimi.ingsw.Server.Model.Cards.ObjectiveFactory;
 import it.polimi.ingsw.Server.Model.Cards.Objectives.Objective;
 import it.polimi.ingsw.Server.Model.PlacedCard;
 import it.polimi.ingsw.Server.Network.*;
@@ -117,8 +118,7 @@ public class GameController {
         String currentPlayer="";
         if(turn!=0) {
             currentPlayer=gameInstance.getTurn();
-            card=gameInstance.getStartingDeck().next();
-            gameInstance.saveStartingCard(currentPlayer,card);
+            card=gameInstance.getPlayers().get(currentPlayer).getPlayerBoard().seeStartingCardID();
         }
         gameInstance.checkIfAllBoardsAreSet();
         Message message = MessageCrafter.craftFirstRoundMessage(card,currentPlayer,gameInstance.getAvailableColors(),inParamsDTO.username(),placedCards,inParamsDTO.color());
@@ -131,20 +131,20 @@ public class GameController {
     }
     public Message playSecondRound(JsonObject jsonParams) {
         InParamsDTO inParamsDTO=messageParser.parseInParamsDTO(jsonParams);
-        gameInstance.getPlayers().get(inParamsDTO.username()).getPlayerBoard().choosePrivateObjective(inParamsDTO.index());
-        String[] privateObjectivesID=new String[2];
+        Objective[] privateObjectives=new Objective[2];
         if(gameInstance.nextTurn()!=0){
             for(int i=0;i<2;i++) {
-                privateObjectivesID[i]=
-                        gameInstance.getPlayers().get(inParamsDTO.username()).getPlayerBoard().seeStartingPrivateObjective(i);
+                privateObjectives[i]=
+                        ObjectiveFactory.makeObjective(gameInstance.getPlayers().get(gameInstance.getTurn()).getPlayerBoard().seeStartingPrivateObjective(i));
             }
         }
-        String currentPlayer= gameInstance.getTurn();;
+        gameInstance.getPlayers().get(inParamsDTO.username()).getPlayerBoard().choosePrivateObjective(inParamsDTO.index());
+        String currentPlayer= gameInstance.getTurn();
         Message message=MessageCrafter.craftSecondRoundMessage(
                 currentPlayer,
                 inParamsDTO.username(),
                 gameInstance.getHand(currentPlayer),
-                privateObjectivesID,
+                privateObjectives,
                 gameInstance.getPlayers().get(currentPlayer).getPlayerBoard().seeObjective(2)
         );
         this.previousMessageType=message.type();

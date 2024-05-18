@@ -125,6 +125,7 @@ public class Server implements Runnable{
                     waitPlayer();
                 } catch (IOException ioe) {
                     System.out.println("LOG: Failed to accept player");
+
                 }
                 sendMasterStatus(false);
             }

@@ -172,11 +172,9 @@ public class GameInstance {
      * @param firstPublicObjective
      * @param secondPublicObjective
      */
-    public void setPublicObjectives(String firstPublicObjective, String secondPublicObjective) {
-        for(String player: getPlayerTurnOrder()) {
-            getPlayers().get(player).getPlayerBoard().addObjective(firstPublicObjective);
-            getPlayers().get(player).getPlayerBoard().addObjective(secondPublicObjective);
-        }
+    public void setPublicObjectives(String currentPlayer,String firstPublicObjective, String secondPublicObjective) {
+        getPlayers().get(currentPlayer).getPlayerBoard().addObjective(firstPublicObjective);
+        getPlayers().get(currentPlayer).getPlayerBoard().addObjective(secondPublicObjective);
     }
     public Card[] getHand(String player) {
         Card[] hand=new Card[3];

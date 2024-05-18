@@ -63,14 +63,8 @@ public class MessageCrafter {
                 availableColors);
         return new Message(messageType,messageParser.toJsonObject(outParamsDTO));
     }
-    public static Message craftSecondRoundMessage(String currentPlayer, String affectedPlayer, Card[] hand, String[] privateObjectivesID, Objective chosenPrivateObjective) {
+    public static Message craftSecondRoundMessage(String currentPlayer, String affectedPlayer, Card[] hand, Objective[] privateObjectives, Objective chosenPrivateObjective) {
             MessageType messageType=MessageType.SECONDROUND;
-            Objective[] privateObjectives= new Objective[2];
-            for(int i=0;i<2;i++) {
-                if(privateObjectivesID[i]!=null) {
-                    privateObjectives[i]=ObjectiveFactory.makeObjective(privateObjectivesID[i]);
-                }
-            }
             OutParamsDTO outParamsDTO=new OutParamsDTO(
                     currentPlayer,
                     affectedPlayer,

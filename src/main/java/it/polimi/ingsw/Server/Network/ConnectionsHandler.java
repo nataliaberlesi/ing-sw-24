@@ -63,43 +63,69 @@ public class ConnectionsHandler implements Runnable{
         }
 
     }
-
+    private void checkStartFirstRound() {
+        if(gameController.gameIsFull() && !gameController.firstRoundIsStarted()) {
+            gameController.startFirstRound();
+            JsonObject jsonParams=gameController.getJSONStartFirstRoundParams();
+            for(PlayerConnection pc: server.getConnections()) {
+                String outMessage=messageParser.toJson(new Message(MessageType.START_FIRSTROUND,jsonParams));
+                pc.setOutMessage(outMessage);
+            }
+        }
+    }
+    private void checkStartSecondRound() {
+        if(gameController.allBoardsAreSet() && !gameController.secondRoundIsStarted()) {
+            JsonObject jsonParams=gameController.getJSONStartSecondRoundParams();
+            gameController.startSecondRound();
+            for(PlayerConnection pc:server.getConnections()) {
+                String outMessage=messageParser.toJson(new Message(MessageType.START_SECONDROUND,jsonParams));
+                pc.setOutMessage(outMessage);
+            }
+        }
+    }
+    private void checkStartGame() {
+        if(gameController.allObjectivesHaveBeenChosen() && !gameController.gameIsStarted()) {
+            Message outMessage=MessageCrafter.craftDrawCardMessage(
+                    gameController.getGameInstance().getTurn(),
+                    gameController.getGameInstance().getTurn(),
+                    gameController.getGameInstance().getHand(gameController.getGameInstance().getTurn()),
+                    gameController.getGameInstance().getResourceDrawableArea(),
+                    gameController.getGameInstance().getGoldDrawableArea());
+            gameController.startGame();
+            for(PlayerConnection pc: server.getConnections()) {
+                String outMessageString=messageParser.toJson(outMessage);
+            }
+        }
+    }
+    private void checkAllPlayerConnected() throws IOException {
+        synchronized (server.getConnections()) {
+            for(PlayerConnection pc: server.getConnections()) {
+                if(!allPlayerConnected) {
+                    pc.setOutMessage(messageParser.toJson(MessageCrafter.craftAbortMessage("A player left the game")));
+                    pc.close();
+                }
+                if(!pc.isConnected()) {
+                    allPlayerConnected=false;
+                }
+            }
+        }
+    }
     /**
-     * Handles some network logic operations, then handles incoming messages
+     * Handles some network game logic operations, then handles incoming messages from each connection
      */
     public void run() {
         while(allPlayerConnected) {
             if (gameController.getGameInstance()!=null) {
-                if(gameController.gameIsFull() && !gameController.firstRoundIsStarted()) {
-                    gameController.startFirstRound();
-                    JsonObject jsonParams=gameController.getJSONStartFirstRoundParams();
-                    for(PlayerConnection pc: server.getConnections()) {
-                        String outMessage=messageParser.toJson(new Message(MessageType.START_FIRSTROUND,jsonParams));
-                        pc.setOutMessage(outMessage);
-                    }
-                }
-                if(gameController.allBoardsAreSet() && !gameController.secondRoundIsStarted()) {
-                    JsonObject jsonParams=gameController.getJSONStartSecondRoundParams();
-                    gameController.startSecondRound();
-                    for(PlayerConnection pc:server.getConnections()) {
-                        String outMessage=messageParser.toJson(new Message(MessageType.START_SECONDROUND,jsonParams));
-                        pc.setOutMessage(outMessage);
-                    }
-                }
-                if(gameController.allObjectivesHaveBeenChosen() && !gameController.gameIsStarted()) {
-                    Message outMessage=MessageCrafter.craftDrawCardMessage(
-                            gameController.getGameInstance().getTurn(),
-                            gameController.getGameInstance().getTurn(),
-                            gameController.getGameInstance().getHand(gameController.getGameInstance().getTurn()),
-                            gameController.getGameInstance().getResourceDrawableArea(),
-                            gameController.getGameInstance().getGoldDrawableArea());
-                    gameController.startGame();
-                    for(PlayerConnection pc: server.getConnections()) {
-                        String outMessageString=messageParser.toJson(outMessage);
-                    }
-                }
+                checkStartFirstRound();
+                checkStartSecondRound();
+                checkStartGame();
             }
             handleConnections(server.getConnections());
+            try {
+                checkAllPlayerConnected();
+            } catch(IOException ioe) {
+                //TODO:
+            }
         }
     }
 

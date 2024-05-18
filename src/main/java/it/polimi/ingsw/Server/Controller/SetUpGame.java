@@ -70,6 +70,12 @@ public class SetUpGame {
     private static void setupPlayerBoards(GameInstance gameInstance) {
         Deck deck= DeckFactory.createShuffledStartingDeck();
         gameInstance.setStartingDeck(deck);
+        for(String player: gameInstance.getPlayerTurnOrder()) {
+            gameInstance.getPlayers().get(player).placeStartingCard(deck.next());
+        }
+        setupObjectives(gameInstance);
+    }
+    private static void setupObjectives(GameInstance gameInstance) {
         ArrayList<String> objectives=ObjectiveFactory.makeEveryObjectiveID();
         Collections.shuffle(objectives);
         Iterator<String> objectiveIterator= objectives.iterator();
@@ -78,7 +84,8 @@ public class SetUpGame {
         for(String player: gameInstance.getPlayerTurnOrder()) {
             String firstPrivateObjectiveID=objectiveIterator.next();
             String secondPrivateObjectiveID=objectiveIterator.next();
-            gameInstance.getPlayers().get(player).startPlayerBoard(deck.next(),firstPublicObjectiveID,secondPublicObjectiveID,firstPrivateObjectiveID, secondPrivateObjectiveID);
+            gameInstance.getPlayers().get(player).getPlayerBoard().setStartingObjectivesID(firstPrivateObjectiveID,secondPrivateObjectiveID);
+            gameInstance.setPublicObjectives(player,firstPublicObjectiveID,secondPublicObjectiveID);
         }
     }
     private static void setupHands(GameInstance gameInstance) {

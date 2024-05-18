@@ -58,7 +58,7 @@ public class Board {
      * ID used to save the starting card assigned to the player during the second round
      * When the player chooses which one of the two, they become both OBJECTIVE_ALREADY_CHOSEN
      */
-    private static final String[] startingObjectivesID=new String[2];
+    private String[] startingObjectivesID;
 
     /**
      * array of objectives that will assign points at the end of the game
@@ -80,24 +80,10 @@ public class Board {
      * @throws IllegalArgumentException if id passed is not a starting card id
      */
     public Board(String startingCardID) throws IllegalArgumentException {
+        this.startingObjectivesID=new String[2];
         if(!StartingCardFactory.isStartingCardID(startingCardID)){
             throw new IllegalArgumentException("Invalid card ID");
         }
-        this.startingCardID =startingCardID;
-    }
-    /**
-     * a board when initiated will save the id of starting card that will be placed in coordinates 0,0 upon command
-     * initializes the public objectives and saves the private objectives to choose from
-     * @param startingCardID id of starting card that will be placed
-     * @throws IllegalArgumentException if id passed is not a starting card id
-     */
-    public Board(String startingCardID, String firstPublicObjectiveID, String secondPublicObjectiveID, String firstPrivateObjectiveID, String secondPrivateObjectiveID) throws IllegalArgumentException {
-        if(!StartingCardFactory.isStartingCardID(startingCardID)){
-            throw new IllegalArgumentException("Invalid card ID");
-        }
-        addObjective(firstPublicObjectiveID);
-        addObjective(secondPublicObjectiveID);
-        setStartingObjectivesID(firstPrivateObjectiveID,secondPrivateObjectiveID);
         this.startingCardID =startingCardID;
     }
     /**
@@ -127,7 +113,7 @@ public class Board {
             throw new RuntimeException("OBJECTIVE_ALREADY_BEEN_CHOSEN");
         }
         addObjective(objective);
-        setStartingObjectivesID(objectiveAlreadyBeenChosen, objectiveAlreadyBeenChosen);
+        this.setStartingObjectivesID(objectiveAlreadyBeenChosen, objectiveAlreadyBeenChosen);
     }
     /**
      * starting card will be placed in (0,0) in the orientation indicated.
@@ -412,9 +398,9 @@ public class Board {
     public ArrayList<PlacedCard> getPlacedCards() {
         return placedCards;
     }
-    private void setStartingObjectivesID(String firstPrivateObjectiveID, String secondPrivateObjectiveID) {
-        startingObjectivesID[0]=firstPrivateObjectiveID;
-        startingObjectivesID[1]=secondPrivateObjectiveID;
+    public void setStartingObjectivesID(String firstPrivateObjectiveID, String secondPrivateObjectiveID) {
+        this.startingObjectivesID[0]=firstPrivateObjectiveID;
+        this.startingObjectivesID[1]=secondPrivateObjectiveID;
     }
 
     public String seeStartingCardID() {
