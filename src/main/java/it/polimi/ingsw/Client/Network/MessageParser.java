@@ -360,8 +360,12 @@ public class MessageParser {
         String[] handIDs=new String[3];
         CardDTO[] handDTO=inParamsDTO.hand();
         for(int i=0;i<3;i++) {
-            handIDs[i]=
-                    handDTO[i].cardID();
+            if(handDTO[i]!=null) {
+                handIDs[i]=
+                        handDTO[i].cardID();
+            } else {
+                handIDs[i]=null;
+            }
         }
         return handIDs;
     }
