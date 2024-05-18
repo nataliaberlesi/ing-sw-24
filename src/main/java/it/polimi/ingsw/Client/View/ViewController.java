@@ -163,7 +163,9 @@ public abstract class ViewController {
                 }
             }
             case SECONDROUND -> {
-                updatePlayerHand(messageParser.getCurrentPlayer());
+                if(isPlayerInGame(messageParser.getCurrentPlayer())){
+                    updatePlayerHand(messageParser.getCurrentPlayer());
+                }
                 showScene();
                 if(isMyTurn(messageParser.getCurrentPlayer())){
                     enableSecondRoundActions();
@@ -204,6 +206,8 @@ public abstract class ViewController {
         updatePlayerHand(affectedPlayer);
         updatePlayerScore(affectedPlayer, score);
     }
+
+    protected abstract boolean isPlayerInGame(String username);
 
     protected abstract void updatePlayerScore(String username, int score);
 
@@ -250,4 +254,5 @@ public abstract class ViewController {
             switchToCreate();
         } else switchToJoin();
     }
+
 }

@@ -102,6 +102,7 @@ public class HandleClientInputCLI implements Runnable{
                     int objectiveIndex=getIndex(input);
                     if(objectiveIndex==0 || objectiveIndex==1){
                         messageDispatcher.secondRound(viewController.getMyPlayer().getUsername(),objectiveIndex);
+                        viewController.setPrivateObjective(messageParser.getPrivateObjectivesCLI()[objectiveIndex]);
                         System.out.println("Hmm that looks like a tough objective, but ok, I'll let the server know");
                         actionsCLI.disableChoosePrivateObjective();
                     }
@@ -109,7 +110,13 @@ public class HandleClientInputCLI implements Runnable{
                         System.out.println("try again, accepted indexes are either 1 or 2");
                     }
                 }
-
+                if(input.equals("HELP")){
+                    System.out.println("ACTIONS:\n" +
+                            "1) PLACE CARD\n" +
+                            "to place a card simply type PLACE followed by the index of the card in your hand you want to place,\n" +
+                            "followed by the coordinates where you want to place the card (x,y),\n" +
+                            "followed UP/DOWN depending on weather you want the card facing up or facing down");
+                }
             }
         }
     }

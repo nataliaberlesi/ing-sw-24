@@ -81,6 +81,11 @@ public class ViewControllerCLI extends ViewController {
     }
 
     @Override
+    protected boolean isPlayerInGame(String username) {
+        return playersInGame.isPlayerInGame(username);
+    }
+
+    @Override
     protected void updatePlayerScore(String username, int score) {
         playersInGame.getPlayer(username).setScore(score);
     }
@@ -90,6 +95,10 @@ public class ViewControllerCLI extends ViewController {
         for(ObjectiveCLI objective:messageParser.getPublicObjectivesCLI()){
             objectivesSection.addObjective(objective);
         }
+    }
+
+    public void setPrivateObjective(ObjectiveCLI privateObjective){
+        objectivesSection.setPrivateObjective(privateObjective);
     }
 
     @Override
