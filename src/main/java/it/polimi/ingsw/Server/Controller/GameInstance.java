@@ -216,7 +216,7 @@ public class GameInstance {
     public void checkIfAllObjectivesHaveBeenChosen() {
         boolean flag=true;
         for(String player: playersTurnOrder) {
-            if(players.get(player).getPlayerBoard().seeFirstPrivateObjectiveID().equals("OBJECTIVE_ALREADY_BEEN_CHOSEN") && players.get(player).getPlayerBoard().seeFirstPrivateObjectiveID().equals("OBJECTIVE_ALREADY_BEEN_CHOSEN")){
+            if(!(players.get(player).getPlayerBoard().seeFirstPrivateObjectiveID().equals("OBJECTIVE_ALREADY_BEEN_CHOSEN") && players.get(player).getPlayerBoard().seeSecondPrivateObjectiveID().equals("OBJECTIVE_ALREADY_BEEN_CHOSEN"))){
                 flag=false;
             }
         }
