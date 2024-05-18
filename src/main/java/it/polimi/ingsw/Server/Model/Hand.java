@@ -50,11 +50,6 @@ public class Hand {
      * @throws RuntimeException if index given doesn't correspond to existing card
      */
     public String showCardInHand(int cardIndex) throws RuntimeException{
-        String cardBeingTakenFromHand=cards[cardIndex];
-        if(cardBeingTakenFromHand==null){
-            throw new RuntimeException("no card in this position in this hand");
-        }
-        return cardBeingTakenFromHand;
+        return cards[cardIndex];
     }
-
 }
