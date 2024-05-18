@@ -147,7 +147,7 @@ public class GameController {
         Message message=MessageCrafter.craftSecondRoundMessage(
                 currentPlayer,
                 inParamsDTO.username(),
-                gameInstance.getHand(currentPlayer),
+                hand,
                 privateObjectives,
                 gameInstance.getPlayers().get(inParamsDTO.username()).getPlayerBoard().seeObjective(2)
         );
