@@ -35,8 +35,13 @@ public class ViewControllerGUI extends ViewController implements Initializable{
      * Instance of player to represent my player
      */
     private PlayerGUI myPlayer;
-
+    /**
+     * Instance of main scene for the game
+     */
     private MainScene mainScene;
+    /**
+     * Instance of token choice pop up for the game
+     */
     private TokenChoicePopUp tokenChoicePopUpScene;
 
     /**
@@ -70,8 +75,6 @@ public class ViewControllerGUI extends ViewController implements Initializable{
         this.errorAlert = new Alert(Alert.AlertType.ERROR);
     }
 
-
-
     public Stage getStage(){
         return stage;
     }
@@ -94,6 +97,11 @@ public class ViewControllerGUI extends ViewController implements Initializable{
         } catch (IOException e){
             throw new RuntimeException("Error while trying to switch scene");
         }
+    }
+
+    @Override
+    protected void connectScene() {
+        switchFXMLScene("initialScreen.fxml");
     }
 
     /**
@@ -140,6 +148,14 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     }
 
     /**
+     * Switches to loading scene
+     */
+    @Override
+    protected void switchToLoading() {
+        switchFXMLScene("loading.fxml");
+    }
+
+    /**
      * Controller initialize method.
      *
      * @param url            url location
@@ -167,13 +183,13 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     @Override
     protected void createMyPlayer(String username) {
         myPlayer = new PlayerGUI(username);
-        mainScene = new MainScene(this);
-        mainScene.setPlayerInScene(myPlayer);
+        mainScene = new MainScene(this, myPlayer);
     }
 
 
     @Override
     protected void switchWaitingServerResponse() {
+        //not implemented for GUI
     }
 
     /**
@@ -234,10 +250,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
 
     }
 
-    @Override
-    protected void connectScene() {
-        switchFXMLScene("initialScreen.fxml");
-    }
+
 
     @Override
     protected void enableFirstRoundActions() {
@@ -301,8 +314,8 @@ public class ViewControllerGUI extends ViewController implements Initializable{
             else playersInGame.add(myPlayer);
         }
         numberOfPlayersInGame = playersInGame.size();
-        mainScene.getScoreBoard().setUsernames(playerUsernames); //sets score to 0 for all players
         mainScene.setSeeOtherPlayersGameButtons(playersInGame);
+        mainScene.setScoreBoard(playerUsernames);
         mainScene.setHelloPlayerLabel(myPlayer.getUsername());
         for (PlayerGUI player : playersInGame){
             if (player.getUsername().equals(playerUsernames.getFirst())){
@@ -324,10 +337,6 @@ public class ViewControllerGUI extends ViewController implements Initializable{
         }
     }
 
-    @Override
-    protected void switchToLoading() {
-        switchFXMLScene("loading.fxml");
-    }
 
     @Override
     protected void updatePlayerBoard(String affectedPlayer) {
