@@ -137,6 +137,7 @@ public abstract class ViewController {
             case JOIN -> manageJoinStatus();
 
             case START_FIRSTROUND -> {
+                setCurrentPlayer(messageParser.getPlayers().getFirst());
                 setUpGame(); //create instance for every player, fill drawableArea, give first player starting card
                 showScene();
                 if(isMyTurn(messageParser.getPlayers().getFirst())){  // getPlayers().get(0) restituisce username del primo giocatore, da confrontare con il tuo client
@@ -144,6 +145,7 @@ public abstract class ViewController {
                 }
            }
             case FIRSTROUND -> {
+                setCurrentPlayer(messageParser.getCurrentPlayer());
                 updatePlayerBoard(messageParser.getAffectedPlayer());//update the board of the last player to act (for player in playersingame upadate player with matching username)
                 setPlayerColor(messageParser.getAffectedPlayer(), messageParser.getColor());
                 updateAvailableColors(messageParser.getAvailableColors());
@@ -154,6 +156,7 @@ public abstract class ViewController {
                 }
             }
             case START_SECONDROUND -> {
+                setCurrentPlayer(messageParser.getCurrentPlayer());
                 updatePlayerHand(messageParser.getCurrentPlayer());
                 setPublicObjectives();
                 // non so tu come gestisci i private objective
@@ -164,6 +167,7 @@ public abstract class ViewController {
             }
             case SECONDROUND -> {
                 if(isPlayerInGame(messageParser.getCurrentPlayer())){
+                    setCurrentPlayer(messageParser.getCurrentPlayer());
                     updatePlayerHand(messageParser.getCurrentPlayer());
                 }
                 showScene();
@@ -175,6 +179,7 @@ public abstract class ViewController {
 
             }
             case ACTION_PLACECARD -> {
+                setCurrentPlayer(messageParser.getCurrentPlayer());
                 updatePlayerBoardHandScore(messageParser.getAffectedPlayer(), messageParser.getScore());
                 showScene();
                 if(isMyTurn(messageParser.getCurrentPlayer())){
@@ -206,6 +211,8 @@ public abstract class ViewController {
         updatePlayerHand(affectedPlayer);
         updatePlayerScore(affectedPlayer, score);
     }
+
+    protected abstract void setCurrentPlayer(String currentPlayer);
 
     protected abstract boolean isPlayerInGame(String username);
 

@@ -3,32 +3,41 @@ import it.polimi.ingsw.Client.Network.MessageDispatcher;
 import it.polimi.ingsw.Client.Network.MessageType;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
+import javafx.stage.Stage;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 
 public class MainScene extends Scene {
 
+    private Stage stage;
     private final AnchorPane root;
-    private final BoardGUI board = new BoardGUI();
-    private final HandGUI hand = new HandGUI();
+    private BoardGUI board = new BoardGUI();
+    private HandGUI hand = new HandGUI();
     private final ObjectivesSectionGUI objectivesSection = new ObjectivesSectionGUI();
-    private final DrawableAreaGUI drawableArea = new DrawableAreaGUI();
+    private DrawableAreaGUI drawableArea = new DrawableAreaGUI();
     private final ScoreBoardGUI scoreBoard = new ScoreBoardGUI();
-    private final Label turnLabel = new Label();
-    private final Label actionLabel = new Label();
+    private Label turnLabel = new Label();
+    private Label actionLabel = new Label();
+    private Label helloPlayerLabel;
+    private Label confirmActionLabel = new Label();
     private final Button flipYourHandButton = new Button("Flip your hand");
     private final Button confirmActionButton = new Button("Confirm action");
-    private final ArrayList<Button> seeOtherPlayersSceneButtons = new ArrayList<>();
+    private final HashMap<PlayerGUI, Button> seeOtherPlayersSceneButtons = new HashMap<>();
     private CardGUI chosenCard = board.getInitialCard();
-    private MessageDispatcher messageDispatcher;
+    private ViewControllerGUI viewControllerGUI;
     private MessageType lastMessageToArrive;
-    private PlayerGUI myplayer;
+    private TokenChoicePopUp tokenChoicePopUp;
+    private PlayerInfo info;
 
     public MainScene() {
         super(new AnchorPane(), 1060, 595);
@@ -43,10 +52,9 @@ public class MainScene extends Scene {
         root.getChildren().add(scoreBoard);
     }
 
-    public MainScene(MessageDispatcher messageDispatcher, PlayerGUI myPlayer) {
+    public MainScene(ViewControllerGUI viewControllerGUI) {
         super(new AnchorPane(), 1060, 595);
-        this.myplayer = myPlayer;
-        this.messageDispatcher = messageDispatcher;
+        this.viewControllerGUI = viewControllerGUI;
         root = (AnchorPane) this.getRoot();
         setUpBackground();
         setUpLabels();
@@ -79,54 +87,53 @@ public class MainScene extends Scene {
     private void setUpLabels(){
         Label resourceCardsLabel = new Label("Resource Cards");
         resourceCardsLabel.setFont(new Font("System Bold Italic", 16));
-        resourceCardsLabel.setAlignment(javafx.geometry.Pos.CENTER);
+        resourceCardsLabel.setAlignment(Pos.CENTER);
         resourceCardsLabel.setLayoutX(912);
         resourceCardsLabel.setLayoutY(52);
         this.root.getChildren().add(resourceCardsLabel);
 
         Label goldCardsLabel = new Label("Gold Cards");
         goldCardsLabel.setFont(new Font("System Bold Italic", 16));
-        goldCardsLabel.setAlignment(javafx.geometry.Pos.CENTER);
+        goldCardsLabel.setAlignment(Pos.CENTER);
         goldCardsLabel.setLayoutX(924);
         goldCardsLabel.setLayoutY(332);
         this.root.getChildren().add(goldCardsLabel);
 
         Label handLabel = new Label("Hand");
         handLabel.setFont(new Font("System Bold Italic", 16));
-        handLabel.setAlignment(javafx.geometry.Pos.CENTER);
+        handLabel.setAlignment(Pos.CENTER);
         handLabel.setLayoutX(370);
         handLabel.setLayoutY(457);
         this.root.getChildren().add(handLabel);
 
         Label secretObjectiveLabel = new Label("Secret Objective");
         secretObjectiveLabel.setFont(new Font("System Bold Italic", 16));
-        secretObjectiveLabel.setAlignment(javafx.geometry.Pos.CENTER);
+        secretObjectiveLabel.setAlignment(Pos.CENTER);
         secretObjectiveLabel.setLayoutX(524);
         secretObjectiveLabel.setLayoutY(457);
         this.root.getChildren().add(secretObjectiveLabel);
 
         Label commonObjectivesLabel = new Label("Common Objectives");
         commonObjectivesLabel.setFont(new Font("System Bold Italic", 16));
-        commonObjectivesLabel.setAlignment(javafx.geometry.Pos.CENTER);
+        commonObjectivesLabel.setAlignment(Pos.CENTER);
         commonObjectivesLabel.setLayoutX(656);
         commonObjectivesLabel.setLayoutY(457);
         this.root.getChildren().add(commonObjectivesLabel);
 
-        Label confirmActionLabel = new Label("Use the confirm action button to confirm your choice");
         confirmActionLabel.setFont(new Font("System Bold", 14));
-        confirmActionLabel.setAlignment(javafx.geometry.Pos.CENTER);
+        confirmActionLabel.setAlignment(Pos.CENTER);
         confirmActionLabel.setLayoutX(30);
         confirmActionLabel.setLayoutY(547);
         this.root.getChildren().add(confirmActionLabel);
 
         turnLabel.setFont(new Font("System Bold", 18));
-        turnLabel.setAlignment(javafx.geometry.Pos.CENTER);
+        turnLabel.setAlignment(Pos.CENTER);
         turnLabel.setLayoutX(30);
         turnLabel.setLayoutY(487);
         this.root.getChildren().add(turnLabel);
 
         actionLabel.setFont(new Font("System Bold", 16));
-        actionLabel.setAlignment(javafx.geometry.Pos.CENTER);
+        actionLabel.setAlignment(Pos.CENTER);
         actionLabel.setLayoutX(30);
         actionLabel.setLayoutY(517);
         this.root.getChildren().add(actionLabel);
@@ -158,15 +165,12 @@ public class MainScene extends Scene {
     }
 
     /**
-     * Sets the action label to a specific text
-     * @param text text
+     * Sets the hello player label to a specific username
+     * @param username username
      */
-    public void setActionLabel(String text){
-        actionLabel.setText(text);
-    }
 
     public void setHelloPlayerLabel(String username){
-        Label helloPlayerLabel = new Label("Hi "+ username);
+        helloPlayerLabel = new Label("Hi "+ username);
         helloPlayerLabel.setFont(new Font("System Bold", 18));
         helloPlayerLabel.setAlignment(Pos.CENTER);
         helloPlayerLabel.setLayoutX(38);
@@ -176,17 +180,118 @@ public class MainScene extends Scene {
 
     /**
      * Sets the buttons to see other player's scenes to a specific username
-     * @param usernames usernames
+     * @param playersInGame players in game
      */
-    public void setSeeOtherPlayersGameButtons(ArrayList<String> usernames){
+    public void setSeeOtherPlayersGameButtons(ArrayList<PlayerGUI> playersInGame){
         for (int i = 0; i < ViewControllerGUI.numberOfPlayersInGame; i++) {
-            seeOtherPlayersSceneButtons.add(new Button());
-            seeOtherPlayersSceneButtons.get(i).setLayoutX(38);
-            seeOtherPlayersSceneButtons.get(i).setLayoutY(277+45*i);
-            seeOtherPlayersSceneButtons.get(i).setMnemonicParsing(false);
-            seeOtherPlayersSceneButtons.get(i).setText("See " + usernames.get(i) + "'s game");
-            this.root.getChildren().add(seeOtherPlayersSceneButtons.get(i));
+            seeOtherPlayersSceneButtons.put(playersInGame.get(i), new Button("See " + playersInGame.get(i).getUsername() + "'s game"));
+            seeOtherPlayersSceneButtons.get(playersInGame.get(i)).setLayoutX(38);
+            seeOtherPlayersSceneButtons.get(playersInGame.get(i)).setLayoutY(277+45*i);
+            seeOtherPlayersSceneButtons.get(playersInGame.get(i)).setMnemonicParsing(false);
+            int finalI = i;
+            if (playersInGame.get(i).equals(viewControllerGUI.getMyPlayer())){
+                seeOtherPlayersSceneButtons.get(playersInGame.get(i)).setDisable(true);
+                seeOtherPlayersSceneButtons.get(playersInGame.get(i)).setOnMouseClicked(event -> handleSeeMyPlayerScene());
+            }
+            else  seeOtherPlayersSceneButtons.get(playersInGame.get(i)).setOnMouseClicked(event -> handleSeeOtherPlayerScene(playersInGame.get(finalI)));
+
+            this.root.getChildren().add(seeOtherPlayersSceneButtons.get(playersInGame.get(i)));
         }
+    }
+
+    private void handleSeeMyPlayerScene() {
+        restoreMyPlayerInfo(viewControllerGUI.getMyPlayer().getMainScene(), info);
+        enableActions(this);
+        this.stage.setScene(viewControllerGUI.getMyPlayer().getMainScene());
+        this.stage.hide();
+        this.stage.show();
+    }
+
+    private void handleSeeOtherPlayerScene(PlayerGUI otherPlayer) {
+
+//            BoardGUI newBoard = otherPlayer.getMainScene().getBoard(); This does not create new objects, just point to the same ones, problem!!!
+            //I can't do that, I need to create a copy of the otherplayer hand and board and dettach all event handlers, then put the copies in my player's scene!
+//            CardGUI[] otherPlayerHandCards = otherPlayer.getMainScene().getHand().getHandCards();
+//            for (CardGUI card : otherPlayerHandCards){
+//                if (card.isFaceUp() && card.getCardID() != null){
+//                    card.flipAndShow();
+//                }
+//            }
+
+        saveMyPlayerInfo(turnLabel.getText(), actionLabel.getText(), confirmActionLabel.getText());
+        changeMyPlayerScene(otherPlayer);
+        disableAllActions(this); //disable all actions on the copied scene except the button to return to my scene
+        this.stage.setScene(this); //set my scene to be the copied scene
+        this.stage.hide();
+        this.stage.show();
+    }
+
+    private void saveMyPlayerInfo(String turnLabel, String actionLabel, String confirmActionLabel) {
+        info = new PlayerInfo(turnLabel, actionLabel, confirmActionLabel);
+    }
+
+    private void restoreMyPlayerInfo(MainScene scene, PlayerInfo info) {
+        scene.setActionLabel(info.actionLabel);
+        scene.setConfirmActionLabel(info.confirmActionLabel);
+        scene.setTurnLabel(info.turnLabel);
+        scene.getBoard().getAnchorPane().getChildren().removeLast();
+    }
+
+    private void changeMyPlayerScene(PlayerGUI otherPlayer) {
+        this.actionLabel.setText("Click the \"See " + viewControllerGUI.getMyPlayer().getUsername() + " 's game\"\nbutton to go back to your game");
+        this.confirmActionLabel.setText("");
+        if (otherPlayer.getMainScene().getTurnLabelText().equals("It's your turn!"))
+            this.setTurnLabel(otherPlayer.getUsername() + " is playing!");
+        else this.setTurnLabel(otherPlayer.getUsername() + " is waiting!");
+
+        WritableImage capturedImage = captureAnchorPaneSnapshot(otherPlayer.getMainScene().getBoard().getAnchorPane());
+        displayCapturedImage(this.board.getAnchorPane(), capturedImage);
+
+    }
+
+    private void displayCapturedImage(AnchorPane targetPane, WritableImage image) {
+        if (image != null) {
+            ImageView imageView = new ImageView(image);
+            targetPane.getChildren().add(imageView);
+        }
+    }
+
+    private WritableImage captureAnchorPaneSnapshot(AnchorPane anchorPane) {
+        SnapshotParameters parameters = new SnapshotParameters();
+        int width = (int) anchorPane.getPrefWidth();
+        int height = (int) anchorPane.getPrefHeight();
+
+        if (width > 0 && height > 0) {
+            WritableImage image = new WritableImage(width, height);
+            return anchorPane.snapshot(parameters, image);
+        }
+        return null;
+    }
+
+    private void disableAllActions(MainScene scene) {
+        scene.confirmActionButton.setDisable(true);
+        scene.flipYourHandButton.setDisable(true);
+        scene.seeOtherPlayersSceneButtons.get(viewControllerGUI.getMyPlayer()).setDisable(false);
+        for (PlayerGUI player : viewControllerGUI.getPlayersInGame()) {
+            if (!player.equals(viewControllerGUI.getMyPlayer())) {
+                scene.seeOtherPlayersSceneButtons.get(player).setDisable(true);
+            }
+        }
+    }
+
+    private void enableActions(MainScene scene){
+        scene.confirmActionButton.setDisable(false);
+        scene.flipYourHandButton.setDisable(false);
+        this.seeOtherPlayersSceneButtons.get(viewControllerGUI.getMyPlayer()).setDisable(true);
+        for (PlayerGUI player : viewControllerGUI.getPlayersInGame()) {
+            if (!player.equals(viewControllerGUI.getMyPlayer())) {
+                scene.seeOtherPlayersSceneButtons.get(player).setDisable(false);
+            }
+        }
+    }
+
+    public void setStage(Stage stage) {
+        this.stage = stage;
     }
 
     public BoardGUI getBoard() {
@@ -210,7 +315,7 @@ public class MainScene extends Scene {
     }
 
     public void handleFirstCardPlacementAndColorChoice() {
-        setActionLabel("Click on the initial card if you want to flip it");
+        actionLabel.setText("Click on the initial card if you want to flip it");
         enableConfirmButtonClick();
     }
 
@@ -222,20 +327,19 @@ public class MainScene extends Scene {
     public void onConfirmButtonClicked(){
         switch (lastMessageToArrive){
             case START_FIRSTROUND, FIRSTROUND -> {
-                Boolean isFaceUp = board.getInitialCard().isFaceUp();
-                board.getInitialCard().setOnMouseClicked(null);
+                chosenCard.setOnMouseClicked(null);
                 confirmActionButton.setDisable(true);
 
                 setActionLabel("Choose a color by clicking on it");
-                TokenChoicePopUp scene = myplayer.getTokenChoicePopUpScene();
-                scene.setPopUpStage();
-                scene.popUpStage.setScene(scene);
-                scene.popUpStage.show();
-                while (scene.color == null){}
-                messageDispatcher.firstRound(myplayer.getUsername(), isFaceUp, scene.color);
+                setConfirmActionLabel("");
+                tokenChoicePopUp = viewControllerGUI.getMyPlayer().getTokenChoicePopUpScene();
+                tokenChoicePopUp.setPopUpStage();
+                tokenChoicePopUp.popUpStage.setScene(tokenChoicePopUp);
+                tokenChoicePopUp.popUpStage.show();
             }
+            case START_SECONDROUND -> {
 
-
+            }
         }
     }
 
@@ -243,9 +347,27 @@ public class MainScene extends Scene {
         this.chosenCard = chosenCard;
     }
 
+    public CardGUI getChosenCard() {
+        return chosenCard;
+    }
+
     public void setLastMessageToArrive(MessageType lastMessageToArrive) {
         this.lastMessageToArrive = lastMessageToArrive;
     }
 
+    public void setConfirmActionLabel(String text) {
+        this.confirmActionLabel.setText(text);
+    }
 
+    public void setActionLabel(String text){
+        this.actionLabel.setText(text);
+
+    }
+    public String getTurnLabelText(){
+        return turnLabel.getText();
+    }
+    public ViewControllerGUI getViewControllerGUI(){
+        return viewControllerGUI;
+    }
+    public record PlayerInfo(String turnLabel, String actionLabel, String confirmActionLabel){}
 }

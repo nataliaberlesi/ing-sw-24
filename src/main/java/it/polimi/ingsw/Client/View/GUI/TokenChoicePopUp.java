@@ -17,11 +17,12 @@ import java.util.Objects;
 public class TokenChoicePopUp extends Scene {
     private AnchorPane root;
     Stage popUpStage;
-    String color = null;
     private HashMap<String, ImageView> availableTokens = new HashMap<>();
+    private MainScene mainScene;
 
-    public TokenChoicePopUp(ArrayList<String> tokenColors) {
+    public TokenChoicePopUp(ArrayList<String> tokenColors, MainScene mainScene) {
         super(new AnchorPane(),300,250);
+        this.mainScene = mainScene;
         root = (AnchorPane) this.getRoot();
         Label label = new Label("Choose one of the available colors:");
         label.setLayoutX(37);
@@ -58,7 +59,10 @@ public class TokenChoicePopUp extends Scene {
     }
 
     public void handleTokenColorChoice(String color) {
-        this.color = color;
+        ViewControllerGUI viewControllerGUI = mainScene.getViewControllerGUI();
+        viewControllerGUI.getMessageDispatcher().firstRound(viewControllerGUI.getMyPlayer().getUsername(), mainScene.getChosenCard().isFaceUp(), color);
+        popUpStage.close();
+
     }
 
     protected void setPopUpStage(){

@@ -165,8 +165,8 @@ public class ViewControllerGUI extends ViewController implements Initializable{
 
     @Override
     protected void createMyPlayer(String username) {
-        myPlayer = new PlayerGUI(username, this.messageDispatcher);
-        //myPlayer = new PlayerGUI(username);
+        myPlayer = new PlayerGUI(username, this);
+        myPlayer.getMainScene().setStage(this.stage);
         playerInScene = myPlayer;
     }
 
@@ -181,6 +181,16 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     @Override
     public void updateView(){
         Platform.runLater(super::updateView);
+    }
+
+    @Override
+    protected void setCurrentPlayer(String currentPlayer) {
+
+    }
+
+    @Override
+    protected boolean isPlayerInGame(String username) {
+        return false;
     }
 
     @Override
@@ -243,8 +253,10 @@ public class ViewControllerGUI extends ViewController implements Initializable{
 
     @Override
     protected void updateAvailableColors(ArrayList<String> availableColors) {
-        for (PlayerGUI player : playersInGame){
-            player.setTokenChoicePopUpScene(availableColors);
+        if (availableColors != null){
+            for (PlayerGUI player : playersInGame){
+                player.setTokenChoicePopUpScene(availableColors);
+            }
         }
     }
 
@@ -264,13 +276,17 @@ public class ViewControllerGUI extends ViewController implements Initializable{
 
     @Override
     protected void giveInitialCard(String username) {
-        String initialCardID = messageParser.getCardID();
-        for (PlayerGUI player: playersInGame){
-            if (player.getUsername().equals(username)){
-                CardGUI initialCard = player.getMainScene().getBoard().getInitialCard();
-                initialCard.setCardID(initialCardID);
-                initialCard.setCardImage();
+        try {
+            String initialCardID = messageParser.getCardID();
+            for (PlayerGUI player : playersInGame) {
+                if (player.getUsername().equals(username)) {
+                    CardGUI initialCard = player.getMainScene().getBoard().getInitialCard();
+                    initialCard.setCardID(initialCardID);
+                    initialCard.setCardImage();
+                }
             }
+        } catch (RuntimeException e){
+
         }
     }
 
@@ -278,7 +294,8 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     protected void addPlayers(ArrayList<String> playerUsernames) {
         for(String username: playerUsernames){
             if (!myPlayer.getUsername().equals(username)){
-                PlayerGUI player = new PlayerGUI(username);
+                PlayerGUI player = new PlayerGUI(username, this);
+                player.getMainScene().setStage(this.stage);
                 playersInGame.add(player);
             }
             else playersInGame.add(myPlayer);
@@ -287,7 +304,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
         for (PlayerGUI player : playersInGame){
             player.getMainScene().getScoreBoard().setUsernames(playerUsernames);
             player.getMainScene().getScoreBoard().updatePlayersScores(player, playersInGame.size());
-            player.getMainScene().setSeeOtherPlayersGameButtons(playerUsernames);
+            player.getMainScene().setSeeOtherPlayersGameButtons(playersInGame);
             player.getMainScene().setHelloPlayerLabel(player.getUsername());
             if (player.getUsername().equals(playerUsernames.getFirst())){
                 player.getMainScene().getBoard().setFirstPlayerToken();
@@ -299,6 +316,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     protected boolean isMyTurn(String usernameOfPlayerWhoseTurnItIs) {
         if (usernameOfPlayerWhoseTurnItIs.equals(myPlayer.getUsername())){
             myPlayer.getMainScene().setTurnLabel("It's your turn!");
+            myPlayer.getMainScene().setConfirmActionLabel("Use the confirm action button to confirm your choice");
             return true;
         }
         else {
@@ -325,5 +343,19 @@ public class ViewControllerGUI extends ViewController implements Initializable{
                 player.getMainScene().getBoard().setPlayerColorToken(color);
             }
         }
+    }
+    protected PlayerGUI getMyPlayer(){
+        return this.myPlayer;
+    }
+    protected MessageDispatcher getMessageDispatcher(){
+        return this.messageDispatcher;
+    }
+
+    protected PlayerGUI getPlayersInScene(){
+        return playerInScene;
+    }
+
+    public ArrayList<PlayerGUI> getPlayersInGame() {
+        return playersInGame;
     }
 }

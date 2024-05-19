@@ -32,7 +32,7 @@ public class BoardGUI extends ScrollPane {
         this.setLayoutX(200);
         this.setLayoutY(22);
         anchorPane = new AnchorPane();
-        anchorPane.setPrefSize(2602.5, 1335);
+        anchorPane.setPrefSize(2603, 1335);
         this.setContent(anchorPane);
         this.setHvalue(0.5);
         this.setVvalue(0.5);
@@ -109,4 +109,7 @@ public class BoardGUI extends ScrollPane {
         }
     }
 
+    public AnchorPane getAnchorPane() {
+        return anchorPane;
+    }
 }

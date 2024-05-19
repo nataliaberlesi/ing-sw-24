@@ -131,7 +131,6 @@ public class ViewControllerCLI extends ViewController {
 
     }
 
-
     /**
      * shows screen for player just connecting
      */
@@ -162,8 +161,7 @@ public class ViewControllerCLI extends ViewController {
      */
     @Override
     protected boolean isMyTurn(String usernameOfPlayerWhoseTurnItIs) {
-        setCurrentPlayer(usernameOfPlayerWhoseTurnItIs);
-        if(usernameOfPlayerWhoseTurnItIs.equals(myPlayer.getUsername())){
+        if(usernameOfPlayerWhoseTurnItIs.equalsIgnoreCase(myPlayer.getUsername())){
             System.out.println("It's your turn!");
             return true;
         }
@@ -175,12 +173,12 @@ public class ViewControllerCLI extends ViewController {
      *
      * @param usernameOfPlayerWhoseTurnItIs is the player whose turn it is, that player is set to current player and everyone else is set to not current player
      */
-    private void setCurrentPlayer(String usernameOfPlayerWhoseTurnItIs) {
+    @Override
+    protected void setCurrentPlayer(String usernameOfPlayerWhoseTurnItIs) {
         for(PlayerCLI player: playersInGame.getPlayers()){
-            player.setCurrentPlayer(player.getUsername().equals(usernameOfPlayerWhoseTurnItIs));
+            player.setCurrentPlayer(player.getUsername().equalsIgnoreCase(usernameOfPlayerWhoseTurnItIs));
         }
     }
-
 
     /**
      * in the first round the client is given a starting card that he will place on his board in the orientation of his choice,
