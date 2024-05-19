@@ -21,8 +21,6 @@ public class MainScene extends Scene {
 
     private Stage stage;
     private final AnchorPane root;
-    private BoardGUI board = new BoardGUI();
-    private HandGUI hand = new HandGUI();
     private final ObjectivesSectionGUI objectivesSection = new ObjectivesSectionGUI();
     private DrawableAreaGUI drawableArea = new DrawableAreaGUI();
     private final ScoreBoardGUI scoreBoard = new ScoreBoardGUI();
@@ -33,25 +31,12 @@ public class MainScene extends Scene {
     private final Button flipYourHandButton = new Button("Flip your hand");
     private final Button confirmActionButton = new Button("Confirm action");
     private final HashMap<PlayerGUI, Button> seeOtherPlayersSceneButtons = new HashMap<>();
-    private CardGUI chosenCard = board.getInitialCard();
     private ViewControllerGUI viewControllerGUI;
     private MessageType lastMessageToArrive;
     private TokenChoicePopUp tokenChoicePopUp;
     private PlayerInfo info;
-
-    public MainScene() {
-        super(new AnchorPane(), 1060, 595);
-        root = (AnchorPane) this.getRoot();
-        setUpBackground();
-        setUpLabels();
-        setUpButtons();
-        root.getChildren().add(board);
-        root.getChildren().add(drawableArea);
-        root.getChildren().add(hand);
-        root.getChildren().add(objectivesSection);
-        root.getChildren().add(scoreBoard);
-    }
-
+    private PlayerGUI playerInScene;
+   private CardGUI chosenCard;
     public MainScene(ViewControllerGUI viewControllerGUI) {
         super(new AnchorPane(), 1060, 595);
         this.viewControllerGUI = viewControllerGUI;
@@ -59,11 +44,18 @@ public class MainScene extends Scene {
         setUpBackground();
         setUpLabels();
         setUpButtons();
-        root.getChildren().add(board);
         root.getChildren().add(drawableArea);
-        root.getChildren().add(hand);
         root.getChildren().add(objectivesSection);
         root.getChildren().add(scoreBoard);
+        addChildrenToScene();
+    }
+
+    /**
+     * Adds playerInScene hand and board to scene
+     */
+    private void addChildrenToScene(){
+        root.getChildren().add(playerInScene.getHand());
+        root.getChildren().add(playerInScene.getBoard());
     }
 
 
@@ -200,16 +192,18 @@ public class MainScene extends Scene {
     }
 
     private void handleSeeMyPlayerScene() {
-        restoreMyPlayerInfo(viewControllerGUI.getMyPlayer().getMainScene(), info);
-        enableActions(this);
-        this.stage.setScene(viewControllerGUI.getMyPlayer().getMainScene());
-        this.stage.hide();
-        this.stage.show();
+//        restoreMyPlayerInfo(viewControllerGUI.getMyPlayer().getMainScene(), info);
+//        enableActions(this);
+//        this.stage.setScene(viewControllerGUI.getMyPlayer().getMainScene());
+//        this.stage.hide();
+//        this.stage.show();
     }
 
     private void handleSeeOtherPlayerScene(PlayerGUI otherPlayer) {
 
-//            BoardGUI newBoard = otherPlayer.getMainScene().getBoard(); This does not create new objects, just point to the same ones, problem!!!
+//            BoardGUI newBoard = otherPlayer.getMainScene().getBoard();
+
+            //This does not create new objects, just point to the same ones, problem!!!
             //I can't do that, I need to create a copy of the otherplayer hand and board and dettach all event handlers, then put the copies in my player's scene!
 //            CardGUI[] otherPlayerHandCards = otherPlayer.getMainScene().getHand().getHandCards();
 //            for (CardGUI card : otherPlayerHandCards){
@@ -218,36 +212,36 @@ public class MainScene extends Scene {
 //                }
 //            }
 
-        saveMyPlayerInfo(turnLabel.getText(), actionLabel.getText(), confirmActionLabel.getText());
-        changeMyPlayerScene(otherPlayer);
-        disableAllActions(this); //disable all actions on the copied scene except the button to return to my scene
-        this.stage.setScene(this); //set my scene to be the copied scene
-        this.stage.hide();
-        this.stage.show();
+//        saveMyPlayerInfo(turnLabel.getText(), actionLabel.getText(), confirmActionLabel.getText());
+//        changeMyPlayerScene(otherPlayer);
+//        disableAllActions(this); //disable all actions on the copied scene except the button to return to my scene
+//        this.stage.setScene(this); //set my scene to be the copied scene
+//        this.stage.hide();
+//        this.stage.show();
     }
 
     private void saveMyPlayerInfo(String turnLabel, String actionLabel, String confirmActionLabel) {
         info = new PlayerInfo(turnLabel, actionLabel, confirmActionLabel);
     }
 
-    private void restoreMyPlayerInfo(MainScene scene, PlayerInfo info) {
-        scene.setActionLabel(info.actionLabel);
-        scene.setConfirmActionLabel(info.confirmActionLabel);
-        scene.setTurnLabel(info.turnLabel);
-        scene.getBoard().getAnchorPane().getChildren().removeLast();
-    }
-
-    private void changeMyPlayerScene(PlayerGUI otherPlayer) {
-        this.actionLabel.setText("Click the \"See " + viewControllerGUI.getMyPlayer().getUsername() + " 's game\"\nbutton to go back to your game");
-        this.confirmActionLabel.setText("");
-        if (otherPlayer.getMainScene().getTurnLabelText().equals("It's your turn!"))
-            this.setTurnLabel(otherPlayer.getUsername() + " is playing!");
-        else this.setTurnLabel(otherPlayer.getUsername() + " is waiting!");
-
-        WritableImage capturedImage = captureAnchorPaneSnapshot(otherPlayer.getMainScene().getBoard().getAnchorPane());
-        displayCapturedImage(this.board.getAnchorPane(), capturedImage);
-
-    }
+//    private void restoreMyPlayerInfo(MainScene scene, PlayerInfo info) {
+//        scene.setActionLabel(info.actionLabel);
+//        scene.setConfirmActionLabel(info.confirmActionLabel);
+//        scene.setTurnLabel(info.turnLabel);
+//        scene.getBoard().getAnchorPane().getChildren().removeLast();
+//    }
+//
+//    private void changeMyPlayerScene(PlayerGUI otherPlayer) {
+//        this.actionLabel.setText("Click the \"See " + viewControllerGUI.getMyPlayer().getUsername() + " 's game\"\nbutton to go back to your game");
+//        this.confirmActionLabel.setText("");
+//        if (viewControllerGUI.isMyTurn(otherPlayer.getUsername()))
+//            this.setTurnLabel(otherPlayer.getUsername() + " is playing!");
+//        else this.setTurnLabel(otherPlayer.getUsername() + " is waiting!");
+//
+//        WritableImage capturedImage = captureAnchorPaneSnapshot(otherPlayer.getMainScene().getBoard().getAnchorPane());
+//        displayCapturedImage(this.board.getAnchorPane(), capturedImage);
+//
+//    }
 
     private void displayCapturedImage(AnchorPane targetPane, WritableImage image) {
         if (image != null) {
@@ -294,10 +288,6 @@ public class MainScene extends Scene {
         this.stage = stage;
     }
 
-    public BoardGUI getBoard() {
-        return board;
-    }
-
     public DrawableAreaGUI getDrawableArea(){
         return drawableArea;
     }
@@ -306,9 +296,6 @@ public class MainScene extends Scene {
         return scoreBoard;
     }
 
-    public HandGUI getHand() {
-        return hand;
-    }
 
     public ObjectivesSectionGUI getObjectivesSection() {
         return objectivesSection;
@@ -327,12 +314,13 @@ public class MainScene extends Scene {
     public void onConfirmButtonClicked(){
         switch (lastMessageToArrive){
             case START_FIRSTROUND, FIRSTROUND -> {
+                chosenCard = playerInScene.getBoard().getInitialCard();
                 chosenCard.setOnMouseClicked(null);
                 confirmActionButton.setDisable(true);
 
                 setActionLabel("Choose a color by clicking on it");
                 setConfirmActionLabel("");
-                tokenChoicePopUp = viewControllerGUI.getMyPlayer().getTokenChoicePopUpScene();
+                tokenChoicePopUp = viewControllerGUI.getTokenChoicePopUpScene();
                 tokenChoicePopUp.setPopUpStage();
                 tokenChoicePopUp.popUpStage.setScene(tokenChoicePopUp);
                 tokenChoicePopUp.popUpStage.show();
@@ -369,5 +357,10 @@ public class MainScene extends Scene {
     public ViewControllerGUI getViewControllerGUI(){
         return viewControllerGUI;
     }
+
+    public void setPlayerInScene(PlayerGUI player) {
+        this.playerInScene = player;
+    }
+
     public record PlayerInfo(String turnLabel, String actionLabel, String confirmActionLabel){}
 }

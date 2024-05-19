@@ -95,16 +95,19 @@ public class ScoreBoardGUI extends GridPane {
     public void setUsernames(ArrayList<String> usernames){
         for (int i = 0; i < usernames.size(); i++) {
             playerLabels[i].setText(usernames.get(i));
+            scoreLabels[i].setText("0");
         }
     }
 
     /**
      * Updates the player's score on the scoreboard
-     * @param player player to update score
      */
-    public void updatePlayersScores(PlayerGUI player, int playersInGame) {
-        for (int i = 0; i < playersInGame; i++) {
-            scoreLabels[i].setText("" + player.getScore());
+    public void updatePlayersScores(String username, int score) {
+        for (Label playerUsername : playerLabels) {
+            if (playerUsername.getText().equalsIgnoreCase(username)){
+                //TODO: set score to correct username
+            }
+
         }
     }
 }
