@@ -59,8 +59,9 @@ public class TokenChoicePopUp extends Scene {
     }
 
     public void handleTokenColorChoice(String color) {
-        ViewControllerGUI viewControllerGUI = mainScene.getViewControllerGUI();
-        viewControllerGUI.getMessageDispatcher().firstRound(viewControllerGUI.getMyPlayer().getUsername(), mainScene.getChosenCard().isFaceUp(), color);
+        mainScene.getViewControllerGUI().getMessageDispatcher().firstRound(mainScene.getPlayerInScene().getUsername(), mainScene.getChosenCard().isFaceUp(), color);
+        for (Button button : mainScene.getSeeOtherPlayersSceneButtons())
+            button.setDisable(false);
         popUpStage.close();
 
     }
