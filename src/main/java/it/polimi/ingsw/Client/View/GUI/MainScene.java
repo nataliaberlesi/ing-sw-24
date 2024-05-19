@@ -174,7 +174,7 @@ public class MainScene extends Scene {
      * @param playersInGame players in game
      */
     public void setSeeOtherPlayersGameButtons(ArrayList<PlayerGUI> playersInGame){
-        for (int i = 0; i < ViewControllerGUI.numberOfPlayersInGame; i++) {
+        for (int i = 0; i < playersInGame.size(); i++) {
             seeOtherPlayersSceneButtons.add(new Button("See " + playersInGame.get(i).getUsername() + "'s game"));
             seeOtherPlayersSceneButtons.get(i).setLayoutX(38);
             seeOtherPlayersSceneButtons.get(i).setLayoutY(277+45*i);

@@ -90,7 +90,7 @@ public class ScoreBoardGUI extends GridPane {
     /**
      * Updates the player's score on the scoreboard
      */
-    public void updatePlayersScores(String username, int score) {
+    public void updatePlayerScore(String username, int score) {
         for (int i = 0; i < numberOfPlayersInGame; i++) {
             if (playerLabels.get(i).getText().equalsIgnoreCase(username)){
                 scoreLabels.get(i).setText(String.valueOf(score));

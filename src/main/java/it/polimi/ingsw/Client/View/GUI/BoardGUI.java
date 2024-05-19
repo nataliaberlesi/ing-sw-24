@@ -85,19 +85,12 @@ public class BoardGUI extends ScrollPane {
         playerColorToken.setImage(new Image(Objects.requireNonNull(GUIApplication.class.getResourceAsStream(imagePath))));
     }
 
-    /**
-     * Getter for player color token
-     * @return player color token image view
-     */
-    public ImageView getPlayerColorToken() {
-        return playerColorToken;
-    }
 
     /**
      * Method to place a card on the board in a certain position and associate an image to it
      * @param cards card to be placed on board
      */
-    public void placeCardOnBoard(ArrayList<CardGUI> cards){
+    public void updateBoard(ArrayList<CardGUI> cards){
         int i;
         for (i = cards.size() - 1; i >= 0 ; i--) {
             if (cards.get(i).equals(lastCardPlaced)){
@@ -107,9 +100,5 @@ public class BoardGUI extends ScrollPane {
         for (; i < cards.size(); i++) {
             anchorPane.getChildren().add(cards.get(i));
         }
-    }
-
-    public AnchorPane getAnchorPane() {
-        return anchorPane;
     }
 }
