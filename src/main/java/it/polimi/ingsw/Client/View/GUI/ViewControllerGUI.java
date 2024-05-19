@@ -253,8 +253,10 @@ public class ViewControllerGUI extends ViewController implements Initializable{
 
     @Override
     protected void updateAvailableColors(ArrayList<String> availableColors) {
-        for (PlayerGUI player : playersInGame){
-            player.setTokenChoicePopUpScene(availableColors);
+        if (availableColors != null){
+            for (PlayerGUI player : playersInGame){
+                player.setTokenChoicePopUpScene(availableColors);
+            }
         }
     }
 
