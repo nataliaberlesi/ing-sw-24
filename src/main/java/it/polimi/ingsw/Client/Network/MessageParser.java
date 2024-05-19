@@ -176,6 +176,22 @@ public class MessageParser {
         }
         return objectiveCLIS;
     }
+    public String[] getPrivateObjectivesID() {
+        ObjectiveDTO[] objectiveDTOS=inParamsDTO.privateObjectives();
+        String[] objectivesIDs= new String[objectiveDTOS.length];
+        for(int i=0;i<objectiveDTOS.length;i++) {
+            objectivesIDs[i]=objectiveDTOS[i].data().objectiveID();
+        }
+        return objectivesIDs;
+    }
+    public String[] getPublicObjectivesID() {
+        ObjectiveDTO[] objectiveDTOS=inParamsDTO.publicObjectives();
+        String[] objectivesIDs= new String[objectiveDTOS.length];
+        for(int i=0;i<objectiveDTOS.length;i++) {
+            objectivesIDs[i]=objectiveDTOS[i].data().objectiveID();
+        }
+        return objectivesIDs;
+    }
     public ObjectiveCLI getChosenObjective() {
         ObjectiveDTO objectiveDTO= inParamsDTO.chosenObjective();
         return new ObjectiveCLI(objectiveDTO.type(),
