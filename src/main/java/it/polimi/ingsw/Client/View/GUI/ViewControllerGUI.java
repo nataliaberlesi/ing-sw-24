@@ -1,7 +1,6 @@
 package it.polimi.ingsw.Client.View.GUI;
 import it.polimi.ingsw.Client.Network.MessageDispatcher;
 import it.polimi.ingsw.Client.Network.MessageParser;
-import it.polimi.ingsw.Client.View.CLI.PlayerCLI;
 import it.polimi.ingsw.Client.View.ViewController;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -15,6 +14,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.concurrent.Semaphore;
 
 /**
  * Class representing the gui view and acting as main controller for JavaFX application.
@@ -83,7 +83,16 @@ public class ViewControllerGUI extends ViewController implements Initializable{
      */
     @Override
     public void updateView(){
-        Platform.runLater(super::updateView);
+        Semaphore semaphore = new Semaphore(0);
+        Platform.runLater(() -> {
+            super.updateView();
+            semaphore.release();
+        });
+        try {
+            semaphore.acquire();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -292,12 +301,18 @@ public class ViewControllerGUI extends ViewController implements Initializable{
 
     @Override
     protected void updatePlayerHand(String username) {
-        playersInGame.getPlayer(username).getHand().updateHand(messageParser.getHandIDs());
+        if (playersInGame.getPlayer(username).equals(myPlayer))
+            playersInGame.getPlayer(username).getHand().updateMyHand(messageParser.getHandIDs());
+        else playersInGame.getPlayer(username).getHand().updateMyHandForOtherPlayers(messageParser.getHandIDs());
         mainScene.enableFlipHandButton();
     }
 
     @Override
     protected void setPublicObjectives() {
+    }
+
+    @Override
+    protected void setPrivateObjectiveChoice() {
     }
 
     @Override

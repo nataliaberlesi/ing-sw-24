@@ -30,9 +30,14 @@ public class HandGUI extends HBox {
         return handCards;
     }
 
-    public void updateHand(String[] handIDs) {
+    public void updateMyHand(String[] handIDs) {
         for (int i = 0; i < handIDs.length; i++){
             handCards[i].setCardIDAndImage(handIDs[i]);
+        }
+    }
+    public void updateMyHandForOtherPlayers(String[] handIDs){
+        for (int i = 0; i < handIDs.length; i++){
+            handCards[i].setCardIDAndImage(handIDs[i].substring(0,2));
         }
     }
 }

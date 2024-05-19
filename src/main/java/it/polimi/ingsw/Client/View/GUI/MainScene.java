@@ -1,21 +1,14 @@
 package it.polimi.ingsw.Client.View.GUI;
-import it.polimi.ingsw.Client.Network.MessageDispatcher;
 import it.polimi.ingsw.Client.Network.MessageType;
-import it.polimi.ingsw.Server.Model.Hand;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.SnapshotParameters;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
-import javafx.stage.Stage;
-
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Objects;
 
 public class MainScene extends Scene {
@@ -46,13 +39,13 @@ public class MainScene extends Scene {
         setUpButtons();
         root.getChildren().add(drawableArea);
         root.getChildren().add(objectivesSection);
-        addChildrenToScene();
+        addHandAndBoardToScene();
     }
 
     /**
      * Adds playerInScene hand and board to scene
      */
-    private void addChildrenToScene(){
+    private void addHandAndBoardToScene(){
         root.getChildren().add(playerInScene.getHand());
         root.getChildren().add(playerInScene.getBoard());
     }
@@ -190,43 +183,15 @@ public class MainScene extends Scene {
     }
 
     private void handleSeeOtherPlayerScene(PlayerGUI otherPlayer) {
-        confirmActionButton.setDisable(true);
-        if (viewControllerGUI.getMyPlayer().equals(otherPlayer)){
-            confirmActionButton.setDisable(false);
-        }
-        else{
-            //playerInScene = otherPlayer;
-//            BoardGUI otherPlayerBoard = otherPlayer.getBoard();
-//            HandGUI otherPlayerHand = otherPlayer.getHand();
-//            for (CardGUI card : otherPlayerHand.getHandCards()){
-//                if (card.isFaceUp() && card.getCardID() != null){
-//                    card.flipAndShow();
-//                }
-//            }
-        }
+        playerInScene = otherPlayer;
+        enableConfirmButtonClick();
+        enableFlipHandButton();
+        BoardGUI otherPlayerBoard = otherPlayer.getBoard();
+        HandGUI otherPlayerHand = otherPlayer.getHand();
+        playerInScene.setHand(otherPlayerHand);
+        playerInScene.setBoard(otherPlayerBoard);
+
     }
-
-//    private void disableAllActions(MainScene scene) {
-//        scene.confirmActionButton.setDisable(true);
-//        scene.flipYourHandButton.setDisable(true);
-//        scene.seeOtherPlayersSceneButtons.get(viewControllerGUI.getMyPlayer()).setDisable(false);
-//        for (PlayerGUI player : viewControllerGUI.getPlayersInGame()) {
-//            if (!player.equals(viewControllerGUI.getMyPlayer())) {
-//                scene.seeOtherPlayersSceneButtons.get(player).setDisable(true);
-//            }
-//        }
-//    }
-
-//    private void enableActions(MainScene scene){
-//        scene.confirmActionButton.setDisable(false);
-//        scene.flipYourHandButton.setDisable(false);
-//        this.seeOtherPlayersSceneButtons.get(viewControllerGUI.getMyPlayer()).setDisable(true);
-//        for (PlayerGUI player : viewControllerGUI.getPlayersInGame()) {
-//            if (!player.equals(viewControllerGUI.getMyPlayer())) {
-//                scene.seeOtherPlayersSceneButtons.get(player).setDisable(false);
-//            }
-//        }
-//    }
 
     public DrawableAreaGUI getDrawableArea(){
         return drawableArea;
@@ -278,10 +243,6 @@ public class MainScene extends Scene {
                 tokenChoicePopUp.popUpStage.setScene(tokenChoicePopUp);
                 tokenChoicePopUp.popUpStage.show();
             }
-            case START_SECONDROUND -> {
-                //viewControllerGUI.getMessageDispatcher().secondRound(pl);
-
-            }
         }
     }
 
@@ -331,8 +292,8 @@ public class MainScene extends Scene {
     }
 
     public void handleObjectivesChoice() {
-        actionLabel.setText("Choose your secret objective");
-
-        confirmActionButton.setText("");
+        actionLabel.setText("Choose your secret objective\nby clicking on it");
+        confirmActionLabel.setText("");
+        confirmActionButton.setDisable(true);
     }
 }

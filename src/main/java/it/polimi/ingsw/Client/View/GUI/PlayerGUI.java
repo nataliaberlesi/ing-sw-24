@@ -19,6 +19,14 @@ public class PlayerGUI {
         return hand;
     }
 
+    public void setBoard(BoardGUI board) {
+        this.board = board;
+    }
+
+    public void setHand(HandGUI hand) {
+        this.hand = hand;
+    }
+
     public BoardGUI getBoard() {
         return board;
     }

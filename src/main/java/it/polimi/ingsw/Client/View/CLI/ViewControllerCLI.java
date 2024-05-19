@@ -81,6 +81,11 @@ public class ViewControllerCLI extends ViewController {
     }
 
     @Override
+    protected void setPrivateObjectiveChoice() {
+
+    }
+
+    @Override
     protected boolean isPlayerInGame(String username) {
         return playersInGame.isPlayerInGame(username);
     }
