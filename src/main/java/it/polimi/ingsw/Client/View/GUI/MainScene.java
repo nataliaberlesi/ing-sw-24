@@ -183,14 +183,13 @@ public class MainScene extends Scene {
     }
 
     private void handleSeeOtherPlayerScene(PlayerGUI otherPlayer) {
+        root.getChildren().remove(playerInScene.getHand());
+        root.getChildren().remove(playerInScene.getBoard());
         playerInScene = otherPlayer;
         enableConfirmButtonClick();
         enableFlipHandButton();
-        BoardGUI otherPlayerBoard = otherPlayer.getBoard();
-        HandGUI otherPlayerHand = otherPlayer.getHand();
-        playerInScene.setHand(otherPlayerHand);
-        playerInScene.setBoard(otherPlayerBoard);
-
+        addHandAndBoardToScene();
+        viewControllerGUI.showScene();
     }
 
     public DrawableAreaGUI getDrawableArea(){
