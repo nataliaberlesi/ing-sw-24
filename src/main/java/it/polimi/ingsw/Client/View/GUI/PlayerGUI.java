@@ -15,9 +15,8 @@ public class PlayerGUI {
         this.username = username;
     }
 
-    public PlayerGUI(String username, MessageDispatcher messageDispatcher) {
-        this.mainScene = new MainScene(messageDispatcher, this);
-
+    public PlayerGUI(String username, ViewControllerGUI viewControllerGUI) {
+        this.mainScene = new MainScene(viewControllerGUI);
         this.username = username;
     }
 
@@ -38,7 +37,7 @@ public class PlayerGUI {
     }
 
     public void setTokenChoicePopUpScene(ArrayList<String> tokenColors) {
-        this.tokenChoicePopUpScene = new TokenChoicePopUp(tokenColors);
+        this.tokenChoicePopUpScene = new TokenChoicePopUp(tokenColors, mainScene);
     }
 
     public TokenChoicePopUp getTokenChoicePopUpScene() {
