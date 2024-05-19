@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Client.View.GUI;
 import it.polimi.ingsw.Client.Network.MessageDispatcher;
 import it.polimi.ingsw.Client.Network.MessageType;
+import it.polimi.ingsw.Server.Model.Hand;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.SnapshotParameters;
@@ -19,26 +20,25 @@ import java.util.Objects;
 
 public class MainScene extends Scene {
 
-    private Stage stage;
     private final AnchorPane root;
     private final ObjectivesSectionGUI objectivesSection = new ObjectivesSectionGUI();
     private DrawableAreaGUI drawableArea = new DrawableAreaGUI();
-    private final ScoreBoardGUI scoreBoard = new ScoreBoardGUI();
+    private ScoreBoardGUI scoreBoard;
     private Label turnLabel = new Label();
     private Label actionLabel = new Label();
     private Label helloPlayerLabel;
     private Label confirmActionLabel = new Label();
     private final Button flipYourHandButton = new Button("Flip your hand");
     private final Button confirmActionButton = new Button("Confirm action");
-    private final HashMap<PlayerGUI, Button> seeOtherPlayersSceneButtons = new HashMap<>();
+    private final ArrayList<Button> seeOtherPlayersSceneButtons = new ArrayList<>();
     private ViewControllerGUI viewControllerGUI;
     private MessageType lastMessageToArrive;
     private TokenChoicePopUp tokenChoicePopUp;
-    private PlayerInfo info;
     private PlayerGUI playerInScene;
    private CardGUI chosenCard;
-    public MainScene(ViewControllerGUI viewControllerGUI) {
+    public MainScene(ViewControllerGUI viewControllerGUI, PlayerGUI playerInScene) {
         super(new AnchorPane(), 1060, 595);
+        this.playerInScene = playerInScene;
         this.viewControllerGUI = viewControllerGUI;
         root = (AnchorPane) this.getRoot();
         setUpBackground();
@@ -46,7 +46,6 @@ public class MainScene extends Scene {
         setUpButtons();
         root.getChildren().add(drawableArea);
         root.getChildren().add(objectivesSection);
-        root.getChildren().add(scoreBoard);
         addChildrenToScene();
     }
 
@@ -176,117 +175,55 @@ public class MainScene extends Scene {
      */
     public void setSeeOtherPlayersGameButtons(ArrayList<PlayerGUI> playersInGame){
         for (int i = 0; i < ViewControllerGUI.numberOfPlayersInGame; i++) {
-            seeOtherPlayersSceneButtons.put(playersInGame.get(i), new Button("See " + playersInGame.get(i).getUsername() + "'s game"));
-            seeOtherPlayersSceneButtons.get(playersInGame.get(i)).setLayoutX(38);
-            seeOtherPlayersSceneButtons.get(playersInGame.get(i)).setLayoutY(277+45*i);
-            seeOtherPlayersSceneButtons.get(playersInGame.get(i)).setMnemonicParsing(false);
+            seeOtherPlayersSceneButtons.add(new Button("See " + playersInGame.get(i).getUsername() + "'s game"));
+            seeOtherPlayersSceneButtons.get(i).setLayoutX(38);
+            seeOtherPlayersSceneButtons.get(i).setLayoutY(277+45*i);
+            seeOtherPlayersSceneButtons.get(i).setMnemonicParsing(false);
             int finalI = i;
-            if (playersInGame.get(i).equals(viewControllerGUI.getMyPlayer())){
-                seeOtherPlayersSceneButtons.get(playersInGame.get(i)).setDisable(true);
-                seeOtherPlayersSceneButtons.get(playersInGame.get(i)).setOnMouseClicked(event -> handleSeeMyPlayerScene());
-            }
-            else  seeOtherPlayersSceneButtons.get(playersInGame.get(i)).setOnMouseClicked(event -> handleSeeOtherPlayerScene(playersInGame.get(finalI)));
-
-            this.root.getChildren().add(seeOtherPlayersSceneButtons.get(playersInGame.get(i)));
+            seeOtherPlayersSceneButtons.get(i).setDisable(true);
+            seeOtherPlayersSceneButtons.get(i).setOnMouseClicked(event -> handleSeeOtherPlayerScene(playersInGame.get(finalI)));
+            this.root.getChildren().add(seeOtherPlayersSceneButtons.get(i));
         }
-    }
-
-    private void handleSeeMyPlayerScene() {
-//        restoreMyPlayerInfo(viewControllerGUI.getMyPlayer().getMainScene(), info);
-//        enableActions(this);
-//        this.stage.setScene(viewControllerGUI.getMyPlayer().getMainScene());
-//        this.stage.hide();
-//        this.stage.show();
     }
 
     private void handleSeeOtherPlayerScene(PlayerGUI otherPlayer) {
+        confirmActionButton.setDisable(true);
+        if (viewControllerGUI.getMyPlayer().equals(otherPlayer)){
+            confirmActionButton.setDisable(false);
+        }
+        else{
+            //playerInScene = otherPlayer;
+            BoardGUI otherPlayerBoard = otherPlayer.getBoard();
+            HandGUI otherPlayerHand = otherPlayer.getHand();
+            for (CardGUI card : otherPlayerHand.getHandCards()){
+                if (card.isFaceUp() && card.getCardID() != null){
+                    card.flipAndShow();
+                }
+            }
+        }
+    }
 
-//            BoardGUI newBoard = otherPlayer.getMainScene().getBoard();
-
-            //This does not create new objects, just point to the same ones, problem!!!
-            //I can't do that, I need to create a copy of the otherplayer hand and board and dettach all event handlers, then put the copies in my player's scene!
-//            CardGUI[] otherPlayerHandCards = otherPlayer.getMainScene().getHand().getHandCards();
-//            for (CardGUI card : otherPlayerHandCards){
-//                if (card.isFaceUp() && card.getCardID() != null){
-//                    card.flipAndShow();
-//                }
+//    private void disableAllActions(MainScene scene) {
+//        scene.confirmActionButton.setDisable(true);
+//        scene.flipYourHandButton.setDisable(true);
+//        scene.seeOtherPlayersSceneButtons.get(viewControllerGUI.getMyPlayer()).setDisable(false);
+//        for (PlayerGUI player : viewControllerGUI.getPlayersInGame()) {
+//            if (!player.equals(viewControllerGUI.getMyPlayer())) {
+//                scene.seeOtherPlayersSceneButtons.get(player).setDisable(true);
 //            }
-
-//        saveMyPlayerInfo(turnLabel.getText(), actionLabel.getText(), confirmActionLabel.getText());
-//        changeMyPlayerScene(otherPlayer);
-//        disableAllActions(this); //disable all actions on the copied scene except the button to return to my scene
-//        this.stage.setScene(this); //set my scene to be the copied scene
-//        this.stage.hide();
-//        this.stage.show();
-    }
-
-    private void saveMyPlayerInfo(String turnLabel, String actionLabel, String confirmActionLabel) {
-        info = new PlayerInfo(turnLabel, actionLabel, confirmActionLabel);
-    }
-
-//    private void restoreMyPlayerInfo(MainScene scene, PlayerInfo info) {
-//        scene.setActionLabel(info.actionLabel);
-//        scene.setConfirmActionLabel(info.confirmActionLabel);
-//        scene.setTurnLabel(info.turnLabel);
-//        scene.getBoard().getAnchorPane().getChildren().removeLast();
-//    }
-//
-//    private void changeMyPlayerScene(PlayerGUI otherPlayer) {
-//        this.actionLabel.setText("Click the \"See " + viewControllerGUI.getMyPlayer().getUsername() + " 's game\"\nbutton to go back to your game");
-//        this.confirmActionLabel.setText("");
-//        if (viewControllerGUI.isMyTurn(otherPlayer.getUsername()))
-//            this.setTurnLabel(otherPlayer.getUsername() + " is playing!");
-//        else this.setTurnLabel(otherPlayer.getUsername() + " is waiting!");
-//
-//        WritableImage capturedImage = captureAnchorPaneSnapshot(otherPlayer.getMainScene().getBoard().getAnchorPane());
-//        displayCapturedImage(this.board.getAnchorPane(), capturedImage);
-//
+//        }
 //    }
 
-    private void displayCapturedImage(AnchorPane targetPane, WritableImage image) {
-        if (image != null) {
-            ImageView imageView = new ImageView(image);
-            targetPane.getChildren().add(imageView);
-        }
-    }
-
-    private WritableImage captureAnchorPaneSnapshot(AnchorPane anchorPane) {
-        SnapshotParameters parameters = new SnapshotParameters();
-        int width = (int) anchorPane.getPrefWidth();
-        int height = (int) anchorPane.getPrefHeight();
-
-        if (width > 0 && height > 0) {
-            WritableImage image = new WritableImage(width, height);
-            return anchorPane.snapshot(parameters, image);
-        }
-        return null;
-    }
-
-    private void disableAllActions(MainScene scene) {
-        scene.confirmActionButton.setDisable(true);
-        scene.flipYourHandButton.setDisable(true);
-        scene.seeOtherPlayersSceneButtons.get(viewControllerGUI.getMyPlayer()).setDisable(false);
-        for (PlayerGUI player : viewControllerGUI.getPlayersInGame()) {
-            if (!player.equals(viewControllerGUI.getMyPlayer())) {
-                scene.seeOtherPlayersSceneButtons.get(player).setDisable(true);
-            }
-        }
-    }
-
-    private void enableActions(MainScene scene){
-        scene.confirmActionButton.setDisable(false);
-        scene.flipYourHandButton.setDisable(false);
-        this.seeOtherPlayersSceneButtons.get(viewControllerGUI.getMyPlayer()).setDisable(true);
-        for (PlayerGUI player : viewControllerGUI.getPlayersInGame()) {
-            if (!player.equals(viewControllerGUI.getMyPlayer())) {
-                scene.seeOtherPlayersSceneButtons.get(player).setDisable(false);
-            }
-        }
-    }
-
-    public void setStage(Stage stage) {
-        this.stage = stage;
-    }
+//    private void enableActions(MainScene scene){
+//        scene.confirmActionButton.setDisable(false);
+//        scene.flipYourHandButton.setDisable(false);
+//        this.seeOtherPlayersSceneButtons.get(viewControllerGUI.getMyPlayer()).setDisable(true);
+//        for (PlayerGUI player : viewControllerGUI.getPlayersInGame()) {
+//            if (!player.equals(viewControllerGUI.getMyPlayer())) {
+//                scene.seeOtherPlayersSceneButtons.get(player).setDisable(false);
+//            }
+//        }
+//    }
 
     public DrawableAreaGUI getDrawableArea(){
         return drawableArea;
@@ -354,6 +291,11 @@ public class MainScene extends Scene {
     public String getTurnLabelText(){
         return turnLabel.getText();
     }
+
+    public ArrayList<Button> getSeeOtherPlayersSceneButtons() {
+        return seeOtherPlayersSceneButtons;
+    }
+
     public ViewControllerGUI getViewControllerGUI(){
         return viewControllerGUI;
     }
@@ -362,5 +304,12 @@ public class MainScene extends Scene {
         this.playerInScene = player;
     }
 
-    public record PlayerInfo(String turnLabel, String actionLabel, String confirmActionLabel){}
+    public PlayerGUI getPlayerInScene() {
+        return playerInScene;
+    }
+
+    public void setScoreBoard(ArrayList<String> playerUsernames) {
+        scoreBoard = new ScoreBoardGUI(playerUsernames);
+        root.getChildren().add(scoreBoard);
+    }
 }
