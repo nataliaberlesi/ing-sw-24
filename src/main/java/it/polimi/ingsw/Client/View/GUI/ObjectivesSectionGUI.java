@@ -24,11 +24,7 @@ public class ObjectivesSectionGUI extends HBox {
         objectiveCards[0].setAsPrivateObjective();
     }
 
-    /**
-     * Getter for objective cards
-     * @return the objective cards array
-     */
-    public CardGUI[] getObjectiveCards() {
-        return objectiveCards;
-    }
+     public void setObjectives(String[] cardIDs){
+
+     }
 }

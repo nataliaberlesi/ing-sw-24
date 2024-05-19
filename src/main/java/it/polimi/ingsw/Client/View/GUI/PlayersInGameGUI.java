@@ -16,7 +16,7 @@ public class PlayersInGameGUI {
      */
     public PlayerGUI getPlayer(String username) throws RuntimeException {
         for(PlayerGUI player : players) {
-            if(player.getUsername().equals(username)) {
+            if(player.getUsername().equalsIgnoreCase(username)) {
                 return player;
             }
         }

@@ -1,12 +1,11 @@
 package it.polimi.ingsw.Client.View.GUI;
 
-import java.util.ArrayList;
-
 public class PlayerGUI {
     private final String username;
     private BoardGUI board = new BoardGUI();
     private HandGUI hand = new HandGUI();
 
+    private boolean isCurrentPlayer = false;
 
     public PlayerGUI(String username) {
         this.username = username;
@@ -22,5 +21,11 @@ public class PlayerGUI {
 
     public BoardGUI getBoard() {
         return board;
+    }
+    public boolean isCurrentPlayer() {
+        return isCurrentPlayer;
+    }
+    public void setCurrentPlayer(boolean currentPlayer) {
+        this.isCurrentPlayer = currentPlayer;
     }
 }

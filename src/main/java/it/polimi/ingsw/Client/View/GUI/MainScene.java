@@ -137,6 +137,8 @@ public class MainScene extends Scene {
         flipYourHandButton.setLayoutX(350);
         flipYourHandButton.setLayoutY(555);
         flipYourHandButton.setMnemonicParsing(false);
+        flipYourHandButton.setDisable(true);
+        flipYourHandButton.setOnMouseClicked(event -> flipAndShowHand());
         this.root.getChildren().add(flipYourHandButton);
 
         confirmActionButton.setLayoutX(38);
@@ -144,6 +146,7 @@ public class MainScene extends Scene {
         confirmActionButton.setMnemonicParsing(false);
         confirmActionButton.setFont(new Font("System Bold", 16));
         confirmActionButton.setDisable(true);
+        confirmActionButton.setOnMouseClicked(event -> onConfirmButtonClicked());
         this.root.getChildren().add(confirmActionButton);
     }
 
@@ -193,13 +196,13 @@ public class MainScene extends Scene {
         }
         else{
             //playerInScene = otherPlayer;
-            BoardGUI otherPlayerBoard = otherPlayer.getBoard();
-            HandGUI otherPlayerHand = otherPlayer.getHand();
-            for (CardGUI card : otherPlayerHand.getHandCards()){
-                if (card.isFaceUp() && card.getCardID() != null){
-                    card.flipAndShow();
-                }
-            }
+//            BoardGUI otherPlayerBoard = otherPlayer.getBoard();
+//            HandGUI otherPlayerHand = otherPlayer.getHand();
+//            for (CardGUI card : otherPlayerHand.getHandCards()){
+//                if (card.isFaceUp() && card.getCardID() != null){
+//                    card.flipAndShow();
+//                }
+//            }
         }
     }
 
@@ -238,14 +241,27 @@ public class MainScene extends Scene {
         return objectivesSection;
     }
 
+    public void enableFlipHandButton(){
+        if (playerInScene.equals(viewControllerGUI.getMyPlayer())){
+            flipYourHandButton.setDisable(false);
+        }
+    }
+
+    private void flipAndShowHand() {
+        HandGUI hand = viewControllerGUI.getMyPlayer().getHand();
+        for (CardGUI card : hand.getHandCards()){
+            card.flipAndShow();
+        }
+    }
+
     public void handleFirstCardPlacementAndColorChoice() {
         actionLabel.setText("Click on the initial card if you want to flip it");
         enableConfirmButtonClick();
     }
 
     public void enableConfirmButtonClick(){
-        confirmActionButton.setDisable(false);
-        confirmActionButton.setOnMouseClicked(event -> onConfirmButtonClicked());
+        if (playerInScene.equals(viewControllerGUI.getMyPlayer()))
+            confirmActionButton.setDisable(false);
     }
 
     public void onConfirmButtonClicked(){
@@ -263,6 +279,7 @@ public class MainScene extends Scene {
                 tokenChoicePopUp.popUpStage.show();
             }
             case START_SECONDROUND -> {
+                //viewControllerGUI.getMessageDispatcher().secondRound(pl);
 
             }
         }
@@ -311,5 +328,11 @@ public class MainScene extends Scene {
     public void setScoreBoard(ArrayList<String> playerUsernames) {
         scoreBoard = new ScoreBoardGUI(playerUsernames);
         root.getChildren().add(scoreBoard);
+    }
+
+    public void handleObjectivesChoice() {
+        actionLabel.setText("Choose your secret objective");
+
+        confirmActionButton.setText("");
     }
 }

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Client.View.GUI;
 import it.polimi.ingsw.Client.Network.MessageDispatcher;
 import it.polimi.ingsw.Client.Network.MessageParser;
+import it.polimi.ingsw.Client.View.CLI.PlayerCLI;
 import it.polimi.ingsw.Client.View.ViewController;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -200,6 +201,9 @@ public class ViewControllerGUI extends ViewController implements Initializable{
 
     @Override
     protected void setCurrentPlayer(String currentPlayer) {
+        for(PlayerGUI player: playersInGame.getPlayers()){
+            player.setCurrentPlayer(player.getUsername().equalsIgnoreCase(currentPlayer));
+        }
     }
 
     @Override
@@ -221,10 +225,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     @Override
     protected void giveInitialCard(String username) {
         try {
-            String initialCardID = messageParser.getCardID();
-            CardGUI initialCard = playersInGame.getPlayer(username).getBoard().getInitialCard();
-            initialCard.setCardID(initialCardID);
-            initialCard.setCardImage();
+            playersInGame.getPlayer(username).getBoard().setInitialCard(messageParser.getCardID());
         } catch (RuntimeException e){
             //this happens at end of first round, when server doesn't give a new startingCard and a new currentPlayer
         }
@@ -281,6 +282,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
 
     @Override
     protected void updatePlayerBoard(String affectedPlayer) {
+        playersInGame.getPlayer(affectedPlayer).getBoard().updateBoard(messageParser.getPlacedCardsGUI());
     }
 
     @Override
@@ -289,8 +291,19 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     }
 
     @Override
-    protected void enableSecondRoundActions() {
+    protected void updatePlayerHand(String username) {
+        playersInGame.getPlayer(username).getHand().updateHand(messageParser.getHandIDs());
+        mainScene.enableFlipHandButton();
+    }
 
+    @Override
+    protected void setPublicObjectives() {
+    }
+
+    @Override
+    protected void enableSecondRoundActions() {
+        mainScene.setLastMessageToArrive(messageParser.getMessageType());
+        mainScene.handleObjectivesChoice();
     }
 
 
@@ -302,16 +315,6 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     @Override
     protected void updatePlayerScore(String username, int score) {
         mainScene.getScoreBoard().updatePlayerScore(username, score);
-    }
-
-    @Override
-    protected void setPublicObjectives() {
-
-    }
-
-    @Override
-    protected void updatePlayerHand(String username) {
-
     }
 
     @Override

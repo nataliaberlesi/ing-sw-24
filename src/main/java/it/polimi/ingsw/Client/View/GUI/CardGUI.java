@@ -63,7 +63,7 @@ public class CardGUI extends AnchorPane {
         imageView.setPreserveRatio(true);
         this.getChildren().add(imageView);
         initializeCorners();
-        this.setCardID(cardID);
+        this.setCardIDAndImage(cardID);
         this.isFaceUp = isFacingUp;
         this.convertCoordinatesFromModelToGUIAndSetImageViewLayout(modelCoordinates.getX(), modelCoordinates.getY());
 
@@ -125,7 +125,7 @@ public class CardGUI extends AnchorPane {
     }
 
 
-    public void setCardID(String cardID){
+    public void setCardIDAndImage(String cardID){
         this.faceUpCardID = cardID;
         this.faceDownCardID = cardID.substring(0,2);
         setCardImage();

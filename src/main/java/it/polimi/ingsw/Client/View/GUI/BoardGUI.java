@@ -36,21 +36,21 @@ public class BoardGUI extends ScrollPane {
         this.setContent(anchorPane);
         this.setHvalue(0.5);
         this.setVvalue(0.5);
-        setInitialCard();
     }
 
     /**
      * Sets the initial card's characteristics
      */
-    private void setInitialCard() {
+    public void setInitialCard(String cardID) {
         initialCard.convertCoordinatesFromGUIToModelAndSetImageViewLayout(1260, 640);
         initialCard.setAsInitialCard();
         playerColorToken.setFitWidth(20);
         playerColorToken.setFitHeight(20);
         playerColorToken.setLayoutX(1276);
         playerColorToken.setLayoutY(657);
-        initialCard.getChildren().add(playerColorToken);
         initialCard.setOnMouseClicked(event -> initialCard.flipAndShow());
+        initialCard.getChildren().add(playerColorToken);
+        initialCard.setCardIDAndImage(cardID);
         anchorPane.getChildren().add(initialCard);
         lastCardPlaced = initialCard;
     }
@@ -92,11 +92,12 @@ public class BoardGUI extends ScrollPane {
      */
     public void updateBoard(ArrayList<CardGUI> cards){
         int i;
-        for (i = cards.size() - 1; i >= 0 ; i--) {
+        for (i = cards.size() - 1; i > 0 ; i--) {
             if (cards.get(i).equals(lastCardPlaced)){
                 break;
             }
         }
+        i++;
         for (; i < cards.size(); i++) {
             anchorPane.getChildren().add(cards.get(i));
         }

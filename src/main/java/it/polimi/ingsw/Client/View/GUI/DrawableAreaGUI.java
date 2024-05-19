@@ -55,13 +55,13 @@ public class DrawableAreaGUI extends Group {
 
     public void setResourceCardsDrawableArea(String[] resourceCardsIDs){
         for (int i = 0; i < resourceCardsIDs.length; i++) {
-            resourceCards[i].setCardID(resourceCardsIDs[i]);
+            resourceCards[i].setCardIDAndImage(resourceCardsIDs[i]);
         }
         resourceCards[0].flipAndShow();
     }
     public void setGoldCardsDrawableArea(String[] goldCardsIDs){
         for (int i = 0; i < goldCardsIDs.length; i++) {
-            goldCards[i].setCardID(goldCardsIDs[i]);
+            goldCards[i].setCardIDAndImage(goldCardsIDs[i]);
         }
         goldCards[0].flipAndShow();
 
