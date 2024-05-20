@@ -19,7 +19,7 @@ public class ViewControllerCLI extends ViewController {
 
     public ViewControllerCLI(MessageParser messageParser, MessageDispatcher messageDispatcher) {
         super(messageParser, messageDispatcher);
-        HandleClientInputCLI handleClientInput=new HandleClientInputCLI(this,messageParser, messageDispatcher, clientActions );
+        HandleClientInputCLI handleClientInput=new HandleClientInputCLI(this, messageDispatcher, clientActions );
         Thread clientInputHandlerthread=new Thread(handleClientInput);
         clientInputHandlerthread.start();
     }
@@ -81,8 +81,23 @@ public class ViewControllerCLI extends ViewController {
     }
 
     @Override
-    protected void setPrivateObjectiveChoice() {
+    protected void disableAllActions() {
 
+    }
+
+    @Override
+    protected void showFinalScoreBoard() {
+
+    }
+
+    @Override
+    protected void setFinalScoreBoard() {
+
+    }
+
+    @Override
+    protected void setPrivateObjectiveChoice() {
+        clientActions.setPrivateObjectiveChoices(messageParser.getPrivateObjectivesCLI());
     }
 
     @Override
@@ -123,7 +138,7 @@ public class ViewControllerCLI extends ViewController {
 
     @Override
     protected void enableSecondRoundActions() {
-        clientActions.enableChoosePrivateObjective(messageParser.getPrivateObjectivesCLI());
+        clientActions.enableChoosePrivateObjective();
     }
 
     @Override
@@ -218,6 +233,7 @@ public class ViewControllerCLI extends ViewController {
 
     @Override
     protected void updateAvailableColors(ArrayList<String> availableColors) {
+        clientActions.setAvailableColors(availableColors);
     }
 
     @Override

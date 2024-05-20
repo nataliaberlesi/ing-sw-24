@@ -159,9 +159,9 @@ public abstract class ViewController {
                 setCurrentPlayer(messageParser.getCurrentPlayer());
                 updatePlayerHand(messageParser.getCurrentPlayer());
                 setPublicObjectives();
-                setPrivateObjectiveChoice();
                 showScene();
                 if(isMyTurn(messageParser.getCurrentPlayer())){
+                    setPrivateObjectiveChoice();
                     enableSecondRoundActions();
                 }
             }
@@ -172,6 +172,7 @@ public abstract class ViewController {
                 }
                 showScene();
                 if(isMyTurn(messageParser.getCurrentPlayer())){
+                    setPrivateObjectiveChoice();
                     enableSecondRoundActions();
                 }
             }
@@ -187,6 +188,7 @@ public abstract class ViewController {
                 }
             }
             case ACTION_DRAWCARD -> {
+                setCurrentPlayer(messageParser.getCurrentPlayer());
                 updatePlayerHand(messageParser.getAffectedPlayer());
                 updateDrawableArea();
                 showScene();
@@ -195,8 +197,10 @@ public abstract class ViewController {
                 }
             }
 
-            case FINALROUND -> {
-
+            case FINALROUND  -> { //FINAL ROUND E' CAMBIATO A ENDGAME
+                setFinalScoreBoard(); // popola la classifica
+                showFinalScoreBoard(); // mostra la classigfica
+                disableAllActions(); //finisce il gioco
             }
             case ABORT -> {
 
@@ -205,6 +209,13 @@ public abstract class ViewController {
             }
         }
     }
+
+    protected abstract void disableAllActions();
+
+    protected abstract void showFinalScoreBoard();
+
+    protected abstract void setFinalScoreBoard();
+
 
     protected abstract void setPrivateObjectiveChoice();
 

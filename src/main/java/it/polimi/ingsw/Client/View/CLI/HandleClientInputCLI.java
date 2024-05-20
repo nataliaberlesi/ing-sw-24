@@ -1,7 +1,6 @@
 package it.polimi.ingsw.Client.View.CLI;
 
 import it.polimi.ingsw.Client.Network.MessageDispatcher;
-import it.polimi.ingsw.Client.Network.MessageParser;
 import it.polimi.ingsw.Server.Model.Coordinates;
 
 import java.util.Arrays;
@@ -27,10 +26,6 @@ public class HandleClientInputCLI implements Runnable{
      */
     ClientActionsCLI actionsCLI;
     /**
-     * hold the last message sent by server
-     */
-    MessageParser messageParser;
-    /**
      * used to read user inputs
      */
     Scanner scanner = new Scanner(System.in);
@@ -39,13 +34,11 @@ public class HandleClientInputCLI implements Runnable{
     /**
      *
      * @param viewController controls client scene
-     * @param messageParser used to read message from server
      * @param messageDispatcher used to send messages to server
      * @param actionsCLI determines which actions a player can take
      */
-    HandleClientInputCLI(ViewControllerCLI viewController, MessageParser messageParser, MessageDispatcher messageDispatcher, ClientActionsCLI actionsCLI) {
+    HandleClientInputCLI(ViewControllerCLI viewController, MessageDispatcher messageDispatcher, ClientActionsCLI actionsCLI) {
         this.viewController = viewController;
-        this.messageParser = messageParser;
         this.messageDispatcher = messageDispatcher;
         this.actionsCLI = actionsCLI;
     }
@@ -102,7 +95,7 @@ public class HandleClientInputCLI implements Runnable{
                     int objectiveIndex=getIndex(input);
                     if(objectiveIndex==0 || objectiveIndex==1){
                         messageDispatcher.secondRound(viewController.getMyPlayer().getUsername(),objectiveIndex);
-                        viewController.setPrivateObjective(messageParser.getPrivateObjectivesCLI()[objectiveIndex]);
+                        viewController.setPrivateObjective(actionsCLI.getPrivateObjectiveChoices()[objectiveIndex]);
                         System.out.println("Hmm that looks like a tough objective, but ok, I'll let the server know");
                         actionsCLI.disableChoosePrivateObjective();
                     }
@@ -111,15 +104,10 @@ public class HandleClientInputCLI implements Runnable{
                     }
                 }
                 if(input.equals("HELP")){
-                    System.out.println("ACTIONS:\n\n" +
-                            "1) PLACE CARD\n" +
-                            "to place a card simply type PLACE followed by the index of the card in your hand you want to place,\n" +
-                            "followed by the coordinates where you want to place the card (x,y),\n" +
-                            "followed UP/DOWN depending on weather you want the card facing up or facing down\n" +
-                            "EXAMPLE: PLACE 3 (-4,7) DOWN\n\n" +
-                            "2) DRAW CARD\n" +
-                            "to draw a card simply type DRAW followed by GOLD/RESOURCE and the index of the card you want to draw\n" +
-                            "EXAMPLE: DRAW RESOURCE 2" );
+                    printInstructions();
+                }
+                if(input.equals("EXIT")){
+
                 }
             }
         }
@@ -139,8 +127,8 @@ public class HandleClientInputCLI implements Runnable{
                 boolean isFaceUp;
                 switch (inputArray[2]) {
                     case "UP" -> {
-                        actionsCLI.disablePlaceCard();
                         success=true;
+                        actionsCLI.disablePlaceCard();
                         isFaceUp = true;
                         messageDispatcher.placeCard(viewController.getMyPlayer().getUsername(), isFaceUp, index, coordinates);
                     }
@@ -157,6 +145,33 @@ public class HandleClientInputCLI implements Runnable{
     }
 
     /**
+     * prints out the different commands that the player can use and how to use them
+     */
+    private void printInstructions(){
+        System.out.println("""
+                            ACTIONS:
+
+                            1) PLACE CARD
+                            to place a card simply type PLACE followed by the index of the card in your hand you want to place,
+                            followed by the coordinates where you want to place the card (x,y),
+                            followed UP/DOWN depending on weather you want the card facing up or facing down
+                            EXAMPLE: PLACE 3 (-4,7) DOWN
+
+                            2) DRAW CARD
+                            to draw a card simply type DRAW followed by GOLD/RESOURCE and the index of the card you want to draw
+                            EXAMPLE: DRAW RESOURCE 2
+                            
+                            3) SEE OTHER PLAYER BOARD AND BACK OF HAND
+                            you can see another players board and the back of their hand by typing
+                            SHOW followed by the username of the player you want to see
+                            EXAMPLE: SHOW player3
+                            
+                            4) EXIT
+                            to exit the game simply type EXIT, though I will personally get offended if you do decide to leave...
+                            EXAMPLE: exit""");
+    }
+
+    /**
      *
      * @param inputArray players input where each word is an element in the array
      * @return true if params to draw card are correct
@@ -168,17 +183,18 @@ public class HandleClientInputCLI implements Runnable{
             switch (inputArray[0]) {
                 case "GOLD" -> {
                     success=true;
+                    actionsCLI.disableDrawCard();
                     messageDispatcher.drawCard(viewController.getMyPlayer().getUsername(), index, "goldDrawableArea");
                 }
                 case "RESOURCE" -> {
                     success=true;
+                    actionsCLI.disableDrawCard();
                     messageDispatcher.drawCard(viewController.getMyPlayer().getUsername(), index, "resourceDrawableArea");
                 }
             }
         }
         return success;
     }
-
 
     /**
      *
@@ -293,7 +309,7 @@ public class HandleClientInputCLI implements Runnable{
             case "PLACE"->{
                 actionsCLI.disablePlaceStartingCard();
                 System.out.println("Congrats! You have placed your first card");
-                actionsCLI.enableChooseColor(messageParser.getAvailableColors());
+                actionsCLI.enableChooseColor(actionsCLI.getAvailableColors());
             }
             default -> {
                 viewController.showErrorAlert("Command Not Recognized", "Remember 'F' is to flip the card and 'place' is to place the card\n ");
@@ -306,7 +322,7 @@ public class HandleClientInputCLI implements Runnable{
      * @param chosenColor is color chosen by client, if color is in the list of available colors then the choice is sent to server
      */
     private void dealWithPlayerColorChoice(String chosenColor){
-        if(messageParser.getAvailableColors().contains(chosenColor)){
+        if(actionsCLI.getAvailableColors().contains(chosenColor)){
             actionsCLI.disableChooseColor();
             sendStartingCardOrientationAndColorChoice(chosenColor);
             if(chosenColor.equals("GREEN")){

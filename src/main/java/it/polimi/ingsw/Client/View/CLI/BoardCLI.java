@@ -52,10 +52,10 @@ public class BoardCLI {
      * prints current board formation
      */
     public void printBoard(){
+        System.out.println("BOARD:");
         StringBuilder spacing= new StringBuilder();
         for(int i=maxY;i>=minY;i--){
             ArrayList<CardCLI> cardsInCurrentLine = board.get(i);
-
             for(int k=0; k<4; k++) {
                 int cursor=minX-1;
                 for (CardCLI card : cardsInCurrentLine) {
@@ -65,9 +65,9 @@ public class BoardCLI {
                     }
                     cursor = cardX;
                     System.out.print(spacing+card.getLine(k));
+                    spacing.setLength(0);
                 }
                 System.out.println();
-                spacing.setLength(0);
             }
         }
     }

@@ -33,13 +33,13 @@ public class ClientActionsCLI {
      */
     private boolean join=false;
     /**
-     * always true if game is in course, if a player exits all players are forced to exit as well
-     */
-    private boolean exit=true;
-    /**
      * true if player is master and can create a game by selecting a username and number of players
      */
     private boolean create=false;
+
+    private ObjectiveCLI[] privateObjectiveChoices =new ObjectiveCLI[2];
+
+    private ArrayList<String> availableColors;
 
     /**
      *
@@ -72,17 +72,6 @@ public class ClientActionsCLI {
         return join;
     }
 
-    public void enableExit() {
-        exit = true;
-    }
-
-    public void disableExit() {
-        exit = false;
-    }
-
-    public boolean isExitEnabled() {
-        return exit;
-    }
 
     public void enableCreate() {
         System.out.println("Choose your username and number of players (min 2, max 4):");
@@ -96,7 +85,6 @@ public class ClientActionsCLI {
     public boolean isCreateEnabled() {
         return create;
     }
-
     public void enablePlaceStartingCard() {
         System.out.println("""
                 You have been assigned a starting card!
@@ -109,11 +97,10 @@ public class ClientActionsCLI {
         System.out.println("""
                 Place a card
                 type "place", then the index of card in your hand you want to place,
-                 then the coordinates of where you want to place them in the form (0,0)
-                 and then UP or DOWN depending if you want the card face up or not""");
+                then the coordinates of where you want to place them in the form (0,0)
+                and then UP or DOWN depending if you want the card face up or not""");
         placeCard = true;
     }
-
     public void enableShowOtherPlayerBoardAndBackOFHand() {
         System.out.println("Now at any time if you want to see another players board (and back of hand) " +
                 "all you need to do is type:\nSHOW 'username'");
@@ -126,28 +113,25 @@ public class ClientActionsCLI {
                 and then the index of the card you want to draw""");
         drawCard = true;
     }
-    public void enableChoosePrivateObjective(ObjectiveCLI[] privateObjectives) {
+    public void enableChoosePrivateObjective() {
         System.out.println("""
                 If you look up you will see the objectives for this game.
                 Those objectives are valid for all players,
                 but each of you can choose a private objective.
                 You can choose from these two:""");
-        for (int i = 0; i < privateObjectives.length; i++) {
+        for (int i = 0; i < privateObjectiveChoices.length; i++) {
             System.out.println(i+1+")");
-            privateObjectives[i].printObjective();
+            privateObjectiveChoices[i].printObjective();
         }
         System.out.println("Type 1 to choose the first one, type 2 to choose the second one");
         choosePrivateObjective = true;
     }
-
     public boolean isPlaceStartingCardEnabled() {
         return placeStartingCard;
     }
     public boolean isPlaceCardEnabled() {
         return placeCard;
     }
-
-
     public boolean isShowOtherPlayerBoardAndBackOFHandEnabled() {
         return showOtherPlayerBoardAndBackOFHand;
     }
@@ -164,8 +148,6 @@ public class ClientActionsCLI {
     public void disablePlaceCard() {
         placeCard = false;
     }
-
-
     public void disableShowOtherPlayerBoardAndBackOFHand() {
         showOtherPlayerBoardAndBackOFHand = false;
     }
@@ -175,5 +157,19 @@ public class ClientActionsCLI {
     public void disableChoosePrivateObjective() {
         choosePrivateObjective = false;
     }
+    public void setAvailableColors(ArrayList<String> availableColors) {
+        this.availableColors = availableColors;
+    }
 
+    public void setPrivateObjectiveChoices(ObjectiveCLI[] privateObjectiveChoices) {
+        this.privateObjectiveChoices = privateObjectiveChoices;
+    }
+
+    public ObjectiveCLI[] getPrivateObjectiveChoices() {
+        return privateObjectiveChoices;
+    }
+
+    public ArrayList<String> getAvailableColors() {
+        return availableColors;
+    }
 }
