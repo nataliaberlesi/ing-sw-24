@@ -1,5 +1,6 @@
 package it.polimi.ingsw.Server.Controller.DTO;
 
+import it.polimi.ingsw.Client.Network.DTO.ModelDTO.ScoreboardPositionDTO;
 import it.polimi.ingsw.Server.Model.Cards.Card;
 import it.polimi.ingsw.Server.Model.Cards.Objectives.Objective;
 import it.polimi.ingsw.Server.Model.Color;
@@ -22,7 +23,7 @@ public record OutParamsDTO(String currentPlayer,
                            Card[] resourceDrawableArea,
                            Card[] goldDrawableArea,
                            ArrayList<Color> availableColors,
-                           ArrayList<String> winners,
+                           ArrayList<ScoreboardPositionDTO> scoreboard,
                            String cause,
                            Boolean masterStatus
                            ) {
@@ -112,10 +113,10 @@ public record OutParamsDTO(String currentPlayer,
 
     /**
      * Constructor used for WINNERS params
-     * @param winners
+     * @param scoreboard
      */
-    public OutParamsDTO(ArrayList<String> winners){
-        this(null, null, null,null,null,null,null,null,null,null,null,null,null,null,null,winners,null,null);
+    public OutParamsDTO(ArrayList<ScoreboardPositionDTO> scoreboard){
+        this(null, null, null,null,null,null,null,null,null,null,null,null,null,null,null,scoreboard,null,null);
     }
     /**
      * Constructor used for ABORT message

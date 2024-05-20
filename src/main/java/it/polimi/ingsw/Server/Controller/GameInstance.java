@@ -1,12 +1,9 @@
 package it.polimi.ingsw.Server.Controller;
 
+import it.polimi.ingsw.Server.Model.*;
 import it.polimi.ingsw.Server.Model.Cards.Card;
 import it.polimi.ingsw.Server.Model.Cards.Deck;
 import it.polimi.ingsw.Server.Model.Cards.ResourceCardFactory;
-import it.polimi.ingsw.Server.Model.Color;
-import it.polimi.ingsw.Server.Model.DrawableArea;
-import it.polimi.ingsw.Server.Model.PlacedCard;
-import it.polimi.ingsw.Server.Model.Player;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,6 +24,9 @@ public class GameInstance {
     private boolean gameIsStarted;
     private boolean allBoardsAreSet;
     private boolean allObjectivesHaveBeenChosen;
+    private boolean endgameIsStarted;
+    private boolean finalRoundIsStarted;
+    private boolean gameIsEnded;
     private Deck startingDeck;
     private ArrayList<Color> availableColors;
 
@@ -37,6 +37,9 @@ public class GameInstance {
         firstRoundIsStarted=false;
         secondRoundIsStarted=false;
         gameIsStarted=false;
+        endgameIsStarted=false;
+        finalRoundIsStarted=false;
+        gameIsEnded=false;
         this.numberOfPlayers = numberOfPlayers;
         playersTurnOrder =new ArrayList<String>();
         availableColors=new ArrayList<Color>();
@@ -79,17 +82,12 @@ public class GameInstance {
     public HashMap<String, Player> getPlayers() {
         return players;
     }
+    public int getCurrentPlayerIndex(){return this.currentPlayerIndex;}
     public void setDrawableArea(DrawableArea drawableArea) {
         this.drawableArea=drawableArea;
     }
     public DrawableArea getDrawableArea() {
         return this.drawableArea;
-    }
-    public boolean firstRoundIsStarted() {
-        return this.firstRoundIsStarted;
-    }
-    public boolean secondRoundIsStarted() {
-        return this.secondRoundIsStarted;
     }
     public void startFirstRound() {
         this.firstRoundIsStarted =true;
@@ -97,12 +95,20 @@ public class GameInstance {
     public void startSecondRound() {
         this.secondRoundIsStarted=true;
     }
-    public void startGame() {
-        this.gameIsStarted=true;
+    public void startGame() {this.gameIsStarted=true;}
+    public void startEndgame(){this.endgameIsStarted=true;}
+    public void startFinalRound(){this.finalRoundIsStarted=true;}
+    public boolean firstRoundIsStarted() {
+        return this.firstRoundIsStarted;
+    }
+    public boolean secondRoundIsStarted() {
+        return this.secondRoundIsStarted;
     }
     public boolean allBoardsAreSet() {
         return allBoardsAreSet;
     }
+    public boolean isEndgameIsStarted(){return this.endgameIsStarted;}
+    public boolean isFinalRoundIsStarted(){return this.finalRoundIsStarted;}
     public void checkIfAllBoardsAreSet() {
         boolean flag=true;
         for(String player: playersTurnOrder) {
@@ -226,5 +232,29 @@ public class GameInstance {
             }
         }
         this.allObjectivesHaveBeenChosen=flag;
+    }
+    public Scoreboard getScoreBoard() {
+        Scoreboard scoreboard=new Scoreboard();
+        for(String player: playersTurnOrder) {
+            scoreboard.addPlayer(players.get(player));
+        }
+        scoreboard.sortScoreboard();
+        scoreboard.orderPositions();
+        return scoreboard;
+    }
+
+    public boolean checkEndgame() {
+        for(String player:playersTurnOrder) {
+            if(players.get(player).getPlayerBoard().getScore()>=20){
+                return true;
+            }
+        }
+        return false;
+    }
+    public void endGame(){
+        this.gameIsEnded=true;
+    }
+    public boolean gameIsEnded(){
+        return this.gameIsEnded;
     }
 }

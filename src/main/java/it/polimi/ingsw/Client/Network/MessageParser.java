@@ -5,7 +5,9 @@ import it.polimi.ingsw.Client.Network.DTO.InParamsDTO;
 import it.polimi.ingsw.Client.Network.DTO.ModelDTO.CardDTO;
 import it.polimi.ingsw.Client.Network.DTO.ModelDTO.ObjectiveDTO;
 import it.polimi.ingsw.Client.Network.DTO.ModelDTO.PlacedCardDTO;
+import it.polimi.ingsw.Client.Network.DTO.ModelDTO.ScoreboardPositionDTO;
 import it.polimi.ingsw.Client.View.CLI.CardCLI;
+import it.polimi.ingsw.Client.View.CLI.FinalScoreBoardCLI;
 import it.polimi.ingsw.Client.View.CLI.ObjectiveCLI;
 import it.polimi.ingsw.Client.View.GUI.CardGUI;
 import it.polimi.ingsw.Client.View.ViewController;
@@ -426,6 +428,13 @@ public class MessageParser {
     public String toJson(Object object) {
         return parser.toJson(object);
     }
-
+    public FinalScoreBoardCLI getFinalScoreBoardCLI() {
+        ArrayList<ScoreboardPositionDTO> scoreboardPositionDTOS=inParamsDTO.scoreboard();
+        FinalScoreBoardCLI finalScoreBoardCLI=new FinalScoreBoardCLI();
+        for(ScoreboardPositionDTO scoreboardPositionDTO:scoreboardPositionDTOS) {
+            finalScoreBoardCLI.addPlayer(scoreboardPositionDTO.position(), scoreboardPositionDTO.username(), scoreboardPositionDTO.score());
+        }
+        return finalScoreBoardCLI;
+    }
 }
 

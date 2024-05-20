@@ -3,10 +3,7 @@ package it.polimi.ingsw.Client.Network.DTO;
 import it.polimi.ingsw.Client.Network.DTO.ModelDTO.CardDTO;
 import it.polimi.ingsw.Client.Network.DTO.ModelDTO.ObjectiveDTO;
 import it.polimi.ingsw.Client.Network.DTO.ModelDTO.PlacedCardDTO;
-import it.polimi.ingsw.Server.Model.Cards.Card;
-import it.polimi.ingsw.Server.Model.Cards.Objectives.Objective;
-import it.polimi.ingsw.Server.Model.Color;
-import it.polimi.ingsw.Server.Model.PlacedCard;
+import it.polimi.ingsw.Client.Network.DTO.ModelDTO.ScoreboardPositionDTO;
 
 import java.util.ArrayList;
 
@@ -27,6 +24,7 @@ public record InParamsDTO(String currentPlayer,
                            ArrayList<String> availableColors, //
                            ArrayList<String> winners, //
                           String cause,
-                          Boolean masterStatus //
+                          Boolean masterStatus, //
+                          ArrayList<ScoreboardPositionDTO> scoreboard
 ) {
 }

@@ -74,5 +74,20 @@ public class Player {
     public Board getPlayerBoard() {
         return playerBoard;
     }
+    public int getPlayerScore() {
+        return this.getPlayerBoard().getScore();
+    }
+    public int getPlayerObjectivesScore() {
+        return this.getPlayerBoard().getObjectivesScore();
+    }
+    public int getPlayerFinalScore() {
+        return this.getPlayerBoard().getFinalScore();
+    }
+    public int getPlayerPosition() {
+        return this.getPlayerBoard().getPosition();
+    }
+    public void setPlayerPosition(int p) {
+        this.getPlayerBoard().setPosition(p);
+    }
 
 }

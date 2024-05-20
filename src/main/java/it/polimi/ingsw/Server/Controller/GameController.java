@@ -7,6 +7,7 @@ import it.polimi.ingsw.Server.Model.Cards.Card;
 import it.polimi.ingsw.Server.Model.Cards.ObjectiveFactory;
 import it.polimi.ingsw.Server.Model.Cards.Objectives.Objective;
 import it.polimi.ingsw.Server.Model.PlacedCard;
+import it.polimi.ingsw.Server.Model.Scoreboard;
 import it.polimi.ingsw.Server.Network.*;
 
 import java.io.IOException;
@@ -38,7 +39,6 @@ public class GameController {
             }
             case JOIN -> {
                 return joinGame(jsonParams);
-
             }
             case FIRSTROUND -> {
                 return playFirstRound(jsonParams);
@@ -198,11 +198,24 @@ public class GameController {
                     gameInstance.getDrawableArea().getGoldDrawingSection().drawCard(inParamsDTO.index())
             );
         }
+        if(!endgameIsStarted()) {
+            if(gameInstance.checkEndgame() && !endgameIsStarted()){
+                startEndgame();
+            }
+        } else{
+            if(gameInstance.getCurrentPlayerIndex()==0 && endgameIsStarted() && !finalroundIsStarted()){
+                startFinalRound();
+            }
+            if(gameInstance.getCurrentPlayerIndex()== gameInstance.getNumberOfPlayers()-1 && endgameIsStarted() && finalroundIsStarted()) {
+                endGame();
+            }
+        }
+
         Message message=MessageCrafter.craftDrawCardMessage(currentPlayer,
                 affectedPlayer,
                 gameInstance.getHand(affectedPlayer),
                 gameInstance.getResourceDrawableArea(),
-                getGameInstance().getGoldDrawableArea()
+                gameInstance.getGoldDrawableArea()
                 );
         this.previousMessageType=message.type();
         return message;
@@ -216,6 +229,8 @@ public class GameController {
     public boolean secondRoundIsStarted() {
         return gameInstance.secondRoundIsStarted();
     }
+    public boolean endgameIsStarted(){return gameInstance.isEndgameIsStarted();}
+    public boolean finalroundIsStarted(){return gameInstance.isFinalRoundIsStarted();}
 
     /**
      * Starts a game when all user are joined
@@ -230,6 +245,9 @@ public class GameController {
     public void startGame() {
         this.gameInstance.startGame();
     }
+    public void startEndgame(){this.gameInstance.startEndgame();}
+    public void startFinalRound(){this.gameInstance.startFinalRound();}
+    public void endGame(){this.gameInstance.endGame();}
     /**
      *
      * @throws IOException
@@ -254,5 +272,13 @@ public class GameController {
 
     public boolean gameIsStarted() {
         return this.gameInstance.gameIsStarted();
+    }
+
+    public Scoreboard getScoreBoard() {
+        return gameInstance.getScoreBoard();
+    }
+
+    public boolean gameIsEnded() {
+        return gameInstance.gameIsEnded();
     }
 }

@@ -30,6 +30,11 @@ public class Board {
      * points earned by completing objectives
      */
     private int objectivesScore=0;
+
+    /**
+     * position on the scoreboard of the player that controls this board
+     */
+    private int position;
     /**
      * list of cards that have been laced on board, where they were placed and in which orientation
      */
@@ -432,5 +437,12 @@ public class Board {
             return objectives[index];
         }
         throw new IndexOutOfBoundsException("Not so many objectives");
+    }
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 }
