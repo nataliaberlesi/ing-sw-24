@@ -115,7 +115,18 @@ public class HandleClientInputCLI implements Runnable{
                         printInstructions();
                     }
                 }
-
+                if(input.equals("ARVEDI")){
+                    System.out.println(EasterEggsCLI.arvedi);
+                }
+                if(input.equals("CHAD")){
+                    System.out.println(EasterEggsCLI.squiddy);
+                }
+                if(input.equals("bocciati")){
+                    System.out.println(EasterEggsCLI.shrek1);
+                }
+                if(input.equals("18")){
+                    System.out.println(EasterEggsCLI.shrek2);
+                }
             }
         }
         System.out.println("Input handler has terminated");
