@@ -159,7 +159,7 @@ public abstract class ViewController {
                 setCurrentPlayer(messageParser.getCurrentPlayer());
                 updatePlayerHand(messageParser.getCurrentPlayer());
                 setPublicObjectives();
-                // non so tu come gestisci i private objective
+                setPrivateObjectiveChoice();
                 showScene();
                 if(isMyTurn(messageParser.getCurrentPlayer())){
                     enableSecondRoundActions();
@@ -205,6 +205,8 @@ public abstract class ViewController {
             }
         }
     }
+
+    protected abstract void setPrivateObjectiveChoice();
 
     private void updatePlayerBoardHandScore(String affectedPlayer, int score){
         updatePlayerBoard(affectedPlayer);

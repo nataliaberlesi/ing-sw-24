@@ -1,54 +1,39 @@
 package it.polimi.ingsw.Client.View.GUI;
 
-import it.polimi.ingsw.Client.Network.MessageDispatcher;
-
-import java.util.ArrayList;
-
 public class PlayerGUI {
     private final String username;
-    private int score = 0;
-    private String color;
-    private final MainScene mainScene;
-    private TokenChoicePopUp tokenChoicePopUpScene;
+    private BoardGUI board = new BoardGUI();
+    private HandGUI hand = new HandGUI();
+
+    private boolean isCurrentPlayer = false;
+
     public PlayerGUI(String username) {
-        this.mainScene = new MainScene();
         this.username = username;
-    }
-
-    public PlayerGUI(String username, ViewControllerGUI viewControllerGUI) {
-        this.mainScene = new MainScene(viewControllerGUI);
-        this.username = username;
-    }
-
-    public int getScore() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
     }
 
     public String getUsername(){
         return username;
     }
 
-    public MainScene getMainScene() {
-        return mainScene;
+    public HandGUI getHand() {
+        return hand;
     }
 
-    public void setTokenChoicePopUpScene(ArrayList<String> tokenColors) {
-        this.tokenChoicePopUpScene = new TokenChoicePopUp(tokenColors, mainScene);
+    public void setBoard(BoardGUI board) {
+        this.board = board;
     }
 
-    public TokenChoicePopUp getTokenChoicePopUpScene() {
-        return tokenChoicePopUpScene;
+    public void setHand(HandGUI hand) {
+        this.hand = hand;
     }
 
-    public String getColor() {
-        return color;
+    public BoardGUI getBoard() {
+        return board;
     }
-
-    public void setColor(String color) {
-        this.color = color;
+    public boolean isCurrentPlayer() {
+        return isCurrentPlayer;
+    }
+    public void setCurrentPlayer(boolean currentPlayer) {
+        this.isCurrentPlayer = currentPlayer;
     }
 }

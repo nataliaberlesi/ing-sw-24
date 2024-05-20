@@ -5,38 +5,27 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Font;
 import java.util.ArrayList;
-import java.util.Objects;
+import java.util.HashMap;
 
 public class ScoreBoardGUI extends GridPane {
-    private final Label[] playerLabels = new Label[4];
-    private final Label[] scoreLabels = new Label[4];
+    private final int numberOfPlayersInGame;
+    private final ArrayList<Label> playerLabels = new ArrayList<>();
+    private final ArrayList<Label> scoreLabels = new ArrayList<>();
 
-    public ScoreBoardGUI(){
+    public ScoreBoardGUI(ArrayList<String> playerUsernames){
         this.setLayoutX(25);
         this.setLayoutY(50);
         this.setPrefSize(166.0, 154.0);
-        columnsContraintsSetUp();
-        rowsConstraintsSetUp();
+        this.numberOfPlayersInGame = playerUsernames.size();
         setUpLabels();
-
+        setUsernamesAndScore(playerUsernames);
+        columnsConstraintsSetUp();
     }
 
-    /**
-     * Sets row constraints
-     */
-    private void rowsConstraintsSetUp() {
-        for (int i = 0; i < 5; i++) {
-            RowConstraints row = new RowConstraints();
-            row.setMinHeight(10.0);
-            row.setPrefHeight(30.0);
-            row.setVgrow(javafx.scene.layout.Priority.SOMETIMES);
-            this.getRowConstraints().add(row);
-        }
-    }
     /**
      * Sets column constraints
      */
-    private void columnsContraintsSetUp() {
+    private void columnsConstraintsSetUp() {
         ColumnConstraints column1 = new ColumnConstraints();
         column1.setHgrow(javafx.scene.layout.Priority.SOMETIMES);
         column1.setMaxWidth(137.688);
@@ -71,40 +60,41 @@ public class ScoreBoardGUI extends GridPane {
         setColumnIndex(scoreLabel, 1);
         this.getChildren().add(scoreLabel);
 
-        for (int i = 0; i < 4; i++) {
-            playerLabels[i] = new Label();
-            playerLabels[i].setFont(new Font("System", 14));
-            playerLabels[i].setAlignment(javafx.geometry.Pos.CENTER);
-            GridPane.setRowIndex(playerLabels[i], i + 1);
-            GridPane.setColumnIndex(playerLabels[i], 0);
-            this.getChildren().add(playerLabels[i]);
+        for (int i = 0; i < numberOfPlayersInGame; i++) {
+            playerLabels.add(new Label());
+            playerLabels.get(i).setFont(new Font("System", 14));
+            playerLabels.get(i).setAlignment(javafx.geometry.Pos.CENTER);
+            GridPane.setRowIndex(playerLabels.get(i), i + 1);
+            GridPane.setColumnIndex(playerLabels.get(i), 0);
+            this.getChildren().add(playerLabels.get(i));
 
-            scoreLabels[i] = new Label();
-            scoreLabels[i].setFont(new Font("System", 14));
-            playerLabels[i].setAlignment(javafx.geometry.Pos.CENTER);
-            GridPane.setRowIndex(scoreLabels[i], i + 1);
-            GridPane.setColumnIndex(scoreLabels[i], 1);
-            this.getChildren().add(scoreLabels[i]);
+            scoreLabels.add(new Label());
+            scoreLabels.get(i).setFont(new Font("System", 14));
+            scoreLabels.get(i).setAlignment(javafx.geometry.Pos.CENTER);
+            GridPane.setRowIndex(scoreLabels.get(i), i + 1);
+            GridPane.setColumnIndex(scoreLabels.get(i), 1);
+            this.getChildren().add(scoreLabels.get(i));
         }
     }
 
     /**
-     * Sets usernames on the scoreBoard
-     * @param usernames usernames of all players in game
+     * Sets usernames and initial score on the scoreBoard
      */
-    public void setUsernames(ArrayList<String> usernames){
-        for (int i = 0; i < usernames.size(); i++) {
-            playerLabels[i].setText(usernames.get(i));
+    public void setUsernamesAndScore(ArrayList<String> playerUsernames){
+        for (int i = 0; i < numberOfPlayersInGame; i++) {
+            playerLabels.get(i).setText(playerUsernames.get(i));
+            scoreLabels.get(i).setText("0");
         }
     }
 
     /**
      * Updates the player's score on the scoreboard
-     * @param player player to update score
      */
-    public void updatePlayersScores(PlayerGUI player, int playersInGame) {
-        for (int i = 0; i < playersInGame; i++) {
-            scoreLabels[i].setText("" + player.getScore());
+    public void updatePlayerScore(String username, int score) {
+        for (int i = 0; i < numberOfPlayersInGame; i++) {
+            if (playerLabels.get(i).getText().equalsIgnoreCase(username)){
+                scoreLabels.get(i).setText(String.valueOf(score));
+            }
         }
     }
 }
