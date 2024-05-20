@@ -84,12 +84,18 @@ public class ViewControllerCLI extends ViewController {
     }
 
     @Override
-    protected void exit() {
+    protected void terminate() {
         clientInputHandler.terminate();
-        messageDispatcher.abortGame(myPlayer.getUsername(),"I don't want to play anymore :(");
         System.out.print("\033[H\033[2J");
         System.out.flush();
     }
+
+    @Override
+    protected void exit() {
+        messageDispatcher.abortGame(myPlayer.getUsername(),"I don't want to play anymore :(");
+        terminate();
+    }
+
 
     @Override
     protected void disableAllActions() {
