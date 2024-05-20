@@ -95,6 +95,11 @@ public class ViewControllerGUI extends ViewController implements Initializable{
         }
     }
 
+    @Override
+    protected void exit() {
+
+    }
+
 
     /**
      * Method for switching to a new FXML scene in application.

@@ -257,4 +257,9 @@ public class GameInstance {
     public boolean gameIsEnded(){
         return this.gameIsEnded;
     }
+    public void calculateEndgamePoints() {
+        for(String player:playersTurnOrder) {
+            players.get(player).getPlayerBoard().calculateAndUpdateObjectiveScore();
+        }
+    }
 }
