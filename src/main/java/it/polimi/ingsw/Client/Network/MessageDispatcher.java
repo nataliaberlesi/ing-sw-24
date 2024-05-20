@@ -52,4 +52,8 @@ public class MessageDispatcher {
         OutParamsDTO outParamsDTO=new OutParamsDTO(username,index,drawableSection);
         dispatch(MessageType.ACTION_DRAWCARD, messageParser.toJsonObject(outParamsDTO));
     }
+    public void abortGame(String username, String cause) {
+        OutParamsDTO outParamsDTO=new OutParamsDTO(username, cause);
+        dispatch(MessageType.ABORT, messageParser.toJsonObject(outParamsDTO));
+    }
 }
