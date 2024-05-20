@@ -42,24 +42,23 @@ public class ConnectionsHandler implements Runnable{
                     throw new RuntimeException(e); //TODO
                 }
                 if(inMessage!=null) {
-                    System.out.println("IN | "+inMessage);
                     Message outMessage=handleMessage(inMessage);
-                    if(outMessage.type().equals(MessageType.FIRSTROUND) || outMessage.type().equals(MessageType.SECONDROUND) || outMessage.type().equals(MessageType.ACTION_PLACECARD) || outMessage.type().equals(MessageType.ACTION_DRAWCARD)) {
+                    if(!(outMessage.type().equals(MessageType.JOIN) || outMessage.type().equals(MessageType.CREATE))) {
                         for(PlayerConnection playerConnection1: playerConnections) {
                             playerConnection1.setOutMessage(messageParser.toJson(outMessage));
+                            if(outMessage.type().equals(MessageType.ABORT)) {
+                                try{
+                                    playerConnection.close();
+                                } catch (IOException e) {
+                                    //TODO
+                                }
                         }
-                    } else {
+                    }
+                } else {
                         playerConnection.setOutMessage(messageParser.toJson(outMessage));
                     }
-                    if(outMessage.type().equals(MessageType.ABORT)) {
-                        try{
-                            playerConnection.close();
-                        } catch (IOException e) {
-                            //TODO
-                        }
-                    }
-                }
             }
+        }
         }
 
     }
@@ -98,6 +97,15 @@ public class ConnectionsHandler implements Runnable{
             }
         }
     }
+    private void checkEndgame() {
+        if(gameController.gameIsEnded()){
+            Message outmessage=MessageCrafter.craftWinnersMessage(gameController.getScoreBoard());
+            for(PlayerConnection pc: server.getConnections()) {
+                String outMessageString=messageParser.toJson(outmessage);
+                pc.setOutMessage(outMessageString);
+            }
+        }
+    }
     private void checkAllPlayerConnected() throws IOException {
         synchronized (server.getConnections()) {
             for(PlayerConnection pc: server.getConnections()) {
@@ -125,8 +133,13 @@ public class ConnectionsHandler implements Runnable{
             try {
                 checkAllPlayerConnected();
             } catch(IOException ioe) {
-                //TODO:
+                System.out.println("Watta");
             }
+        }
+        try {
+            server.closeServerSocket();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
