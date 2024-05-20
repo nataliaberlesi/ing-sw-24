@@ -360,7 +360,7 @@ public class Board {
     /**
      * calculates points gained from objectives and updates objectiveScore
      */
-    private void calculateAndUpdateObjectiveScore(){
+    public void calculateAndUpdateObjectiveScore(){
         for(Objective objective:objectives){
             objectivesScore+=objective.calculatePoints(visibleSymbolCounter);
         }
@@ -371,9 +371,9 @@ public class Board {
      * @return the current score plus the points gained from the objectives
      */
     public int getFinalScore(){
-        calculateAndUpdateObjectiveScore();
         return score+objectivesScore;
     }
+
 
     /**
      *
