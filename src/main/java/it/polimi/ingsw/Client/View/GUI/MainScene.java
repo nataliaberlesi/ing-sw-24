@@ -1,4 +1,5 @@
 package it.polimi.ingsw.Client.View.GUI;
+import com.almasb.fxgl.core.View;
 import it.polimi.ingsw.Client.Network.MessageType;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -206,15 +207,16 @@ public class MainScene extends Scene {
     }
 
     public void enableFlipHandButton(){
-        if (playerInScene.equals(viewControllerGUI.getMyPlayer())){
+        if (playerInScene.equals(viewControllerGUI.getMyPlayer()))
             flipYourHandButton.setDisable(false);
-        }
+        else flipYourHandButton.setDisable(true);
     }
 
     private void flipAndShowHand() {
         HandGUI hand = viewControllerGUI.getMyPlayer().getHand();
         for (CardGUI card : hand.getHandCards()){
-            card.flipAndShow();
+            if (card.getCardID() != null)
+                card.flipAndShow();
         }
     }
 
@@ -226,13 +228,15 @@ public class MainScene extends Scene {
     public void enableConfirmButtonClick(){
         if (playerInScene.equals(viewControllerGUI.getMyPlayer()))
             confirmActionButton.setDisable(false);
+        else confirmActionButton.setDisable(true);
     }
 
     public void onConfirmButtonClicked(){
         switch (lastMessageToArrive){
             case START_FIRSTROUND, FIRSTROUND -> {
-                chosenCard = playerInScene.getBoard().getInitialCard();
-                chosenCard.setOnMouseClicked(null);
+                chosenCard = viewControllerGUI.getMyPlayer().getBoard().getInitialCard();
+                for (PlayerGUI player : viewControllerGUI.getPlayersInGame().getPlayers())
+                    player.getBoard().getInitialCard().setOnMouseClicked(null);
                 confirmActionButton.setDisable(true);
 
                 setActionLabel("Choose a color by clicking on it");

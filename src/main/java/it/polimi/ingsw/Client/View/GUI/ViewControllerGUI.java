@@ -95,6 +95,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
         }
     }
 
+
     /**
      * Method for switching to a new FXML scene in application.
      *
@@ -354,6 +355,20 @@ public class ViewControllerGUI extends ViewController implements Initializable{
 
     }
 
+    @Override
+    protected void disableAllActions() {
+
+    }
+
+    @Override
+    protected void showFinalScoreBoard() {
+
+    }
+
+    @Override
+    protected void setFinalScoreBoard() {
+
+    }
     protected PlayerGUI getMyPlayer(){
         return this.myPlayer;
     }
