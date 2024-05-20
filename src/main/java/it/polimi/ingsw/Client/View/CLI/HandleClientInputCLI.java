@@ -14,6 +14,10 @@ import java.util.Scanner;
 public class HandleClientInputCLI implements Runnable{
 
     /**
+     * volatile flag that thread checks regularly to determine if it should terminate
+     */
+    private boolean running=true;
+    /**
      * controls the scene of client
      */
     ViewControllerCLI viewController;
@@ -48,9 +52,12 @@ public class HandleClientInputCLI implements Runnable{
      */
     @Override
     public void run() {
-        while(true){
+        while(running){
             if(scanner.hasNextLine()){
                 String input = scanner.nextLine().toUpperCase().strip();
+                if(input.equals("EXIT")){
+                   viewController.exit();
+                }
                 if(actionsCLI.isPlaceCardEnabled()){
                     String[] inputArray = input.split(" ");
                     if(inputArray[0].equals("PLACE")){
@@ -104,13 +111,21 @@ public class HandleClientInputCLI implements Runnable{
                     }
                 }
                 if(input.equals("HELP")){
-                    printInstructions();
+                    if(actionsCLI.isHelp()) {
+                        printInstructions();
+                    }
                 }
-                if(input.equals("EXIT")){
 
-                }
             }
         }
+        System.out.println("Input handler has terminated");
+    }
+
+    /**
+     * terminates thread
+     */
+    public void terminate(){
+        running=false;
     }
 
     /**

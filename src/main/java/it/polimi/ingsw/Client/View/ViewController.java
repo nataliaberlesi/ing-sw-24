@@ -203,13 +203,13 @@ public abstract class ViewController {
                 disableAllActions(); //finisce il gioco
             }
             case ABORT -> {
-
-            }
-            case ERROR -> {
+                exit();
+                showErrorAlert(messageParser.getCause(), "game has terminated");
             }
         }
     }
 
+    protected abstract void exit();
     protected abstract void disableAllActions();
 
     protected abstract void showFinalScoreBoard();

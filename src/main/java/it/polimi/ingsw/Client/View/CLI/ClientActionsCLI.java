@@ -36,6 +36,10 @@ public class ClientActionsCLI {
      * true if player is master and can create a game by selecting a username and number of players
      */
     private boolean create=false;
+    /**
+     * true if player can ask for help to see which commands he can use, false if game is over
+     */
+    private boolean help=false;
 
     private ObjectiveCLI[] privateObjectiveChoices =new ObjectiveCLI[2];
 
@@ -55,6 +59,7 @@ public class ClientActionsCLI {
     public void disableChooseColor(){
         chooseColor=false;
     }
+
     public boolean isChooseColorEnabled(){
         return chooseColor;
     }
@@ -72,6 +77,9 @@ public class ClientActionsCLI {
         return join;
     }
 
+    public boolean isHelp() {
+        return help;
+    }
 
     public void enableCreate() {
         System.out.println("Choose your username and number of players (min 2, max 4):");
@@ -148,9 +156,7 @@ public class ClientActionsCLI {
     public void disablePlaceCard() {
         placeCard = false;
     }
-    public void disableShowOtherPlayerBoardAndBackOFHand() {
-        showOtherPlayerBoardAndBackOFHand = false;
-    }
+
     public void disableDrawCard() {
         drawCard = false;
     }
@@ -172,4 +178,10 @@ public class ClientActionsCLI {
     public ArrayList<String> getAvailableColors() {
         return availableColors;
     }
+
+    public void enableHelp(){
+        help = true;
+    }
+
+
 }

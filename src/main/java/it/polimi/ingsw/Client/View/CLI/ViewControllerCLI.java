@@ -16,11 +16,13 @@ public class ViewControllerCLI extends ViewController {
     private PlayerCLI myPlayer;
     private PlayerCLI currentPlayerInScene;
     private final ClientActionsCLI clientActions=new ClientActionsCLI();
+    private FinalScoreBoardCLI finalScoreBoard;
+    private final HandleClientInputCLI clientInputHandler;
 
     public ViewControllerCLI(MessageParser messageParser, MessageDispatcher messageDispatcher) {
         super(messageParser, messageDispatcher);
-        HandleClientInputCLI handleClientInput=new HandleClientInputCLI(this, messageDispatcher, clientActions );
-        Thread clientInputHandlerthread=new Thread(handleClientInput);
+        this.clientInputHandler=new HandleClientInputCLI(this, messageDispatcher, clientActions );
+        Thread clientInputHandlerthread=new Thread(clientInputHandler);
         clientInputHandlerthread.start();
     }
 
@@ -33,6 +35,7 @@ public class ViewControllerCLI extends ViewController {
         PlayerCLI myPlayer= new PlayerCLI(username);
         this.myPlayer=myPlayer;
         this.currentPlayerInScene=myPlayer;
+        clientActions.enableHelp();
     }
 
     public void setCurrentPlayerInScene(PlayerCLI currentPlayerInScene) {
@@ -81,13 +84,21 @@ public class ViewControllerCLI extends ViewController {
     }
 
     @Override
+    protected void exit() {
+        clientInputHandler.terminate();
+        messageDispatcher.abortGame(myPlayer.getUsername(),"I don't want to play anymore :(");
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
+    }
+
+    @Override
     protected void disableAllActions() {
 
     }
 
     @Override
     protected void showFinalScoreBoard() {
-
+        finalScoreBoard.printFinalScoreBoard();
     }
 
     @Override
@@ -185,7 +196,7 @@ public class ViewControllerCLI extends ViewController {
             System.out.println("It's your turn!");
             return true;
         }
-        System.out.println("Wait for your turn...");
+        System.out.println("Wait for your turn...\nRemember you can type HELP at any moment to see all the commands you can use");
         return false;
     }
 
