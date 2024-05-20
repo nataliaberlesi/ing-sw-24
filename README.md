@@ -6,9 +6,9 @@
 | :------------- | :-------------: |
 | MODEL  | [:white_check_mark:](https://github.com/nataliaberlesi/ing-sw-24/tree/master/src/main/java/it/polimi/ingsw/Server/Model)  |
 | SERVER CONTROLLER  | :stopwatch:  |
-| SERVER NETWORK  | :stopwatch:  |
-| CLIENT NETWORK  | :stopwatch:  |
-| CLIENT CLI  | :stopwatch:  |
+| SERVER NETWORK  | :white_check_mark:  |
+| CLIENT NETWORK  | :white_check_mark:  |
+| CLIENT CLI  | :white_check_mark:  |
 | CLIENT GUI  | :stopwatch:  |
 | MULTI MATCH  | :no_entry: |
 | CHAT  | :no_entry:  |
