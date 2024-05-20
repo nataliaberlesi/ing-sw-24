@@ -67,7 +67,7 @@ public record OutParamsDTO(String username,
     /**
      * Constructor for ABORT params
      */
-    public OutParamsDTO(String cause, Boolean isABORT) {
-        this(null,null,null,null,null,null,null,cause);
+    public OutParamsDTO(String username, String cause) {
+        this(username,null,null,null,null,null,null,cause);
     }
 }
