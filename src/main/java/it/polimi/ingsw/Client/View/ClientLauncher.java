@@ -17,13 +17,13 @@ public class ClientLauncher {
             MessageParser messageParser=MessageParser.getInstance();
             MessageDispatcher messageDispatcher=new MessageDispatcher(networkManager);
             networkManager.setMessageParser(messageParser);
-            //ViewControllerCLI viewControllerCLI=new ViewControllerCLI(messageParser, messageDispatcher);
+            ViewControllerCLI viewControllerCLI=new ViewControllerCLI(messageParser, messageDispatcher);
 
-            ViewControllerGUI viewControllerGUI = new ViewControllerGUI(messageParser, messageDispatcher);
+            /*ViewControllerGUI viewControllerGUI = new ViewControllerGUI(messageParser, messageDispatcher);
             GUIApplication.setViewControllerGUI(viewControllerGUI);
             GUIApplication.setParserAndDispatcher(messageParser, messageDispatcher);
             new Thread(GUIApplication::main).start();
-            while(viewControllerGUI.getStage() == null){}
+            while(viewControllerGUI.getStage() == null){}*/
             new Thread(networkManager).start();
 
         } catch(IOException ioe) {

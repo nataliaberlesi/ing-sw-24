@@ -207,6 +207,7 @@ public class GameController {
                 startFinalRound();
             }
             if(gameInstance.getCurrentPlayerIndex()== gameInstance.getNumberOfPlayers()-1 && endgameIsStarted() && finalroundIsStarted()) {
+                calculateEndGamePoints();
                 endGame();
             }
         }
@@ -280,5 +281,8 @@ public class GameController {
 
     public boolean gameIsEnded() {
         return gameInstance.gameIsEnded();
+    }
+    public void calculateEndGamePoints(){
+        gameInstance.calculateEndgamePoints();
     }
 }
