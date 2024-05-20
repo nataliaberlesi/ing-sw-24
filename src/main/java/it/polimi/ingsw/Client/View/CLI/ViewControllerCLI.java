@@ -103,7 +103,7 @@ public class ViewControllerCLI extends ViewController {
 
     @Override
     protected void setFinalScoreBoard() {
-
+        this.finalScoreBoard=messageParser.getFinalScoreBoardCLI();
     }
 
     @Override
