@@ -78,23 +78,30 @@ public class NetworkManager implements Runnable{
         this.outMessage=outMessage;
     }
     public void threadSendMethod() {
-        while(socket.isConnected()) {
+        while(!socket.isClosed()) {
             if(outMessage!=null) {
                 outSocket.println(outMessage);
                 outMessage=null;
             }
         }
     }
-    public void threadReceiveMethod() {
-        while(socket.isConnected()) {
+    public void threadReceiveMethod(){
+        while(!socket.isClosed()) {
             try{
                 inMessage=inSocket.readLine();
                 if(inMessage!=null) {
                     messageParser.buildMessage(inMessage);
+                    if(messageParser.getMessageType()==MessageType.ABORT) {
+                        socket.close();
+                    }
                     inMessage=null;
                 }
             } catch(IOException ioe) {
-                //TODO
+                try {
+                    socket.close();
+                } catch(IOException ioe1) {
+
+                }
             }
         }
     }

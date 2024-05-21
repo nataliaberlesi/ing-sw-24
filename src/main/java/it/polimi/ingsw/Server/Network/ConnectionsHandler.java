@@ -97,12 +97,17 @@ public class ConnectionsHandler implements Runnable{
             }
         }
     }
-    private void checkEndgame() {
+    private void checkEndgame(){
         if(gameController.gameIsEnded()){
             Message outmessage=MessageCrafter.craftWinnersMessage(gameController.getScoreBoard());
             for(PlayerConnection pc: server.getConnections()) {
                 String outMessageString=messageParser.toJson(outmessage);
                 pc.setOutMessage(outMessageString);
+                try{
+                    pc.close();
+                } catch(Exception e){
+                    System.out.println("Error in closing socket");
+                }
             }
         }
     }
@@ -128,12 +133,12 @@ public class ConnectionsHandler implements Runnable{
                 checkStartFirstRound();
                 checkStartSecondRound();
                 checkStartGame();
+                checkEndgame();
             }
             handleConnections(server.getConnections());
             try {
                 checkAllPlayerConnected();
             } catch(IOException ioe) {
-                System.out.println("Watta");
             }
         }
         try {

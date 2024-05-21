@@ -56,10 +56,15 @@ public class GameController {
                 return drawCard(jsonParams);
             }
             case ABORT -> {
-                //TODO
+                return closeGame(jsonParams);
             }
         }
         return null;
+    }
+
+    private Message closeGame(JsonObject jsonParams) {
+        InParamsDTO inParamsDTO=messageParser.parseInParamsDTO(jsonParams);
+        return MessageCrafter.craftAbortMessage(inParamsDTO.cause());
     }
 
     /**
@@ -198,18 +203,15 @@ public class GameController {
                     gameInstance.getDrawableArea().getGoldDrawingSection().drawCard(inParamsDTO.index())
             );
         }
-        if(!endgameIsStarted()) {
-            if(gameInstance.checkEndgame() && !endgameIsStarted()){
-                startEndgame();
-            }
-        } else{
-            if(gameInstance.getCurrentPlayerIndex()==0 && endgameIsStarted() && !finalroundIsStarted()){
-                startFinalRound();
-            }
-            if(gameInstance.getCurrentPlayerIndex()== gameInstance.getNumberOfPlayers()-1 && endgameIsStarted() && finalroundIsStarted()) {
-                calculateEndGamePoints();
-                endGame();
-            }
+        if(gameInstance.getPlayers().get(affectedPlayer).getPlayerBoard().getScore()>=20) {
+            startEndgame();
+        }
+        if(gameInstance.getCurrentPlayerIndex()==0 && endgameIsStarted() && !finalroundIsStarted()){
+            startFinalRound();
+        }
+        if(gameInstance.getCurrentPlayerIndex()== gameInstance.getNumberOfPlayers()-1 && finalroundIsStarted()) {
+            calculateEndGamePoints();
+            endGame();
         }
 
         Message message=MessageCrafter.craftDrawCardMessage(currentPlayer,

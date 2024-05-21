@@ -33,10 +33,6 @@ public enum MessageType {
      */
     SECONDROUND,
     /**
-     * Initializes player actions.
-     */
-    START_ACTION,
-    /**
      * A player placed a card.
      */
     ACTION_PLACECARD,
@@ -47,14 +43,9 @@ public enum MessageType {
     /**
      * The game is ended
      */
-    WINNERS,
+    ENDGAME,
     /**
      * Game abort.
      */
     ABORT,
-    /**
-     * Error message.
-     */
-    ERROR
-
 }

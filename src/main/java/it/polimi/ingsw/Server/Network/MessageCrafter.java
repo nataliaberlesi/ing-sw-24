@@ -1,12 +1,9 @@
 package it.polimi.ingsw.Server.Network;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.Client.Network.DTO.ModelDTO.ScoreboardPositionDTO;
 import it.polimi.ingsw.Server.Controller.DTO.OutParamsDTO;
-import it.polimi.ingsw.Server.Controller.GameController;
 import it.polimi.ingsw.Server.Model.Cards.Card;
-import it.polimi.ingsw.Server.Model.Cards.ObjectiveFactory;
 import it.polimi.ingsw.Server.Model.Cards.Objectives.Objective;
 import it.polimi.ingsw.Server.Model.Cards.StartingCardFactory;
 import it.polimi.ingsw.Server.Model.Color;
@@ -103,7 +100,7 @@ public class MessageCrafter {
     }
 
     public static Message craftWinnersMessage(Scoreboard scoreBoard) {
-        MessageType messageType=MessageType.WINNERS;
+        MessageType messageType=MessageType.ENDGAME;
         ArrayList<ScoreboardPositionDTO> scoreBoardDTO=new ArrayList<>();
         for(Player player:scoreBoard.getScoreboard()){
             scoreBoardDTO.add(new ScoreboardPositionDTO(

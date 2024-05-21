@@ -51,7 +51,7 @@ public class PlayerConnection implements Runnable{
         socket.close();
     }
     public boolean isConnected() {
-        return socket.isConnected();
+        return !socket.isClosed();
     }
 
     /**
@@ -72,7 +72,7 @@ public class PlayerConnection implements Runnable{
      * @throws IOException
      */
     public void threadReceiveMethod() {
-        while(socket.isConnected()) {
+        while(!socket.isClosed()) {
             try{
                 if(inMessage==null) {
                     this.readMessage=inSocket.readLine();
@@ -80,7 +80,12 @@ public class PlayerConnection implements Runnable{
                 }
 
             } catch(IOException ioe) {
-                //TODO
+                System.out.println("Player disconnected");
+                try {
+                    close();
+                } catch (IOException e) {
+                    System.out.println("Socket already closed");
+                }
             }
         }
     }
@@ -98,6 +103,7 @@ public class PlayerConnection implements Runnable{
     public synchronized String getInMessage(boolean read) throws IOException {
         if(read) {
             this.inMessage=this.readMessage;
+            System.out.println("IN | "+inMessage);
             return inMessage;
         } else {
             String consumedMessage=this.inMessage;
