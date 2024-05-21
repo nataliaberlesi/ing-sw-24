@@ -140,7 +140,6 @@ public class MainScene extends Scene {
         confirmActionButton.setMnemonicParsing(false);
         confirmActionButton.setFont(new Font("System Bold", 16));
         confirmActionButton.setDisable(true);
-        confirmActionButton.setOnMouseClicked(event -> onConfirmButtonClicked());
         this.root.getChildren().add(confirmActionButton);
     }
 
@@ -207,7 +206,7 @@ public class MainScene extends Scene {
     }
 
     public void enableFlipHandButton(){
-        if (playerInScene.equals(viewControllerGUI.getMyPlayer()))
+        if (playerInScene.equals(viewControllerGUI.getMyPlayer()) && playerInScene.isCurrentPlayer())
             flipYourHandButton.setDisable(false);
         else flipYourHandButton.setDisable(true);
     }
@@ -221,32 +220,17 @@ public class MainScene extends Scene {
     }
 
     public void handleFirstCardPlacementAndColorChoice() {
-        actionLabel.setText("Click on the initial card if you want to flip it");
-        enableConfirmButtonClick();
+        setActionLabel("Click on the initial card if you want to flip it\nChoose a color by clicking on it");
+        tokenChoicePopUp = viewControllerGUI.getTokenChoicePopUpScene();
+        tokenChoicePopUp.setPopUpStage();
+        tokenChoicePopUp.popUpStage.setScene(tokenChoicePopUp);
+        tokenChoicePopUp.popUpStage.show();
     }
 
     public void enableConfirmButtonClick(){
-        if (playerInScene.equals(viewControllerGUI.getMyPlayer()))
+        if (playerInScene.equals(viewControllerGUI.getMyPlayer()) && playerInScene.isCurrentPlayer())
             confirmActionButton.setDisable(false);
         else confirmActionButton.setDisable(true);
-    }
-
-    public void onConfirmButtonClicked(){
-        switch (lastMessageToArrive){
-            case START_FIRSTROUND, FIRSTROUND -> {
-                chosenCard = viewControllerGUI.getMyPlayer().getBoard().getInitialCard();
-                for (PlayerGUI player : viewControllerGUI.getPlayersInGame().getPlayers())
-                    player.getBoard().getInitialCard().setOnMouseClicked(null);
-                confirmActionButton.setDisable(true);
-
-                setActionLabel("Choose a color by clicking on it");
-                setConfirmActionLabel("");
-                tokenChoicePopUp = viewControllerGUI.getTokenChoicePopUpScene();
-                tokenChoicePopUp.setPopUpStage();
-                tokenChoicePopUp.popUpStage.setScene(tokenChoicePopUp);
-                tokenChoicePopUp.popUpStage.show();
-            }
-        }
     }
 
     public void setChosenCard(CardGUI chosenCard){
@@ -292,6 +276,10 @@ public class MainScene extends Scene {
     public void setScoreBoard(ArrayList<String> playerUsernames) {
         scoreBoard = new ScoreBoardGUI(playerUsernames);
         root.getChildren().add(scoreBoard);
+    }
+
+    public Button getConfirmActionButton() {
+        return confirmActionButton;
     }
 
     public void handleObjectivesChoice() {

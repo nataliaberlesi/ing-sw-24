@@ -96,6 +96,11 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     }
 
     @Override
+    protected void terminate() {
+
+    }
+
+    @Override
     protected void exit() {
 
     }
@@ -240,7 +245,12 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     @Override
     protected void giveInitialCard(String username) {
         try {
-            playersInGame.getPlayer(username).getBoard().setInitialCard(messageParser.getCardID());
+            PlayerGUI player = playersInGame.getPlayer(username);
+            player.getBoard().setInitialCard(messageParser.getCardID());
+            CardGUI initialCard = player.getBoard().getInitialCard();
+            if (player.equals(myPlayer))
+                initialCard.setOnMouseClicked(event -> initialCard.flipAndShow());
+            mainScene.setChosenCard(initialCard);
         } catch (RuntimeException e){
             //this happens at end of first round, when server doesn't give a new startingCard and a new currentPlayer
         }
@@ -280,7 +290,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     protected boolean isMyTurn(String usernameOfPlayerWhoseTurnItIs) {
         if (usernameOfPlayerWhoseTurnItIs.equals(myPlayer.getUsername())){
             mainScene.setTurnLabel("It's your turn!");
-            mainScene.setConfirmActionLabel("Use the confirm action button to confirm your choice");
+            mainScene.setConfirmActionLabel("\nUse the confirm button to confirm your choice");
             return true;
         }
         else {
@@ -291,8 +301,19 @@ public class ViewControllerGUI extends ViewController implements Initializable{
 
     @Override
     protected void enableFirstRoundActions() {
-        mainScene.setLastMessageToArrive(messageParser.getMessageType());
+        //mainScene.setLastMessageToArrive(messageParser.getMessageType());
         mainScene.handleFirstCardPlacementAndColorChoice();
+        mainScene.getConfirmActionButton().setOnMouseClicked(event ->  sendFirstRoundMessageAndUpdateScene());
+    }
+
+    protected void sendFirstRoundMessageAndUpdateScene(){
+        messageDispatcher.firstRound(myPlayer.getUsername(), mainScene.getChosenCard().isFaceUp(), myPlayer.getColor());
+        mainScene.getConfirmActionButton().setDisable(true);
+        for (Button button : mainScene.getSeeOtherPlayersSceneButtons())
+            button.setDisable(false);
+        for (PlayerGUI player : playersInGame.getPlayers())
+            player.getBoard().getInitialCard().setOnMouseClicked(null);
+        mainScene.setActionLabel("");
     }
 
     @Override

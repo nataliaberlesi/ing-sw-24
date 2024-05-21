@@ -137,8 +137,8 @@ public abstract class ViewController {
             case JOIN -> manageJoinStatus();
 
             case START_FIRSTROUND -> {
-                setCurrentPlayer(messageParser.getPlayers().getFirst());
                 setUpGame(); //create instance for every player, fill drawableArea, give first player starting card
+                setCurrentPlayer(messageParser.getPlayers().getFirst());
                 showScene();
                 if(isMyTurn(messageParser.getPlayers().getFirst())){  // getPlayers().get(0) restituisce username del primo giocatore, da confrontare con il tuo client
                     enableFirstRoundActions(); // player must place starting card and choose color for available colors

@@ -4,6 +4,7 @@ public class PlayerGUI {
     private final String username;
     private BoardGUI board = new BoardGUI();
     private HandGUI hand = new HandGUI();
+    private String color;
 
     private boolean isCurrentPlayer = false;
 
@@ -25,6 +26,14 @@ public class PlayerGUI {
 
     public void setHand(HandGUI hand) {
         this.hand = hand;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getColor() {
+        return color;
     }
 
     public BoardGUI getBoard() {

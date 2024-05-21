@@ -48,7 +48,6 @@ public class BoardGUI extends ScrollPane {
         playerColorToken.setFitHeight(20);
         playerColorToken.setLayoutX(1276);
         playerColorToken.setLayoutY(657);
-        initialCard.setOnMouseClicked(event -> initialCard.flipAndShow());
         initialCard.getChildren().add(playerColorToken);
         initialCard.setCardIDAndImage(cardID);
         anchorPane.getChildren().add(initialCard);
