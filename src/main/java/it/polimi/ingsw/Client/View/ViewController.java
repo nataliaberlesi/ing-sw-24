@@ -197,7 +197,7 @@ public abstract class ViewController {
                 }
             }
 
-            case FINALROUND  -> { //FINAL ROUND E' CAMBIATO A ENDGAME
+            case ENDGAME  -> { //FINAL ROUND E' CAMBIATO A ENDGAME
                 setFinalScoreBoard(); // popola la classifica
                 showFinalScoreBoard(); // mostra la classigfica
                 disableAllActions(); //finisce il gioco
