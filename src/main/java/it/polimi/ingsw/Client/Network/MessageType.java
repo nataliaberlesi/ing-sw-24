@@ -48,14 +48,10 @@ public enum MessageType {
     /**
      * Final round
      */
-    FINALROUND,
+    ENDGAME,
     /**
      * Game abort.
      */
     ABORT,
-    /**
-     * Error message.
-     */
-    ERROR
 
 }
