@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Client.Network;
 
 import com.google.gson.Gson;
+import it.polimi.ingsw.Server.Network.MessageCrafter;
 
 import java.io.*;
 import java.net.Socket;
@@ -104,10 +105,12 @@ public class NetworkManager implements Runnable{
                 }
             }
         }
+        messageParser.buildMessage(messageParser.toJson(MessageCrafter.craftAbortMessage("Server is unreachable")));
     }
     public void run() {
         new Thread(this::threadReceiveMethod).start();
         new Thread(this::threadSendMethod).start();
+
     }
 
 }

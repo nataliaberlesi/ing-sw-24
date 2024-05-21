@@ -244,6 +244,9 @@ public class GameInstance {
     }
 
     public boolean checkEndgame() {
+        if(drawableArea.isEmpty()) {
+            return true;
+        }
         for(String player:playersTurnOrder) {
             if(players.get(player).getPlayerBoard().getScore()>=20){
                 return true;

@@ -1,12 +1,14 @@
 package it.polimi.ingsw.Server.Network;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class Server implements Runnable{
     /**
@@ -22,8 +24,10 @@ public class Server implements Runnable{
     /**
      * The active connections inside the server
      */
-    private ArrayList<PlayerConnection> connections;
+    private ArrayList<PlayerConnection> connections= new ArrayList<>();
     private boolean masterIsConnected;
+    private boolean lobbyIsOpen;
+    private boolean serverIsOpen;
     /**
      * Creates a server using a custom port, then waits for a master player to connect
      * @param port
@@ -31,30 +35,31 @@ public class Server implements Runnable{
      */
     public Server(int port) throws IOException {
         this.port = port;
-        maxAllowablePlayers=1;
+        maxAllowablePlayers=0;
         masterIsConnected=false;
+        lobbyIsOpen=false;
+        serverIsOpen=true;
+        this.serverSocket=new ServerSocket(port);
+        serverSocket.setSoTimeout(1000);
     }
     public ArrayList<PlayerConnection> getConnections() {
         return connections;
     }
 
-    public void openServerSocket() throws IOException {
-        this.serverSocket=new ServerSocket(this.port);
+    public void closeLobby() {lobbyIsOpen=false;}
+    public void restart() {
+        masterIsConnected=false;
+        maxAllowablePlayers=0;
+        connections.clear();
+        System.out.println("SERVER RESTARTED");
     }
-    public void closeServerSocket() throws IOException {
-        serverSocket.close();
-    }
-
     /**
      * Waits for the master player to connect and add it to the connections
      * @throws IOException
      */
     private void waitMaster() throws IOException {
-        this.connections=new ArrayList<>();
-        this.serverSocket=new ServerSocket(port);
         PlayerConnection master=connectPlayer(true);
         this.connections.add(master);
-        masterIsConnected=true;
     }
 
     /**
@@ -63,7 +68,7 @@ public class Server implements Runnable{
      */
     public void waitPlayer() throws IOException {
         PlayerConnection player=connectPlayer(false);
-        synchronized (connections) {
+        synchronized (connections){
             this.connections.add(player);
         }
     }
@@ -82,52 +87,53 @@ public class Server implements Runnable{
         return playerConnection;
     }
 
-    /**
-     * Get a connection by his nickname
-     * @param nickname
-     * @return
-     */
-    public PlayerConnection getConnection(String nickname) {
-        for(PlayerConnection pc:connections) {
-            if(pc.getPlayer().getUsername().equals(nickname)) {
-                return pc;
-            }
-        }
-        return null;
-    }
     public void setMaxAllowablePlayers(int maxAllowablePlayers) {
         this.maxAllowablePlayers=maxAllowablePlayers;
     }
-
     /**
      *
      * @param masterStatus
      */
     private void sendMasterStatus(Boolean masterStatus) {
         Message message=MessageCrafter.craftConnectMessage(masterStatus);
-        Gson gson=new Gson();
-        String outMessage=gson.toJson(message);
+        String outMessage=MessageParser.getINSTANCE().toJson(message);
         connections.getLast().setOutMessage(outMessage);
     }
-    public void run() {
-        if(!masterIsConnected) {
+    private void readServerInput() {
+        BufferedReader inKeyboard=new BufferedReader(new InputStreamReader(System.in));
+        while(!serverSocket.isClosed()) {
+            String input= null;
             try {
-                waitMaster();
-                sendMasterStatus(true);
-                new Thread(new ConnectionsHandler(this)).start();
-            } catch (IOException ioe) {
-                System.out.println("LOG: Failed to accept master");
+                input = inKeyboard.readLine();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            if(input.equals("close")) {
+                serverIsOpen=false;
             }
         }
+    }
+    public void run() {
+        new Thread(this::readServerInput).start();
         while(!serverSocket.isClosed()) {
-            if(connections.size()<maxAllowablePlayers) {
+            if(!masterIsConnected) {
+                try {
+                    waitMaster();
+                    sendMasterStatus(true);
+                    new Thread(new ConnectionsHandler(this)).start();
+                    masterIsConnected=true;
+                    lobbyIsOpen=true;
+                } catch (IOException ioe) {
+                    //waiting for master
+                }
+            }
+            if(connections.size()<maxAllowablePlayers && lobbyIsOpen) {
                 try {
                     waitPlayer();
+                    sendMasterStatus(false);
                 } catch (IOException ioe) {
-                    System.out.println("LOG: Failed to accept player");
-
+                    //waiting for player
                 }
-                sendMasterStatus(false);
             }
         }
     }

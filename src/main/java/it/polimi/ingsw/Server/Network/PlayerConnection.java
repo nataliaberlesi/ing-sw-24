@@ -50,15 +50,15 @@ public class PlayerConnection implements Runnable{
         while(outMessage!=null) {}
         socket.close();
     }
-    public boolean isConnected() {
-        return !socket.isClosed();
+    public boolean socketIsClosed() {
+        return socket.isClosed();
     }
 
     /**
      * Sends a Message into outSocket
      */
     public void threadSendMethod() {
-        while(socket.isConnected()) {
+        while(!socket.isClosed()) {
             if(outMessage!=null) {
                 System.out.println("OUT | "+outMessage);
                 outSocket.println(outMessage);
@@ -80,14 +80,14 @@ public class PlayerConnection implements Runnable{
                 }
 
             } catch(IOException ioe) {
-                System.out.println("Player disconnected");
                 try {
-                    close();
+                    socket.close();
                 } catch (IOException e) {
-                    System.out.println("Socket already closed");
+                    throw new RuntimeException(e);
                 }
             }
         }
+        System.out.println("Player disconnected");
     }
     public Player getPlayer() {
         return player;
@@ -103,7 +103,6 @@ public class PlayerConnection implements Runnable{
     public synchronized String getInMessage(boolean read) throws IOException {
         if(read) {
             this.inMessage=this.readMessage;
-            System.out.println("IN | "+inMessage);
             return inMessage;
         } else {
             String consumedMessage=this.inMessage;

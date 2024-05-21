@@ -1,7 +1,6 @@
 package it.polimi.ingsw.Server.Network;
 
 import com.google.gson.JsonObject;
-import it.polimi.ingsw.Client.Network.DTO.OutParamsDTO;
 import it.polimi.ingsw.Server.Controller.GameController;
 
 import java.io.IOException;
@@ -42,17 +41,11 @@ public class ConnectionsHandler implements Runnable{
                     throw new RuntimeException(e); //TODO
                 }
                 if(inMessage!=null) {
+                    System.out.println("IN | "+inMessage);
                     Message outMessage=handleMessage(inMessage);
                     if(!(outMessage.type().equals(MessageType.JOIN) || outMessage.type().equals(MessageType.CREATE))) {
                         for(PlayerConnection playerConnection1: playerConnections) {
                             playerConnection1.setOutMessage(messageParser.toJson(outMessage));
-                            if(outMessage.type().equals(MessageType.ABORT)) {
-                                try{
-                                    playerConnection.close();
-                                } catch (IOException e) {
-                                    //TODO
-                                }
-                        }
                     }
                 } else {
                         playerConnection.setOutMessage(messageParser.toJson(outMessage));
@@ -64,6 +57,7 @@ public class ConnectionsHandler implements Runnable{
     }
     private void checkStartFirstRound() {
         if(gameController.gameIsFull() && !gameController.firstRoundIsStarted()) {
+            server.closeLobby();
             gameController.startFirstRound();
             JsonObject jsonParams=gameController.getJSONStartFirstRoundParams();
             for(PlayerConnection pc: server.getConnections()) {
@@ -103,10 +97,10 @@ public class ConnectionsHandler implements Runnable{
             for(PlayerConnection pc: server.getConnections()) {
                 String outMessageString=messageParser.toJson(outmessage);
                 pc.setOutMessage(outMessageString);
-                try{
+                try {
                     pc.close();
-                } catch(Exception e){
-                    System.out.println("Error in closing socket");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
             }
         }
@@ -114,14 +108,27 @@ public class ConnectionsHandler implements Runnable{
     private void checkAllPlayerConnected() throws IOException {
         synchronized (server.getConnections()) {
             for(PlayerConnection pc: server.getConnections()) {
-                if(!allPlayerConnected) {
-                    pc.setOutMessage(messageParser.toJson(MessageCrafter.craftAbortMessage("A player left the game")));
-                    pc.close();
-                }
-                if(!pc.isConnected()) {
+                if(pc.socketIsClosed()) {
                     allPlayerConnected=false;
                 }
             }
+        }
+    }
+    private void closeConnections() {
+        synchronized (server.getConnections()) {
+            for(PlayerConnection pc: server.getConnections()) {
+                if(!pc.socketIsClosed()) {
+                    pc.setOutMessage(messageParser.toJson(MessageCrafter.craftAbortMessage("A player has exit")));
+                }
+            }
+            /*for(PlayerConnection pc:server.getConnections()) {
+                try {
+                    pc.close();
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }*/
+            server.restart();
         }
     }
     /**
@@ -141,11 +148,7 @@ public class ConnectionsHandler implements Runnable{
             } catch(IOException ioe) {
             }
         }
-        try {
-            server.closeServerSocket();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        closeConnections();
     }
 
 }

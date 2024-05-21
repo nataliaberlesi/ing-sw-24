@@ -190,6 +190,7 @@ public class GameController {
     }
     public Message drawCard(JsonObject jsonObject) {
         InParamsDTO inParamsDTO=messageParser.parseInParamsDTO(jsonObject);
+        int affectedPlayerIndex=gameInstance.getCurrentPlayerIndex();
         gameInstance.nextTurn();
         String currentPlayer=gameInstance.getTurn();
         String affectedPlayer=inParamsDTO.username();
@@ -203,13 +204,10 @@ public class GameController {
                     gameInstance.getDrawableArea().getGoldDrawingSection().drawCard(inParamsDTO.index())
             );
         }
-        if(gameInstance.getPlayers().get(affectedPlayer).getPlayerBoard().getScore()>=20) {
-            startEndgame();
-        }
-        if(gameInstance.getCurrentPlayerIndex()==0 && endgameIsStarted() && !finalroundIsStarted()){
+        if(affectedPlayerIndex == 0 && gameInstance.checkEndgame() && !finalroundIsStarted()){
             startFinalRound();
         }
-        if(gameInstance.getCurrentPlayerIndex()== gameInstance.getNumberOfPlayers()-1 && finalroundIsStarted()) {
+        if(gameInstance.getCurrentPlayerIndex() == 0 && finalroundIsStarted()) {
             calculateEndGamePoints();
             endGame();
         }
