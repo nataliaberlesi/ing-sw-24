@@ -1,11 +1,9 @@
 package it.polimi.ingsw.Client.View.GUI;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
@@ -14,15 +12,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
-public class TokenChoicePopUp extends Scene {
-    private AnchorPane root;
-    Stage popUpStage;
+public class TokenColorChoice extends Scene {
+    private final AnchorPane root;
     private HashMap<String, ImageView> availableTokens = new HashMap<>();
-    private MainScene mainScene;
+    private final ViewControllerGUI viewControllerGUI;
 
-    public TokenChoicePopUp(ArrayList<String> tokenColors, MainScene mainScene) {
+    public TokenColorChoice(ArrayList<String> tokenColors, ViewControllerGUI viewControllerGUI) {
         super(new AnchorPane(),300,250);
-        this.mainScene = mainScene;
+        this.viewControllerGUI = viewControllerGUI ;
         root = (AnchorPane) this.getRoot();
         Label label = new Label("Choose one of the available colors:");
         label.setLayoutX(37);
@@ -59,16 +56,9 @@ public class TokenChoicePopUp extends Scene {
     }
 
     public void handleTokenColorChoice(String color) {
-        mainScene.getViewControllerGUI().getMyPlayer().setColor(color);
-        mainScene.enableConfirmButtonClick();
-        popUpStage.close();
+        viewControllerGUI.getMyPlayer().setColor(color);
+        viewControllerGUI.getMainScene().enableConfirmButtonClick();
+        viewControllerGUI.getPopUpStage().close();
     }
 
-    protected void setPopUpStage(){
-        popUpStage = new Stage();
-        popUpStage.setResizable(false);
-        popUpStage.setFullScreen(false);
-        popUpStage.setTitle("Codex Naturalis");
-        popUpStage.getIcons().add(new Image(String.valueOf(GUIApplication.class.getResource("Images/cranioLogo.png"))));
-    }
 }

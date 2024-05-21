@@ -1,5 +1,7 @@
 package it.polimi.ingsw.Client.View.GUI;
 
+import it.polimi.ingsw.Client.View.CLI.PlayerCLI;
+
 import java.util.ArrayList;
 
 public class PlayersInGameGUI {
@@ -21,6 +23,20 @@ public class PlayersInGameGUI {
             }
         }
         throw new RuntimeException("Player not found");
+    }
+
+    /**
+     *
+     * @param username of player that might be in game
+     * @return true if username corresponds to a player in the game
+     */
+    public boolean isPlayerInGame(String username) {
+        for(PlayerGUI player : players) {
+            if(player.getUsername().equals(username)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**

@@ -3,7 +3,8 @@ package it.polimi.ingsw.Client.View.GUI;
 import javafx.scene.layout.HBox;
 
 public class ObjectivesSectionGUI extends HBox {
-    private final CardGUI[] objectiveCards = new CardGUI[3];
+    private final CardGUI[] publicObjectiveCards = new CardGUI[2];
+    private final CardGUI privateObjective = new CardGUI();
 
     public ObjectivesSectionGUI(){
         this.setLayoutX(576.0);
@@ -17,14 +18,18 @@ public class ObjectivesSectionGUI extends HBox {
      * Adds the objective cards to the container
      */
     private void addCardsToObjectivesSection() {
-        for (int i = 0; i < 3; i++) {
-            objectiveCards[i] = new CardGUI();
-            this.getChildren().add(objectiveCards[i]);
+        this.getChildren().add(privateObjective);
+        for (int i = 0; i < publicObjectiveCards.length; i++) {
+            publicObjectiveCards[i] = new CardGUI();
+            this.getChildren().add(publicObjectiveCards[i]);
         }
-        objectiveCards[0].setAsPrivateObjective();
     }
 
-     public void setObjectives(String[] cardIDs){
-
+     public void setPublicObjectives(String[] cardIDs){
+        for (int i = 0; i < publicObjectiveCards.length; i++)
+            publicObjectiveCards[i].setCardIDAndImage(cardIDs[i]);
+     }
+     public CardGUI getPrivateObjective(){
+        return privateObjective;
      }
 }

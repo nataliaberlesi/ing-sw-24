@@ -218,7 +218,6 @@ public abstract class ViewController {
 
     protected abstract void setFinalScoreBoard();
 
-
     protected abstract void setPrivateObjectiveChoice();
 
     private void updatePlayerBoardHandScore(String affectedPlayer, int score){

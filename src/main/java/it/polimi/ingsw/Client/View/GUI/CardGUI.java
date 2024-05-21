@@ -175,18 +175,6 @@ public class CardGUI extends AnchorPane {
     public void setAsInitialCard() {
         isInitialCard = true;
     }
-    /**
-     * Verifies if this card is a private objective card
-     * */
-    public boolean isPrivateObjective() {
-        return isPrivateObjective;
-    }
-    /**
-     * Sets this card to be a private objective card
-     * */
-    public void setAsPrivateObjective() {
-        isPrivateObjective = true;
-    }
 
     /**
      * Sets the guiCoordinates to the layouts associated with its ImageView

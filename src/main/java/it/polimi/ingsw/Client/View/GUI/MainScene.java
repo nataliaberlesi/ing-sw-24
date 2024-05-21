@@ -1,5 +1,4 @@
 package it.polimi.ingsw.Client.View.GUI;
-import com.almasb.fxgl.core.View;
 import it.polimi.ingsw.Client.Network.MessageType;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -26,8 +25,6 @@ public class MainScene extends Scene {
     private final Button confirmActionButton = new Button("Confirm action");
     private final ArrayList<Button> seeOtherPlayersSceneButtons = new ArrayList<>();
     private ViewControllerGUI viewControllerGUI;
-    private MessageType lastMessageToArrive;
-    private TokenChoicePopUp tokenChoicePopUp;
     private PlayerGUI playerInScene;
    private CardGUI chosenCard;
     public MainScene(ViewControllerGUI viewControllerGUI, PlayerGUI playerInScene) {
@@ -87,21 +84,21 @@ public class MainScene extends Scene {
         Label handLabel = new Label("Hand");
         handLabel.setFont(new Font("System Bold Italic", 16));
         handLabel.setAlignment(Pos.CENTER);
-        handLabel.setLayoutX(370);
+        handLabel.setLayoutX(380);
         handLabel.setLayoutY(457);
         this.root.getChildren().add(handLabel);
 
         Label secretObjectiveLabel = new Label("Secret Objective");
         secretObjectiveLabel.setFont(new Font("System Bold Italic", 16));
         secretObjectiveLabel.setAlignment(Pos.CENTER);
-        secretObjectiveLabel.setLayoutX(524);
+        secretObjectiveLabel.setLayoutX(560);
         secretObjectiveLabel.setLayoutY(457);
         this.root.getChildren().add(secretObjectiveLabel);
 
         Label commonObjectivesLabel = new Label("Common Objectives");
         commonObjectivesLabel.setFont(new Font("System Bold Italic", 16));
         commonObjectivesLabel.setAlignment(Pos.CENTER);
-        commonObjectivesLabel.setLayoutX(656);
+        commonObjectivesLabel.setLayoutX(686);
         commonObjectivesLabel.setLayoutY(457);
         this.root.getChildren().add(commonObjectivesLabel);
 
@@ -206,7 +203,7 @@ public class MainScene extends Scene {
     }
 
     public void enableFlipHandButton(){
-        if (playerInScene.equals(viewControllerGUI.getMyPlayer()) && playerInScene.isCurrentPlayer())
+        if (playerInScene.equals(viewControllerGUI.getMyPlayer()))
             flipYourHandButton.setDisable(false);
         else flipYourHandButton.setDisable(true);
     }
@@ -217,14 +214,6 @@ public class MainScene extends Scene {
             if (card.getCardID() != null)
                 card.flipAndShow();
         }
-    }
-
-    public void handleFirstCardPlacementAndColorChoice() {
-        setActionLabel("Click on the initial card if you want to flip it\nChoose a color by clicking on it");
-        tokenChoicePopUp = viewControllerGUI.getTokenChoicePopUpScene();
-        tokenChoicePopUp.setPopUpStage();
-        tokenChoicePopUp.popUpStage.setScene(tokenChoicePopUp);
-        tokenChoicePopUp.popUpStage.show();
     }
 
     public void enableConfirmButtonClick(){
@@ -241,9 +230,6 @@ public class MainScene extends Scene {
         return chosenCard;
     }
 
-    public void setLastMessageToArrive(MessageType lastMessageToArrive) {
-        this.lastMessageToArrive = lastMessageToArrive;
-    }
 
     public void setConfirmActionLabel(String text) {
         this.confirmActionLabel.setText(text);
@@ -282,9 +268,4 @@ public class MainScene extends Scene {
         return confirmActionButton;
     }
 
-    public void handleObjectivesChoice() {
-        actionLabel.setText("Choose your secret objective\nby clicking on it");
-        confirmActionLabel.setText("");
-        confirmActionButton.setDisable(true);
-    }
 }

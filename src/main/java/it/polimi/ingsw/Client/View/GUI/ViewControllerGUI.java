@@ -9,6 +9,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
@@ -27,6 +28,8 @@ public class ViewControllerGUI extends ViewController implements Initializable{
      */
     private Stage stage;
 
+    private Stage popUpStage;
+
     /**
      * Alert dialog for errors.
      */
@@ -41,9 +44,13 @@ public class ViewControllerGUI extends ViewController implements Initializable{
      */
     private MainScene mainScene;
     /**
-     * Instance of token choice pop up for the game
+     * Instance of token color choice pop up for the game
      */
-    private TokenChoicePopUp tokenChoicePopUpScene;
+    private TokenColorChoice tokenColorChoiceScene;
+    /**
+     * Instance of private objective choice pop up for the game
+     */
+    private PrivateObjectiveChoice privateObjectiveChoiceScene;
 
     /**
      * Players in game
@@ -72,6 +79,13 @@ public class ViewControllerGUI extends ViewController implements Initializable{
         this.stage = stage;
         this.numberOfPlayersChoiceBox = new ChoiceBox<>();
         this.errorAlert = new Alert(Alert.AlertType.ERROR);
+    }
+    protected void setPopUpStage(){
+        popUpStage = new Stage();
+        popUpStage.setResizable(false);
+        popUpStage.setFullScreen(false);
+        popUpStage.setTitle("Codex Naturalis");
+        popUpStage.getIcons().add(new Image(String.valueOf(GUIApplication.class.getResource("Images/cranioLogo.png"))));
     }
 
     public Stage getStage(){
@@ -276,7 +290,8 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     }
 
     public void setTokenChoicePopUpScene(ArrayList<String> tokenColors) {
-        this.tokenChoicePopUpScene = new TokenChoicePopUp(tokenColors, mainScene);
+        TokenColorChoice tokenColorChoiceScene = new TokenColorChoice(tokenColors, this);
+        popUpStage.setScene(tokenColorChoiceScene);
     }
 
     @Override
@@ -301,8 +316,8 @@ public class ViewControllerGUI extends ViewController implements Initializable{
 
     @Override
     protected void enableFirstRoundActions() {
-        //mainScene.setLastMessageToArrive(messageParser.getMessageType());
-        mainScene.handleFirstCardPlacementAndColorChoice();
+        mainScene.setActionLabel("Click on the initial card if you want to flip it\nChoose a color by clicking on it");
+        popUpStage.show();
         mainScene.getConfirmActionButton().setOnMouseClicked(event ->  sendFirstRoundMessageAndUpdateScene());
     }
 
@@ -336,22 +351,33 @@ public class ViewControllerGUI extends ViewController implements Initializable{
 
     @Override
     protected void setPublicObjectives() {
+        mainScene.getObjectivesSection().setPublicObjectives(messageParser.getPublicObjectivesID());
     }
 
     @Override
     protected void setPrivateObjectiveChoice() {
+    PrivateObjectiveChoice privateObjectiveChoiceScene = new PrivateObjectiveChoice(messageParser.getPrivateObjectivesID(), this);
+    popUpStage.setScene(privateObjectiveChoiceScene);
     }
 
     @Override
     protected void enableSecondRoundActions() {
-        mainScene.setLastMessageToArrive(messageParser.getMessageType());
-        mainScene.handleObjectivesChoice();
+        mainScene.setActionLabel("Choose your secret objective\nby clicking on it");
+        popUpStage.show();
+        mainScene.getConfirmActionButton().setOnMouseClicked(event -> sendSecondRoundMessageAndUpdateScene());
+    }
+
+    private void sendSecondRoundMessageAndUpdateScene() {
+        messageDispatcher.secondRound(myPlayer.getUsername(), myPlayer.getPrivateObjectiveIndex());
+        mainScene.getConfirmActionButton().setDisable(true);
+        mainScene.setActionLabel("");
+        mainScene.getObjectivesSection().getPrivateObjective().setCardIDAndImage(myPlayer.getPrivateObjectiveID());
     }
 
 
     @Override
     protected boolean isPlayerInGame(String username) {
-        return false;
+        return playersInGame.isPlayerInGame(username);
     }
 
     @Override
@@ -406,7 +432,15 @@ public class ViewControllerGUI extends ViewController implements Initializable{
         return playersInGame;
     }
 
-    public TokenChoicePopUp getTokenChoicePopUpScene() {
-        return tokenChoicePopUpScene;
+    public TokenColorChoice getTokenChoiceScene() {
+        return tokenColorChoiceScene;
+    }
+
+    public MainScene getMainScene() {
+        return mainScene;
+    }
+
+    public Stage getPopUpStage() {
+        return popUpStage;
     }
 }

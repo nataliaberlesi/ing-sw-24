@@ -43,6 +43,7 @@ public class GUIApplication extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         viewControllerGUI.setStage(primaryStage);
+        viewControllerGUI.setPopUpStage();
         primaryStage.getIcons().add(new Image(String.valueOf(GUIApplication.class.getResource("Images/cranioLogo.png"))));
         primaryStage.setFullScreen(false);
         primaryStage.setResizable(false);
