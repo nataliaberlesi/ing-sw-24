@@ -64,6 +64,27 @@ public class DrawableAreaGUI extends Group {
             goldCards[i].setCardIDAndImage(goldCardsIDs[i]);
         }
         goldCards[0].flipAndShow();
+    }
 
+    public void addEventHandlerToDrawableArea(){
+        for (CardGUI card : resourceCards){
+            card.setOnMouseClicked(event -> {
+
+            });
+        }
+        for (CardGUI card : goldCards){
+            card.setOnMouseClicked(event -> {
+
+            });
+        }
+    }
+
+    public void deactivateEventHandlerOnDrawableArea(){
+        for (CardGUI card : resourceCards){
+            card.setOnMouseClicked(null);
+        }
+        for (CardGUI card : goldCards){
+            card.setOnMouseClicked(null);
+        }
     }
 }

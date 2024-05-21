@@ -1,12 +1,13 @@
 package it.polimi.ingsw.Client.View.GUI;
-import it.polimi.ingsw.Client.Network.MessageType;
+import it.polimi.ingsw.Server.Model.CornerCoordinatesCalculator;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -26,7 +27,8 @@ public class MainScene extends Scene {
     private final ArrayList<Button> seeOtherPlayersSceneButtons = new ArrayList<>();
     private ViewControllerGUI viewControllerGUI;
     private PlayerGUI playerInScene;
-   private CardGUI chosenCard;
+    protected static boolean enableActions = false;
+
     public MainScene(ViewControllerGUI viewControllerGUI, PlayerGUI playerInScene) {
         super(new AnchorPane(), 1060, 595);
         this.playerInScene = playerInScene;
@@ -217,19 +219,55 @@ public class MainScene extends Scene {
     }
 
     public void enableConfirmButtonClick(){
-        if (playerInScene.equals(viewControllerGUI.getMyPlayer()) && playerInScene.isCurrentPlayer())
+        if (playerInScene.equals(viewControllerGUI.getMyPlayer()) && playerInScene.isCurrentPlayer() && enableActions)
             confirmActionButton.setDisable(false);
         else confirmActionButton.setDisable(true);
     }
 
-    public void setChosenCard(CardGUI chosenCard){
-        this.chosenCard = chosenCard;
+    public void addEventHandlerToHandCards(){
+        HandGUI hand = viewControllerGUI.getMyPlayer().getHand();
+        CardGUI[] handCards = hand.getHandCards();
+        for ( int i = 0; i < handCards.length; i++){
+            int finalI = i;
+            CardGUI handCard = handCards[i];
+            handCard.setOnMouseClicked(event -> {
+                handCard.toggleSelection(handCard, hand);
+                hand.setChosenHandCard(handCard);
+                hand.setIndex(finalI);
+                enableCornerChoice();
+            });
+        }
     }
 
-    public CardGUI getChosenCard() {
-        return chosenCard;
+    private void enableCornerChoice() {
+        setActionLabel("Click on the corner where\nyou'd like to place your card");
+        enableActions = true;
+        enableConfirmButtonClick();
+    }
+    public void setEventHandlerToBoardCards() {
+        for (CardGUI card : viewControllerGUI.getMyPlayer().getBoard().getCardsOnBoard()){
+            addEventHandlerToCorners(card);
+        }
+    }
+    public void addEventHandlerToCorners(CardGUI card){
+        Region[] corners = card.getCorners();
+        for (int i = 0; i < corners.length; i++) {
+            int finalI = i;
+            corners[i].setOnMouseClicked((event -> handleCornerClick(finalI, corners[finalI], card)));
+        }
     }
 
+    private void handleCornerClick(int i, Region corner, CardGUI card) {
+        viewControllerGUI.getMyPlayer().getBoard().setChosenCard(card);
+        card.setChosenCornerCoordinates(CornerCoordinatesCalculator.cornerCoordinates(card.getModelCoordinates(), i));
+        if ((corner.getBorder() == null || corner.getBorder().getStrokes().isEmpty())) {
+            corner.setBorder(new Border(new BorderStroke(
+                    Color.RED, BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(3)
+            )));
+        } else {
+            corner.setBorder(null);
+        }
+    }
 
     public void setConfirmActionLabel(String text) {
         this.confirmActionLabel.setText(text);

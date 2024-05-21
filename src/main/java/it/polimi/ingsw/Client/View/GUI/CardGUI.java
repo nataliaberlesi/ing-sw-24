@@ -1,11 +1,12 @@
 package it.polimi.ingsw.Client.View.GUI;
 import it.polimi.ingsw.Server.Model.Coordinates;
 import it.polimi.ingsw.Server.Model.CornerCoordinatesCalculator;
+import javafx.geometry.Insets;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Region;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+
 import java.util.Objects;
 
 public class CardGUI extends AnchorPane {
@@ -16,7 +17,7 @@ public class CardGUI extends AnchorPane {
     /**
      * Regions to represent the corners of the card
      * */
-    private final Region[] corners = new Region[4];
+    private Region[] corners = new Region[4];
     /**
      * Card's face up resource ID
      */
@@ -30,14 +31,11 @@ public class CardGUI extends AnchorPane {
      * Indicates the orientation of the card
      */
     private boolean isFaceUp = true;
+
     /**
-     * Indicates if this is a starting card
-     * */
-    private boolean isInitialCard = false;
-    /**
-     * Indicates if this is a private objective card
+     * Model coordinates of where client would like the next card to be placed
      */
-    private boolean isPrivateObjective = false;
+    private Coordinates chosenCornerCoordinates;
     /**
      * Model coordinates of where the card is placed
      */
@@ -47,13 +45,15 @@ public class CardGUI extends AnchorPane {
      */
     private final Coordinates guiCoordinates = new Coordinates();
 
+    private boolean isCornerSelected = false;
+    private boolean isSelected = false;
+
     public CardGUI(){
         imageView.setFitHeight(55);
         imageView.setFitWidth(82.5);
         imageView.setPickOnBounds(true);
         imageView.setPreserveRatio(true);
         this.getChildren().add(imageView);
-        initializeCorners();
     }
 
     public CardGUI(String cardID, Coordinates modelCoordinates, Boolean isFacingUp){
@@ -62,47 +62,47 @@ public class CardGUI extends AnchorPane {
         imageView.setPickOnBounds(true);
         imageView.setPreserveRatio(true);
         this.getChildren().add(imageView);
-        initializeCorners();
         this.setCardIDAndImage(cardID);
         this.isFaceUp = isFacingUp;
         this.convertCoordinatesFromModelToGUIAndSetImageViewLayout(modelCoordinates.getX(), modelCoordinates.getY());
-
+        initializeCorners();
     }
 
     /**
      * Puts the corners on the card
      * */
-    private void initializeCorners() {
+    public void initializeCorners() {
         double cornerWidth = 19.5;
         double cornerHeight = 23.0;
 
-        double[] xPositions = {0, imageView.getFitWidth() - cornerWidth};
-        double[] yPositions = {0, imageView.getFitHeight() - cornerHeight};
+        double[] xPositions = {imageView.getLayoutX(), imageView.getLayoutX() + (imageView.getFitWidth() - cornerWidth)};
+        double[] yPositions = {imageView.getLayoutY(), imageView.getLayoutY() + (imageView.getFitHeight() - cornerHeight)};
 
         for (int i = 0; i < corners.length; i++) {
             corners[i] = new Region();
             corners[i].setPrefSize(cornerWidth, cornerHeight);
             corners[i].setLayoutX(xPositions[i % 2]);
             corners[i].setLayoutY(yPositions[i / 2]);
-            corners[i].setOpacity(0);
-            int finalI = i;
-            corners[i].setOnMouseClicked((event -> handleCornerClick(finalI, event)));
+            corners[i].setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
             this.getChildren().add(corners[i]);
+            corners[i].toFront();
         }
     }
 
-    private Coordinates handleCornerClick(int i, MouseEvent event) {
-        Coordinates coordinates = CornerCoordinatesCalculator.cornerCoordinates(this.modelCoordinates, i);
-        event.consume();
-        return coordinates;
+    public Region[] getCorners() {
+        return corners;
     }
 
     /**
-     * Gets the corners of the card
-     * @return corners
+     * Gets the chosen corner's coordinates for placing the next card on board
+     * @return coordinates
      */
-    public Region[] getCorners() {
-        return corners;
+    public Coordinates getChosenCornerCoordinates(){
+        return chosenCornerCoordinates;
+    }
+
+    public void setChosenCornerCoordinates(Coordinates chosenCornerCoordinates) {
+        this.chosenCornerCoordinates = chosenCornerCoordinates;
     }
 
     /**
@@ -144,6 +144,10 @@ public class CardGUI extends AnchorPane {
         imageView.setImage(cardImage);
     }
 
+    public void removeCardImage(){
+        this.imageView.setImage(null);
+    }
+
     /**
      * Gets the ID of the card facing up
      * @return card's ID
@@ -162,32 +166,10 @@ public class CardGUI extends AnchorPane {
         this.faceUpCardID = faceUpCardID;
     }
 
-    /**
-     * Verifies if this card is an initial card
-     * */
-    public boolean isInitialCard() {
-        return isInitialCard;
-    }
-
-    /**
-     * Sets this card to be an initialCard
-     * */
-    public void setAsInitialCard() {
-        isInitialCard = true;
-    }
 
     /**
      * Sets the guiCoordinates to the layouts associated with its ImageView
      * */
-    public void convertCoordinatesFromGUIToModelAndSetImageViewLayout(int x, int y) {
-        this.imageView.setLayoutX(x);
-        this.imageView.setLayoutY(y);
-        guiCoordinates.setX(x);
-        guiCoordinates.setY(y);
-        modelCoordinates.setX((x-1260)/63);
-        modelCoordinates.setY(-(y-640)/32);
-    }
-
     public void convertCoordinatesFromModelToGUIAndSetImageViewLayout(int x, int y){
         modelCoordinates.setX(x);
         modelCoordinates.setY(y);
@@ -214,4 +196,22 @@ public class CardGUI extends AnchorPane {
         return modelCoordinates;
     }
 
+    public void toggleSelection(CardGUI card, HandGUI hand) {
+        for (CardGUI cardInHand : hand.getHandCards()){
+            if(cardInHand.isSelected && !cardInHand.equals(card)){
+                cardInHand.setBorder(null);
+                cardInHand.isSelected = false;
+            }
+        }
+
+        if ((card.getBorder() == null || card.getBorder().getStrokes().isEmpty()) && !card.isSelected) {
+            card.setBorder(new Border(new BorderStroke(
+                    Color.RED, BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(5)
+            )));
+            card.isSelected = true;
+        } else {
+            card.setBorder(null);
+            card.isSelected = false;
+        }
+    }
 }

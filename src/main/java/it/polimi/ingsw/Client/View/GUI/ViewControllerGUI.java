@@ -264,7 +264,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
             CardGUI initialCard = player.getBoard().getInitialCard();
             if (player.equals(myPlayer))
                 initialCard.setOnMouseClicked(event -> initialCard.flipAndShow());
-            mainScene.setChosenCard(initialCard);
+            myPlayer.getBoard().setChosenCard(initialCard);
         } catch (RuntimeException e){
             //this happens at end of first round, when server doesn't give a new startingCard and a new currentPlayer
         }
@@ -310,6 +310,8 @@ public class ViewControllerGUI extends ViewController implements Initializable{
         }
         else {
             mainScene.setTurnLabel("Wait for your turn!");
+            mainScene.setConfirmActionLabel("");
+            mainScene.setActionLabel("");
             return false;
         }
     }
@@ -322,8 +324,9 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     }
 
     protected void sendFirstRoundMessageAndUpdateScene(){
-        messageDispatcher.firstRound(myPlayer.getUsername(), mainScene.getChosenCard().isFaceUp(), myPlayer.getColor());
+        messageDispatcher.firstRound(myPlayer.getUsername(), myPlayer.getBoard().getChosenCard().isFaceUp(), myPlayer.getColor());
         mainScene.getConfirmActionButton().setDisable(true);
+        MainScene.enableActions = false;
         for (Button button : mainScene.getSeeOtherPlayersSceneButtons())
             button.setDisable(false);
         for (PlayerGUI player : playersInGame.getPlayers())
@@ -368,10 +371,26 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     }
 
     private void sendSecondRoundMessageAndUpdateScene() {
-        messageDispatcher.secondRound(myPlayer.getUsername(), myPlayer.getPrivateObjectiveIndex());
+        MainScene.enableActions = false;
         mainScene.getConfirmActionButton().setDisable(true);
-        mainScene.setActionLabel("");
         mainScene.getObjectivesSection().getPrivateObjective().setCardIDAndImage(myPlayer.getPrivateObjectiveID());
+        messageDispatcher.secondRound(myPlayer.getUsername(), myPlayer.getPrivateObjectiveIndex());
+    }
+
+    @Override
+    protected void enablePlaceCard() {
+        mainScene.setActionLabel("Choose a card from your hand");
+        mainScene.addEventHandlerToHandCards();
+        mainScene.setEventHandlerToBoardCards();
+        mainScene.getConfirmActionButton().setOnMouseClicked(event -> sendPlaceCardMessageAndUpdateScene());
+    }
+
+    private void sendPlaceCardMessageAndUpdateScene() {
+        MainScene.enableActions = false;
+        myPlayer.getHand().deactivateEventHandlerOnHandCards();
+        myPlayer.getBoard().deactivateEventHandlerOnCorners();
+        mainScene.getConfirmActionButton().setDisable(true);
+        messageDispatcher.placeCard(myPlayer.getUsername(), myPlayer.getHand().getChosenHandCard().isFaceUp(), myPlayer.getHand().getIndex(), myPlayer.getBoard().getChosenCard().getChosenCornerCoordinates());
     }
 
 
@@ -385,10 +404,6 @@ public class ViewControllerGUI extends ViewController implements Initializable{
         mainScene.getScoreBoard().updatePlayerScore(username, score);
     }
 
-    @Override
-    protected void enablePlaceCard() {
-
-    }
 
     @Override
     protected void enableDrawCard() {

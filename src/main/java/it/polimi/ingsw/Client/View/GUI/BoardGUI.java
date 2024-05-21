@@ -4,7 +4,9 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Region;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -17,7 +19,10 @@ public class BoardGUI extends ScrollPane {
      * Initial card placed in the middle of the board
      */
     private final CardGUI initialCard = new CardGUI();
-    private CardGUI lastCardPlaced;
+    private CardGUI chosenCard;
+
+    private ArrayList<CardGUI> cardsOnBoard = new ArrayList<>();
+
     /**
      * Image View to contain the black token
      */
@@ -42,16 +47,16 @@ public class BoardGUI extends ScrollPane {
      * Sets the initial card's characteristics
      */
     public void setInitialCard(String cardID) {
-        initialCard.convertCoordinatesFromGUIToModelAndSetImageViewLayout(1260, 640);
-        initialCard.setAsInitialCard();
+        initialCard.convertCoordinatesFromModelToGUIAndSetImageViewLayout(0, 0);
         playerColorToken.setFitWidth(20);
         playerColorToken.setFitHeight(20);
         playerColorToken.setLayoutX(1276);
         playerColorToken.setLayoutY(657);
         initialCard.getChildren().add(playerColorToken);
         initialCard.setCardIDAndImage(cardID);
+        initialCard.initializeCorners();
         anchorPane.getChildren().add(initialCard);
-        lastCardPlaced = initialCard;
+        cardsOnBoard.add(initialCard);
     }
 
     /**
@@ -92,13 +97,33 @@ public class BoardGUI extends ScrollPane {
     public void updateBoard(ArrayList<CardGUI> cards){
         int i;
         for (i = cards.size() - 1; i > 0 ; i--) {
-            if (cards.get(i).equals(lastCardPlaced)){
+            if (cards.get(i).equals(cardsOnBoard.getLast())){
                 break;
             }
         }
         i++;
         for (; i < cards.size(); i++) {
             anchorPane.getChildren().add(cards.get(i));
+            cardsOnBoard.add(cards.get(i));
         }
     }
+    public void setChosenCard(CardGUI chosenCard){
+        this.chosenCard = chosenCard;
+    }
+
+    public ArrayList<CardGUI> getCardsOnBoard() {
+        return cardsOnBoard;
+    }
+
+    public CardGUI getChosenCard() {
+        return chosenCard;
+    }
+
+    public void deactivateEventHandlerOnCorners(){
+        for (CardGUI card : cardsOnBoard){
+            for (Region corner : card.getCorners())
+                corner.setOnMouseClicked(null);
+        }
+    }
+
 }

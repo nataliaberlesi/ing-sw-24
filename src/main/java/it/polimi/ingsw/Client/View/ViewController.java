@@ -144,6 +144,7 @@ public abstract class ViewController {
                     enableFirstRoundActions(); // player must place starting card and choose color for available colors
                 }
            }
+
             case FIRSTROUND -> {
                 setCurrentPlayer(messageParser.getCurrentPlayer());
                 updatePlayerBoard(messageParser.getAffectedPlayer());//update the board of the last player to act (for player in playersingame upadate player with matching username)
@@ -155,6 +156,7 @@ public abstract class ViewController {
                     enableFirstRoundActions();
                 }
             }
+
             case START_SECONDROUND -> {
                 setCurrentPlayer(messageParser.getCurrentPlayer());
                 updatePlayerHand(messageParser.getCurrentPlayer());
@@ -165,6 +167,7 @@ public abstract class ViewController {
                     enableSecondRoundActions();
                 }
             }
+
             case SECONDROUND -> {
                 if(isPlayerInGame(messageParser.getCurrentPlayer())){
                     setCurrentPlayer(messageParser.getCurrentPlayer());
@@ -176,9 +179,7 @@ public abstract class ViewController {
                     enableSecondRoundActions();
                 }
             }
-            case START_ACTION -> {
 
-            }
             case ACTION_PLACECARD -> {
                 setCurrentPlayer(messageParser.getCurrentPlayer());
                 updatePlayerBoardHandScore(messageParser.getAffectedPlayer(), messageParser.getScore());
@@ -187,6 +188,7 @@ public abstract class ViewController {
                     enableDrawCard();
                 }
             }
+
             case ACTION_DRAWCARD -> {
                 setCurrentPlayer(messageParser.getCurrentPlayer());
                 updatePlayerHand(messageParser.getAffectedPlayer());
@@ -197,7 +199,7 @@ public abstract class ViewController {
                 }
             }
 
-            case FINALROUND  -> { //FINAL ROUND E' CAMBIATO A ENDGAME
+            case ENDGAME  -> {
                 setFinalScoreBoard(); // popola la classifica
                 showFinalScoreBoard(); // mostra la classigfica
                 disableAllActions(); //finisce il gioco
