@@ -200,7 +200,7 @@ public abstract class ViewController {
             case ENDGAME  -> { //FINAL ROUND E' CAMBIATO A ENDGAME
                 setFinalScoreBoard(); // popola la classifica
                 showFinalScoreBoard(); // mostra la classigfica
-                disableAllActions(); //finisce il gioco
+                terminate(); //finisce il gioco
             }
             case ABORT -> {
                 showErrorAlert(messageParser.getCause(), "game has terminated");
