@@ -88,4 +88,8 @@ public class DrawableCards {
         }
     }
 
+    public boolean deckIsEmpty(){
+        return deck.isEmpty();
+    }
+
 }

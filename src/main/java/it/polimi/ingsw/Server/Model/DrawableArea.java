@@ -42,4 +42,11 @@ public class DrawableArea {
     public DrawableCards getResourceDrawingSection() {
         return resourceDrawableCards;
     }
+
+    public boolean isEmpty(){
+        if(resourceDrawableCards.deckIsEmpty() && goldDrawableCards.deckIsEmpty()){
+            return true;
+        }
+        return false;
+    }
 }
