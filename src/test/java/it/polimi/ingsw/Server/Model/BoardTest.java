@@ -49,9 +49,9 @@ class BoardTest {
 
     @BeforeEach
     void setUp(){
-        board2 =new Board("S5");
+        board2 =new Board("S55");
         board2.placeStartingCard(facingUp);
-        board1 =new Board("S4");
+        board1 =new Board("S44");
         board1.placeStartingCard(facingUp);
         // "O04"=new VerticalPatternObjective(Symbol.MUSHROOM)); "O08"=new SymbolObjective(Symbol.MUSHROOM)); "O13"=
         String[] objectives2=new String[]{"O04", "O08", "O13"};
@@ -76,6 +76,7 @@ class BoardTest {
 
     @Test
     void oneVerticalPatternAndOneThreeOfAKindReturnsFivePoints(){
+        board1.calculateAndUpdateObjectiveScore();
         assertEquals(5, board1.getFinalScore());
     }
 
@@ -94,6 +95,7 @@ class BoardTest {
         board1.placeCard("GB0",new Coordinates(7,7),facingDown);
         board1.placeCard("RB9",new Coordinates(8,8),facingDown);
         board1.placeCard("RB9",new Coordinates(9,9),facingDown);
+        board1.calculateAndUpdateObjectiveScore();
         assertEquals(9, board1.getFinalScore());
     }
 
@@ -177,7 +179,7 @@ class BoardTest {
     @Test
     void realGameScenario(){
 
-        board1=new Board("S0");
+        board1=new Board("S00");
         board1.placeStartingCard(facingDown);
         board1.addObjective("O02");
         board1.addObjective("O12");
@@ -214,12 +216,13 @@ class BoardTest {
         assertEquals(22, board1.getScore());
         board1.placeCard("GG0",new Coordinates(1,-3),facingUp);
         assertEquals(26, board1.getScore());
+        board1.calculateAndUpdateObjectiveScore();
         assertEquals(39, board1.getFinalScore());
     }
 
     @Test
     void secondRealGameScenario(){
-        board1=new Board("S1");
+        board1=new Board("S11");
         board1.placeStartingCard(facingUp);
         board1.addObjective("O04");
         board1.addObjective("O06");
@@ -260,6 +263,7 @@ class BoardTest {
         assertEquals(22, board1.getScore());
         board1.placeCard("RG1",new Coordinates(2,0),facingUp);
         board1.placeCard("RG4",new Coordinates(3,-1),facingUp);
+        board1.calculateAndUpdateObjectiveScore();
         assertEquals(41, board1.getFinalScore());
     }
 

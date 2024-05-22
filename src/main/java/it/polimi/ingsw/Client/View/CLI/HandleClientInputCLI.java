@@ -74,7 +74,7 @@ public class HandleClientInputCLI implements Runnable{
                     if(inputArray[0].equals("DRAW")) {
                         if (inputArray.length > 2) {
                             if(!drawCard(Arrays.copyOfRange(inputArray,1, 3))){
-                                System.out.println("remeber to follow the instructions to draw card.\n" +
+                                System.out.println("remember to follow the instructions to draw card.\n" +
                                         "If you need help, type help");
                             }
                         }

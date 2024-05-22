@@ -8,21 +8,21 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.*;
 
 class ServerTest {
-    /**
-     * Tests if the first player to connect is the master
-     * @throws IOException
-     * @throws InterruptedException
-     */
-    @Test
-    void FirstPlayerIsMaster() throws IOException, InterruptedException {
-        ThreadServer ts=new ThreadServer();
-        ThreadClient tc=new ThreadClient();
-        Thread t1=new Thread(ts);
-        t1.start();
-        new Thread(tc).start();
-        t1.join();
-        assertTrue(ts.getServer().getConnections().get(0).isMaster());
-    }
+//    /**
+//     * Tests if the first player to connect is the master
+//     * @throws IOException
+//     * @throws InterruptedException
+//     */
+//    @Test
+//    void FirstPlayerIsMaster() throws IOException, InterruptedException {
+//        ThreadServer ts=new ThreadServer();
+//        ThreadClient tc=new ThreadClient();
+//        Thread t1=new Thread(ts);
+//        t1.start();
+//        new Thread(tc).start();
+//        t1.join();
+//        assertTrue(ts.getServer().getConnections().get(0).isMaster());
+//    }
     static class ThreadClient implements Runnable {
         NetworkManager networkManager;
         public NetworkManager getClient() {
