@@ -86,6 +86,16 @@ public class HandleClientInputCLI implements Runnable{
                         showPlayerBoardAndHand(inputArray[1]);
                     }
                 }
+                if(actionsCLI.isContinueGameEnabled()){
+                    if(input.equalsIgnoreCase("n")){
+                        messageDispatcher.notifyPersistence(false);
+                    } else if (input.equalsIgnoreCase("y")) {
+                        messageDispatcher.notifyPersistence(true);
+                    }
+                    else {
+                        System.out.println("You can only respond Y or N");
+                    }
+                }
                 if(actionsCLI.isChooseColorEnabled()){
                     dealWithPlayerColorChoice(input);
                 }

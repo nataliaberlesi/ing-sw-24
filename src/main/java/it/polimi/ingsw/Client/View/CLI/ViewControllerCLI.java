@@ -84,6 +84,27 @@ public class ViewControllerCLI extends ViewController {
     }
 
     @Override
+    protected void askCreateOrContinue() {
+        clientActions.enableContinueGame();
+        System.out.println("There is a saved game, do you want to continue?\n(type Y to continue or N to start a new game)");
+    }
+
+    @Override
+    protected boolean onlyMyPlayerInGame() {
+        return playersInGame.getPlayers().size()==1;
+    }
+
+    @Override
+    protected boolean isMyPlayer(String username) {
+        return myPlayer.getUsername().equalsIgnoreCase(username);
+    }
+
+    @Override
+    protected void setPrivateObjective() {
+        setPrivateObjective(messageParser.getPrivateObjectiveCLI());
+    }
+
+    @Override
     protected void terminate() {
         clientInputHandler.terminate();
         System.out.print("\033[H\033[2J");
@@ -134,6 +155,7 @@ public class ViewControllerCLI extends ViewController {
             objectivesSection.addObjective(objective);
         }
     }
+
 
     public void setPrivateObjective(ObjectiveCLI privateObjective){
         objectivesSection.setPrivateObjective(privateObjective);

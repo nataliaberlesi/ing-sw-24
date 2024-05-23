@@ -126,12 +126,36 @@ public abstract class ViewController {
     protected abstract void updatePlayerBoard(String affectedPlayer);
 
     protected abstract void setPlayerColor(String affectedPlayer, String color);
+
+    protected abstract void askCreateOrContinue();
+
+    protected abstract boolean onlyMyPlayerInGame();
+
+    protected abstract boolean isMyPlayer(String username);
+
+    protected abstract void setPrivateObjective();
     /**
      * Method called to update the view according to received message type.
      */
     public void updateView() {
         switch (this.messageParser.getMessageType()) {
 
+            case PERSISTENCE ->{
+                askCreateOrContinue();
+            }
+            case CONTINUE ->{
+                if(onlyMyPlayerInGame()){
+                    addPlayers(messageParser.getPlayers());
+                }
+                setPublicObjectives();
+                updateDrawableArea();
+                updatePlayerHand(messageParser.getAffectedPlayer());
+                updatePlayerScore(messageParser.getAffectedPlayer(), messageParser.getScore());
+                updatePlayerBoard(messageParser.getAffectedPlayer());
+                if(isMyPlayer(messageParser.getAffectedPlayer())){
+                    setPrivateObjective();
+                }
+            }
             case CONNECT -> connectScene();
 
             case JOIN -> manageJoinStatus();
@@ -144,7 +168,6 @@ public abstract class ViewController {
                     enableFirstRoundActions(); // player must place starting card and choose color for available colors
                 }
            }
-
             case FIRSTROUND -> {
                 setCurrentPlayer(messageParser.getCurrentPlayer());
                 updatePlayerBoard(messageParser.getAffectedPlayer());//update the board of the last player to act (for player in playersingame upadate player with matching username)
