@@ -101,7 +101,7 @@ public class ViewControllerCLI extends ViewController {
 
     @Override
     protected void setPrivateObjective() {
-        setPrivateObjective(messageParser.getPrivateObjectiveCLI());
+        setPrivateObjective(messageParser.getChosenObjective());
     }
 
     @Override
