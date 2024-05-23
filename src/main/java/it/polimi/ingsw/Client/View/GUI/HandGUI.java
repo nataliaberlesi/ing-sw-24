@@ -3,7 +3,7 @@ import javafx.scene.layout.*;
 
 public class HandGUI extends HBox {
     private final CardGUI[] handCards = new CardGUI[3];
-    private int index;
+    private int chosenHandCardIndex;
     private CardGUI chosenHandCard = new CardGUI();
 
     public HandGUI(){
@@ -52,11 +52,15 @@ public class HandGUI extends HBox {
     }
     public void deactivateEventHandlerOnHandCards(){
         for (CardGUI card : handCards){
+            if (card.isSelected){
+                card.setBorder(null);
+                card.isSelected=false;
+            }
             card.setOnMouseClicked(null);
         }
     }
-    public Integer getIndex() {
-        return index;
+    public Integer getChosenHandCardIndex() {
+        return chosenHandCardIndex;
     }
 
     public boolean setChosenHandCard(CardGUI handCard) {
@@ -66,7 +70,7 @@ public class HandGUI extends HBox {
         } else return false;
     }
 
-    public void setIndex(int finalI) {
-        index = finalI;
+    public void setChosenHandCardIndex(int finalI) {
+        chosenHandCardIndex = finalI;
     }
 }

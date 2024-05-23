@@ -372,7 +372,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
 
     private void sendSecondRoundMessageAndUpdateScene() {
         MainScene.enableActions = false;
-        mainScene.getConfirmActionButton().setDisable(true);
+        mainScene.enableConfirmButtonClick();
         mainScene.getObjectivesSection().getPrivateObjective().setCardIDAndImage(myPlayer.getPrivateObjectiveID());
         messageDispatcher.secondRound(myPlayer.getUsername(), myPlayer.getPrivateObjectiveIndex());
     }
@@ -386,10 +386,12 @@ public class ViewControllerGUI extends ViewController implements Initializable{
 
     private void sendPlaceCardMessageAndUpdateScene() {
         MainScene.enableActions = false;
+        mainScene.enableConfirmButtonClick();
+        messageDispatcher.placeCard(myPlayer.getUsername(), myPlayer.getHand().getChosenHandCard().isFaceUp(), myPlayer.getHand().getChosenHandCardIndex(), myPlayer.getBoard().getChosenCard().getChosenCornerCoordinates());
         myPlayer.getHand().deactivateEventHandlerOnHandCards();
         myPlayer.getBoard().deactivateEventHandlerOnCorners();
-        mainScene.getConfirmActionButton().setDisable(true);
-        messageDispatcher.placeCard(myPlayer.getUsername(), myPlayer.getHand().getChosenHandCard().isFaceUp(), myPlayer.getHand().getIndex(), myPlayer.getBoard().getChosenCard().getChosenCornerCoordinates());
+        CornerGUI.isEventHandlerSet = false;
+
     }
 
 
@@ -400,15 +402,26 @@ public class ViewControllerGUI extends ViewController implements Initializable{
 
     @Override
     protected void updatePlayerScore(String username, int score) {
+        if (score >= 20){
+            mainScene.getLastRoundLabel().setVisible(true);
+        }
         mainScene.getScoreBoard().updatePlayerScore(username, score);
     }
 
 
     @Override
     protected void enableDrawCard() {
-
+        mainScene.setActionLabel("Draw a resource or gold card!");
+        mainScene.addEventHandlerToDrawableAreaCards();
+        mainScene.getConfirmActionButton().setOnMouseClicked(event -> sendDrawCardMessageAndUpdateScene());
     }
 
+    private void sendDrawCardMessageAndUpdateScene() {
+        MainScene.enableActions = false;
+        mainScene.enableConfirmButtonClick();
+        mainScene.getDrawableArea().deactivateEventHandlerOnDrawableArea();
+        messageDispatcher.drawCard(myPlayer.getUsername(), mainScene.getDrawableArea().getChosenDrawableAreaCardIndex(), mainScene.getDrawableArea().getChosenDrawableArea());
+    }
 
 
     @Override

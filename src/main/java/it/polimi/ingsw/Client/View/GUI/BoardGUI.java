@@ -95,17 +95,11 @@ public class BoardGUI extends ScrollPane {
      * @param cards cards to be placed on board
      */
     public void updateBoard(ArrayList<CardGUI> cards){
-        int i;
-        for (i = cards.size() - 1; i > 0 ; i--) {
-            if (cards.get(i).equals(cardsOnBoard.getLast())){
-                break;
-            }
-        }
-        i++;
-        for (; i < cards.size(); i++) {
+        for (int i=1; i < cards.size(); i++) {
             anchorPane.getChildren().add(cards.get(i));
-            cardsOnBoard.add(cards.get(i));
         }
+        cardsOnBoard=cards;
+        cardsOnBoard.set(0, initialCard);
     }
     public void setChosenCard(CardGUI chosenCard){
         this.chosenCard = chosenCard;

@@ -1,7 +1,6 @@
 package it.polimi.ingsw.Client.View.GUI;
 
 import it.polimi.ingsw.Server.Model.Coordinates;
-import it.polimi.ingsw.Server.Model.CornerCoordinatesCalculator;
 import javafx.geometry.Insets;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -11,15 +10,16 @@ public class CornerGUI extends Region {
     protected static final double cornerWidth = 19.5;
     protected static final double cornerHeight = 23.0;
     protected Coordinates cornerCoordinates;
-    protected static boolean atLeastOneCornerSelected;
+    protected boolean atLeastOneCornerSelected;
+    protected static boolean isEventHandlerSet = false;
 
     public CornerGUI(){
         setPrefSize(cornerWidth, cornerHeight);
-        setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
+        setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, CornerRadii.EMPTY, Insets.EMPTY)));
     }
 
 
-    public boolean toggleSelection(CornerGUI corner, BoardGUI board, MainScene mainScene) {
+    public boolean toggleSelection(CornerGUI corner, BoardGUI board) {
         atLeastOneCornerSelected = false;
         for (CardGUI cardInBoard : board.getCardsOnBoard()){ //deactivates selection of corner
             for (CornerGUI cornerInCard : cardInBoard.getCorners()) {

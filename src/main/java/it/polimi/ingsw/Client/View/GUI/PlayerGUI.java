@@ -6,7 +6,6 @@ public class PlayerGUI {
     private HandGUI hand = new HandGUI();
     private String color;
     private int privateObjectiveIndex;
-
     private String privateObjectiveID;
     private boolean isCurrentPlayer = false;
 
@@ -62,4 +61,5 @@ public class PlayerGUI {
     public void setCurrentPlayer(boolean currentPlayer) {
         this.isCurrentPlayer = currentPlayer;
     }
+
 }

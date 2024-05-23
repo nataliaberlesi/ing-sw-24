@@ -1,5 +1,4 @@
 package it.polimi.ingsw.Client.View.GUI;
-import it.polimi.ingsw.Server.Model.CornerCoordinatesCalculator;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -7,10 +6,10 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MainScene extends Scene {
 
@@ -22,12 +21,14 @@ public class MainScene extends Scene {
     private Label actionLabel = new Label();
     private Label helloPlayerLabel;
     private Label confirmActionLabel = new Label();
+    private Label lastRoundLabel = new Label("Last Round!");
     private final Button flipYourHandButton = new Button("Flip your hand");
     private final Button confirmActionButton = new Button("Confirm action");
     private final ArrayList<Button> seeOtherPlayersSceneButtons = new ArrayList<>();
     private ViewControllerGUI viewControllerGUI;
     private PlayerGUI playerInScene;
     protected static boolean enableActions = false;
+    private boolean atLeastOneCornerSelected = false;
 
     public MainScene(ViewControllerGUI viewControllerGUI, PlayerGUI playerInScene) {
         super(new AnchorPane(), 1060, 595);
@@ -121,6 +122,14 @@ public class MainScene extends Scene {
         actionLabel.setLayoutX(30);
         actionLabel.setLayoutY(517);
         this.root.getChildren().add(actionLabel);
+
+        lastRoundLabel.setFont(new Font("System Bold", 18));
+        lastRoundLabel.setAlignment(Pos.CENTER);
+        lastRoundLabel.setLayoutX(30);
+        lastRoundLabel.setLayoutY(350);
+        lastRoundLabel.setVisible(false);
+        this.root.getChildren().add(lastRoundLabel);
+
     }
 
     /**
@@ -239,10 +248,13 @@ public class MainScene extends Scene {
             handCard.setOnMouseClicked(event -> {
                 handCard.toggleSelection(handCard, hand);
                 boolean isHandCardChosen = hand.setChosenHandCard(handCard);
-                hand.setIndex(finalI);
+                hand.setChosenHandCardIndex(finalI);
                 enableCornerChoice();
-                setEventHandlerToBoardCards();
-                if (isHandCardChosen && CornerGUI.atLeastOneCornerSelected){
+                if (!CornerGUI.isEventHandlerSet){
+                    setEventHandlerToBoardCards();
+                    CornerGUI.isEventHandlerSet = true;
+                }
+                if (isHandCardChosen && atLeastOneCornerSelected){
                     enableActions = true;
                     enableConfirmButtonClick();
                 }else{
@@ -265,23 +277,65 @@ public class MainScene extends Scene {
         CornerGUI[] corners = card.getCorners();
         for (int i = 0; i < corners.length; i++) {
             int finalI = i;
-            corners[i].setOnMouseClicked(event -> handleCornerClick(corners[finalI], card));
+            corners[i].setOnMouseClicked(event -> {
+                handleCornerClick(corners[finalI], card);
+                event.consume();});
         }
     }
 
     private void handleCornerClick(CornerGUI corner, CardGUI card) {
-        boolean atLeastOneCornerSelected = corner.toggleSelection(corner, viewControllerGUI.getMyPlayer().getBoard(), this);
+        atLeastOneCornerSelected = corner.toggleSelection(corner, viewControllerGUI.getMyPlayer().getBoard());
         viewControllerGUI.getMyPlayer().getBoard().setChosenCard(card);
         card.setChosenCornerCoordinates(corner.cornerCoordinates);
         if (atLeastOneCornerSelected && viewControllerGUI.getMyPlayer().getHand().getChosenHandCard().isSelected){
             enableActions = true;
             enableConfirmButtonClick();
-        }else{
+        } else{
             enableActions = false;
             enableConfirmButtonClick();
         }
     }
 
+    public void addEventHandlerToDrawableAreaCards() {
+        AtomicBoolean isResourceCardChosen = new AtomicBoolean(false);
+        AtomicBoolean isGoldCardChosen = new AtomicBoolean(false);
+        CardGUI[] resourceCards = drawableArea.getResourceCards();
+        CardGUI[] goldCards = drawableArea.getGoldCards();
+        for (int i = 0; i < resourceCards.length; i++){
+            int finalI = i;
+            resourceCards[i].setOnMouseClicked(event -> {
+                drawableArea.setChosenDrawableAreaCardIndex(finalI);
+                resourceCards[finalI].toggleSelection(resourceCards[finalI], drawableArea);
+                isResourceCardChosen.set(drawableArea.setChosenDrawableAreaCard(resourceCards[finalI], true));
+                checkForSelectedCards(isResourceCardChosen.get(), isGoldCardChosen.get());
+            });
+        }
+
+        for (int i = 0; i < goldCards.length; i++){
+            int finalI = i;
+            goldCards[i].setOnMouseClicked(event -> {
+                drawableArea.setChosenDrawableAreaCardIndex(finalI);
+                goldCards[finalI].toggleSelection(goldCards[finalI], drawableArea);
+                isGoldCardChosen.set(drawableArea.setChosenDrawableAreaCard(goldCards[finalI], false));
+                checkForSelectedCards(isResourceCardChosen.get(), isGoldCardChosen.get());
+            });
+        }
+    }
+
+    private void checkForSelectedCards(boolean isResourceCardChosen, boolean isGoldCardChosen) {
+        if (isResourceCardChosen || isGoldCardChosen){
+            enableActions = true;
+            enableConfirmButtonClick();
+        } else{
+            enableActions = false;
+            enableConfirmButtonClick();
+        }
+    }
+
+
+    public Label getLastRoundLabel() {
+        return lastRoundLabel;
+    }
 
     public void setConfirmActionLabel(String text) {
         this.confirmActionLabel.setText(text);

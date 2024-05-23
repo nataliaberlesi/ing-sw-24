@@ -7,10 +7,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
+import java.util.ArrayList;
 import java.util.Objects;
-
-import static it.polimi.ingsw.Client.View.GUI.CornerGUI.cornerHeight;
-import static it.polimi.ingsw.Client.View.GUI.CornerGUI.cornerWidth;
 
 public class CardGUI extends AnchorPane {
     /**
@@ -75,8 +73,8 @@ public class CardGUI extends AnchorPane {
      * */
     public void initializeCorners() {
 
-        double[] xPositions = {imageView.getLayoutX(), imageView.getLayoutX() + (imageView.getFitWidth() - cornerWidth)};
-        double[] yPositions = {imageView.getLayoutY(), imageView.getLayoutY() + (imageView.getFitHeight() - cornerHeight)};
+        double[] xPositions = {imageView.getLayoutX(), imageView.getLayoutX() + (imageView.getFitWidth() - CornerGUI.cornerWidth)};
+        double[] yPositions = {imageView.getLayoutY(), imageView.getLayoutY() + (imageView.getFitHeight() - CornerGUI.cornerHeight)};
 
         for (int i = 0; i < corners.length; i++) {
             corners[i] = new CornerGUI();
@@ -210,6 +208,25 @@ public class CardGUI extends AnchorPane {
             if(cardInHand.isSelected && !cardInHand.equals(card)){
                 cardInHand.setBorder(null);
                 cardInHand.isSelected = false;
+            }
+        }
+
+        if ((card.getBorder() == null || card.getBorder().getStrokes().isEmpty()) && !card.isSelected) {
+            card.setBorder(new Border(new BorderStroke(
+                    Color.RED, BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(5)
+            )));
+            card.isSelected = true;
+        } else {
+            card.setBorder(null);
+            card.isSelected = false;
+        }
+    }
+
+    public void toggleSelection(CardGUI card, DrawableAreaGUI drawableAreaGUI){
+        for (CardGUI cardInDrawableArea : drawableAreaGUI.getDrawableAreaCards()){
+            if(cardInDrawableArea.isSelected && !cardInDrawableArea.equals(card)){
+                cardInDrawableArea.setBorder(null);
+                cardInDrawableArea.isSelected = false;
             }
         }
 
