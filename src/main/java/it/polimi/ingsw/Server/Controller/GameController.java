@@ -68,7 +68,7 @@ public class GameController {
     }
     private Message checkPersistency(JsonObject jsonParams) {
         InParamsDTO inParamsDTO=messageParser.parseInParamsDTO(jsonParams);
-        persistency=inParamsDTO.persistency();
+        persistency=inParamsDTO.persistence();
         if(persistency) {
             try {
                 gameInstance=PersistencyHandler.fetchState();

@@ -10,5 +10,5 @@ public record InParamsDTO(String username,
                           Coordinates coordinates,
                           String drawableSection,
                           String cause,
-                          Boolean persistency) {
+                          Boolean persistence) {
 }
