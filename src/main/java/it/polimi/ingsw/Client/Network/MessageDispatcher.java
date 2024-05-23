@@ -56,4 +56,8 @@ public class MessageDispatcher {
         OutParamsDTO outParamsDTO=new OutParamsDTO(username, cause);
         dispatch(MessageType.ABORT, messageParser.toJsonObject(outParamsDTO));
     }
+    public void notifyPersistence(boolean persistence) {
+        OutParamsDTO outParamsDTO=new OutParamsDTO(persistence);
+        dispatch(MessageType.PERSISTENCE,messageParser.toJsonObject(outParamsDTO));
+    }
 }
