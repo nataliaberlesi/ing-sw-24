@@ -1,7 +1,5 @@
 package it.polimi.ingsw.Client.View.GUI;
-import it.polimi.ingsw.Server.Model.Coordinates;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
 
 public class HandGUI extends HBox {
     private final CardGUI[] handCards = new CardGUI[3];
@@ -42,14 +40,14 @@ public class HandGUI extends HBox {
         for (int i = 0; i < handIDs.length; i++){
             if (handIDs[i] != null)
                 handCards[i].setCardIDAndImage(handIDs[i]);
-            else handCards[i].removeCardImage();
+            else handCards[i].removeCardIDAndImage();
         }
     }
     public void updateMyHandForOtherPlayers(String[] handIDs){
         for (int i = 0; i < handIDs.length; i++){
             if (handIDs[i] != null)
                 handCards[i].setCardIDAndImage(handIDs[i].substring(0,2));
-            else handCards[i].removeCardImage();
+            else handCards[i].removeCardIDAndImage();
         }
     }
     public void deactivateEventHandlerOnHandCards(){
@@ -61,8 +59,11 @@ public class HandGUI extends HBox {
         return index;
     }
 
-    public void setChosenHandCard(CardGUI handCard) {
-        chosenHandCard = handCard;
+    public boolean setChosenHandCard(CardGUI handCard) {
+        if (handCard.isSelected){
+            chosenHandCard = handCard;
+            return true;
+        } else return false;
     }
 
     public void setIndex(int finalI) {

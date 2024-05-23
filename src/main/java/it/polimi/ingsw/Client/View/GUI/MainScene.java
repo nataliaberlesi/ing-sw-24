@@ -215,6 +215,12 @@ public class MainScene extends Scene {
         for (CardGUI card : hand.getHandCards()){
             if (card.getCardID() != null)
                 card.flipAndShow();
+            if (card.isSelected) {
+                card.setBorder(null);
+                card.isSelected = false;
+                enableActions = false;
+                enableConfirmButtonClick();
+            }
         }
     }
 
@@ -232,17 +238,23 @@ public class MainScene extends Scene {
             CardGUI handCard = handCards[i];
             handCard.setOnMouseClicked(event -> {
                 handCard.toggleSelection(handCard, hand);
-                hand.setChosenHandCard(handCard);
+                boolean isHandCardChosen = hand.setChosenHandCard(handCard);
                 hand.setIndex(finalI);
                 enableCornerChoice();
+                setEventHandlerToBoardCards();
+                if (isHandCardChosen && CornerGUI.atLeastOneCornerSelected){
+                    enableActions = true;
+                    enableConfirmButtonClick();
+                }else{
+                    enableActions = false;
+                    enableConfirmButtonClick();
+                }
             });
         }
     }
 
     private void enableCornerChoice() {
         setActionLabel("Click on the corner where\nyou'd like to place your card");
-        enableActions = true;
-        enableConfirmButtonClick();
     }
     public void setEventHandlerToBoardCards() {
         for (CardGUI card : viewControllerGUI.getMyPlayer().getBoard().getCardsOnBoard()){
@@ -250,24 +262,26 @@ public class MainScene extends Scene {
         }
     }
     public void addEventHandlerToCorners(CardGUI card){
-        Region[] corners = card.getCorners();
+        CornerGUI[] corners = card.getCorners();
         for (int i = 0; i < corners.length; i++) {
             int finalI = i;
-            corners[i].setOnMouseClicked((event -> handleCornerClick(finalI, corners[finalI], card)));
+            corners[i].setOnMouseClicked(event -> handleCornerClick(corners[finalI], card));
         }
     }
 
-    private void handleCornerClick(int i, Region corner, CardGUI card) {
+    private void handleCornerClick(CornerGUI corner, CardGUI card) {
+        boolean atLeastOneCornerSelected = corner.toggleSelection(corner, viewControllerGUI.getMyPlayer().getBoard(), this);
         viewControllerGUI.getMyPlayer().getBoard().setChosenCard(card);
-        card.setChosenCornerCoordinates(CornerCoordinatesCalculator.cornerCoordinates(card.getModelCoordinates(), i));
-        if ((corner.getBorder() == null || corner.getBorder().getStrokes().isEmpty())) {
-            corner.setBorder(new Border(new BorderStroke(
-                    Color.RED, BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(3)
-            )));
-        } else {
-            corner.setBorder(null);
+        card.setChosenCornerCoordinates(corner.cornerCoordinates);
+        if (atLeastOneCornerSelected && viewControllerGUI.getMyPlayer().getHand().getChosenHandCard().isSelected){
+            enableActions = true;
+            enableConfirmButtonClick();
+        }else{
+            enableActions = false;
+            enableConfirmButtonClick();
         }
     }
+
 
     public void setConfirmActionLabel(String text) {
         this.confirmActionLabel.setText(text);

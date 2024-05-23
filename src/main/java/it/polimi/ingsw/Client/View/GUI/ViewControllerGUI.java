@@ -381,7 +381,6 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     protected void enablePlaceCard() {
         mainScene.setActionLabel("Choose a card from your hand");
         mainScene.addEventHandlerToHandCards();
-        mainScene.setEventHandlerToBoardCards();
         mainScene.getConfirmActionButton().setOnMouseClicked(event -> sendPlaceCardMessageAndUpdateScene());
     }
 

@@ -9,6 +9,9 @@ import javafx.scene.paint.Color;
 
 import java.util.Objects;
 
+import static it.polimi.ingsw.Client.View.GUI.CornerGUI.cornerHeight;
+import static it.polimi.ingsw.Client.View.GUI.CornerGUI.cornerWidth;
+
 public class CardGUI extends AnchorPane {
     /**
      * ImageView associated with the card
@@ -17,7 +20,7 @@ public class CardGUI extends AnchorPane {
     /**
      * Regions to represent the corners of the card
      * */
-    private Region[] corners = new Region[4];
+    private final CornerGUI[] corners = new CornerGUI[4];
     /**
      * Card's face up resource ID
      */
@@ -45,8 +48,7 @@ public class CardGUI extends AnchorPane {
      */
     private final Coordinates guiCoordinates = new Coordinates();
 
-    private boolean isCornerSelected = false;
-    private boolean isSelected = false;
+    protected boolean isSelected = false;
 
     public CardGUI(){
         imageView.setFitHeight(55);
@@ -62,8 +64,8 @@ public class CardGUI extends AnchorPane {
         imageView.setPickOnBounds(true);
         imageView.setPreserveRatio(true);
         this.getChildren().add(imageView);
-        this.setCardIDAndImage(cardID);
         this.isFaceUp = isFacingUp;
+        this.setCardIDAndImage(cardID);
         this.convertCoordinatesFromModelToGUIAndSetImageViewLayout(modelCoordinates.getX(), modelCoordinates.getY());
         initializeCorners();
     }
@@ -72,24 +74,30 @@ public class CardGUI extends AnchorPane {
      * Puts the corners on the card
      * */
     public void initializeCorners() {
-        double cornerWidth = 19.5;
-        double cornerHeight = 23.0;
 
         double[] xPositions = {imageView.getLayoutX(), imageView.getLayoutX() + (imageView.getFitWidth() - cornerWidth)};
         double[] yPositions = {imageView.getLayoutY(), imageView.getLayoutY() + (imageView.getFitHeight() - cornerHeight)};
 
         for (int i = 0; i < corners.length; i++) {
-            corners[i] = new Region();
-            corners[i].setPrefSize(cornerWidth, cornerHeight);
-            corners[i].setLayoutX(xPositions[i % 2]);
+            corners[i] = new CornerGUI();
+            if (i==0 || i==3){
+                corners[i].setLayoutX(xPositions[1]);
+            }
+            if (i==1 || i==2){
+                corners[i].setLayoutX(xPositions[0]);
+            }
             corners[i].setLayoutY(yPositions[i / 2]);
-            corners[i].setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
+            corners[i].cornerCoordinates = CornerCoordinatesCalculator.cornerCoordinates(this.getModelCoordinates(), i);
             this.getChildren().add(corners[i]);
             corners[i].toFront();
         }
     }
 
-    public Region[] getCorners() {
+    public ImageView getImageView() {
+        return imageView;
+    }
+
+    public CornerGUI[] getCorners() {
         return corners;
     }
 
@@ -100,7 +108,6 @@ public class CardGUI extends AnchorPane {
     public Coordinates getChosenCornerCoordinates(){
         return chosenCornerCoordinates;
     }
-
     public void setChosenCornerCoordinates(Coordinates chosenCornerCoordinates) {
         this.chosenCornerCoordinates = chosenCornerCoordinates;
     }
@@ -144,8 +151,10 @@ public class CardGUI extends AnchorPane {
         imageView.setImage(cardImage);
     }
 
-    public void removeCardImage(){
+    public void removeCardIDAndImage(){
         this.imageView.setImage(null);
+        this.faceUpCardID = null;
+        this.faceDownCardID = null;
     }
 
     /**

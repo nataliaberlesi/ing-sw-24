@@ -91,8 +91,8 @@ public class BoardGUI extends ScrollPane {
 
 
     /**
-     * Method to place a card on the board in a certain position and associate an image to it
-     * @param cards card to be placed on board
+     * Method to place cards on board
+     * @param cards cards to be placed on board
      */
     public void updateBoard(ArrayList<CardGUI> cards){
         int i;
@@ -121,8 +121,11 @@ public class BoardGUI extends ScrollPane {
 
     public void deactivateEventHandlerOnCorners(){
         for (CardGUI card : cardsOnBoard){
-            for (Region corner : card.getCorners())
+            for (CornerGUI corner : card.getCorners()) {
+                corner.setBorder(null);
+                corner.isSelected = false;
                 corner.setOnMouseClicked(null);
+            }
         }
     }
 
