@@ -3,6 +3,7 @@ package it.polimi.ingsw.Server.Controller;
 import it.polimi.ingsw.Server.Model.*;
 import it.polimi.ingsw.Server.Model.Cards.Card;
 import it.polimi.ingsw.Server.Model.Cards.Deck;
+import it.polimi.ingsw.Server.Model.Cards.Objectives.Objective;
 import it.polimi.ingsw.Server.Model.Cards.ResourceCardFactory;
 
 import java.util.ArrayList;
@@ -13,12 +14,14 @@ import java.util.HashMap;
  * Is the instance of the game for the controller and acts as a way to communicate with the model data
  */
 public class GameInstance {
-    private ArrayList<String> playersTurnOrder;
+    private final ArrayList<String> playersTurnOrder=new ArrayList<String>();
     private int currentPlayerIndex;
     private final int numberOfPlayers;
 
-    private HashMap<String, Player> players;
+    private final HashMap<String, Player> players=new HashMap<String,Player>();
     private DrawableArea drawableArea;
+    private Deck startingDeck;
+    private final ArrayList<Color> availableColors=new ArrayList<Color>();
     private boolean firstRoundIsStarted;
     private boolean secondRoundIsStarted;
     private boolean gameIsStarted;
@@ -27,11 +30,15 @@ public class GameInstance {
     private boolean endgameIsStarted;
     private boolean finalRoundIsStarted;
     private boolean gameIsEnded;
-    private Deck startingDeck;
-    private ArrayList<Color> availableColors;
 
     public GameInstance(String masterNickname,int numberOfPlayers) {
+        this.numberOfPlayers = numberOfPlayers;
         this.currentPlayerIndex=0;
+        availableColors.addAll(Arrays.asList(Color.values()));
+        initializeGamePhases();
+        joinPlayer(masterNickname);
+    }
+    private void initializeGamePhases() {
         allBoardsAreSet=false;
         allObjectivesHaveBeenChosen=false;
         firstRoundIsStarted=false;
@@ -40,12 +47,6 @@ public class GameInstance {
         endgameIsStarted=false;
         finalRoundIsStarted=false;
         gameIsEnded=false;
-        this.numberOfPlayers = numberOfPlayers;
-        playersTurnOrder =new ArrayList<String>();
-        availableColors=new ArrayList<Color>();
-        availableColors.addAll(Arrays.asList(Color.values()));
-        players=new HashMap<String,Player>();
-        joinPlayer(masterNickname);
     }
 
     /**
@@ -109,6 +110,10 @@ public class GameInstance {
     }
     public boolean isEndgameIsStarted(){return this.endgameIsStarted;}
     public boolean isFinalRoundIsStarted(){return this.finalRoundIsStarted;}
+
+    /**
+     * Checks if all the boards contains a placed starting card
+     */
     public void checkIfAllBoardsAreSet() {
         boolean flag=true;
         for(String player: playersTurnOrder) {
@@ -123,7 +128,7 @@ public class GameInstance {
     }
     /**
      *
-     * @return the current player
+     * @return the current player username
      */
     public String getTurn() {
         return playersTurnOrder.get(currentPlayerIndex);
@@ -166,14 +171,6 @@ public class GameInstance {
         players.get(username).getPlayerBoard().placeStartingCard(flipStartingCard);
     }
     /**
-     * Saves the starting card into the player instance
-     * @param username
-     * @param cardID
-     */
-    public void saveStartingCard(String username, String cardID) {
-        players.get(username).placeStartingCard(cardID);
-    }
-    /**
      * Sets public objectives for each player
      * @param firstPublicObjective
      * @param secondPublicObjective
@@ -182,6 +179,12 @@ public class GameInstance {
         getPlayers().get(currentPlayer).getPlayerBoard().addObjective(firstPublicObjective);
         getPlayers().get(currentPlayer).getPlayerBoard().addObjective(secondPublicObjective);
     }
+
+    /**
+     * Shows the hand of a given player
+     * @param player the player who owns the hand
+     * @return the hand
+     */
     public Card[] getHand(String player) {
         Card[] hand=new Card[3];
         for(int i=0;i<3;i++) {
@@ -194,14 +197,29 @@ public class GameInstance {
         }
         return hand;
     }
+
+    /**
+     * Shows all the placed cards of a player
+     * @param player the player who placed the cards
+     * @return the placedcards
+     */
     public ArrayList<PlacedCard> getPlacedCards(String player) {
         return getPlayers().get(player).getPlayerBoard().getPlacedCards();
     }
 
+    /**
+     * Shows the score of a given player
+     * @param currentPlayer
+     * @return the player score
+     */
     public Integer getScore(String currentPlayer) {
         return getPlayers().get(currentPlayer).getPlayerBoard().getScore();
     }
 
+    /**
+     * Shows the resource drawable area
+     * @return the cards inside the resource drawable area
+     */
     public Card[] getResourceDrawableArea() {
         Card[] cards=new Card[3];
         for(int i=0;i<3;i++) {
@@ -209,6 +227,11 @@ public class GameInstance {
         }
         return cards;
     }
+
+    /**
+     * shows the gold drawable area
+     * @return the cards inside the gold drawable area
+     */
     public Card[] getGoldDrawableArea() {
         Card[] cards=new Card[3];
         for(int i=0;i<3;i++) {
@@ -224,6 +247,10 @@ public class GameInstance {
     public boolean gameIsStarted() {
         return this.gameIsStarted;
     }
+
+    /**
+     * checks if all objectives have been chosen and updates the flag
+     */
     public void checkIfAllObjectivesHaveBeenChosen() {
         boolean flag=true;
         for(String player: playersTurnOrder) {
@@ -233,6 +260,11 @@ public class GameInstance {
         }
         this.allObjectivesHaveBeenChosen=flag;
     }
+
+    /**
+     * Get the actual scoreboard
+     * @return
+     */
     public Scoreboard getScoreBoard() {
         Scoreboard scoreboard=new Scoreboard();
         for(String player: playersTurnOrder) {
@@ -243,6 +275,10 @@ public class GameInstance {
         return scoreboard;
     }
 
+    /**
+     * checks if endgame conditions are meet
+     * @return
+     */
     public boolean checkEndgame() {
         if(drawableArea.isEmpty()) {
             return true;
@@ -260,9 +296,25 @@ public class GameInstance {
     public boolean gameIsEnded(){
         return this.gameIsEnded;
     }
+
+    /**
+     * calculates endgame points for each player
+     */
     public void calculateEndgamePoints() {
         for(String player:playersTurnOrder) {
             players.get(player).getPlayerBoard().calculateAndUpdateObjectiveScore();
         }
+    }
+
+    public Color getColor(String player) {
+        return players.get(player).getPlayerColor();
+    }
+
+    public Objective[] getObjectives(String player) {
+        Objective[] objectives=new Objective[3];
+        for(int i=0;i<3;i++) {
+            objectives[i]=players.get(player).getPlayerBoard().seeObjective(i);
+        }
+        return objectives;
     }
 }

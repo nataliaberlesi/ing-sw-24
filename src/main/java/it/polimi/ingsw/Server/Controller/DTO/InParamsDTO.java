@@ -9,5 +9,6 @@ public record InParamsDTO(String username,
                           Integer index,
                           Coordinates coordinates,
                           String drawableSection,
-                          String cause) {
+                          String cause,
+                          Boolean persistency) {
 }

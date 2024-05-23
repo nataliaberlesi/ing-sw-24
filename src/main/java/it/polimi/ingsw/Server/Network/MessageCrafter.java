@@ -3,6 +3,7 @@ package it.polimi.ingsw.Server.Network;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.Client.Network.DTO.ModelDTO.ScoreboardPositionDTO;
 import it.polimi.ingsw.Server.Controller.DTO.OutParamsDTO;
+import it.polimi.ingsw.Server.Controller.GameInstance;
 import it.polimi.ingsw.Server.Model.Cards.Card;
 import it.polimi.ingsw.Server.Model.Cards.Objectives.Objective;
 import it.polimi.ingsw.Server.Model.Cards.StartingCardFactory;
@@ -112,6 +113,32 @@ public class MessageCrafter {
         OutParamsDTO outParamsDTO=new OutParamsDTO(
                 scoreBoardDTO
         );
+        return new Message(messageType,messageParser.toJsonObject(outParamsDTO));
+    }
+
+    public static Message craftPersistencyNotification() {
+        return new Message(MessageType.PERSISTENCE,null);
+    }
+
+    public static Message craftContinueGameMessage(GameInstance gameInstance) {
+        MessageType messageType=MessageType.CONTINUE;
+        Objective[] objectives=gameInstance.getObjectives(gameInstance.getTurn());
+        Objective[] publicObjectives= new Objective[2];
+        publicObjectives[0]=objectives[0];
+        publicObjectives[1]=objectives[1];
+        OutParamsDTO outParamsDTO= new OutParamsDTO(
+                gameInstance.getTurn(),
+                gameInstance.getPlacedCards(gameInstance.getTurn()),
+                gameInstance.getScore(gameInstance.getTurn()),
+                gameInstance.getColor(gameInstance.getTurn()).toString(),
+                gameInstance.getHand(gameInstance.getTurn()),
+                publicObjectives,
+                objectives[2],
+                gameInstance.getPlayerTurnOrder(),
+                gameInstance.getResourceDrawableArea(),
+                gameInstance.getGoldDrawableArea()
+        );
+        gameInstance.nextTurn();
         return new Message(messageType,messageParser.toJsonObject(outParamsDTO));
     }
 }

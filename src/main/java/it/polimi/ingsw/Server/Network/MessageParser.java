@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.Server.Controller.DTO.*;
 import it.polimi.ingsw.Server.Controller.DTO.InParamsDTO;
+import it.polimi.ingsw.Server.Controller.GameInstance;
 import it.polimi.ingsw.Server.Model.Cards.Objectives.CardObjective;
 import it.polimi.ingsw.Server.Model.Cards.Objectives.Objective;
 
@@ -31,5 +32,8 @@ public class MessageParser {
 
     public String toJson(Object object) {
         return parser.toJson(object);
+    }
+    public GameInstance parseGameInstance(String state) {
+        return parser.fromJson(state, GameInstance.class);
     }
 }
