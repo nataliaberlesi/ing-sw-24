@@ -435,5 +435,8 @@ public class MessageParser {
         }
         return finalScoreBoardCLI;
     }
+    public ArrayList<ScoreboardPositionDTO> getFinalScoreBoardGUI() {
+        return inParamsDTO.scoreboard();
+    }
 }
 
