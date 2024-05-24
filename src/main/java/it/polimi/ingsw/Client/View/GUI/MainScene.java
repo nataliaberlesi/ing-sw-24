@@ -125,8 +125,8 @@ public class MainScene extends Scene {
 
         lastRoundLabel.setFont(new Font("System Bold", 18));
         lastRoundLabel.setAlignment(Pos.CENTER);
-        lastRoundLabel.setLayoutX(30);
-        lastRoundLabel.setLayoutY(350);
+        lastRoundLabel.setLayoutX(45);
+        lastRoundLabel.setLayoutY(180);
         lastRoundLabel.setVisible(false);
         this.root.getChildren().add(lastRoundLabel);
 
