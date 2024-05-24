@@ -225,11 +225,9 @@ public abstract class ViewController {
             case ENDGAME  -> {
                 setFinalScoreBoard(); // popola la classifica
                 showFinalScoreBoard(); // mostra la classigfica
-                disableAllActions(); //finisce il gioco
             }
             case ABORT -> {
                 showErrorAlert(messageParser.getCause(), "game has terminated");
-                terminate();
             }
         }
     }
@@ -237,7 +235,6 @@ public abstract class ViewController {
     protected abstract void terminate();
 
     protected abstract void exit();
-    protected abstract void disableAllActions();
 
     protected abstract void showFinalScoreBoard();
 
@@ -267,9 +264,6 @@ public abstract class ViewController {
 
     protected abstract void enableSecondRoundActions();
 
-    protected abstract void enablePlaceStartingCard();
-
-    protected abstract void enableChooseColor();
 
     protected abstract void connectScene();
 
