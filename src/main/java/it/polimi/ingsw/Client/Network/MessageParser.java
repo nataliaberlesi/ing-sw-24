@@ -2,16 +2,12 @@ package it.polimi.ingsw.Client.Network;
 
 import com.google.gson.*;
 import it.polimi.ingsw.Client.Network.DTO.InParamsDTO;
-import it.polimi.ingsw.Client.Network.DTO.ModelDTO.CardDTO;
-import it.polimi.ingsw.Client.Network.DTO.ModelDTO.ObjectiveDTO;
-import it.polimi.ingsw.Client.Network.DTO.ModelDTO.PlacedCardDTO;
-import it.polimi.ingsw.Client.Network.DTO.ModelDTO.ScoreboardPositionDTO;
+import it.polimi.ingsw.Client.Network.DTO.ModelDTO.*;
 import it.polimi.ingsw.Client.View.CLI.CardCLI;
 import it.polimi.ingsw.Client.View.CLI.FinalScoreBoardCLI;
 import it.polimi.ingsw.Client.View.CLI.ObjectiveCLI;
 import it.polimi.ingsw.Client.View.GUI.CardGUI;
 import it.polimi.ingsw.Client.View.ViewController;
-import it.polimi.ingsw.Server.Model.Cards.Card;
 import it.polimi.ingsw.Server.Model.Coordinates;
 import java.util.ArrayList;
 import java.util.List;
@@ -205,8 +201,8 @@ public class MessageParser {
      * Parses the starting card front center symbols
      * @return the starting card DTO
      */
-    private CardDTO getCardDTO() {
-        return inParamsDTO.card();
+    private CardDataDTO getCardDTO() {
+        return inParamsDTO.card().data();
     }
 
     /**
@@ -215,13 +211,13 @@ public class MessageParser {
      * @param index the index inside the drawableArea
      * @return
      */
-    private CardDTO getCardDTO(String drawableArea, int index) {
+    private CardDataDTO getCardDTO(String drawableArea, int index) {
         switch(drawableArea) {
             case("goldDrawableArea") -> {
-                return inParamsDTO.goldDrawableArea()[index];
+                return inParamsDTO.goldDrawableArea()[index].data();
             }
             case("resourceDrawableArea") -> {
-                return inParamsDTO.resourceDrawableArea()[index];
+                return inParamsDTO.resourceDrawableArea()[index].data();
             }
         } throw new MessageParserException("Not such drawableArea:"+ drawableArea);
     }
@@ -231,18 +227,18 @@ public class MessageParser {
      * @return
      */
     public CardCLI getCardCLI() {
-        CardDTO cardDTO=getCardDTO();
+        CardDataDTO cardDataDTO =getCardDTO();
         ArrayList<String> prerequisites=new ArrayList<>();
-        if (cardDTO.prerequisites()!=null) {
-            prerequisites=cardDTO.prerequisites();
+        if (cardDataDTO.prerequisites()!=null) {
+            prerequisites= cardDataDTO.prerequisites();
         }
         return new CardCLI(
-                cardDTO.cardID(),
-                cardDTO.frontCorners(),
-                cardDTO.backCorners(),
-                cardDTO.cardObjective().type(),
-                cardDTO.cardObjective().data().symbolOfInterest(),
-                cardDTO.cardObjective().data().points(),
+                cardDataDTO.cardID(),
+                cardDataDTO.frontCorners(),
+                cardDataDTO.backCorners(),
+                cardDataDTO.cardObjective().type(),
+                cardDataDTO.cardObjective().data().symbolOfInterest(),
+                cardDataDTO.cardObjective().data().points(),
                 prerequisites
         );
     }
@@ -255,29 +251,29 @@ public class MessageParser {
         ArrayList<PlacedCardDTO> placedCardsDTO=inParamsDTO.placedCards();
         ArrayList<CardCLI> placedCardsCLI=new ArrayList<>();
         for(PlacedCardDTO placedCardDTO: placedCardsDTO) {
-            CardDTO cardDTO=placedCardDTO.placedCard();
+            CardDataDTO cardDataDTO =placedCardDTO.placedCard().data();
             String cardObjectiveType=null;
             String cardObjectiveSymbolOfInterest=null;
             Integer cardObjectivePoints=0;
-            if(cardDTO.cardObjective()!=null) {
-                cardObjectiveType= cardDTO.cardObjective().type();
-                cardObjectiveSymbolOfInterest=cardDTO.cardObjective().data().symbolOfInterest();
-                cardObjectivePoints=cardDTO.cardObjective().data().points();
+            if(cardDataDTO.cardObjective()!=null) {
+                cardObjectiveType= cardDataDTO.cardObjective().type();
+                cardObjectiveSymbolOfInterest= cardDataDTO.cardObjective().data().symbolOfInterest();
+                cardObjectivePoints= cardDataDTO.cardObjective().data().points();
             }
             ArrayList<String> prerequisites=new ArrayList<>();
-            if(cardDTO.prerequisites()!=null) {
-                prerequisites=cardDTO.prerequisites();
+            if(cardDataDTO.prerequisites()!=null) {
+                prerequisites= cardDataDTO.prerequisites();
             }
             ArrayList<String> frontCenterSymbols=new ArrayList<>();
-            if(cardDTO.frontCenterSymbols()!=null) {
-                frontCenterSymbols=cardDTO.frontCenterSymbols();
+            if(cardDataDTO.frontCenterSymbols()!=null) {
+                frontCenterSymbols= cardDataDTO.frontCenterSymbols();
             }
             Coordinates coordinates= new Coordinates(placedCardDTO.cardCoordinates().x(), placedCardDTO.cardCoordinates().y());
             placedCardsCLI.add(
                     new CardCLI(
-                            cardDTO.cardID(),
-                            cardDTO.frontCorners(),
-                            cardDTO.backCorners(),
+                            cardDataDTO.cardID(),
+                            cardDataDTO.frontCorners(),
+                            cardDataDTO.backCorners(),
                             cardObjectiveType,
                             cardObjectiveSymbolOfInterest,
                             cardObjectivePoints,
@@ -302,7 +298,7 @@ public class MessageParser {
             Coordinates coordinates=new Coordinates(placedCardDTO.cardCoordinates().x(),placedCardDTO.cardCoordinates().y());
             placedCardsGUI.add(
                     new CardGUI(
-                            placedCardDTO.placedCard().cardID(),
+                            placedCardDTO.placedCard().data().cardID(),
                             new Coordinates(placedCardDTO.cardCoordinates().x(),placedCardDTO.cardCoordinates().y()),
                             placedCardDTO.isFacingUp()
                     )
@@ -318,19 +314,19 @@ public class MessageParser {
      * @return a Card in CLI format
      */
     public CardCLI getCardCLI(String drawingSection, int index) {
-        CardDTO cardDTO=getCardDTO(drawingSection,index);
-        if(cardDTO!=null) {
+        CardDataDTO cardDataDTO =getCardDTO(drawingSection,index);
+        if(cardDataDTO !=null) {
             ArrayList<String> prerequisites=new ArrayList<>();
-            if (cardDTO.prerequisites()!=null) {
-                prerequisites=cardDTO.prerequisites();
+            if (cardDataDTO.prerequisites()!=null) {
+                prerequisites= cardDataDTO.prerequisites();
             }
             return new CardCLI(
-                    cardDTO.cardID(),
-                    cardDTO.frontCorners(),
-                    cardDTO.backCorners(),
-                    cardDTO.cardObjective().type(),
-                    cardDTO.cardObjective().data().symbolOfInterest(),
-                    cardDTO.cardObjective().data().points(),
+                    cardDataDTO.cardID(),
+                    cardDataDTO.frontCorners(),
+                    cardDataDTO.backCorners(),
+                    cardDataDTO.cardObjective().type(),
+                    cardDataDTO.cardObjective().data().symbolOfInterest(),
+                    cardDataDTO.cardObjective().data().points(),
                     prerequisites
             );
         }
@@ -342,12 +338,12 @@ public class MessageParser {
      * @return a starting card in CLI format
      */
     public CardCLI getStartingCardCLI() {
-        CardDTO cardDTO=getCardDTO();
+        CardDataDTO cardDataDTO =getCardDTO();
         return new CardCLI(
-                cardDTO.cardID(),
-                cardDTO.frontCorners(),
-                cardDTO.backCorners(),
-                cardDTO.frontCenterSymbols()
+                cardDataDTO.cardID(),
+                cardDataDTO.frontCorners(),
+                cardDataDTO.backCorners(),
+                cardDataDTO.frontCenterSymbols()
         );
     }
     public CardCLI[] getHandCLI() {
@@ -356,17 +352,17 @@ public class MessageParser {
         for(int i=0;i<3;i++) {
             if(handDTO[i]!=null) {
                 ArrayList<String> prerequisites=new ArrayList<>();
-                if(handDTO[i].prerequisites()!=null) {
-                    prerequisites=handDTO[i].prerequisites();
+                if(handDTO[i].data().prerequisites()!=null) {
+                    prerequisites=handDTO[i].data().prerequisites();
                 }
                 handCLI[i]=
                         new CardCLI(
-                                handDTO[i].cardID(),
-                                handDTO[i].frontCorners(),
-                                handDTO[i].backCorners(),
-                                handDTO[i].cardObjective().type(),
-                                handDTO[i].cardObjective().data().symbolOfInterest(),
-                                handDTO[i].cardObjective().data().points(),
+                                handDTO[i].data().cardID(),
+                                handDTO[i].data().frontCorners(),
+                                handDTO[i].data().backCorners(),
+                                handDTO[i].data().cardObjective().type(),
+                                handDTO[i].data().cardObjective().data().symbolOfInterest(),
+                                handDTO[i].data().cardObjective().data().points(),
                                 prerequisites
                         );
             } else {
@@ -381,7 +377,7 @@ public class MessageParser {
         for(int i=0;i<3;i++) {
             if(handDTO[i]!=null) {
                 handIDs[i]=
-                        handDTO[i].cardID();
+                        handDTO[i].data().cardID();
             } else {
                 handIDs[i]=null;
             }
@@ -393,7 +389,7 @@ public class MessageParser {
      * @return
      */
     public String getCardID() {
-        return inParamsDTO.card().cardID();
+        return inParamsDTO.card().data().cardID();
     }
 
     /**
@@ -403,9 +399,9 @@ public class MessageParser {
      * @return
      */
     public String getCardID(String drawableArea, int index) {
-        CardDTO cardDTO=getCardDTO(drawableArea,index);
-        if(cardDTO!=null) {
-            return cardDTO.cardID();
+        CardDataDTO cardDataDTO =getCardDTO(drawableArea,index);
+        if(cardDataDTO !=null) {
+            return cardDataDTO.cardID();
         } else {
             return null;
         }

@@ -33,12 +33,13 @@ public class PersistencyHandler {
         fileWriter.close();
     }
     public static GameInstance fetchState() throws IOException {
+        bufferedReader=new BufferedReader(new FileReader(file));
         StringBuilder state=new StringBuilder();
         String line;
         while ((line = bufferedReader.readLine()) != null) {
             state.append(line);
         }
-        bufferedReader.reset();
+        bufferedReader.close();
         return messageParser.parseGameInstance(String.valueOf(state));
     }
     public static boolean gameAlreadyExists() {
@@ -51,14 +52,18 @@ public class PersistencyHandler {
         PersistencyHandler.playersTemp=playersTemp;
     }
     public static boolean checkPlayerTemp(String player) {
-        boolean flag=false;
+        boolean flag=true;
         if(playersTemp.contains(player)){
-            flag=true;
+            flag=false;
             playersTemp.remove(player);
         }
         return flag;
     }
     public static boolean playersTempIsEmpty() {
-        return playersTemp.isEmpty();
+        if(playersTemp!=null) {
+            return playersTemp.isEmpty();
+        } else {
+            return false;
+        }
     }
 }

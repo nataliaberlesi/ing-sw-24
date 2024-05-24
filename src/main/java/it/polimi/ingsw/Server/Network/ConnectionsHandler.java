@@ -145,6 +145,7 @@ public class ConnectionsHandler implements Runnable{
                 String outMessageString=messageParser.toJson(outMessage);
                 pc.setOutMessage(outMessageString);
             }
+            gameController.turnOffPersistency();
         }
     }
     /**
