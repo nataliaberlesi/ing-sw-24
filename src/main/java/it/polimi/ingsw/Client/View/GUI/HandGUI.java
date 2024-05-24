@@ -63,11 +63,10 @@ public class HandGUI extends HBox {
         return chosenHandCardIndex;
     }
 
-    public boolean setChosenHandCard(CardGUI handCard) {
-        if (handCard.isSelected){
+    public void setChosenHandCard(CardGUI handCard) {
+        if (handCard.isSelected) {
             chosenHandCard = handCard;
-            return true;
-        } else return false;
+        }
     }
 
     public void setChosenHandCardIndex(int finalI) {

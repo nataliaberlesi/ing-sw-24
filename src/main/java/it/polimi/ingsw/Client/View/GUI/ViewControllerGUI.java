@@ -252,8 +252,6 @@ public class ViewControllerGUI extends ViewController implements Initializable{
         mainScene.setSeeOtherPlayersGameButtons(playersInGame.getPlayers());
         mainScene.setScoreBoard(playerUsernames);
         mainScene.setHelloPlayerLabel(myPlayer.getUsername());
-
-        playersInGame.getPlayer(playerUsernames.getFirst()).getBoard().setFirstPlayerToken();
     }
 
     @Override
@@ -261,6 +259,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
         try {
             PlayerGUI player = playersInGame.getPlayer(username);
             player.getBoard().setInitialCard(messageParser.getCardID());
+            playersInGame.getPlayers().getFirst().getBoard().setFirstPlayerToken();
             CardGUI initialCard = player.getBoard().getInitialCard();
             if (player.equals(myPlayer))
                 initialCard.setOnMouseClicked(event -> initialCard.flipAndShow());
@@ -337,6 +336,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     @Override
     protected void updatePlayerBoard(String affectedPlayer) {
         playersInGame.getPlayer(affectedPlayer).getBoard().updateBoard(messageParser.getPlacedCardsGUI());
+        mainScene.setEventHandlerToBoardCards();
     }
 
     @Override
@@ -379,7 +379,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
 
     @Override
     protected void enablePlaceCard() {
-        mainScene.setActionLabel("Choose a card from your hand");
+        mainScene.setActionLabel("Choose a card from your hand\nand a corner to place it on the board");
         mainScene.addEventHandlerToHandCards();
         mainScene.getConfirmActionButton().setOnMouseClicked(event -> sendPlaceCardMessageAndUpdateScene());
     }
@@ -390,7 +390,6 @@ public class ViewControllerGUI extends ViewController implements Initializable{
         messageDispatcher.placeCard(myPlayer.getUsername(), myPlayer.getHand().getChosenHandCard().isFaceUp(), myPlayer.getHand().getChosenHandCardIndex(), myPlayer.getBoard().getChosenCard().getChosenCornerCoordinates());
         myPlayer.getHand().deactivateEventHandlerOnHandCards();
         myPlayer.getBoard().deactivateEventHandlerOnCorners();
-        CornerGUI.isEventHandlerSet = false;
 
     }
 

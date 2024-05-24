@@ -1,13 +1,10 @@
 package it.polimi.ingsw.Client.View.GUI;
 import it.polimi.ingsw.Server.Model.Coordinates;
 import it.polimi.ingsw.Server.Model.CornerCoordinatesCalculator;
-import javafx.geometry.Insets;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
-
-import java.util.ArrayList;
 import java.util.Objects;
 
 public class CardGUI extends AnchorPane {
@@ -64,7 +61,7 @@ public class CardGUI extends AnchorPane {
         this.getChildren().add(imageView);
         this.isFaceUp = isFacingUp;
         this.setCardIDAndImage(cardID);
-        this.convertCoordinatesFromModelToGUIAndSetImageViewLayout(modelCoordinates.getX(), modelCoordinates.getY());
+        this.convertCoordinatesFromModelToGUIAndSetLayout(modelCoordinates.getX(), modelCoordinates.getY());
         initializeCorners();
     }
 
@@ -175,15 +172,15 @@ public class CardGUI extends AnchorPane {
 
 
     /**
-     * Sets the guiCoordinates to the layouts associated with its ImageView
+     * Converts the model coordinates to gui coordinates and places the card on the board
      * */
-    public void convertCoordinatesFromModelToGUIAndSetImageViewLayout(int x, int y){
+    public void convertCoordinatesFromModelToGUIAndSetLayout(int x, int y){
         modelCoordinates.setX(x);
         modelCoordinates.setY(y);
         guiCoordinates.setX(63*x + 1260);
         guiCoordinates.setY(640 - 32*y);
-        this.imageView.setLayoutX(63*x + 1260);
-        this.imageView.setLayoutY(640 - 32*y);
+        this.setLayoutX(63*x + 1260);
+        this.setLayoutY(640 - 32*y);
     }
 
 

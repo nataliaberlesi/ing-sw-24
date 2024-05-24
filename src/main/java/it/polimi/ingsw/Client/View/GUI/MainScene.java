@@ -28,7 +28,7 @@ public class MainScene extends Scene {
     private ViewControllerGUI viewControllerGUI;
     private PlayerGUI playerInScene;
     protected static boolean enableActions = false;
-    private boolean atLeastOneCornerSelected = false;
+    protected static boolean atLeastOneCornerSelected = false;
 
     public MainScene(ViewControllerGUI viewControllerGUI, PlayerGUI playerInScene) {
         super(new AnchorPane(), 1060, 595);
@@ -227,8 +227,8 @@ public class MainScene extends Scene {
             if (card.isSelected) {
                 card.setBorder(null);
                 card.isSelected = false;
+                confirmActionButton.setDisable(true);
                 enableActions = false;
-                enableConfirmButtonClick();
             }
         }
     }
@@ -247,32 +247,24 @@ public class MainScene extends Scene {
             CardGUI handCard = handCards[i];
             handCard.setOnMouseClicked(event -> {
                 handCard.toggleSelection(handCard, hand);
-                boolean isHandCardChosen = hand.setChosenHandCard(handCard);
+                hand.setChosenHandCard(handCard);
                 hand.setChosenHandCardIndex(finalI);
-                enableCornerChoice();
-                if (!CornerGUI.isEventHandlerSet){
-                    setEventHandlerToBoardCards();
-                    CornerGUI.isEventHandlerSet = true;
-                }
-                if (isHandCardChosen && atLeastOneCornerSelected){
+                if (atLeastOneCornerSelected && viewControllerGUI.getMyPlayer().getHand().getChosenHandCard().isSelected){
                     enableActions = true;
-                    enableConfirmButtonClick();
+                    confirmActionButton.setDisable(false);
                 }else{
                     enableActions = false;
-                    enableConfirmButtonClick();
+                    confirmActionButton.setDisable(true);
                 }
             });
         }
-    }
-
-    private void enableCornerChoice() {
-        setActionLabel("Click on the corner where\nyou'd like to place your card");
     }
     public void setEventHandlerToBoardCards() {
         for (CardGUI card : viewControllerGUI.getMyPlayer().getBoard().getCardsOnBoard()){
             addEventHandlerToCorners(card);
         }
     }
+
     public void addEventHandlerToCorners(CardGUI card){
         CornerGUI[] corners = card.getCorners();
         for (int i = 0; i < corners.length; i++) {
@@ -283,18 +275,19 @@ public class MainScene extends Scene {
         }
     }
 
-    private void handleCornerClick(CornerGUI corner, CardGUI card) {
-        atLeastOneCornerSelected = corner.toggleSelection(corner, viewControllerGUI.getMyPlayer().getBoard());
+    public void handleCornerClick(CornerGUI corner, CardGUI card) {
+        MainScene.atLeastOneCornerSelected = corner.toggleSelection(corner, viewControllerGUI.getMyPlayer().getBoard());
         viewControllerGUI.getMyPlayer().getBoard().setChosenCard(card);
         card.setChosenCornerCoordinates(corner.cornerCoordinates);
-        if (atLeastOneCornerSelected && viewControllerGUI.getMyPlayer().getHand().getChosenHandCard().isSelected){
-            enableActions = true;
-            enableConfirmButtonClick();
-        } else{
-            enableActions = false;
-            enableConfirmButtonClick();
+        if (MainScene.atLeastOneCornerSelected && viewControllerGUI.getMyPlayer().getHand().getChosenHandCard().isSelected){
+            MainScene.enableActions = true;
+            confirmActionButton.setDisable(false);
+        }else{
+            MainScene.enableActions = false;
+            confirmActionButton.setDisable(true);
         }
     }
+
 
     public void addEventHandlerToDrawableAreaCards() {
         AtomicBoolean isResourceCardChosen = new AtomicBoolean(false);
