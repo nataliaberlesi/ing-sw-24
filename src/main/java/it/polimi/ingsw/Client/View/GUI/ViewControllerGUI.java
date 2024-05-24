@@ -259,11 +259,11 @@ public class ViewControllerGUI extends ViewController implements Initializable{
         try {
             PlayerGUI player = playersInGame.getPlayer(username);
             player.getBoard().setInitialCard(messageParser.getCardID());
-            playersInGame.getPlayers().getFirst().getBoard().setFirstPlayerToken();
             CardGUI initialCard = player.getBoard().getInitialCard();
             if (player.equals(myPlayer))
                 initialCard.setOnMouseClicked(event -> initialCard.flipAndShow());
             myPlayer.getBoard().setChosenCard(initialCard);
+            playersInGame.getPlayers().getFirst().getBoard().setFirstPlayerToken();
         } catch (RuntimeException e){
             //this happens at end of first round, when server doesn't give a new startingCard and a new currentPlayer
         }
@@ -328,15 +328,13 @@ public class ViewControllerGUI extends ViewController implements Initializable{
         MainScene.enableActions = false;
         for (Button button : mainScene.getSeeOtherPlayersSceneButtons())
             button.setDisable(false);
-        for (PlayerGUI player : playersInGame.getPlayers())
-            player.getBoard().getInitialCard().setOnMouseClicked(null);
+        myPlayer.getBoard().getInitialCard().setOnMouseClicked(null);
         mainScene.setActionLabel("");
     }
 
     @Override
     protected void updatePlayerBoard(String affectedPlayer) {
         playersInGame.getPlayer(affectedPlayer).getBoard().updateBoard(messageParser.getPlacedCardsGUI());
-        mainScene.setEventHandlerToBoardCards();
     }
 
     @Override
@@ -381,6 +379,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     protected void enablePlaceCard() {
         mainScene.setActionLabel("Choose a card from your hand\nand a corner to place it on the board");
         mainScene.addEventHandlerToHandCards();
+        mainScene.setEventHandlerToBoardCards();
         mainScene.getConfirmActionButton().setOnMouseClicked(event -> sendPlaceCardMessageAndUpdateScene());
     }
 
