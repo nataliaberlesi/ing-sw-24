@@ -3,6 +3,7 @@ import it.polimi.ingsw.Client.Network.MessageDispatcher;
 import it.polimi.ingsw.Client.Network.MessageParser;
 import it.polimi.ingsw.Client.View.ViewController;
 import javafx.application.Platform;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -77,6 +78,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
 
     protected void setStage(Stage stage){
         this.stage = stage;
+        this.stage.setOnCloseRequest(event -> exit());
         this.numberOfPlayersChoiceBox = new ChoiceBox<>();
         this.errorAlert = new Alert(Alert.AlertType.ERROR);
     }
@@ -86,6 +88,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
         popUpStage.setFullScreen(false);
         popUpStage.setTitle("Codex Naturalis");
         popUpStage.getIcons().add(new Image(String.valueOf(GUIApplication.class.getResource("Images/cranioLogo.png"))));
+        popUpStage.setOnCloseRequest(Event::consume);
     }
 
     public Stage getStage(){
@@ -110,13 +113,16 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     }
 
     @Override
-    protected void terminate() {
-
+    protected void exit() {
+        if (myPlayer != null)
+            messageDispatcher.abortGame(myPlayer.getUsername(), myPlayer.getUsername() + " doesn't want to play anymore :(");
+        else messageDispatcher.abortGame(null, "A player has disconnect");
+        terminate();
     }
 
     @Override
-    protected void exit() {
-
+    protected void terminate() {
+        this.stage.close();
     }
 
 

@@ -205,7 +205,7 @@ public abstract class ViewController {
                 disableAllActions(); //finisce il gioco
             }
             case ABORT -> {
-                showErrorAlert(messageParser.getCause(), "game has terminated");
+                showErrorAlert(messageParser.getCause(), "Game has terminated");
                 terminate();
             }
         }
