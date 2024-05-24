@@ -72,6 +72,7 @@ public class GameController {
         if(persistency) {
             try {
                 gameInstance=PersistencyHandler.fetchState();
+                PersistencyHandler.setPlayersTemp((ArrayList<String>) gameInstance.getPlayerTurnOrder().clone());
                 server.openLobby(gameInstance.getNumberOfPlayers());
             } catch (IOException e) {
                 throw new RuntimeException(e);
@@ -333,5 +334,9 @@ public class GameController {
 
     public Message continueGame() {
         return MessageCrafter.craftContinueGameMessage(gameInstance);
+    }
+
+    public void turnOffPersistency() {
+        this.persistency=false;
     }
 }
