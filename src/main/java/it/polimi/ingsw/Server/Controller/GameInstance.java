@@ -317,4 +317,8 @@ public class GameInstance {
         }
         return objectives;
     }
+
+    public void unpauseGame() {
+        this.gameIsStarted=false;
+    }
 }

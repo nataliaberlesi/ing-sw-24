@@ -339,4 +339,8 @@ public class GameController {
     public void turnOffPersistency() {
         this.persistency=false;
     }
+
+    public void unpauseGame() {
+        this.gameInstance.unpauseGame();
+    }
 }

@@ -142,11 +142,7 @@ public class ConnectionsHandler implements Runnable{
                     }
                 }
             }
-            for(PlayerConnection pc: server.getConnections()) {
-                outMessage=gameController.startGame();
-                String outMessageString=messageParser.toJson(outMessage);
-                pc.setOutMessage(outMessageString);
-            }
+            gameController.unpauseGame();
             gameController.turnOffPersistency();
         }
     }
