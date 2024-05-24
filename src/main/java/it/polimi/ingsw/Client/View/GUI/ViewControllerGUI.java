@@ -116,13 +116,16 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     protected void exit() {
         if (myPlayer != null)
             messageDispatcher.abortGame(myPlayer.getUsername(), myPlayer.getUsername() + " doesn't want to play anymore :(");
-        else messageDispatcher.abortGame(null, "A player has disconnect");
+        else messageDispatcher.abortGame(null, "A player has disconnected");
         terminate();
     }
 
     @Override
     protected void terminate() {
-        this.stage.close();
+        this.popUpStage.close();
+        this.stage.hide();
+        Platform.exit();
+        System.exit(0);
     }
 
 
@@ -450,6 +453,11 @@ public class ViewControllerGUI extends ViewController implements Initializable{
 
     @Override
     protected void setFinalScoreBoard() {
+        EndGameScene endGameScene = new EndGameScene();
+        endGameScene.setScoreBoard(messageParser.getFinalScoreBoardGUI(), myPlayer.getUsername());
+        stage.setScene(endGameScene);
+        stage.hide();
+        stage.show();
 
     }
     protected PlayerGUI getMyPlayer(){

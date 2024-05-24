@@ -2,10 +2,8 @@ package it.polimi.ingsw.Client.View.GUI;
 import javafx.scene.control.Label;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
 import javafx.scene.text.Font;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class ScoreBoardGUI extends GridPane {
     private final int numberOfPlayersInGame;
@@ -18,7 +16,7 @@ public class ScoreBoardGUI extends GridPane {
         this.setPrefSize(166.0, 154.0);
         this.numberOfPlayersInGame = playerUsernames.size();
         setUpLabels();
-        setUsernamesAndScore(playerUsernames);
+        setUsernamesAndInitialScore(playerUsernames);
         columnsConstraintsSetUp();
     }
 
@@ -80,7 +78,7 @@ public class ScoreBoardGUI extends GridPane {
     /**
      * Sets usernames and initial score on the scoreBoard
      */
-    public void setUsernamesAndScore(ArrayList<String> playerUsernames){
+    public void setUsernamesAndInitialScore(ArrayList<String> playerUsernames){
         for (int i = 0; i < numberOfPlayersInGame; i++) {
             playerLabels.get(i).setText(playerUsernames.get(i));
             scoreLabels.get(i).setText("0");

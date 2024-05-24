@@ -21,5 +21,6 @@ module it.polimi.ingsw {
     opens it.polimi.ingsw.Client.View to javafx.fxml;
     exports it.polimi.ingsw.Client.Network;
     exports it.polimi.ingsw.Server.Model;
+    exports it.polimi.ingsw.Client.Network.DTO.ModelDTO;
     opens it.polimi.ingsw.Client.Network.DTO.ModelDTO to com.google.gson;
 }

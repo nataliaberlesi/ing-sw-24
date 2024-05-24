@@ -49,4 +49,9 @@ public class GUIApplication extends Application {
         primaryStage.setResizable(false);
         primaryStage.setTitle("Codex Naturalis");
     }
+
+    @Override
+    public void stop() throws Exception {
+        super.stop();
+    }
 }
