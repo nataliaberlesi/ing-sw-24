@@ -3,6 +3,7 @@ import it.polimi.ingsw.Client.Network.MessageDispatcher;
 import it.polimi.ingsw.Client.Network.MessageParser;
 import it.polimi.ingsw.Client.View.ViewController;
 import javafx.application.Platform;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -77,6 +78,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
 
     protected void setStage(Stage stage){
         this.stage = stage;
+        this.stage.setOnCloseRequest(event -> exit());
         this.numberOfPlayersChoiceBox = new ChoiceBox<>();
         this.errorAlert = new Alert(Alert.AlertType.ERROR);
     }
@@ -86,6 +88,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
         popUpStage.setFullScreen(false);
         popUpStage.setTitle("Codex Naturalis");
         popUpStage.getIcons().add(new Image(String.valueOf(GUIApplication.class.getResource("Images/cranioLogo.png"))));
+        popUpStage.setOnCloseRequest(Event::consume);
     }
 
     public Stage getStage(){
@@ -110,13 +113,16 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     }
 
     @Override
-    protected void terminate() {
-
+    protected void exit() {
+        if (myPlayer != null)
+            messageDispatcher.abortGame(myPlayer.getUsername(), myPlayer.getUsername() + " doesn't want to play anymore :(");
+        else messageDispatcher.abortGame(null, "A player has disconnect");
+        terminate();
     }
 
     @Override
-    protected void exit() {
-
+    protected void terminate() {
+        this.stage.close();
     }
 
 
@@ -252,8 +258,6 @@ public class ViewControllerGUI extends ViewController implements Initializable{
         mainScene.setSeeOtherPlayersGameButtons(playersInGame.getPlayers());
         mainScene.setScoreBoard(playerUsernames);
         mainScene.setHelloPlayerLabel(myPlayer.getUsername());
-
-        playersInGame.getPlayer(playerUsernames.getFirst()).getBoard().setFirstPlayerToken();
     }
 
     @Override
@@ -265,6 +269,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
             if (player.equals(myPlayer))
                 initialCard.setOnMouseClicked(event -> initialCard.flipAndShow());
             myPlayer.getBoard().setChosenCard(initialCard);
+            playersInGame.getPlayers().getFirst().getBoard().setFirstPlayerToken();
         } catch (RuntimeException e){
             //this happens at end of first round, when server doesn't give a new startingCard and a new currentPlayer
         }
@@ -329,8 +334,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
         MainScene.enableActions = false;
         for (Button button : mainScene.getSeeOtherPlayersSceneButtons())
             button.setDisable(false);
-        for (PlayerGUI player : playersInGame.getPlayers())
-            player.getBoard().getInitialCard().setOnMouseClicked(null);
+        myPlayer.getBoard().getInitialCard().setOnMouseClicked(null);
         mainScene.setActionLabel("");
     }
 
@@ -399,8 +403,9 @@ public class ViewControllerGUI extends ViewController implements Initializable{
 
     @Override
     protected void enablePlaceCard() {
-        mainScene.setActionLabel("Choose a card from your hand");
+        mainScene.setActionLabel("Choose a card from your hand\nand a corner to place it on the board");
         mainScene.addEventHandlerToHandCards();
+        mainScene.setEventHandlerToBoardCards();
         mainScene.getConfirmActionButton().setOnMouseClicked(event -> sendPlaceCardMessageAndUpdateScene());
     }
 
@@ -410,7 +415,6 @@ public class ViewControllerGUI extends ViewController implements Initializable{
         messageDispatcher.placeCard(myPlayer.getUsername(), myPlayer.getHand().getChosenHandCard().isFaceUp(), myPlayer.getHand().getChosenHandCardIndex(), myPlayer.getBoard().getChosenCard().getChosenCornerCoordinates());
         myPlayer.getHand().deactivateEventHandlerOnHandCards();
         myPlayer.getBoard().deactivateEventHandlerOnCorners();
-        CornerGUI.isEventHandlerSet = false;
 
     }
 

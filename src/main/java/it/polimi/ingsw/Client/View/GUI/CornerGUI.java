@@ -2,6 +2,7 @@ package it.polimi.ingsw.Client.View.GUI;
 
 import it.polimi.ingsw.Server.Model.Coordinates;
 import javafx.geometry.Insets;
+import javafx.scene.control.Button;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 
@@ -10,17 +11,16 @@ public class CornerGUI extends Region {
     protected static final double cornerWidth = 19.5;
     protected static final double cornerHeight = 23.0;
     protected Coordinates cornerCoordinates;
-    protected boolean atLeastOneCornerSelected;
-    protected static boolean isEventHandlerSet = false;
+
 
     public CornerGUI(){
         setPrefSize(cornerWidth, cornerHeight);
-        setBackground(new Background(new BackgroundFill(Color.LIGHTBLUE, CornerRadii.EMPTY, Insets.EMPTY)));
+        setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
     }
 
 
+
     public boolean toggleSelection(CornerGUI corner, BoardGUI board) {
-        atLeastOneCornerSelected = false;
         for (CardGUI cardInBoard : board.getCardsOnBoard()){ //deactivates selection of corner
             for (CornerGUI cornerInCard : cardInBoard.getCorners()) {
                 if (cornerInCard.isSelected && !cornerInCard.equals(corner)) {
@@ -32,15 +32,17 @@ public class CornerGUI extends Region {
 
         if ((corner.getBorder() == null || corner.getBorder().getStrokes().isEmpty()) && !corner.isSelected) {
             corner.setBorder(new Border(new BorderStroke(
-                    Color.RED, BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(5)
+                    Color.RED, BorderStrokeStyle.SOLID, new CornerRadii(3), new BorderWidths(3)
             )));
             corner.isSelected = true;
-            atLeastOneCornerSelected = true;
+            MainScene.atLeastOneCornerSelected = true;
         } else {
             corner.setBorder(null);
             corner.isSelected = false;
+            MainScene.atLeastOneCornerSelected = false;
         }
-        return atLeastOneCornerSelected;
+        return MainScene.atLeastOneCornerSelected;
     }
+
 
 }

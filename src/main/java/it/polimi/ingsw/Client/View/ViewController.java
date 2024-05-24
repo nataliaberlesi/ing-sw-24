@@ -228,7 +228,8 @@ public abstract class ViewController {
                 showFinalScoreBoard(); // mostra la classigfica
             }
             case ABORT -> {
-                showErrorAlert(messageParser.getCause(), "game has terminated");
+                showErrorAlert(messageParser.getCause(), "Game has terminated");
+                terminate();
             }
         }
     }
