@@ -89,7 +89,7 @@ public class ViewControllerCLI extends ViewController {
     }
 
     @Override
-    protected boolean playersNotAlreadyAdded() {
+    protected boolean playersInfoAlreadyAdded() {
         return playersInGame.getPlayers().isEmpty();
     }
 

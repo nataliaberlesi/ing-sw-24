@@ -129,7 +129,7 @@ public abstract class ViewController {
 
     protected abstract void askCreateOrContinue();
 
-    protected abstract boolean playersNotAlreadyAdded();
+    protected abstract boolean playersInfoAlreadyAdded();
 
     protected abstract boolean isMyPlayer(String username);
 
@@ -144,8 +144,9 @@ public abstract class ViewController {
                 askCreateOrContinue();
             }
             case CONTINUE ->{
-                if(playersNotAlreadyAdded()){
+                if(playersInfoAlreadyAdded()){
                     addPlayers(messageParser.getPlayers());
+                    setPublicObjectives();
                 }
                 setPublicObjectives();
                 updateDrawableArea();
