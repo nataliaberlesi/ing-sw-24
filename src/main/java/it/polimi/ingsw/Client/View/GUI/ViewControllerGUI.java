@@ -353,17 +353,16 @@ public class ViewControllerGUI extends ViewController implements Initializable{
 
     @Override
     protected void askCreateOrContinue() {
-
     }
 
     @Override
-    protected boolean onlyMyPlayerInGame() {
-        return false;
+    protected boolean playersInfoAlreadyAdded() {
+        return playersInGame.getPlayers().isEmpty();
     }
 
     @Override
     protected boolean isMyPlayer(String username) {
-        return false;
+        return username.equalsIgnoreCase(myPlayer.getUsername());
     }
 
     @Override
@@ -450,22 +449,6 @@ public class ViewControllerGUI extends ViewController implements Initializable{
         messageDispatcher.drawCard(myPlayer.getUsername(), mainScene.getDrawableArea().getChosenDrawableAreaCardIndex(), mainScene.getDrawableArea().getChosenDrawableArea());
     }
 
-
-    @Override
-    protected void enablePlaceStartingCard() {
-
-    }
-
-    @Override
-    protected void enableChooseColor() {
-
-    }
-
-    @Override
-    protected void disableAllActions() {
-
-    }
-
     @Override
     protected void showFinalScoreBoard() {
 
@@ -482,17 +465,6 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     }
     protected PlayerGUI getMyPlayer(){
         return this.myPlayer;
-    }
-    protected MessageDispatcher getMessageDispatcher(){
-        return this.messageDispatcher;
-    }
-
-    public PlayersInGameGUI getPlayersInGame() {
-        return playersInGame;
-    }
-
-    public TokenColorChoice getTokenChoiceScene() {
-        return tokenColorChoiceScene;
     }
 
     public MainScene getMainScene() {

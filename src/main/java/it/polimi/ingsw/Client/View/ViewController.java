@@ -140,18 +140,15 @@ public abstract class ViewController {
     public void updateView() {
         switch (this.messageParser.getMessageType()) {
 
-            case PERSISTENCE ->{
+            case PERSISTENCE ->
                 askCreateOrContinue();
-            }
             case CONTINUE ->{
                 if(playersInfoAlreadyAdded()){
                     addPlayers(messageParser.getPlayers());
                     setPublicObjectives();
+                    updateDrawableArea();
                 }
-                updateDrawableArea();
-                updatePlayerHand(messageParser.getAffectedPlayer());
-                updatePlayerScore(messageParser.getAffectedPlayer(), messageParser.getScore());
-                updatePlayerBoard(messageParser.getAffectedPlayer());
+                updatePlayerBoardHandScore(messageParser.getAffectedPlayer(), messageParser.getScore());
                 if(isMyPlayer(messageParser.getAffectedPlayer())){
                     setPrivateObjective();
                 }
