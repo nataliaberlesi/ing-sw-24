@@ -136,8 +136,10 @@ public class ConnectionsHandler implements Runnable{
             for(int i=0;i<server.getConnections().size();i++) {
                 outMessage=gameController.continueGame();
                 for(PlayerConnection pc: server.getConnections()) {
-                    String outMessageString=messageParser.toJson(outMessage);
-                    pc.setOutMessage(outMessageString);
+                    synchronized (pc) {
+                        String outMessageString=messageParser.toJson(outMessage);
+                        pc.setOutMessage(outMessageString);
+                    }
                 }
             }
             for(PlayerConnection pc: server.getConnections()) {

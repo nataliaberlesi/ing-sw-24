@@ -192,10 +192,13 @@ public class MessageParser {
     }
     public ObjectiveCLI getChosenObjective() {
         ObjectiveDTO objectiveDTO= inParamsDTO.chosenObjective();
-        return new ObjectiveCLI(objectiveDTO.type(),
-                objectiveDTO.data().points(),
-                objectiveDTO.data().numberOfOccurrences(),
-                objectiveDTO.data().symbolOfInterest());
+        if(objectiveDTO!=null) {
+            return new ObjectiveCLI(objectiveDTO.type(),
+                    objectiveDTO.data().points(),
+                    objectiveDTO.data().numberOfOccurrences(),
+                    objectiveDTO.data().symbolOfInterest());
+        }
+        return null;
     }
     /**
      * Parses the starting card front center symbols
