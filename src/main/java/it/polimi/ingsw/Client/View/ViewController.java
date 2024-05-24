@@ -148,7 +148,6 @@ public abstract class ViewController {
                     addPlayers(messageParser.getPlayers());
                     setPublicObjectives();
                 }
-                setPublicObjectives();
                 updateDrawableArea();
                 updatePlayerHand(messageParser.getAffectedPlayer());
                 updatePlayerScore(messageParser.getAffectedPlayer(), messageParser.getScore());
@@ -169,6 +168,7 @@ public abstract class ViewController {
                     enableFirstRoundActions(); // player must place starting card and choose color for available colors
                 }
            }
+
             case FIRSTROUND -> {
                 setCurrentPlayer(messageParser.getCurrentPlayer());
                 updatePlayerBoard(messageParser.getAffectedPlayer());//update the board of the last player to act (for player in playersingame upadate player with matching username)
