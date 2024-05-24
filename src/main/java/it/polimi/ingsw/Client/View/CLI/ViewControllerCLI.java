@@ -89,8 +89,8 @@ public class ViewControllerCLI extends ViewController {
     }
 
     @Override
-    protected boolean onlyMyPlayerInGame() {
-        return playersInGame.getPlayers().size()==1;
+    protected boolean playersNotAlreadyAdded() {
+        return playersInGame.getPlayers().isEmpty();
     }
 
     @Override

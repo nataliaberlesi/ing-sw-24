@@ -129,7 +129,7 @@ public abstract class ViewController {
 
     protected abstract void askCreateOrContinue();
 
-    protected abstract boolean onlyMyPlayerInGame();
+    protected abstract boolean playersNotAlreadyAdded();
 
     protected abstract boolean isMyPlayer(String username);
 
@@ -144,7 +144,7 @@ public abstract class ViewController {
                 askCreateOrContinue();
             }
             case CONTINUE ->{
-                if(onlyMyPlayerInGame()){
+                if(playersNotAlreadyAdded()){
                     addPlayers(messageParser.getPlayers());
                 }
                 setPublicObjectives();
