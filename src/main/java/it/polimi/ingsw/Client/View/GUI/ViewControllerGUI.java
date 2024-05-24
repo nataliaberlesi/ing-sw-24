@@ -352,6 +352,26 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     }
 
     @Override
+    protected void askCreateOrContinue() {
+
+    }
+
+    @Override
+    protected boolean onlyMyPlayerInGame() {
+        return false;
+    }
+
+    @Override
+    protected boolean isMyPlayer(String username) {
+        return false;
+    }
+
+    @Override
+    protected void setPrivateObjective() {
+
+    }
+
+    @Override
     protected void updatePlayerHand(String username) {
         if (playersInGame.getPlayer(username).equals(myPlayer))
             playersInGame.getPlayer(username).getHand().updateMyHand(messageParser.getHandIDs());

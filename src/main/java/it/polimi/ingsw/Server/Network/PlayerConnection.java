@@ -60,9 +60,11 @@ public class PlayerConnection implements Runnable{
     public void threadSendMethod() {
         while(!socket.isClosed()) {
             if(outMessage!=null) {
-                System.out.println("OUT | "+outMessage);
-                outSocket.println(outMessage);
-                outMessage=null;
+                synchronized (this){
+                    System.out.println("OUT | "+outMessage);
+                    outSocket.println(outMessage);
+                    outMessage=null;
+                }
             }
         }
     }

@@ -7,15 +7,15 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class ConnectionsHandler implements Runnable{
-    public GameController gameController;
-    public MessageParser messageParser;
-    public Server server;
-    public Boolean allPlayerConnected;
-    public ConnectionsHandler(Server server) {
+    private GameController gameController;
+    private MessageParser messageParser;
+    private Server server;
+    public ConnectionsHandler(Server server) throws IOException {
         this.server=server;
         messageParser=MessageParser.getINSTANCE();
         this.gameController=new GameController(server);
-        allPlayerConnected=true;
+        ServerInputHandler serverInputHandler=new ServerInputHandler(server, gameController);
+        new Thread(serverInputHandler).start();
     }
 
     /**
@@ -78,13 +78,7 @@ public class ConnectionsHandler implements Runnable{
     }
     private void checkStartGame() {
         if(gameController.allObjectivesHaveBeenChosen() && !gameController.gameIsStarted()) {
-            Message outMessage=MessageCrafter.craftDrawCardMessage(
-                    gameController.getGameInstance().getTurn(),
-                    gameController.getGameInstance().getTurn(),
-                    gameController.getGameInstance().getHand(gameController.getGameInstance().getTurn()),
-                    gameController.getGameInstance().getResourceDrawableArea(),
-                    gameController.getGameInstance().getGoldDrawableArea());
-            gameController.startGame();
+            Message outMessage=gameController.startGame();
             for(PlayerConnection pc: server.getConnections()) {
                 String outMessageString=messageParser.toJson(outMessage);
                 pc.setOutMessage(outMessageString);
@@ -105,7 +99,8 @@ public class ConnectionsHandler implements Runnable{
             }
         }
     }
-    private void checkAllPlayerConnected() throws IOException {
+    private void checkAllPlayerConnected(){
+        boolean allPlayerConnected=true;
         synchronized (server.getConnections()) {
             for(PlayerConnection pc: server.getConnections()) {
                 if(pc.socketIsClosed()) {
@@ -113,42 +108,58 @@ public class ConnectionsHandler implements Runnable{
                 }
             }
         }
+        if(!allPlayerConnected) {
+            safeCloseConnections("A player has left");
+        }
     }
-    private void closeConnections() {
+    private void closeConnections(String cause) {
         synchronized (server.getConnections()) {
             for(PlayerConnection pc: server.getConnections()) {
                 if(!pc.socketIsClosed()) {
-                    pc.setOutMessage(messageParser.toJson(MessageCrafter.craftAbortMessage("A player has exit")));
+                    pc.setOutMessage(messageParser.toJson(MessageCrafter.craftAbortMessage(cause)));
                 }
             }
-            /*for(PlayerConnection pc:server.getConnections()) {
-                try {
-                    pc.close();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
+        }
+    }
+    private void safeCloseConnections(String cause) {
+        closeConnections(cause);
+        try {
+            gameController=new GameController(server);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        server.restart();
+    }
+    private void checkContinueGame() {
+        if(gameController.persistency() && gameController.persistencyGameIsFull()) {
+            Message outMessage;
+            for(int i=0;i<server.getConnections().size();i++) {
+                outMessage=gameController.continueGame();
+                for(PlayerConnection pc: server.getConnections()) {
+                    synchronized (pc) {
+                        String outMessageString=messageParser.toJson(outMessage);
+                        pc.setOutMessage(outMessageString);
+                    }
                 }
-            }*/
-            server.restart();
+            }
+            gameController.unpauseGame();
+            gameController.turnOffPersistency();
         }
     }
     /**
      * Handles some network game logic operations, then handles incoming messages from each connection
      */
     public void run() {
-        while(allPlayerConnected) {
+        while(!server.isClosed()) {
             if (gameController.getGameInstance()!=null) {
+                checkContinueGame();
                 checkStartFirstRound();
                 checkStartSecondRound();
                 checkStartGame();
                 checkEndgame();
             }
             handleConnections(server.getConnections());
-            try {
-                checkAllPlayerConnected();
-            } catch(IOException ioe) {
-            }
+            checkAllPlayerConnected();
         }
-        closeConnections();
     }
-
 }

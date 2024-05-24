@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Server.Network;
 
-import com.google.gson.Gson;
+import it.polimi.ingsw.Server.Controller.PersistencyHandler;
+import it.polimi.ingsw.Server.Controller.SetUpGame;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -8,7 +9,6 @@ import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class Server implements Runnable{
     /**
@@ -27,7 +27,8 @@ public class Server implements Runnable{
     private ArrayList<PlayerConnection> connections= new ArrayList<>();
     private boolean masterIsConnected;
     private boolean lobbyIsOpen;
-    private boolean serverIsOpen;
+    private boolean aGameAlreadyExist;
+    private boolean chooseContinueGame;
     /**
      * Creates a server using a custom port, then waits for a master player to connect
      * @param port
@@ -38,7 +39,8 @@ public class Server implements Runnable{
         maxAllowablePlayers=0;
         masterIsConnected=false;
         lobbyIsOpen=false;
-        serverIsOpen=true;
+        chooseContinueGame=false;
+        aGameAlreadyExist= PersistencyHandler.gameAlreadyExists();
         this.serverSocket=new ServerSocket(port);
         serverSocket.setSoTimeout(1000);
     }
@@ -47,6 +49,10 @@ public class Server implements Runnable{
     }
 
     public void closeLobby() {lobbyIsOpen=false;}
+    public void openLobby(Integer maxAllowablePlayers) {
+        this.maxAllowablePlayers=maxAllowablePlayers;
+        lobbyIsOpen=true;
+    }
     public void restart() {
         masterIsConnected=false;
         maxAllowablePlayers=0;
@@ -99,43 +105,55 @@ public class Server implements Runnable{
         String outMessage=MessageParser.getINSTANCE().toJson(message);
         connections.getLast().setOutMessage(outMessage);
     }
-    private void readServerInput() {
-        BufferedReader inKeyboard=new BufferedReader(new InputStreamReader(System.in));
-        while(!serverSocket.isClosed()) {
-            String input= null;
+    private void sendPersistencyNotification() {
+        Message message=MessageCrafter.craftPersistencyNotification();
+        String outMessage=MessageParser.getINSTANCE().toJson(message);
+        connections.getLast().setOutMessage(outMessage);
+    }
+    public boolean isClosed() {
+        return serverSocket.isClosed();
+    }
+    public void close() throws IOException {
+        serverSocket.close();
+    }
+    private void checkMasterConnection() {
+        if(!masterIsConnected) {
             try {
-                input = inKeyboard.readLine();
+                waitMaster();
+                masterIsConnected=true;
+                chooseContinueGame=true;
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                //socket timed out
             }
-            if(input.equals("close")) {
-                serverIsOpen=false;
+        }
+    }
+    private void checkContinueGame() {
+        if(chooseContinueGame) {
+            if(!aGameAlreadyExist) {
+                sendMasterStatus(true);
+                chooseContinueGame=false;
+            }
+            if(aGameAlreadyExist) {
+                sendPersistencyNotification();
+                chooseContinueGame=false;
+            }
+        }
+    }
+    private void checkLobby() {
+        if(connections.size()<maxAllowablePlayers && lobbyIsOpen) {
+            try {
+                waitPlayer();
+                sendMasterStatus(false);
+            } catch (IOException ioe) {
+                //waiting for player
             }
         }
     }
     public void run() {
-        new Thread(this::readServerInput).start();
         while(!serverSocket.isClosed()) {
-            if(!masterIsConnected) {
-                try {
-                    waitMaster();
-                    sendMasterStatus(true);
-                    new Thread(new ConnectionsHandler(this)).start();
-                    masterIsConnected=true;
-                    lobbyIsOpen=true;
-                } catch (IOException ioe) {
-                    //waiting for master
-                }
-            }
-            if(connections.size()<maxAllowablePlayers && lobbyIsOpen) {
-                try {
-                    waitPlayer();
-                    sendMasterStatus(false);
-                } catch (IOException ioe) {
-                    //waiting for player
-                }
-            }
+            checkMasterConnection();
+            checkContinueGame();
+            checkLobby();
         }
     }
-
 }

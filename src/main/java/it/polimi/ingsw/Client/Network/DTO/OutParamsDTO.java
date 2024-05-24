@@ -9,65 +9,59 @@ public record OutParamsDTO(String username,
                           Integer index,
                           CoordinatesDTO coordinates,
                           String drawableSection,
-                          String cause) {
+                          String cause,
+                           Boolean persistence) {
     /**
      * Constructor for CREATE params
-     * @param username
-     * @param numberOfPlayers
      */
     public OutParamsDTO(String username, Integer numberOfPlayers) {
-        this(username, numberOfPlayers, null, null, null, null, null, null);
+        this(username, numberOfPlayers, null, null, null, null, null, null,null);
     }
 
     /**
      * Constructor for JOIN params
-     * @param username
      */
     public OutParamsDTO(String username) {
-        this(username, null,null,null,null,null,null,null);
+        this(username, null,null,null,null,null,null,null,null);
     }
 
     /**
      * Constructor for FIRSTROUND params
-     * @param username
-     * @param isFaceUp
-     * @param color
      */
     public OutParamsDTO(String username, Boolean isFaceUp, String color) {
-        this(username, null, isFaceUp, color, null, null, null, null);
+        this(username, null, isFaceUp, color, null, null, null, null,null);
     }
 
     /**
      * Constructor for SECONDROUND params
-     * @param username
-     * @param index
      */
     public OutParamsDTO(Integer index, String username) {
-        this(username,null,null,null,index,null,null,null);
+        this(username,null,null,null,index,null,null,null,null);
     }
 
     /**
      * Constructor for ACTION_PLACECARD params
-     * @param username
-     * @param isFaceUp
-     * @param index
-     * @param coordinatesDTO
      */
     public OutParamsDTO(String username, Boolean isFaceUp,Integer index, CoordinatesDTO coordinatesDTO) {
-        this(username,null,isFaceUp,null,index,coordinatesDTO,null,null);
+        this(username,null,isFaceUp,null,index,coordinatesDTO,null,null,null);
     }
     /**
      * Constructor for ACTION_DRAWCARD params
-     * @param username
-     * @param index
      */
     public OutParamsDTO(String username, Integer index, String drawableSection) {
-        this(username,null,null,null,index,null,drawableSection,null);
+        this(username,null,null,null,index,null,drawableSection,null,null);
     }
     /**
      * Constructor for ABORT params
      */
     public OutParamsDTO(String username, String cause) {
-        this(username,null,null,null,null,null,null,cause);
+        this(username,null,null,null,null,null,null,cause,null);
+    }
+
+    /**
+     * Constructor for PERSISTENCY params
+     */
+    public OutParamsDTO(Boolean persistence) {
+        this(null,null,null,null,null,null,null,null,persistence);
     }
 }

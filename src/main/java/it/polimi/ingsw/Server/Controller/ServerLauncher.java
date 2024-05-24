@@ -14,7 +14,11 @@ public class ServerLauncher {
 
         }
         new Thread(server).start();
-
+        try {
+            new Thread(new ConnectionsHandler(server)).start();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
