@@ -41,6 +41,8 @@ public class ClientActionsCLI {
      */
     private boolean help=false;
 
+    private boolean continueGame=false;
+
     private ObjectiveCLI[] privateObjectiveChoices =new ObjectiveCLI[2];
 
     private ArrayList<String> availableColors;
@@ -56,10 +58,22 @@ public class ClientActionsCLI {
         }
         chooseColor=true;
     }
+
     public void disableChooseColor(){
         chooseColor=false;
     }
 
+    public void enableContinueGame(){
+        continueGame=true;
+    }
+
+    public void disableContinueGame(){
+        continueGame=false;
+    }
+
+    public boolean isContinueGameEnabled(){
+        return continueGame;
+    }
     public boolean isChooseColorEnabled(){
         return chooseColor;
     }

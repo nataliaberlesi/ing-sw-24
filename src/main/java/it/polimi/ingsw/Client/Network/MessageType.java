@@ -5,6 +5,8 @@ package it.polimi.ingsw.Client.Network;
  */
 
 public enum MessageType {
+    PERSISTENCE,
+    CONTINUE,
     /**
      * Game connection.
      */

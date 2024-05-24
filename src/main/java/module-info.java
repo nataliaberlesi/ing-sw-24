@@ -14,6 +14,8 @@ module it.polimi.ingsw {
     opens it.polimi.ingsw.Server.Model.Cards.Objectives to com.google.gson;
     opens it.polimi.ingsw.Server.Model to com.google.gson;
     opens it.polimi.ingsw.Client.Network.DTO to com.google.gson;
+    opens it.polimi.ingsw.Server.Controller to com.google.gson;
+    opens it.polimi.ingsw.Client.Network.DTO.ModelDTO to com.google.gson;
     // I need to add the path of the directory containing the GUIApplication class to the module for it to work
     opens it.polimi.ingsw.Client.View.GUI to javafx.fxml;
     exports it.polimi.ingsw.Client.View.GUI;
@@ -21,5 +23,4 @@ module it.polimi.ingsw {
     opens it.polimi.ingsw.Client.View to javafx.fxml;
     exports it.polimi.ingsw.Client.Network;
     exports it.polimi.ingsw.Server.Model;
-    opens it.polimi.ingsw.Client.Network.DTO.ModelDTO to com.google.gson;
 }

@@ -18,9 +18,11 @@ public class GameController {
     private GameInstance gameInstance;
     private final Server server;
     private MessageType previousMessageType;
-    public GameController(Server server) {
+    private boolean persistency;
+    public GameController(Server server) throws IOException {
         this.server=server;
         this.messageParser=MessageParser.getINSTANCE();
+        persistency=false;
     }
 
     public Message dispatchMessage(String message) {
@@ -34,6 +36,9 @@ public class GameController {
      */
     public Message queryModel(MessageType messageType,JsonObject jsonParams) {
         switch (messageType) {
+            case PERSISTENCE -> {
+                return checkPersistency(jsonParams);
+            }
             case CREATE -> {
                 return createGame(jsonParams);
             }
@@ -61,7 +66,23 @@ public class GameController {
         }
         return null;
     }
-
+    private Message checkPersistency(JsonObject jsonParams) {
+        InParamsDTO inParamsDTO=messageParser.parseInParamsDTO(jsonParams);
+        persistency=inParamsDTO.persistence();
+        if(persistency) {
+            try {
+                gameInstance=PersistencyHandler.fetchState();
+                PersistencyHandler.setPlayersTemp((ArrayList<String>) gameInstance.getPlayerTurnOrder().clone());
+                server.openLobby(gameInstance.getNumberOfPlayers());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            return MessageCrafter.craftConnectMessage(false);
+        } else {
+            PersistencyHandler.deleteGame();
+            return MessageCrafter.craftConnectMessage(true);
+        }
+    }
     private Message closeGame(JsonObject jsonParams) {
         InParamsDTO inParamsDTO=messageParser.parseInParamsDTO(jsonParams);
         return MessageCrafter.craftAbortMessage(inParamsDTO.cause());
@@ -77,7 +98,7 @@ public class GameController {
             return new Message(type, null);
         }
         InParamsDTO inParamsDTO=messageParser.parseInParamsDTO(jsonParams);
-        this.server.setMaxAllowablePlayers(inParamsDTO.numberOfPlayers());
+        this.server.openLobby(inParamsDTO.numberOfPlayers());
         this.gameInstance=new GameInstance(inParamsDTO.username(),inParamsDTO.numberOfPlayers());
         Message message = MessageCrafter.craftCreateMessage(inParamsDTO.username());
         previousMessageType=message.type();
@@ -91,9 +112,14 @@ public class GameController {
      */
     public Message joinGame(JsonObject jsonParams) {
         InParamsDTO inParamsDTO=messageParser.parseInParamsDTO(jsonParams);
-        Boolean unavailableUsername=this.gameInstance.unavailableUsername(inParamsDTO.username());
-        if(!unavailableUsername){
-            gameInstance.joinPlayer(inParamsDTO.username());
+        Boolean unavailableUsername;
+        if(persistency) {
+            unavailableUsername=PersistencyHandler.checkPlayerTemp(inParamsDTO.username());
+        } else {
+            unavailableUsername=this.gameInstance.unavailableUsername(inParamsDTO.username());
+            if(!unavailableUsername){
+                gameInstance.joinPlayer(inParamsDTO.username());
+            }
         }
         Message message = MessageCrafter.craftJoinMessage(inParamsDTO.username(),unavailableUsername);
         previousMessageType=message.type();
@@ -219,10 +245,18 @@ public class GameController {
                 gameInstance.getGoldDrawableArea()
                 );
         this.previousMessageType=message.type();
+        try {
+            PersistencyHandler.saveState(gameInstance);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         return message;
     }
     public boolean gameIsFull() {
         return this.gameInstance.checkIfGameIsFull();
+    }
+    public boolean persistencyGameIsFull() {
+        return PersistencyHandler.playersTempIsEmpty();
     }
     public boolean firstRoundIsStarted() {
         return gameInstance.firstRoundIsStarted();
@@ -243,12 +277,21 @@ public class GameController {
     public void startSecondRound() {
         this.gameInstance.startSecondRound();
     }
-    public void startGame() {
+    public Message startGame() {
         this.gameInstance.startGame();
+        return MessageCrafter.craftDrawCardMessage(
+                gameInstance.getTurn(),
+                gameInstance.getTurn(),
+                gameInstance.getHand(gameInstance.getTurn()),
+                gameInstance.getResourceDrawableArea(),
+                gameInstance.getGoldDrawableArea());
     }
     public void startEndgame(){this.gameInstance.startEndgame();}
     public void startFinalRound(){this.gameInstance.startFinalRound();}
-    public void endGame(){this.gameInstance.endGame();}
+    public void endGame(){
+        PersistencyHandler.deleteGame();
+        this.gameInstance.endGame();
+    }
     /**
      *
      * @throws IOException
@@ -284,5 +327,20 @@ public class GameController {
     }
     public void calculateEndGamePoints(){
         gameInstance.calculateEndgamePoints();
+    }
+    public boolean persistency() {
+        return this.persistency;
+    }
+
+    public Message continueGame() {
+        return MessageCrafter.craftContinueGameMessage(gameInstance);
+    }
+
+    public void turnOffPersistency() {
+        this.persistency=false;
+    }
+
+    public void unpauseGame() {
+        this.gameInstance.unpauseGame();
     }
 }

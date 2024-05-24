@@ -5,6 +5,14 @@ package it.polimi.ingsw.Server.Network;
 
 public enum MessageType {
     /**
+     * A game already exists
+     */
+    PERSISTENCE,
+    /**
+     * Continue a previous game
+     */
+    CONTINUE,
+    /**
      * Game connection.
      */
     CONNECT,

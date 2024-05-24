@@ -56,7 +56,6 @@ public class ViewControllerCLI extends ViewController {
         return playersInGame;
     }
 
-
     /**
      * shows scene for player to create a game, where he needs to provide his username and number of players that will be playing
      */
@@ -84,27 +83,56 @@ public class ViewControllerCLI extends ViewController {
     }
 
     @Override
+    protected void askCreateOrContinue() {
+        clientActions.enableContinueGame();
+        System.out.println("There is a saved game, do you want to continue?\n(type Y to continue or N to start a new game)");
+    }
+
+    @Override
+    protected boolean playersInfoAlreadyAdded() {
+        return playersInGame.getPlayers().isEmpty();
+    }
+
+    @Override
+    protected boolean isMyPlayer(String username) {
+        return myPlayer.getUsername().equalsIgnoreCase(username);
+    }
+
+    @Override
+    protected void setPrivateObjective() {
+        setPrivateObjective(messageParser.getChosenObjective());
+    }
+
+    @Override
     protected void terminate() {
         clientInputHandler.terminate();
+        System.exit(0);
+    }
+
+    private void clearScreen(){
         System.out.print("\033[H\033[2J");
         System.out.flush();
-        System.exit(0);
     }
 
     @Override
     protected void exit() {
         messageDispatcher.abortGame(myPlayer.getUsername(),"I don't want to play anymore :(");
         terminate();
-    }
-
-
-    @Override
-    protected void disableAllActions() {
-
+        clearScreen();
     }
 
     @Override
     protected void showFinalScoreBoard() {
+        clearScreen();
+        System.out.println(
+                """
+                        _______  ___   __    _  _______  ___        _______  _______  _______  ______    _______  _______  _______  _______  ______    ______ \s
+                        |       ||   | |  |  | ||   _   ||   |      |       ||       ||       ||    _ |  |       ||  _    ||       ||   _   ||    _ |  |      |\s
+                        |    ___||   | |   |_| ||  |_|  ||   |      |  _____||       ||   _   ||   | ||  |    ___|| |_|   ||   _   ||  |_|  ||   | ||  |  _    |
+                        |   |___ |   | |       ||       ||   |      | |_____ |       ||  | |  ||   |_||_ |   |___ |       ||  | |  ||       ||   |_||_ | | |   |
+                        |    ___||   | |  _    ||       ||   |___   |_____  ||      _||  |_|  ||    __  ||    ___||  _   | |  |_|  ||       ||    __  || |_|   |
+                        |   |    |   | | | |   ||   _   ||       |   _____| ||     |_ |       ||   |  | ||   |___ | |_|   ||       ||   _   ||   |  | ||       |
+                        |___|    |___| |_|  |__||__| |__||_______|  |_______||_______||_______||___|  |_||_______||_______||_______||__| |__||___|  |_||______|\s""");
         finalScoreBoard.printFinalScoreBoard();
     }
 
@@ -159,21 +187,23 @@ public class ViewControllerCLI extends ViewController {
         clientActions.enableChoosePrivateObjective();
     }
 
-    @Override
-    protected void enablePlaceStartingCard() {
 
-    }
-
-    @Override
-    protected void enableChooseColor() {
-
-    }
 
     /**
      * shows screen for player just connecting
      */
     @Override
     protected void connectScene() {
+        clearScreen();
+        System.out.println(
+                """
+                         _____  _____ ______  _____ __   __
+                        /  __ \\|  _  ||  _  \\|  ___|\\ \\ / /
+                        | /  \\/| | | || | | || |__   \\ V /\s
+                        | |    | | | || | | ||  __|  /   \\\s
+                        | \\__/\\\\ \\_/ /| |/ / | |___ / /^\\ \\
+                         \\____/ \\___/ |___/  \\____/ \\/   \\/
+                                                          \s""");
         connectPlayer();
     }
 

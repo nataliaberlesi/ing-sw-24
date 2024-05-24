@@ -18,7 +18,7 @@ public record OutParamsDTO(String currentPlayer,
                            Card[] hand,
                            Objective[] privateObjectives,
                            Objective[] publicObjectives,
-                           Objective chosenPrivateObjective,
+                           Objective chosenObjective,
                            ArrayList<String> players,
                            Card[] resourceDrawableArea,
                            Card[] goldDrawableArea,
@@ -36,15 +36,6 @@ public record OutParamsDTO(String currentPlayer,
                         Boolean unavailableUsername) {
         this(currentPlayer, unavailableUsername, null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null);
     }
-
-    /**
-     * Constructor used for CREATE params
-     * @param currentPlayer the player who created the game
-     */
-    public OutParamsDTO(String currentPlayer){
-        this(currentPlayer, null, null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null);
-    }
-
     /**
      * Constructor used for START_FIRSTROUND params
      * @param currentPlayer the player who has his turn
@@ -121,8 +112,14 @@ public record OutParamsDTO(String currentPlayer,
     /**
      * Constructor used for ABORT message
      */
-    public OutParamsDTO(String cause, boolean isAbort){
+    public OutParamsDTO(String cause){
         this(null, null, null,null,null,null,null,null,null,null,null,null,null,null,null,null,cause,null);
+    }
+    /**
+     * Constructor used for CONTINUE message
+     */
+    public OutParamsDTO(String affectedPlayer, ArrayList<PlacedCard> placedCards, Integer score, String color, Card[] hand, Objective[] publicObjectives, Objective chosenPrivateObjective, ArrayList<String> players, Card[] resourceDrawableArea, Card[] goldDrawableArea) {
+        this(null,null,null,affectedPlayer,placedCards,score,color,hand,null,publicObjectives,chosenPrivateObjective,players,resourceDrawableArea,goldDrawableArea, null, null, null, null);
     }
 }
 
