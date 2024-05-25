@@ -35,6 +35,11 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     private Stage popUpStage;
 
     /**
+     * Chat stage
+     */
+    private Stage chatStage;
+
+    /**
      * Alert dialog for errors.
      */
     private Alert errorAlert;
@@ -47,6 +52,10 @@ public class ViewControllerGUI extends ViewController implements Initializable{
      * Instance of main scene for the game
      */
     private MainScene mainScene;
+    /**
+     * Instance of chat scene for the game
+     */
+    private ChatGUI chatScene;
     /**
      * Players in game
      */
@@ -125,12 +134,49 @@ public class ViewControllerGUI extends ViewController implements Initializable{
         setStageCharacteristics(popUpStage);
     }
 
+    protected void setChatStage(){
+        chatStage = new Stage();
+        setStageCharacteristics(chatStage);
+    }
+
     /**
      * Getter for main application stage
      * @return stage
      */
     public Stage getStage(){
         return stage;
+    }
+
+    /**
+     * Getter for popUpStage
+     * @return popUpStage
+     */
+    public Stage getPopUpStage() {
+        return popUpStage;
+    }
+
+    /**
+     * Getter for chat stage
+     * @return stage
+     */
+    public Stage getChatStage(){
+        return chatStage;
+    }
+
+    /**
+     * Getter for main scene
+     * @return main scene
+     */
+    public MainScene getMainScene() {
+        return mainScene;
+    }
+
+    /**
+     * Getter for chat scene
+     * @return chat scene
+     */
+    public ChatGUI getChatScene() {
+        return chatScene;
     }
 
     /**
@@ -150,12 +196,22 @@ public class ViewControllerGUI extends ViewController implements Initializable{
         }
     }
 
+    @Override
+    protected void showUpdatedChat() {
+
+    }
+
+    @Override
+    protected void addMessageToChat(String sender, String receiver, String bodyOfMessage, boolean isPrivate) {
+
+    }
+
     /**
      * Sets a scene on a stage
      * @param scene sce to be set
      * @param stage stage where to set the scene
      */
-    private void setSceneOnStage(Scene scene, Stage stage){
+    protected void setSceneOnStage(Scene scene, Stage stage){
         stage.setScene(scene);
         stage.hide();
         stage.show();
@@ -627,19 +683,5 @@ public class ViewControllerGUI extends ViewController implements Initializable{
         return this.myPlayer;
     }
 
-    /**
-     * Getter for main scene
-     * @return main scene
-     */
-    public MainScene getMainScene() {
-        return mainScene;
-    }
 
-    /**
-     * Getter for popUpStage
-     * @return popUpStage
-     */
-    public Stage getPopUpStage() {
-        return popUpStage;
-    }
 }

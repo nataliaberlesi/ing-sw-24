@@ -17,13 +17,13 @@ public class MainScene extends Scene {
     private final ObjectivesSectionGUI objectivesSection = new ObjectivesSectionGUI();
     private DrawableAreaGUI drawableArea = new DrawableAreaGUI();
     private ScoreBoardGUI scoreBoard;
-    private Label turnLabel = new Label();
-    private Label actionLabel = new Label();
-    private Label helloPlayerLabel;
-    private Label confirmActionLabel = new Label();
-    private Label endGameLabel = new Label("End Game!");
+    private final Label turnLabel = new Label();
+    private final Label actionLabel = new Label();
+    private final Label confirmActionLabel = new Label();
+    private final Label endGameLabel = new Label("End Game!");
     private final Button flipYourHandButton = new Button("Flip your hand");
     private final Button confirmActionButton = new Button("Confirm action");
+    private final Button chatButton = new Button("Chat");
     private final ArrayList<Button> seeOtherPlayersSceneButtons = new ArrayList<>();
     private ViewControllerGUI viewControllerGUI;
     private PlayerGUI playerInScene;
@@ -103,19 +103,18 @@ public class MainScene extends Scene {
      * Sets up all standard buttons for the scene
      */
     private void setUpButtons() {
-        flipYourHandButton.setLayoutX(350);
-        flipYourHandButton.setLayoutY(555);
-        flipYourHandButton.setMnemonicParsing(false);
-        flipYourHandButton.setDisable(true);
+        StaticsForGUI.setButtonCharacteristics(flipYourHandButton, "System", 12, 350, 555, true);
         flipYourHandButton.setOnMouseClicked(event -> flipAndShowHand());
-        this.root.getChildren().add(flipYourHandButton);
 
-        confirmActionButton.setLayoutX(38);
-        confirmActionButton.setLayoutY(230);
-        confirmActionButton.setMnemonicParsing(false);
-        confirmActionButton.setFont(new Font("System Bold", 16));
-        confirmActionButton.setDisable(true);
-        this.root.getChildren().add(confirmActionButton);
+        StaticsForGUI.setButtonCharacteristics(confirmActionButton, "System Bold", 16, 38, 230, true);
+
+        StaticsForGUI.setButtonCharacteristics(chatButton, "System Bold", 16, 38, 185, false);
+        chatButton.setOnMouseClicked(event -> {
+            viewControllerGUI.showUpdatedChat();
+            viewControllerGUI.setSceneOnStage(viewControllerGUI.getChatScene(), viewControllerGUI.getChatStage());
+        });
+
+        this.root.getChildren().addAll(flipYourHandButton, confirmActionButton);
     }
 
     /**
@@ -132,7 +131,7 @@ public class MainScene extends Scene {
      */
 
     public void setHelloPlayerLabel(String username){
-        helloPlayerLabel = new Label("Hi "+ username);
+        Label helloPlayerLabel = new Label("Hi " + username);
         helloPlayerLabel.setFont(new Font("System Bold", 18));
         helloPlayerLabel.setAlignment(Pos.CENTER);
         helloPlayerLabel.setLayoutX(38);

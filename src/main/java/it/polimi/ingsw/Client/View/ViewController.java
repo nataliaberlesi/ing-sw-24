@@ -252,18 +252,20 @@ public abstract class ViewController {
             }
             if (addMessage) {
                 addMessageToChat(sender, receiver, messageParser.getChat(), isPrivate);
-                showScene(); // non so se a te va bene questo metodo qua, fammi sapere
+                showUpdatedChat();
             }
         }
 
     }
+
+    protected abstract void showUpdatedChat();
 
 
     public void sendChatMessage(String myPlayerUsername, String receiver, String message){
         messageDispatcher.chat(myPlayerUsername, receiver, message);
     }
 
-    protected abstract void addMessageToChat(String sender, String receiver,String bodyOfMessage, boolean isPrivate);
+    protected abstract void addMessageToChat(String sender, String receiver, String bodyOfMessage, boolean isPrivate);
 
     protected abstract void terminate();
 
