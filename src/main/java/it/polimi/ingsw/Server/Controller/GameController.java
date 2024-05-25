@@ -102,8 +102,8 @@ public class GameController {
         }
         InParamsDTO inParamsDTO=messageParser.parseInParamsDTO(jsonParams);
         this.server.openLobby(inParamsDTO.numberOfPlayers());
-        this.gameInstance=new GameInstance(inParamsDTO.username(),inParamsDTO.numberOfPlayers());
-        Message message = MessageCrafter.craftCreateMessage(inParamsDTO.username());
+        this.gameInstance=new GameInstance(inParamsDTO.username().toUpperCase(),inParamsDTO.numberOfPlayers());
+        Message message = MessageCrafter.craftCreateMessage(inParamsDTO.username().toUpperCase());
         previousMessageType=message.type();
         return message;
     }
@@ -115,13 +115,14 @@ public class GameController {
      */
     public Message joinGame(JsonObject jsonParams) {
         InParamsDTO inParamsDTO=messageParser.parseInParamsDTO(jsonParams);
+        String username=inParamsDTO.username().toUpperCase();
         Boolean unavailableUsername;
         if(persistency) {
-            unavailableUsername=PersistencyHandler.checkPlayerTemp(inParamsDTO.username());
+            unavailableUsername=PersistencyHandler.checkPlayerTemp(username);
         } else {
-            unavailableUsername=this.gameInstance.unavailableUsername(inParamsDTO.username());
+            unavailableUsername=this.gameInstance.unavailableUsername(username);
             if(!unavailableUsername){
-                gameInstance.joinPlayer(inParamsDTO.username());
+                gameInstance.joinPlayer(username);
             }
         }
         Message message = MessageCrafter.craftJoinMessage(inParamsDTO.username(),unavailableUsername);
