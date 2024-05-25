@@ -438,5 +438,11 @@ public class MessageParser {
     public ArrayList<ScoreboardPositionDTO> getFinalScoreBoardGUI() {
         return inParamsDTO.scoreboard();
     }
+    public String getChosenObjectiveID() {
+        return inParamsDTO.chosenObjective().data().objectiveID();
+    }
+    public String getChat() {
+        return inParamsDTO.chat();
+    }
 }
 

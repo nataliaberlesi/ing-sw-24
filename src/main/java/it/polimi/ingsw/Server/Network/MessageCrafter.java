@@ -141,4 +141,13 @@ public class MessageCrafter {
         gameInstance.nextTurn();
         return new Message(messageType,messageParser.toJsonObject(outParamsDTO));
     }
+    public static Message craftChatMessage(String currentPlayer, String affectedPlayer, String chat) {
+        MessageType messageType=MessageType.CHAT;
+        OutParamsDTO outParamsDTO =new OutParamsDTO(
+                currentPlayer,
+                affectedPlayer,
+                chat
+        );
+        return new Message(messageType,messageParser.toJsonObject(outParamsDTO));
+    }
 }

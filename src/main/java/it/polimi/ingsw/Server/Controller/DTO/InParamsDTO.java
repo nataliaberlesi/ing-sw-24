@@ -10,5 +10,7 @@ public record InParamsDTO(String username,
                           Coordinates coordinates,
                           String drawableSection,
                           String cause,
-                          Boolean persistence) {
+                          Boolean persistence,
+                          String affectedPlayer,
+                          String chat) {
 }

@@ -52,6 +52,10 @@ public enum MessageType {
      */
     ENDGAME,
     /**
+     * Game chat
+     */
+    CHAT,
+    /**
      * Game abort.
      */
     ABORT,

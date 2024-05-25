@@ -25,7 +25,8 @@ public record OutParamsDTO(String currentPlayer,
                            ArrayList<Color> availableColors,
                            ArrayList<ScoreboardPositionDTO> scoreboard,
                            String cause,
-                           Boolean masterStatus
+                           Boolean masterStatus,
+                           String chat
                            ) {
     /**
      * Constructor used for JOIN params
@@ -34,7 +35,7 @@ public record OutParamsDTO(String currentPlayer,
      */
     public OutParamsDTO(String currentPlayer,
                         Boolean unavailableUsername) {
-        this(currentPlayer, unavailableUsername, null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null);
+        this(currentPlayer, unavailableUsername,null, null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null);
     }
     /**
      * Constructor used for START_FIRSTROUND params
@@ -51,7 +52,7 @@ public record OutParamsDTO(String currentPlayer,
                 players,
                 resourceDrawableArea,
                 goldDrawableArea,
-                availableColors,null,null,null);
+                availableColors,null,null,null,null);
     }
 
     /**
@@ -68,7 +69,7 @@ public record OutParamsDTO(String currentPlayer,
                 affectedPlayer,
                 placedCards,null,
                 color,null,null,null,null,null,null,null,
-                availableColors,null,null,null);
+                availableColors,null,null,null,null);
     }
 
     /**
@@ -79,19 +80,19 @@ public record OutParamsDTO(String currentPlayer,
     public OutParamsDTO(String currentPlayer, Card[] hand,Objective[] privateObjectives, Objective[] publicObjectives){
         this(currentPlayer, null, null,null,null,null,null,
                 hand,privateObjectives,
-                publicObjectives,null,null,null,null,null,null,null,null);
+                publicObjectives,null,null,null,null,null,null,null,null,null);
     }
     /**
      * Constructor used for SECONDROUND params
      */
     public OutParamsDTO(String currentPlayer, String affectedPlayer, Card[] hand,Objective[] privateObjectives, Objective chosenPrivateObjective){
-        this(currentPlayer, null, null,affectedPlayer,null,null,null,hand,privateObjectives,null,chosenPrivateObjective,null,null,null,null,null,null,null);
+        this(currentPlayer, null, null,affectedPlayer,null,null,null,hand,privateObjectives,null,chosenPrivateObjective,null,null,null,null,null,null,null,null);
     }
     /**
      * Constructor used for ACTION_PLACECARD params
      */
     public OutParamsDTO(String currentPlayer, String affectedPlayer, ArrayList<PlacedCard> placedCards, Integer score, Card[] hand){
-        this(currentPlayer, null, null,affectedPlayer,placedCards,score,null,hand,null,null,null,null,null,null,null,null,null,null);
+        this(currentPlayer, null, null,affectedPlayer,placedCards,score,null,hand,null,null,null,null,null,null,null,null,null,null,null);
     }
 
     /**
@@ -99,7 +100,7 @@ public record OutParamsDTO(String currentPlayer,
      * @param currentPlayer
      */
     public OutParamsDTO(String currentPlayer, String affectedPlayer, Card[] hand, Card[] resourceDrawableArea, Card[] goldDrawableArea){
-        this(currentPlayer, null, null,affectedPlayer,null,null,null,hand,null,null,null,null,resourceDrawableArea,goldDrawableArea,null,null,null,null);
+        this(currentPlayer, null, null,affectedPlayer,null,null,null,hand,null,null,null,null,resourceDrawableArea,goldDrawableArea,null,null,null,null,null);
     }
 
     /**
@@ -107,19 +108,26 @@ public record OutParamsDTO(String currentPlayer,
      * @param scoreboard
      */
     public OutParamsDTO(ArrayList<ScoreboardPositionDTO> scoreboard){
-        this(null, null, null,null,null,null,null,null,null,null,null,null,null,null,null,scoreboard,null,null);
+        this(null, null, null,null,null,null,null,null,null,null,null,null,null,null,null,scoreboard,null,null,null);
     }
     /**
      * Constructor used for ABORT message
      */
     public OutParamsDTO(String cause){
-        this(null, null, null,null,null,null,null,null,null,null,null,null,null,null,null,null,cause,null);
+        this(null, null, null,null,null,null,null,null,null,null,null,null,null,null,null,null,cause,null,null);
     }
     /**
      * Constructor used for CONTINUE message
      */
     public OutParamsDTO(String affectedPlayer, ArrayList<PlacedCard> placedCards, Integer score, String color, Card[] hand, Objective[] publicObjectives, Objective chosenPrivateObjective, ArrayList<String> players, Card[] resourceDrawableArea, Card[] goldDrawableArea) {
-        this(null,null,null,affectedPlayer,placedCards,score,color,hand,null,publicObjectives,chosenPrivateObjective,players,resourceDrawableArea,goldDrawableArea, null, null, null, null);
+        this(null,null,null,affectedPlayer,placedCards,score,color,hand,null,publicObjectives,chosenPrivateObjective,players,resourceDrawableArea,goldDrawableArea, null, null, null, null,null);
     }
+    /**
+     * Constructor used for CHAT message
+     */
+    public OutParamsDTO(String currentPlayer, String affectedPlayer, String chat) {
+        this(currentPlayer, null, null, affectedPlayer, null,null,null,null,null,null,null,null,null,null,null,null,null,null,chat);
+    }
+
 }
 

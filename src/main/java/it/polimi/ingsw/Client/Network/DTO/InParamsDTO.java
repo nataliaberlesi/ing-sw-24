@@ -22,6 +22,7 @@ public record InParamsDTO(String currentPlayer,
                           ArrayList<String> winners, //
                           String cause,
                           Boolean masterStatus, //
-                          ArrayList<ScoreboardPositionDTO> scoreboard
+                          ArrayList<ScoreboardPositionDTO> scoreboard,
+                          String chat
 ) {
 }

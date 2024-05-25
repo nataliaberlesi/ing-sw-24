@@ -10,58 +10,66 @@ public record OutParamsDTO(String username,
                           CoordinatesDTO coordinates,
                           String drawableSection,
                           String cause,
-                           Boolean persistence) {
+                           Boolean persistence,
+                           String affectedPlayer,
+                           String chat) {
     /**
      * Constructor for CREATE params
      */
     public OutParamsDTO(String username, Integer numberOfPlayers) {
-        this(username, numberOfPlayers, null, null, null, null, null, null,null);
+        this(username, numberOfPlayers, null, null, null, null, null, null,null,null,null);
     }
 
     /**
      * Constructor for JOIN params
      */
     public OutParamsDTO(String username) {
-        this(username, null,null,null,null,null,null,null,null);
+        this(username, null,null,null,null,null,null,null,null,null,null);
     }
 
     /**
      * Constructor for FIRSTROUND params
      */
     public OutParamsDTO(String username, Boolean isFaceUp, String color) {
-        this(username, null, isFaceUp, color, null, null, null, null,null);
+        this(username, null, isFaceUp, color, null, null, null, null,null,null,null);
     }
 
     /**
      * Constructor for SECONDROUND params
      */
     public OutParamsDTO(Integer index, String username) {
-        this(username,null,null,null,index,null,null,null,null);
+        this(username,null,null,null,index,null,null,null,null,null,null);
     }
 
     /**
      * Constructor for ACTION_PLACECARD params
      */
     public OutParamsDTO(String username, Boolean isFaceUp,Integer index, CoordinatesDTO coordinatesDTO) {
-        this(username,null,isFaceUp,null,index,coordinatesDTO,null,null,null);
+        this(username,null,isFaceUp,null,index,coordinatesDTO,null,null,null,null,null);
     }
     /**
      * Constructor for ACTION_DRAWCARD params
      */
     public OutParamsDTO(String username, Integer index, String drawableSection) {
-        this(username,null,null,null,index,null,drawableSection,null,null);
+        this(username,null,null,null,index,null,drawableSection,null,null,null,null);
     }
     /**
      * Constructor for ABORT params
      */
     public OutParamsDTO(String username, String cause) {
-        this(username,null,null,null,null,null,null,cause,null);
+        this(username,null,null,null,null,null,null,cause,null,null,null);
     }
 
     /**
      * Constructor for PERSISTENCY params
      */
     public OutParamsDTO(Boolean persistence) {
-        this(null,null,null,null,null,null,null,null,persistence);
+        this(null,null,null,null,null,null,null,null,persistence,null,null);
+    }
+    /**
+     * Constructor for CHAT params
+     */
+    public OutParamsDTO(String username, String affectedPlayer, String chat){
+        this(username,null,null,null,null,null,null,null,null,affectedPlayer,chat);
     }
 }

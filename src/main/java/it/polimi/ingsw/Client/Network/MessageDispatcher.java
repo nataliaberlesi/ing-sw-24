@@ -60,4 +60,8 @@ public class MessageDispatcher {
         OutParamsDTO outParamsDTO=new OutParamsDTO(persistence);
         dispatch(MessageType.PERSISTENCE,messageParser.toJsonObject(outParamsDTO));
     }
+    public void chat(String username, String affectedPlayer, String chat) {
+        OutParamsDTO outParamsDTO=new OutParamsDTO(username, affectedPlayer,chat);
+        dispatch(MessageType.CHAT,messageParser.toJsonObject(outParamsDTO));
+    }
 }

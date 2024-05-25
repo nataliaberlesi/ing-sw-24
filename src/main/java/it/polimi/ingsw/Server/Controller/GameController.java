@@ -60,6 +60,9 @@ public class GameController {
                 //TODO
                 return drawCard(jsonParams);
             }
+            case CHAT -> {
+                return chat(jsonParams);
+            }
             case ABORT -> {
                 return closeGame(jsonParams);
             }
@@ -251,6 +254,10 @@ public class GameController {
             throw new RuntimeException(e);
         }
         return message;
+    }
+    public Message chat(JsonObject jsonParams) {
+        InParamsDTO inParamsDTO=messageParser.parseInParamsDTO(jsonParams);
+        return MessageCrafter.craftChatMessage(inParamsDTO.username(), inParamsDTO.affectedPlayer(), inParamsDTO.chat());
     }
     public boolean gameIsFull() {
         return this.gameInstance.checkIfGameIsFull();
