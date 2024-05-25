@@ -42,7 +42,7 @@ public class PlayersInGameCLI {
      */
     public PlayerCLI getPlayer(String username) throws RuntimeException {
         for(PlayerCLI player : players) {
-            if(player.getUsername().equals(username)) {
+            if(player.getUsername().equalsIgnoreCase(username)) {
                 return player;
             }
         }

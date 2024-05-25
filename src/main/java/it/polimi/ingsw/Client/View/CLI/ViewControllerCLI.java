@@ -18,6 +18,7 @@ public class ViewControllerCLI extends ViewController {
     private final ClientActionsCLI clientActions=new ClientActionsCLI();
     private FinalScoreBoardCLI finalScoreBoard;
     private final HandleClientInputCLI clientInputHandler;
+    private final ChatCLI chatRoom=new ChatCLI();
 
     public ViewControllerCLI(MessageParser messageParser, MessageDispatcher messageDispatcher) {
         super(messageParser, messageDispatcher);
@@ -104,6 +105,11 @@ public class ViewControllerCLI extends ViewController {
     }
 
     @Override
+    protected void addMessageToChat(String sender, String receiver, String bodyOfMessage, boolean isPrivate) {
+        chatRoom.addMessage(sender, receiver, bodyOfMessage, isPrivate);
+    }
+
+    @Override
     protected void terminate() {
         clientInputHandler.terminate();
         System.exit(0);
@@ -117,22 +123,13 @@ public class ViewControllerCLI extends ViewController {
     @Override
     protected void exit() {
         messageDispatcher.abortGame(myPlayer.getUsername(),"I don't want to play anymore :(");
-        terminate();
         clearScreen();
+        terminate();
     }
 
     @Override
     protected void showFinalScoreBoard() {
         clearScreen();
-        System.out.println(
-                """
-                        _______  ___   __    _  _______  ___        _______  _______  _______  ______    _______  _______  _______  _______  ______    ______ \s
-                        |       ||   | |  |  | ||   _   ||   |      |       ||       ||       ||    _ |  |       ||  _    ||       ||   _   ||    _ |  |      |\s
-                        |    ___||   | |   |_| ||  |_|  ||   |      |  _____||       ||   _   ||   | ||  |    ___|| |_|   ||   _   ||  |_|  ||   | ||  |  _    |
-                        |   |___ |   | |       ||       ||   |      | |_____ |       ||  | |  ||   |_||_ |   |___ |       ||  | |  ||       ||   |_||_ | | |   |
-                        |    ___||   | |  _    ||       ||   |___   |_____  ||      _||  |_|  ||    __  ||    ___||  _   | |  |_|  ||       ||    __  || |_|   |
-                        |   |    |   | | | |   ||   _   ||       |   _____| ||     |_ |       ||   |  | ||   |___ | |_|   ||       ||   _   ||   |  | ||       |
-                        |___|    |___| |_|  |__||__| |__||_______|  |_______||_______||_______||___|  |_||_______||_______||_______||__| |__||___|  |_||______|\s""");
         finalScoreBoard.printFinalScoreBoard();
     }
 
@@ -144,6 +141,7 @@ public class ViewControllerCLI extends ViewController {
     @Override
     protected void setPrivateObjectiveChoice() {
         clientActions.setPrivateObjectiveChoices(messageParser.getPrivateObjectivesCLI());
+        clientActions.enableShowOtherPlayerBoardAndBackOFHand();
     }
 
     @Override
@@ -272,6 +270,7 @@ public class ViewControllerCLI extends ViewController {
         }
         System.out.println("hand facing down:");
         currentPlayerInScene.printBackOfHand();
+        chatRoom.printRecentMessages();
     }
 
     @Override
@@ -329,6 +328,9 @@ public class ViewControllerCLI extends ViewController {
         setCurrentPlayer(messageParser.getPlayers().getFirst());
     }
 
+    public void printCompleteChat(){
+        chatRoom.printCompleteChat();
+    }
 
     public PlayerCLI getMyPlayer() {
         return myPlayer;

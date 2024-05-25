@@ -54,55 +54,27 @@ public class HandleClientInputCLI implements Runnable{
     public void run() {
         while(running){
             if(scanner.hasNextLine()){
-                String input = scanner.nextLine().toUpperCase().strip();
-                if(input.equals("EXIT")){
+                String input = scanner.nextLine().strip();
+                if(input.equalsIgnoreCase("EXIT")){
                    viewController.exit();
                 }
                 if(actionsCLI.isPlaceCardEnabled()){
-                    String[] inputArray = input.split(" ");
-                    if(inputArray[0].equals("PLACE")){
-                        if(inputArray.length > 3) {
-                            if(!placeCard(Arrays.copyOfRange(inputArray,1, 4))){
-                                System.out.println("remember to follow the instructions to place card.\n" +
-                                        "If you need help, type help");
-                            }
-                        }
-                    }
+                    dealWithCardPlacement(input);
                 }
                 if(actionsCLI.isDrawCardEnabled()){
-                    String[] inputArray = input.split(" ");
-                    if(inputArray[0].equals("DRAW")) {
-                        if (inputArray.length > 2) {
-                            if(!drawCard(Arrays.copyOfRange(inputArray,1, 3))){
-                                System.out.println("remember to follow the instructions to draw card.\n" +
-                                        "If you need help, type help");
-                            }
-                        }
-                    }
+                    dealWithDrawingCard(input);
                 }
                 if(actionsCLI.isShowOtherPlayerBoardAndBackOFHandEnabled()){
-                    String[] inputArray=input.split(" ");
-                    if(inputArray.length>1 && inputArray[0].equals("SHOW")){
-                        showPlayerBoardAndHand(inputArray[1]);
-                    }
+                    dealWithShowingOtherPlayerBoard(input);
                 }
                 if(actionsCLI.isContinueGameEnabled()){
-                    if(input.equalsIgnoreCase("n")){
-                        messageDispatcher.notifyPersistence(false);
-                        actionsCLI.disableContinueGame();
-                    } else if (input.equalsIgnoreCase("y")) {
-                        messageDispatcher.notifyPersistence(true);
-                        actionsCLI.disableContinueGame();
-                    }
-                    else {
-                        System.out.println("You can only respond Y or N");
-                    }
+                    dealWithContinueGame(input);
                 }
                 if(actionsCLI.isChooseColorEnabled()){
-                    dealWithPlayerColorChoice(input);
+                    dealWithPlayerColorChoice(input.toUpperCase());
                 }
                 if(actionsCLI.isPlaceStartingCardEnabled()){
-                    dealWithFirstCardPlacement(input);
+                    dealWithFirstCardPlacement(input.toUpperCase());
                 }
                 if(actionsCLI.isCreateEnabled()){
                     checkUsernameAndNumberOfPlayersAsksAgainIfNotOK(input);
@@ -111,25 +83,96 @@ public class HandleClientInputCLI implements Runnable{
                     checkUsernameAsksAgainIfNotOk(input);
                 }
                 if(actionsCLI.isisChoosePrivateObjectiveEnabled()){
-                    int objectiveIndex=getIndex(input);
-                    if(objectiveIndex==0 || objectiveIndex==1){
-                        messageDispatcher.secondRound(viewController.getMyPlayer().getUsername(),objectiveIndex);
-                        viewController.setPrivateObjective(actionsCLI.getPrivateObjectiveChoices()[objectiveIndex]);
-                        System.out.println("Hmm that looks like a tough objective, but ok, I'll let the server know");
-                        actionsCLI.disableChoosePrivateObjective();
-                    }
-                    else{
-                        System.out.println("try again, accepted indexes are either 1 or 2");
-                    }
+                    dealWithPrivateObjectiveChoice(getIndex(input));
                 }
-                if(input.equals("HELP")){
-                    if(actionsCLI.isHelp()) {
-                        printInstructions();
-                    }
+                if(input.equalsIgnoreCase("HELP")){
+                    helpPlayer();
+                }
+                if(input.charAt(0)=='T' || input.charAt(0)=='t'){
+                    sendMessageToChat(input);
+                }
+                if(input.equalsIgnoreCase("chat")){
+                    viewController.printCompleteChat();
                 }
             }
         }
         System.out.println("Input handler has terminated");
+    }
+
+    /**
+     *
+     * @param input should ether be y or n to indicate weather or not to continue game or start a new one
+     */
+    private void dealWithContinueGame(String input){
+        if(input.equalsIgnoreCase("n")){
+            continueGame(false);
+        } else if (input.equalsIgnoreCase("y")) {
+            continueGame(true);
+        }
+        else {
+            System.out.println("You can only respond Y or N");
+        }
+    }
+
+    /**
+     *
+     * @param input should come in the form of "show 'username'", if so method will change player screen to show the board of the player
+     *              indicated by the input
+     */
+    private void dealWithShowingOtherPlayerBoard(String input){
+        String[] inputArray=input.split(" ");
+        if(inputArray.length>1 && inputArray[0].equalsIgnoreCase("show")){
+            showPlayerBoardAndHand(inputArray[1]);
+        }
+    }
+
+    /**
+     * takes index indicated by client and informs server of client choice
+     * @param objectiveIndex should be 0 or 1
+     */
+    private void dealWithPrivateObjectiveChoice(int objectiveIndex) {
+        if(objectiveIndex==0 || objectiveIndex==1){
+            messageDispatcher.secondRound(viewController.getMyPlayer().getUsername(),objectiveIndex);
+            viewController.setPrivateObjective(actionsCLI.getPrivateObjectiveChoices()[objectiveIndex]);
+            System.out.println("Hmm that looks like a tough objective, but ok, I'll let the server know");
+            actionsCLI.disableChoosePrivateObjective();
+        }
+        else{
+            System.out.println("try again, accepted indexes are either 1 or 2");
+        }
+    }
+
+    /**
+     * informs server weather client wants to continue an existing game orr start a new one
+     * @param continueGame is true if player wants to continue an existing game, false if player want's to start a new game
+     */
+    private void continueGame(boolean continueGame){
+        messageDispatcher.notifyPersistence(continueGame);
+        actionsCLI.disableContinueGame();
+    }
+
+    /**
+     * sends server the message
+     * @param input should be in the form "t -all/player2(receiver of message): message(body of message)"
+     */
+    private void sendMessageToChat(String input){
+        String[] completeMessage= input.split(":");
+        if(completeMessage.length>1) {
+            String receiver = completeMessage[0].strip().split(" ")[1].toUpperCase();
+            viewController.sendChatMessage(viewController.getMyPlayer().getUsername(), receiver, completeMessage[1]);
+        }
+        else {
+            System.out.println("message invalid, message must be in the form -all/username(to indicate the receiver): body of message");
+        }
+    }
+
+    /**
+     * shows player the different commands he can use
+     */
+    private void helpPlayer(){
+        if(actionsCLI.isHelp()) {
+            printInstructions();
+        }
     }
 
     /**
@@ -171,6 +214,45 @@ public class HandleClientInputCLI implements Runnable{
     }
 
     /**
+     * informs server of where and how a player wants to place a card
+     * @param input should be in the form " 'place' 1/2/3(index of card in hand) 0,0(Coordinates) up/down(orientation)"
+     */
+    private void dealWithCardPlacement(String input){
+        input=input.toUpperCase();
+        String[] inputArray = input.split(" ");
+        if(inputArray[0].equalsIgnoreCase("PLACE")){
+            boolean success=false;
+            if(inputArray.length > 3) {
+                success=placeCard(Arrays.copyOfRange(inputArray,1, 4));
+            }
+            if(!success){
+                System.out.println("remember to follow the instructions to place card.\n" +
+                        "If you need help, type help");
+            }
+        }
+    }
+
+    /**
+     * informs server of what card client wants to draw and player if params aren't correct
+     * @param input should come in the form of " 'draw' gold/resource(type of card client wants to draw) 1/2/3(index of card in drawable area)"
+     */
+    private void dealWithDrawingCard(String input){
+        input=input.toUpperCase();
+        String[] inputArray = input.split(" ");
+        if(inputArray[0].equalsIgnoreCase("DRAW")) {
+            boolean success=false;
+            if (inputArray.length > 2) {
+                success=drawCard(Arrays.copyOfRange(inputArray,1, 3));
+
+            }
+            if(!success){
+                System.out.println("remember to follow the instructions to draw card.\n" +
+                        "If you need help, type help");
+            }
+        }
+    }
+
+    /**
      * prints out the different commands that the player can use and how to use them
      */
     private void printInstructions(){
@@ -198,8 +280,8 @@ public class HandleClientInputCLI implements Runnable{
     }
 
     /**
-     *
-     * @param inputArray players input where each word is an element in the array
+     * informs server of card player wants to place
+     * @param inputArray should be in the form "gold/resource(type of card player wants to draw) 1/2/3(index of card in drawable area)"
      * @return true if params to draw card are correct
      */
     private boolean drawCard(String[] inputArray){
@@ -224,7 +306,7 @@ public class HandleClientInputCLI implements Runnable{
 
     /**
      *
-     * @param coordinatesString coordinates written like this   (0,0)
+     * @param coordinatesString coordinates written like this 0,0
      * @return string translated to actual coordinates
      */
     private Coordinates getCoordinates(String coordinatesString){
@@ -258,13 +340,13 @@ public class HandleClientInputCLI implements Runnable{
     }
 
     /**
-     *
+     * displays the board and back of hand of the player chosen by the client
      * @param username of player that my client wants to see
      */
     private void showPlayerBoardAndHand(String username){
         boolean playerNotFound=true;
         for(PlayerCLI player: viewController.getPlayersInGame().getPlayers()){
-            if(player.getUsername().toUpperCase().equals(username)){
+            if(player.getUsername().equals(username)){
                 playerNotFound=false;
                 viewController.setCurrentPlayerInScene(player);
                 viewController.showScene();
@@ -276,10 +358,11 @@ public class HandleClientInputCLI implements Runnable{
     }
 
     /**
-     *
-     * @param username is username chosen by client
+     * checks weather chosen username fits regex, if so server is notified, else client will be asked to choose another username
+     * @param username chosen by my player that will be assigned to him if server says it's ok
      */
     private void checkUsernameAsksAgainIfNotOk(String username){
+        username=username.toUpperCase();
         if(viewController.checkParamsAndSendJoin(username)){
             actionsCLI.disableJoin();
             viewController.createMyPlayer(username);
@@ -290,10 +373,11 @@ public class HandleClientInputCLI implements Runnable{
     }
 
     /**
-     *
-     * @param input is composed of username chosen by client and number of players that will be in game
+     * checks if params given by client are correct, if so they will be sent to server, else he will be asked again
+     * @param input is the username that client has chosen and the number of players he wants in the game
      */
     private void checkUsernameAndNumberOfPlayersAsksAgainIfNotOK(String input){
+        input=input.toUpperCase();
         String[] inputArray=input.split(" ");
         String username=inputArray[0];
         int numberOfPlayers;
@@ -324,7 +408,8 @@ public class HandleClientInputCLI implements Runnable{
     }
 
     /**
-     * reads user input and flips card or places it accordingly, if input is not understood the method calls itself
+     * reads user input and flips card or places it, if input is not understood client will be asked again, if card is placed the card can't be flipped anymore
+     * and server is notified of placement orientation
      */
     private void dealWithFirstCardPlacement(String input){
         switch (input){
