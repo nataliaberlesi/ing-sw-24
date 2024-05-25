@@ -240,19 +240,22 @@ public abstract class ViewController {
      * checks weather message is sent by my player or for my player and updates the chat
      */
     protected void updateChat(){
-        String sender=messageParser.getCurrentPlayer();
         String receiver=messageParser.getAffectedPlayer();
-        boolean isPrivate=(!receiver.equalsIgnoreCase("-all"));
-        boolean addMessage= (receiver.equalsIgnoreCase("-all")|| isMyPlayer(sender));
-        if(isMyPlayer(receiver) ){
-            addMessage=true;
-            isPrivate=true;
-            receiver="";
+        if(isPlayerInGame(receiver)) {
+            String sender = messageParser.getCurrentPlayer();
+            boolean isPrivate = (!receiver.equalsIgnoreCase("-all"));
+            boolean addMessage = (!isPrivate || isMyPlayer(sender));
+            if (isMyPlayer(receiver)) {
+                addMessage = true;
+                isPrivate = true;
+                receiver = "";
+            }
+            if (addMessage) {
+                addMessageToChat(sender, receiver, messageParser.getChat(), isPrivate);
+                showScene(); // non so se a te va bene questo metodo qua, fammi sapere
+            }
         }
-        if(addMessage){
-            addMessageToChat(sender,receiver, messageParser.getChat(), isPrivate);
-        }
-        showScene(); // non so se a te va bene questo metodo qua, fammi sapere
+
     }
 
 
