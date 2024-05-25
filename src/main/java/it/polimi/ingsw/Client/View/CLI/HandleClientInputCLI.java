@@ -88,7 +88,7 @@ public class HandleClientInputCLI implements Runnable{
                 if(input.equalsIgnoreCase("HELP")){
                     helpPlayer();
                 }
-                if(input.charAt(0)=='T' || input.charAt(0)=='t'){
+                if(!input.isEmpty() && (input.charAt(0)=='T' || input.charAt(0)=='t')){
                     sendMessageToChat(input);
                 }
                 if(input.equalsIgnoreCase("chat")){
@@ -344,6 +344,7 @@ public class HandleClientInputCLI implements Runnable{
      * @param username of player that my client wants to see
      */
     private void showPlayerBoardAndHand(String username){
+        username=username.toUpperCase();
         boolean playerNotFound=true;
         for(PlayerCLI player: viewController.getPlayersInGame().getPlayers()){
             if(player.getUsername().equals(username)){

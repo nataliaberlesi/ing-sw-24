@@ -240,32 +240,46 @@ public abstract class ViewController {
      * checks weather message is sent by my player or for my player and updates the chat
      */
     protected void updateChat(){
-        String receiver=messageParser.getAffectedPlayer();
-        if(isPlayerInGame(receiver)) {
+        String receiver = messageParser.getAffectedPlayer();
+        String messageMeantForEveryone = "-all";
+
+        if (shouldProcessMessage(receiver, messageMeantForEveryone)) {
             String sender = messageParser.getCurrentPlayer();
-            boolean isPrivate = (!receiver.equalsIgnoreCase("-all"));
-            boolean addMessage = (!isPrivate || isMyPlayer(sender));
+            boolean isPrivate = isPrivateMessage(receiver, messageMeantForEveryone);
+            boolean addMessage = shouldAddMessage(sender, receiver, isPrivate);
+
             if (isMyPlayer(receiver)) {
-                addMessage = true;
-                isPrivate = true;
                 receiver = "";
+                isPrivate = true;
+                addMessage = true;
             }
+
             if (addMessage) {
                 addMessageToChat(sender, receiver, messageParser.getChat(), isPrivate);
                 showUpdatedChat();
             }
         }
-
     }
 
     protected abstract void showUpdatedChat();
 
+    private boolean shouldAddMessage(String sender, String receiver, boolean isPrivate) {
+        return !isPrivate || isMyPlayer(sender);
+    }
+
+    private boolean shouldProcessMessage(String receiver, String messageMeantForEveryone) {
+        return isPlayerInGame(receiver) || receiver.equalsIgnoreCase(messageMeantForEveryone);
+    }
+
+    private boolean isPrivateMessage(String receiver, String messageMeantForEveryone) {
+        return !receiver.equalsIgnoreCase(messageMeantForEveryone);
+    }
 
     public void sendChatMessage(String myPlayerUsername, String receiver, String message){
         messageDispatcher.chat(myPlayerUsername, receiver, message);
     }
 
-    protected abstract void addMessageToChat(String sender, String receiver, String bodyOfMessage, boolean isPrivate);
+    protected abstract void addMessageToChat(String sender, String receiver,String bodyOfMessage, boolean isPrivate);
 
     protected abstract void terminate();
 

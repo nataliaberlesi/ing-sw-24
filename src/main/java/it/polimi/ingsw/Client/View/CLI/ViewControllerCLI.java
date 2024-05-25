@@ -105,6 +105,11 @@ public class ViewControllerCLI extends ViewController {
     }
 
     @Override
+    protected void showUpdatedChat() {
+        showScene();
+    }
+
+    @Override
     protected void addMessageToChat(String sender, String receiver, String bodyOfMessage, boolean isPrivate) {
         chatRoom.addMessage(sender, receiver, bodyOfMessage, isPrivate);
     }
@@ -141,7 +146,6 @@ public class ViewControllerCLI extends ViewController {
     @Override
     protected void setPrivateObjectiveChoice() {
         clientActions.setPrivateObjectiveChoices(messageParser.getPrivateObjectivesCLI());
-        clientActions.enableShowOtherPlayerBoardAndBackOFHand();
     }
 
     @Override
@@ -162,6 +166,7 @@ public class ViewControllerCLI extends ViewController {
     }
 
     public void setPrivateObjective(ObjectiveCLI privateObjective){
+        clientActions.enableShowOtherPlayerBoardAndBackOFHand();
         objectivesSection.setPrivateObjective(privateObjective);
     }
 
