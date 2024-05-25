@@ -20,10 +20,7 @@ public class PrivateObjectiveChoice extends Scene {
         this.viewControllerGUI = viewControllerGUI ;
         root = (AnchorPane) this.getRoot();
         Label label = new Label("Choose your secret objective:");
-        label.setLayoutX(87);
-        label.setLayoutY(27);
-        label.setFont(new Font("System Bold", 16));
-        label.setAlignment(Pos.CENTER);
+        StaticsForGUI.setLabelCharacteristics(label,"System Bold", 16,87,27);
         root.getChildren().add(label);
         addImagesToScene(cardIDs);
     }

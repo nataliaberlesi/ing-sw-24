@@ -21,7 +21,7 @@ public class MainScene extends Scene {
     private Label actionLabel = new Label();
     private Label helloPlayerLabel;
     private Label confirmActionLabel = new Label();
-    private Label lastRoundLabel = new Label("Last Round!");
+    private Label endGameLabel = new Label("End Game!");
     private final Button flipYourHandButton = new Button("Flip your hand");
     private final Button confirmActionButton = new Button("Confirm action");
     private final ArrayList<Button> seeOtherPlayersSceneButtons = new ArrayList<>();
@@ -71,64 +71,31 @@ public class MainScene extends Scene {
      */
     private void setUpLabels(){
         Label resourceCardsLabel = new Label("Resource Cards");
-        resourceCardsLabel.setFont(new Font("System Bold Italic", 16));
-        resourceCardsLabel.setAlignment(Pos.CENTER);
-        resourceCardsLabel.setLayoutX(912);
-        resourceCardsLabel.setLayoutY(52);
-        this.root.getChildren().add(resourceCardsLabel);
+        StaticsForGUI.setLabelCharacteristics(resourceCardsLabel, "System Bold Italic", 16, 912,52);
 
         Label goldCardsLabel = new Label("Gold Cards");
-        goldCardsLabel.setFont(new Font("System Bold Italic", 16));
-        goldCardsLabel.setAlignment(Pos.CENTER);
-        goldCardsLabel.setLayoutX(924);
-        goldCardsLabel.setLayoutY(332);
-        this.root.getChildren().add(goldCardsLabel);
+        StaticsForGUI.setLabelCharacteristics(goldCardsLabel, "System Bold Italic", 16, 924,332);
 
         Label handLabel = new Label("Hand");
-        handLabel.setFont(new Font("System Bold Italic", 16));
-        handLabel.setAlignment(Pos.CENTER);
-        handLabel.setLayoutX(380);
-        handLabel.setLayoutY(457);
-        this.root.getChildren().add(handLabel);
+        StaticsForGUI.setLabelCharacteristics(handLabel, "System Bold Italic", 16, 380,457);
 
         Label secretObjectiveLabel = new Label("Secret Objective");
-        secretObjectiveLabel.setFont(new Font("System Bold Italic", 16));
-        secretObjectiveLabel.setAlignment(Pos.CENTER);
-        secretObjectiveLabel.setLayoutX(560);
-        secretObjectiveLabel.setLayoutY(457);
-        this.root.getChildren().add(secretObjectiveLabel);
+        StaticsForGUI.setLabelCharacteristics(secretObjectiveLabel, "System Bold Italic", 16, 560,457);
 
         Label commonObjectivesLabel = new Label("Common Objectives");
-        commonObjectivesLabel.setFont(new Font("System Bold Italic", 16));
-        commonObjectivesLabel.setAlignment(Pos.CENTER);
-        commonObjectivesLabel.setLayoutX(686);
-        commonObjectivesLabel.setLayoutY(457);
-        this.root.getChildren().add(commonObjectivesLabel);
+        StaticsForGUI.setLabelCharacteristics(commonObjectivesLabel, "System Bold Italic", 16, 686,457);
 
-        confirmActionLabel.setFont(new Font("System Bold", 14));
-        confirmActionLabel.setAlignment(Pos.CENTER);
-        confirmActionLabel.setLayoutX(30);
-        confirmActionLabel.setLayoutY(547);
-        this.root.getChildren().add(confirmActionLabel);
+        StaticsForGUI.setLabelCharacteristics(confirmActionLabel, "System Bold", 14, 30,547);
 
-        turnLabel.setFont(new Font("System Bold", 18));
-        turnLabel.setAlignment(Pos.CENTER);
-        turnLabel.setLayoutX(30);
-        turnLabel.setLayoutY(487);
-        this.root.getChildren().add(turnLabel);
+        StaticsForGUI.setLabelCharacteristics(turnLabel, "System Bold", 18, 30,487);
 
-        actionLabel.setFont(new Font("System Bold", 16));
-        actionLabel.setAlignment(Pos.CENTER);
-        actionLabel.setLayoutX(30);
-        actionLabel.setLayoutY(517);
-        this.root.getChildren().add(actionLabel);
+        StaticsForGUI.setLabelCharacteristics(actionLabel, "System Bold", 16, 30,517);
 
-        lastRoundLabel.setFont(new Font("System Bold", 18));
-        lastRoundLabel.setAlignment(Pos.CENTER);
-        lastRoundLabel.setLayoutX(45);
-        lastRoundLabel.setLayoutY(180);
-        lastRoundLabel.setVisible(false);
-        this.root.getChildren().add(lastRoundLabel);
+        StaticsForGUI.setLabelCharacteristics(endGameLabel, "System Bold", 18, 45,180);
+        endGameLabel.setVisible(false);
+
+        this.root.getChildren().addAll(resourceCardsLabel, goldCardsLabel, handLabel, secretObjectiveLabel, commonObjectivesLabel,
+                confirmActionLabel, turnLabel, actionLabel, endGameLabel);
 
     }
 
@@ -326,8 +293,8 @@ public class MainScene extends Scene {
     }
 
 
-    public Label getLastRoundLabel() {
-        return lastRoundLabel;
+    public Label getEndGameLabel() {
+        return endGameLabel;
     }
 
     public void setConfirmActionLabel(String text) {
