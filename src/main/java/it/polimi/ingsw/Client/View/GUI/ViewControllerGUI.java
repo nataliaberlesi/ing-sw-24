@@ -44,14 +44,6 @@ public class ViewControllerGUI extends ViewController implements Initializable{
      * Instance of main scene for the game
      */
     private MainScene mainScene;
-    /**
-     * Instance of token color choice pop up for the game
-     */
-    private TokenColorChoice tokenColorChoiceScene;
-    /**
-     * Instance of private objective choice pop up for the game
-     */
-    private PrivateObjectiveChoice privateObjectiveChoiceScene;
 
     /**
      * Players in game
@@ -151,13 +143,17 @@ public class ViewControllerGUI extends ViewController implements Initializable{
 
     @Override
     protected void connectScene() {
-        switchFXMLScene("initialScreen.fxml");
+        InitialScene initialScene = new InitialScene(this);
+        stage.setScene(initialScene);
+        stage.hide();
+        stage.show();
+
     }
 
     /**
      * Connects player to create or join mode based on server response indicating the master status of the player trying to connect
      * */
-    @FXML
+
     protected void connectPlayer() {
         super.connectPlayer();
     }
@@ -202,7 +198,10 @@ public class ViewControllerGUI extends ViewController implements Initializable{
      */
     @Override
     protected void switchToLoading() {
-        switchFXMLScene("loading.fxml");
+        LoadingScene loadingScene = new LoadingScene();
+        this.stage.setScene(loadingScene);
+        stage.hide();
+        stage.show();
     }
 
     /**
@@ -317,7 +316,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
             return true;
         }
         else {
-            mainScene.setTurnLabel("Wait for your turn!");
+            mainScene.setTurnLabel("Wait for your turn!\n"+usernameOfPlayerWhoseTurnItIs+" is playing");
             mainScene.setConfirmActionLabel("");
             mainScene.setActionLabel("");
             return false;
@@ -353,6 +352,14 @@ public class ViewControllerGUI extends ViewController implements Initializable{
 
     @Override
     protected void askCreateOrContinue() {
+        InitialScene initialSceneWithPersistence = new InitialScene(this, popUpStage);
+        stage.setScene(initialSceneWithPersistence);
+        stage.hide();
+        stage.show();
+
+    }
+    public void getPlayerAnswerAndSendPersistenceMessage(boolean answer){
+        messageDispatcher.notifyPersistence(answer);
     }
 
     @Override
@@ -429,7 +436,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     @Override
     protected void updatePlayerScore(String username, int score) {
         if (score >= 20){
-            mainScene.getLastRoundLabel().setVisible(true);
+            mainScene.getEndGameLabel().setVisible(true);
         }
         mainScene.getScoreBoard().updatePlayerScore(username, score);
     }
