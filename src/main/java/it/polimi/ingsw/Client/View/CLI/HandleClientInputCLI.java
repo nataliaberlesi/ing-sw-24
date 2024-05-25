@@ -96,7 +96,7 @@ public class HandleClientInputCLI implements Runnable{
                 }
             }
         }
-        System.out.println("Input handler has terminated");
+        System.out.println(ClientOutputs.inputHandlerHasTerminated);
     }
 
     /**
@@ -110,7 +110,7 @@ public class HandleClientInputCLI implements Runnable{
             continueGame(true);
         }
         else {
-            System.out.println("You can only respond Y or N");
+            System.out.println(ClientOutputs.continueGameAnswerNotValid);
         }
     }
 
@@ -134,11 +134,11 @@ public class HandleClientInputCLI implements Runnable{
         if(objectiveIndex==0 || objectiveIndex==1){
             messageDispatcher.secondRound(viewController.getMyPlayer().getUsername(),objectiveIndex);
             viewController.setPrivateObjective(actionsCLI.getPrivateObjectiveChoices()[objectiveIndex]);
-            System.out.println("Hmm that looks like a tough objective, but ok, I'll let the server know");
+            System.out.println(ClientOutputs.validPrivateObjectiveChoice);
             actionsCLI.disableChoosePrivateObjective();
         }
         else{
-            System.out.println("try again, accepted indexes are either 1 or 2");
+            System.out.println(ClientOutputs.invalidPrivateObjectiveChoice);
         }
     }
 
@@ -162,7 +162,7 @@ public class HandleClientInputCLI implements Runnable{
             viewController.sendChatMessage(viewController.getMyPlayer().getUsername(), receiver, completeMessage[1]);
         }
         else {
-            System.out.println("message invalid, message must be in the form -all/username(to indicate the receiver): body of message");
+            System.out.println(ClientOutputs.invalidChatMessageFormat);
         }
     }
 
@@ -226,8 +226,7 @@ public class HandleClientInputCLI implements Runnable{
                 success=placeCard(Arrays.copyOfRange(inputArray,1, 4));
             }
             if(!success){
-                System.out.println("remember to follow the instructions to place card.\n" +
-                        "If you need help, type help");
+                System.out.println(ClientOutputs.invalidPlaceCardFormat);
             }
         }
     }
@@ -246,8 +245,7 @@ public class HandleClientInputCLI implements Runnable{
 
             }
             if(!success){
-                System.out.println("remember to follow the instructions to draw card.\n" +
-                        "If you need help, type help");
+                System.out.println(ClientOutputs.invalidDrawCardFormat);
             }
         }
     }
@@ -256,33 +254,7 @@ public class HandleClientInputCLI implements Runnable{
      * prints out the different commands that the player can use and how to use them
      */
     private void printInstructions(){
-        System.out.println("""
-                            ACTIONS:
-
-                            1) PLACE CARD
-                            To place a card simply type PLACE followed by the index of the card in your hand you want to place,
-                            followed by the coordinates where you want to place the card (x,y),
-                            followed UP/DOWN depending on weather you want the card facing up or facing down
-                            EXAMPLE: PLACE 3 (-4,7) DOWN
-
-                            2) DRAW CARD
-                            To draw a card simply type DRAW followed by GOLD/RESOURCE and the index of the card you want to draw
-                            EXAMPLE: DRAW RESOURCE 2
-                            
-                            3) SEE OTHER PLAYER BOARD AND BACK OF HAND
-                            You can see another players board and the back of their hand by typing
-                            SHOW followed by the username of the player you want to see
-                            EXAMPLE: SHOW player3
-                            
-                            3) CHAT
-                            If you want send a message to other players type T then the username of the player you want to talk to
-                            or -ALL if you want to send a message to everyone, then : followed by your message.
-                            EXAMPLE: T -all: hello everybody
-                                     T kevin: i think you are very cute <3
-                            
-                            4) EXIT
-                            To exit the game simply type EXIT, though I will personally get offended if you do decide to leave...
-                            EXAMPLE: exit""");
+        System.out.println(ClientOutputs.gameCommands);
     }
 
     /**
@@ -426,7 +398,7 @@ public class HandleClientInputCLI implements Runnable{
             }
             case "PLACE"->{
                 actionsCLI.disablePlaceStartingCard();
-                System.out.println("Congrats! You have placed your first card");
+                System.out.println(ClientOutputs.congratulationsOnFirstCard);
                 actionsCLI.enableChooseColor(actionsCLI.getAvailableColors());
             }
             default -> {
@@ -444,15 +416,15 @@ public class HandleClientInputCLI implements Runnable{
             actionsCLI.disableChooseColor();
             sendStartingCardOrientationAndColorChoice(chosenColor);
             if(chosenColor.equals("GREEN")){
-                System.out.println("\nGREEN IS NOT A CREATIVE COLOR\n");
+                System.out.println(ClientOutputs.confirmationOfUnoriginalColorChoice);
             }
             else{
-                System.out.println("\nGREAT CHOICE!\n");
+                System.out.println(ClientOutputs.confirmationOfColorChoice);
             }
             actionsCLI.enableShowOtherPlayerBoardAndBackOFHand();
         }
         else {
-            System.out.println("I'm afraid that color is unavailable, let's try again");
+            System.out.println(ClientOutputs.invalidColorChoice);
         }
     }
 

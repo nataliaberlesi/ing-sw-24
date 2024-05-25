@@ -70,7 +70,7 @@ public class ViewControllerCLI extends ViewController {
      */
     @Override
     protected void switchToLoading(){
-        System.out.println("All good\nWaiting for players...\n\n");
+        System.out.println(ClientOutputs.loadingScreen);
     }
 
     @Override
@@ -86,7 +86,7 @@ public class ViewControllerCLI extends ViewController {
     @Override
     protected void askCreateOrContinue() {
         clientActions.enableContinueGame();
-        System.out.println("There is a saved game, do you want to continue?\n(type Y to continue or N to start a new game)");
+        System.out.println(ClientOutputs.askIfPlayerWantsToContinueGame);
     }
 
     @Override
@@ -198,15 +198,7 @@ public class ViewControllerCLI extends ViewController {
     @Override
     protected void connectScene() {
         clearScreen();
-        System.out.println(
-                """
-                         _____  _____ ______  _____ __   __
-                        /  __ \\|  _  ||  _  \\|  ___|\\ \\ / /
-                        | /  \\/| | | || | | || |__   \\ V /\s
-                        | |    | | | || | | ||  __|  /   \\\s
-                        | \\__/\\\\ \\_/ /| |/ / | |___ / /^\\ \\
-                         \\____/ \\___/ |___/  \\____/ \\/   \\/
-                                                          \s""");
+        System.out.println(ClientOutputs.titleScreen);
         connectPlayer();
     }
 
@@ -233,10 +225,10 @@ public class ViewControllerCLI extends ViewController {
     @Override
     protected boolean isMyTurn(String usernameOfPlayerWhoseTurnItIs) {
         if(usernameOfPlayerWhoseTurnItIs.equalsIgnoreCase(myPlayer.getUsername())){
-            System.out.println("It's your turn!");
+            System.out.println(ClientOutputs.itsClientsTurn);
             return true;
         }
-        System.out.println("Wait for your turn...\nRemember you can type HELP at any moment to see all the commands you can use");
+        System.out.println(ClientOutputs.itsNotClientsPlayersTurn);
         return false;
     }
 
