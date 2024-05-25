@@ -13,6 +13,8 @@ public abstract class ViewController {
      */
     protected static final String USERNAME_REGEX = "^\\w{1,8}$";
 
+
+
     protected final MessageParser messageParser;
 
     protected final MessageDispatcher messageDispatcher;
@@ -129,7 +131,7 @@ public abstract class ViewController {
 
     protected abstract void askCreateOrContinue();
 
-    protected abstract boolean playersInfoAlreadyAdded();
+    protected abstract boolean playersInfoNotYetAdded();
 
     protected abstract boolean isMyPlayer(String username);
 
@@ -143,15 +145,15 @@ public abstract class ViewController {
             case PERSISTENCE ->
                 askCreateOrContinue();
             case CONTINUE ->{
-                if(playersInfoAlreadyAdded()){
+                if(playersInfoNotYetAdded()){
                     addPlayers(messageParser.getPlayers());
                     setPublicObjectives();
                     updateDrawableArea();
                 }
-                updatePlayerBoardHandScore(messageParser.getAffectedPlayer(), messageParser.getScore());
                 if(isMyPlayer(messageParser.getAffectedPlayer())){
                     setPrivateObjective();
                 }
+                updatePlayerBoardHandScore(messageParser.getAffectedPlayer(), messageParser.getScore());
             }
             case CONNECT -> connectScene();
 
@@ -221,8 +223,8 @@ public abstract class ViewController {
             }
 
             case ENDGAME  -> {
-                setFinalScoreBoard(); // popola la classifica
-                showFinalScoreBoard(); // mostra la classigfica
+                setFinalScoreBoard();
+                showFinalScoreBoard();
             }
             case ABORT -> {
                 showErrorAlert(messageParser.getCause(), "Game has terminated");

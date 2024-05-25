@@ -1,4 +1,5 @@
 package it.polimi.ingsw.Client.View.GUI;
+import it.polimi.ingsw.Server.Model.Coordinates;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -15,7 +16,7 @@ public class BoardGUI extends ScrollPane {
     /**
      * Initial card placed in the middle of the board
      */
-    private final CardGUI initialCard = new CardGUI();
+    private CardGUI initialCard;
     private CardGUI chosenCard;
 
     private ArrayList<CardGUI> cardsOnBoard = new ArrayList<>();
@@ -44,17 +45,14 @@ public class BoardGUI extends ScrollPane {
      * Sets the initial card's characteristics
      */
     public void setInitialCard(String cardID) {
+        initialCard = new CardGUI(cardID, new Coordinates(0,0), true);
         initialCard.convertCoordinatesFromModelToGUIAndSetLayout(0, 0);
-        initialCard.setCardIDAndImage(cardID);
-        initialCard.initializeCorners();
         anchorPane.getChildren().add(initialCard);
-        cardsOnBoard.add(initialCard);
 
         playerColorToken.setFitWidth(20);
         playerColorToken.setFitHeight(20);
         playerColorToken.setLayoutX(1276);
         playerColorToken.setLayoutY(657);
-        anchorPane.getChildren().add(playerColorToken);
     }
 
     /**
@@ -74,6 +72,7 @@ public class BoardGUI extends ScrollPane {
         firstPlayerToken.setFitHeight(20);
         firstPlayerToken.setLayoutX(1306);
         firstPlayerToken.setLayoutY(657);
+        anchorPane.getChildren().remove(firstPlayerToken);
         anchorPane.getChildren().add(firstPlayerToken);
         firstPlayerToken.toFront();
 
@@ -86,6 +85,8 @@ public class BoardGUI extends ScrollPane {
     public void setPlayerColorToken(String tokenImage){
         String imagePath = String.format("Images/Tokens/%s.png", tokenImage);
         playerColorToken.setImage(new Image(Objects.requireNonNull(GUIApplication.class.getResourceAsStream(imagePath))));
+        anchorPane.getChildren().remove(playerColorToken);
+        anchorPane.getChildren().add(playerColorToken);
         playerColorToken.toFront();
     }
 
@@ -95,12 +96,11 @@ public class BoardGUI extends ScrollPane {
      * @param cards cards to be placed on board
      */
     public void updateBoard(ArrayList<CardGUI> cards){
-
-        for (int i=1; i < cards.size(); i++) {
-            anchorPane.getChildren().add(cards.get(i));
+        cardsOnBoard = cards;
+        anchorPane.getChildren().remove(initialCard);
+        for (CardGUI cardGUI : cardsOnBoard) {
+            anchorPane.getChildren().add(cardGUI);
         }
-        cardsOnBoard=cards;
-        cardsOnBoard.set(0, initialCard);
     }
     public void setChosenCard(CardGUI chosenCard){
         this.chosenCard = chosenCard;

@@ -55,7 +55,7 @@ public class InitialScene extends Scene {
             yesButton.setLayoutX(95);
             yesButton.setLayoutY(150);
             yesButton.setOnMouseClicked(event -> {
-                viewController.getPlayerAnswerAndSendPersistenceMessage(true);
+                viewController.sendPersistenceMessage(true);
                 popUpStage.close();
             });
 
@@ -63,7 +63,7 @@ public class InitialScene extends Scene {
             noButton.setLayoutX(285);
             noButton.setLayoutY(150);
             noButton.setOnMouseClicked(event -> {
-                viewController.getPlayerAnswerAndSendPersistenceMessage(false);
+                viewController.sendPersistenceMessage(false);
                 popUpStage.close();
 
             });
