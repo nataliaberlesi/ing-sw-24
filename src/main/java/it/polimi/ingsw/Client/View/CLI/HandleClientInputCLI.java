@@ -260,22 +260,28 @@ public class HandleClientInputCLI implements Runnable{
                             ACTIONS:
 
                             1) PLACE CARD
-                            to place a card simply type PLACE followed by the index of the card in your hand you want to place,
+                            To place a card simply type PLACE followed by the index of the card in your hand you want to place,
                             followed by the coordinates where you want to place the card (x,y),
                             followed UP/DOWN depending on weather you want the card facing up or facing down
                             EXAMPLE: PLACE 3 (-4,7) DOWN
 
                             2) DRAW CARD
-                            to draw a card simply type DRAW followed by GOLD/RESOURCE and the index of the card you want to draw
+                            To draw a card simply type DRAW followed by GOLD/RESOURCE and the index of the card you want to draw
                             EXAMPLE: DRAW RESOURCE 2
                             
                             3) SEE OTHER PLAYER BOARD AND BACK OF HAND
-                            you can see another players board and the back of their hand by typing
+                            You can see another players board and the back of their hand by typing
                             SHOW followed by the username of the player you want to see
                             EXAMPLE: SHOW player3
                             
+                            3) CHAT
+                            If you want send a message to other players type T then the username of the player you want to talk to
+                            or -ALL if you want to send a message to everyone, then : followed by your message.
+                            EXAMPLE: T -all: hello everybody
+                                     T kevin: i think you are very cute <3
+                            
                             4) EXIT
-                            to exit the game simply type EXIT, though I will personally get offended if you do decide to leave...
+                            To exit the game simply type EXIT, though I will personally get offended if you do decide to leave...
                             EXAMPLE: exit""");
     }
 
