@@ -150,6 +150,16 @@ public class ViewControllerGUI extends ViewController implements Initializable{
         }
     }
 
+    @Override
+    protected void showUpdatedChat() {
+
+    }
+
+    @Override
+    protected void addMessageToChat(String sender, String receiver, String bodyOfMessage, boolean isPrivate) {
+
+    }
+
     /**
      * Sets a scene on a stage
      * @param scene sce to be set

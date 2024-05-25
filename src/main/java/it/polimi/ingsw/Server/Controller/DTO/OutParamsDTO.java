@@ -29,6 +29,12 @@ public record OutParamsDTO(String currentPlayer,
                            String chat
                            ) {
     /**
+     * Constructor used for CONNECT params
+     */
+    public OutParamsDTO(Boolean masterStatus) {
+        this(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,masterStatus,null);
+    }
+    /**
      * Constructor used for JOIN params
      * @param currentPlayer player who tried to join
      * @param unavailableUsername if the username he provided is unavailable

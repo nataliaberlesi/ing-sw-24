@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Server.Controller;
 
 import it.polimi.ingsw.Server.Controller.DTO.OutParamsDTO;
+import it.polimi.ingsw.Server.Controller.DTO.ParamsDTO;
 import it.polimi.ingsw.Server.Model.Cards.*;
 import it.polimi.ingsw.Server.Model.Cards.Objectives.Objective;
 import it.polimi.ingsw.Server.Model.Color;
@@ -19,7 +20,7 @@ public class SetUpGame {
      * @param gameInstance
      * @return DTO representing the gameInstance's first round starting configuration
      */
-    public static OutParamsDTO getStartFirstRoundParams(GameInstance gameInstance) {
+    public static ParamsDTO getStartFirstRoundParams(GameInstance gameInstance) {
         Collections.shuffle(gameInstance.getPlayerTurnOrder());
         setupPlayerBoards(gameInstance);
         String firstPlayerStartingCardID=gameInstance.getPlayers().get(gameInstance.getTurn()).getPlayerBoard().seeStartingCardID();
@@ -27,13 +28,13 @@ public class SetUpGame {
         DrawableArea drawableArea=getDrawableArea();
         gameInstance.setDrawableArea(drawableArea);
         setupHands(gameInstance);
-        return new OutParamsDTO(
+        return new ParamsDTO(new OutParamsDTO(
                 gameInstance.getPlayerTurnOrder().get(0),
                 firstPlayerStartingCard,
                 gameInstance.getPlayerTurnOrder(),
                 gameInstance.getResourceDrawableArea(),
                 gameInstance.getGoldDrawableArea(),
-                gameInstance.getAvailableColors());
+                gameInstance.getAvailableColors()));
     }
 
     /**
@@ -41,7 +42,7 @@ public class SetUpGame {
      * @param gameInstance
      * @return DTO representing the game instance starting configuration
      */
-    public static OutParamsDTO getStartSecondRoundParams(GameInstance gameInstance) {
+    public static ParamsDTO getStartSecondRoundParams(GameInstance gameInstance) {
         Player currentPlayer=gameInstance.getPlayers().get(gameInstance.getTurn());
         Card[] hand= gameInstance.getHand(gameInstance.getTurn());
         Objective firstPrivateObjective=ObjectiveFactory.makeObjective(currentPlayer.getPlayerBoard().seeFirstPrivateObjectiveID());
@@ -54,10 +55,10 @@ public class SetUpGame {
         Objective[] publicObjectives=new Objective[2];
         publicObjectives[0]=firstPublicObjective;
         publicObjectives[1]=secondPublicObjective;
-        return new OutParamsDTO(currentPlayer.getUsername(),
+        return new ParamsDTO(new OutParamsDTO(currentPlayer.getUsername(),
                 hand,
                 privateObjectives,
-                publicObjectives);
+                publicObjectives));
     }
 
 
