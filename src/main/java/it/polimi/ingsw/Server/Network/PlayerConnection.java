@@ -46,10 +46,18 @@ public class PlayerConnection implements Runnable{
         outSocket=new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())),true);
     }
 
+    /**
+     * Closes the connection
+     */
     public void close() throws IOException {
         while(outMessage!=null) {}
         socket.close();
     }
+
+    /**
+     * Verifies if the connection is closed
+     * @return the state of the connection
+     */
     public boolean socketIsClosed() {
         return socket.isClosed();
     }
@@ -57,21 +65,15 @@ public class PlayerConnection implements Runnable{
     /**
      * Sends a Message into outSocket
      */
-    public void threadSendMethod() {
-        while(!socket.isClosed()) {
-            if(outMessage!=null) {
-                synchronized (this){
-                    System.out.println("OUT | "+outMessage);
-                    outSocket.println(outMessage);
-                    outMessage=null;
-                }
-            }
+    public void send() {
+        if(outMessage!=null) {
+            System.out.println("OUT | "+outMessage);
+            outSocket.println(outMessage);
+            outMessage=null;
         }
     }
-
     /**
-     * Waits for a String to be received and parses it into a Message
-     * @throws IOException
+     * Waits for a String to be received
      */
     public void threadReceiveMethod() {
         while(!socket.isClosed()) {
@@ -112,13 +114,18 @@ public class PlayerConnection implements Runnable{
             return consumedMessage;
         }
     }
-    public void setOutMessage(String outMessage) {
+    public synchronized void setOutMessage(String outMessage) {
         this.outMessage=outMessage;
+        send();
+    }
+    public String getOutMessage() {
+        synchronized (this) {
+            return this.outMessage;
+        }
     }
     @Override
     public void run() {
-        new Thread(this::threadReceiveMethod).start();
-        new Thread(this::threadSendMethod).start();
+        threadReceiveMethod();
     }
 }
 

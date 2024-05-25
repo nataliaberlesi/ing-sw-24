@@ -1,6 +1,6 @@
 package it.polimi.ingsw.Server.Network;
 
-import com.google.gson.JsonObject;
+
 import it.polimi.ingsw.Server.Controller.GameController;
 
 import java.io.IOException;
@@ -59,20 +59,20 @@ public class ConnectionsHandler implements Runnable{
         if(gameController.gameIsFull() && !gameController.firstRoundIsStarted()) {
             server.closeLobby();
             gameController.startFirstRound();
-            JsonObject jsonParams=gameController.getJSONStartFirstRoundParams();
+            Message outMessage =gameController.getJSONStartFirstRoundParams();
             for(PlayerConnection pc: server.getConnections()) {
-                String outMessage=messageParser.toJson(new Message(MessageType.START_FIRSTROUND,jsonParams));
-                pc.setOutMessage(outMessage);
+                String outMessageJSON=messageParser.toJson(outMessage);
+                pc.setOutMessage(outMessageJSON);
             }
         }
     }
     private void checkStartSecondRound() {
         if(gameController.allBoardsAreSet() && !gameController.secondRoundIsStarted()) {
-            JsonObject jsonParams=gameController.getJSONStartSecondRoundParams();
+            Message outMessage=gameController.getJSONStartSecondRoundParams();
             gameController.startSecondRound();
             for(PlayerConnection pc:server.getConnections()) {
-                String outMessage=messageParser.toJson(new Message(MessageType.START_SECONDROUND,jsonParams));
-                pc.setOutMessage(outMessage);
+                String outMessageJSON=messageParser.toJson(outMessage);
+                pc.setOutMessage(outMessageJSON);
             }
         }
     }
@@ -81,6 +81,7 @@ public class ConnectionsHandler implements Runnable{
             Message outMessage=gameController.startGame();
             for(PlayerConnection pc: server.getConnections()) {
                 String outMessageString=messageParser.toJson(outMessage);
+                while(pc.getOutMessage()!=null){}
                 pc.setOutMessage(outMessageString);
             }
         }
@@ -136,10 +137,8 @@ public class ConnectionsHandler implements Runnable{
             for(int i=0;i<server.getConnections().size();i++) {
                 outMessage=gameController.continueGame();
                 for(PlayerConnection pc: server.getConnections()) {
-                    synchronized (pc) {
-                        String outMessageString=messageParser.toJson(outMessage);
-                        pc.setOutMessage(outMessageString);
-                    }
+                    String outMessageString=messageParser.toJson(outMessage);
+                    pc.setOutMessage(outMessageString);
                 }
             }
             gameController.unpauseGame();
