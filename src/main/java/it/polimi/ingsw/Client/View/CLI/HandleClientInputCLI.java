@@ -88,6 +88,12 @@ public class HandleClientInputCLI implements Runnable{
                 if(input.equalsIgnoreCase("HELP")){
                     helpPlayer();
                 }
+                if(input.charAt(0)=='T' || input.charAt(0)=='t'){
+                    sendMessageToChat(input);
+                }
+                if(input.equalsIgnoreCase("chat")){
+                    viewController.printCompleteChat();
+                }
             }
         }
         System.out.println("Input handler has terminated");
@@ -143,6 +149,21 @@ public class HandleClientInputCLI implements Runnable{
     private void continueGame(boolean continueGame){
         messageDispatcher.notifyPersistence(continueGame);
         actionsCLI.disableContinueGame();
+    }
+
+    /**
+     * sends server the message
+     * @param input should be in the form "t -all/player2(receiver of message): message(body of message)"
+     */
+    private void sendMessageToChat(String input){
+        String[] completeMessage= input.split(":");
+        if(completeMessage.length>1) {
+            String receiver = completeMessage[0].strip().split(" ")[1].toUpperCase();
+            viewController.sendChatMessage(viewController.getMyPlayer().getUsername(), receiver, completeMessage[1]);
+        }
+        else {
+            System.out.println("message invalid, message must be in the form -all/username(to indicate the receiver): body of message");
+        }
     }
 
     /**
@@ -341,6 +362,7 @@ public class HandleClientInputCLI implements Runnable{
      * @param username chosen by my player that will be assigned to him if server says it's ok
      */
     private void checkUsernameAsksAgainIfNotOk(String username){
+        username=username.toUpperCase();
         if(viewController.checkParamsAndSendJoin(username)){
             actionsCLI.disableJoin();
             viewController.createMyPlayer(username);
@@ -355,6 +377,7 @@ public class HandleClientInputCLI implements Runnable{
      * @param input is the username that client has chosen and the number of players he wants in the game
      */
     private void checkUsernameAndNumberOfPlayersAsksAgainIfNotOK(String input){
+        input=input.toUpperCase();
         String[] inputArray=input.split(" ");
         String username=inputArray[0];
         int numberOfPlayers;

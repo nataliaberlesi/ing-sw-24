@@ -148,6 +148,7 @@ public abstract class ViewController {
                     setPublicObjectives();
                     updateDrawableArea();
                 }
+                setPlayerColor(messageParser.getAffectedPlayer(), messageParser.getColor());
                 updatePlayerBoardHandScore(messageParser.getAffectedPlayer(), messageParser.getScore());
                 if(isMyPlayer(messageParser.getAffectedPlayer())){
                     setPrivateObjective();
@@ -156,6 +157,8 @@ public abstract class ViewController {
             case CONNECT -> connectScene();
 
             case JOIN -> manageJoinStatus();
+
+            case CHAT -> updateChat();
 
             case START_FIRSTROUND -> {
                 setUpGame(); //create instance for every player, fill drawableArea, give first player starting card
@@ -221,8 +224,8 @@ public abstract class ViewController {
             }
 
             case ENDGAME  -> {
-                setFinalScoreBoard(); // popola la classifica
-                showFinalScoreBoard(); // mostra la classigfica
+                setFinalScoreBoard();
+                showFinalScoreBoard();
             }
             case ABORT -> {
                 showErrorAlert(messageParser.getCause(), "Game has terminated");
@@ -230,6 +233,32 @@ public abstract class ViewController {
             }
         }
     }
+
+    /**
+     * checks weather message is sent by my player or for my player and updates the chat
+     */
+    protected void updateChat(){
+        String sender=messageParser.getCurrentPlayer();
+        String receiver=messageParser.getAffectedPlayer();
+        boolean isPrivate=(!receiver.equalsIgnoreCase("-all"));
+        boolean addMessage= (receiver.equalsIgnoreCase("-all")|| isMyPlayer(sender));
+        if(isMyPlayer(receiver) ){
+            addMessage=true;
+            isPrivate=true;
+            receiver="";
+        }
+        if(addMessage){
+            addMessageToChat(sender,receiver, messageParser.getChat(), isPrivate);
+        }
+        showScene(); // non so se a te va bene questo metodo qua, fammi sapere
+    }
+
+
+    public void sendChatMessage(String myPlayerUsername, String receiver, String message){
+        messageDispatcher.chat(myPlayerUsername, receiver, message);
+    }
+
+    protected abstract void addMessageToChat(String sender, String receiver,String bodyOfMessage, boolean isPrivate);
 
     protected abstract void terminate();
 
