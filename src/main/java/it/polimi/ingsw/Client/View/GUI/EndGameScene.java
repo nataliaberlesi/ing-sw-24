@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class EndGameScene extends Scene {
     private final AnchorPane root;
-    private final Label winnerLabel = new Label("CONGRATULATIONS!\nYOU WON!!!\n");
+    private final Label winnerLabel = new Label("CONGRATULATIONS,\nYOU WON!!!\n");
     private final Label loserLabel =  new Label("Sorry,\nYou lost :(\n");
     private final Label finalScore = new Label("This is the final score:\n");
     private final GridPane finalScoreBoard = new GridPane();
@@ -26,7 +26,6 @@ public class EndGameScene extends Scene {
         finalScoreBoard.setLayoutX(438);
         finalScoreBoard.setLayoutY(358);
         this.root.getChildren().add(finalScoreBoard);
-
     }
 
     private void initializeScene() {
@@ -38,31 +37,28 @@ public class EndGameScene extends Scene {
         backgroundImageView.setFitHeight(600);
         backgroundImageView.setPreserveRatio(true);
         backgroundImageView.setPickOnBounds(true);
-        backgroundImageView.setOpacity(0.1);
+        backgroundImageView.setOpacity(0.2);
 
-        StaticsForGUI.setLabelCharacteristics(new Label("CONGRATULATIONS!\nYOU WON!!!\n"),"Lao MN Bold", 36, 330, 108);
-        StaticsForGUI.setLabelCharacteristics(new Label("Sorry,\nYou lost :(\n"),"Lao MN Bold", 36, 467, 108);
-        StaticsForGUI.setLabelCharacteristics(new Label("This is the final score:\n"), "Lao MN Bold", 36,340, 266);
+        StaticsForGUI.setLabelCharacteristics(finalScore, "Lao MN Bold", 36,345, 266);
 
         this.root.getChildren().add(backgroundImageView);
         this.root.getChildren().add(finalScore);
-        this.root.getChildren().add(winnerLabel);
-        this.root.getChildren().add(loserLabel);
-        winnerLabel.setVisible(false);
-        loserLabel.setVisible(false);
     }
 
     public void setWinnerLabel(){
-        winnerLabel.setVisible(true);
+        StaticsForGUI.setLabelCharacteristics(winnerLabel,"Lao MN Bold", 36, 330, 108);
+        this.root.getChildren().add(winnerLabel);
+
     }
 
     public void setLoserLabel(){
-        winnerLabel.setVisible(true);
+        StaticsForGUI.setLabelCharacteristics(loserLabel,"Lao MN Bold", 36, 467, 108);
+        this.root.getChildren().add(loserLabel);
     }
 
     protected void setScoreBoard(ArrayList<ScoreboardPositionDTO> ranking, String username){
-        finalScoreBoard.setVgap(10);
-        finalScoreBoard.setVgap(10);
+        finalScoreBoard.setVgap(5);
+        finalScoreBoard.setHgap(20);
         ArrayList<Label> rankingLabels = new ArrayList<>();
         ArrayList<Label> usernames = new ArrayList<>();
         ArrayList<Label> scores = new ArrayList<>();
@@ -91,8 +87,9 @@ public class EndGameScene extends Scene {
             if (ranking.get(i).username().equalsIgnoreCase(username) && ranking.get(i).position() == 1){
                 setWinnerLabel();
             }
-            else setLoserLabel();
-
+            if (ranking.get(i).username().equalsIgnoreCase(username) && ranking.get(i).position() != 1){
+                setLoserLabel();
+            }
         }
     }
 }
