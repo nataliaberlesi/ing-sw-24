@@ -509,7 +509,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     private void sendFirstRoundMessageAndUpdateScene(){
         messageDispatcher.firstRound(myPlayer.getUsername(), myPlayer.getBoard().getChosenCard().isFaceUp(), myPlayer.getColor());
         mainScene.getConfirmActionButton().setDisable(true);
-        MainScene.enableActions = false;
+        StaticsForGUI.enableActions = false;
         for (Button button : mainScene.getSeeOtherPlayersSceneButtons())
             button.setDisable(false);
         myPlayer.getBoard().getInitialCard().setOnMouseClicked(null);
@@ -593,7 +593,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
      * Sends second round message to server and updates main scene accordingly
      */
     private void sendSecondRoundMessageAndUpdateScene() {
-        MainScene.enableActions = false;
+        StaticsForGUI.enableActions = false;
         mainScene.getConfirmActionButton().setDisable(true);
         mainScene.getObjectivesSection().getPrivateObjective().setCardIDAndImage(myPlayer.getPrivateObjectiveID());
         messageDispatcher.secondRound(myPlayer.getUsername(), myPlayer.getPrivateObjectiveIndex());
@@ -614,7 +614,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
      * Sends place card message to server and updates main scene accordingly
      */
     private void sendPlaceCardMessageAndUpdateScene() {
-        MainScene.enableActions = false;
+        StaticsForGUI.enableActions = false;
         mainScene.getConfirmActionButton().setDisable(true);
         messageDispatcher.placeCard(myPlayer.getUsername(), myPlayer.getHand().getChosenHandCard().isFaceUp(), myPlayer.getHand().getChosenHandCardIndex(), myPlayer.getBoard().getChosenCard().getChosenCornerCoordinates());
         myPlayer.getHand().deactivateEventHandlerOnHandCards();
@@ -659,7 +659,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
      * Sends draw card message to server and updates main scene accordingly
      */
     private void sendDrawCardMessageAndUpdateScene() {
-        MainScene.enableActions = false;
+        StaticsForGUI.enableActions = false;
         mainScene.enableConfirmButtonClick();
         mainScene.getDrawableArea().deactivateEventHandlerOnDrawableArea();
         messageDispatcher.drawCard(myPlayer.getUsername(), mainScene.getDrawableArea().getChosenDrawableAreaCardIndex(), mainScene.getDrawableArea().getChosenDrawableArea());

@@ -57,7 +57,7 @@ public class TokenColorChoice extends Scene {
 
     public void handleTokenColorChoice(String color) {
         viewControllerGUI.getMyPlayer().setColor(color);
-        MainScene.enableActions = true;
+        StaticsForGUI.enableActions = true;
         viewControllerGUI.getMainScene().enableConfirmButtonClick();
         viewControllerGUI.getPopUpStage().close();
     }

@@ -7,6 +7,7 @@ import javafx.scene.text.Font;
 
 public class StaticsForGUI {
     protected static boolean enableActions = false;
+    protected static boolean atLeastOneCornerSelected = false;
     protected static void setLabelCharacteristics(Label label, String fontStyle, int fontDimension, double layoutX, double layoutY){
         label.setFont(new Font(fontStyle, fontDimension));
         label.setAlignment(Pos.CENTER);

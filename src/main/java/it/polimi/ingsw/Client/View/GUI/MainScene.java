@@ -13,23 +13,69 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class MainScene extends Scene {
 
+    /**
+     * Root of the scene
+     */
     private final AnchorPane root;
+    /**
+     * Instance of ObjectivesSectionGUI that will be used in scene
+     */
     private final ObjectivesSectionGUI objectivesSection = new ObjectivesSectionGUI();
-    private DrawableAreaGUI drawableArea = new DrawableAreaGUI();
+    /**
+     * Instance of DrawableAreaGUI that will be used in scene
+     */
+    private final DrawableAreaGUI drawableArea = new DrawableAreaGUI();
+    /**
+     * Instance of ScoreBoardGUI that will be used in scene
+     */
     private ScoreBoardGUI scoreBoard;
+    /**
+     * Label to state if it is the player's turn or not
+     */
     private final Label turnLabel = new Label();
+    /**
+     * Label to explain actions to players
+     */
     private final Label actionLabel = new Label();
+    /**
+     * Label to explain confirm button to players
+     */
     private final Label confirmActionLabel = new Label();
+    /**
+     * Label to warn players that end game has started
+     */
     private final Label endGameLabel = new Label("End Game!");
+    /**
+     * Button that allows players to flip their hand
+     */
     private final Button flipYourHandButton = new Button("Flip your hand");
+    /**
+     * Button that confirms player's actions and sends messages to server
+     */
     private final Button confirmActionButton = new Button("Confirm action");
+    /**
+     * Button to interact with chat
+     */
     private final Button chatButton = new Button("Chat");
+    /**
+     * Buttons to see other player's board and flipped hand and to go back to player's scene
+     */
     private final ArrayList<Button> seeOtherPlayersSceneButtons = new ArrayList<>();
-    private ViewControllerGUI viewControllerGUI;
+    /**
+     * Instance of ViewControllerGUI to interact with controller
+     */
+    private final ViewControllerGUI viewControllerGUI;
+    /**
+     * Player who is currently appearing on main scene
+     */
     private PlayerGUI playerInScene;
-    protected static boolean enableActions = false;
-    protected static boolean atLeastOneCornerSelected = false;
 
+
+    /**
+     * Constructor for main scene
+     * @param viewControllerGUI view controller gui instance
+     * @param playerInScene player that is appearing on main scene
+     */
     public MainScene(ViewControllerGUI viewControllerGUI, PlayerGUI playerInScene) {
         super(new AnchorPane(), 1060, 595);
         this.playerInScene = playerInScene;
@@ -50,7 +96,6 @@ public class MainScene extends Scene {
         root.getChildren().add(playerInScene.getHand());
         root.getChildren().add(playerInScene.getBoard());
     }
-
 
     /**
      * Sets up background image
@@ -96,7 +141,6 @@ public class MainScene extends Scene {
 
         this.root.getChildren().addAll(resourceCardsLabel, goldCardsLabel, handLabel, secretObjectiveLabel, commonObjectivesLabel,
                 confirmActionLabel, turnLabel, actionLabel, endGameLabel);
-
     }
 
     /**
@@ -108,34 +152,22 @@ public class MainScene extends Scene {
 
         StaticsForGUI.setButtonCharacteristics(confirmActionButton, "System Bold", 16, 38, 230, true);
 
-        StaticsForGUI.setButtonCharacteristics(chatButton, "System Bold", 16, 38, 185, false);
+        StaticsForGUI.setButtonCharacteristics(chatButton, "System Bold", 16, 65, 170, false);
         chatButton.setOnMouseClicked(event -> {
             viewControllerGUI.showUpdatedChat();
             viewControllerGUI.setSceneOnStage(viewControllerGUI.getChatScene(), viewControllerGUI.getChatStage());
         });
 
-        this.root.getChildren().addAll(flipYourHandButton, confirmActionButton);
+        this.root.getChildren().addAll(flipYourHandButton, confirmActionButton, chatButton);
     }
 
     /**
-     * Sets the turn label to a specific text
-     * @param text text
-     */
-    public void setTurnLabel(String text){
-        turnLabel.setText(text);
-    }
-
-    /**
-     * Sets the hello player label to a specific username
+     * Sets the hello player label to a specific username and adds it to main scene
      * @param username username
      */
-
     public void setHelloPlayerLabel(String username){
         Label helloPlayerLabel = new Label("Hi " + username);
-        helloPlayerLabel.setFont(new Font("System Bold", 18));
-        helloPlayerLabel.setAlignment(Pos.CENTER);
-        helloPlayerLabel.setLayoutX(38);
-        helloPlayerLabel.setLayoutY(457);
+        StaticsForGUI.setLabelCharacteristics(helloPlayerLabel, "System Bold", 18, 38, 457);
         this.root.getChildren().add(helloPlayerLabel);
     }
 
@@ -146,16 +178,17 @@ public class MainScene extends Scene {
     public void setSeeOtherPlayersGameButtons(ArrayList<PlayerGUI> playersInGame){
         for (int i = 0; i < playersInGame.size(); i++) {
             seeOtherPlayersSceneButtons.add(new Button("See " + playersInGame.get(i).getUsername() + "'s game"));
-            seeOtherPlayersSceneButtons.get(i).setLayoutX(38);
-            seeOtherPlayersSceneButtons.get(i).setLayoutY(277+45*i);
-            seeOtherPlayersSceneButtons.get(i).setMnemonicParsing(false);
+            StaticsForGUI.setButtonCharacteristics(seeOtherPlayersSceneButtons.get(i), "System", 12, 38, 277+45*i, true);
             int finalI = i;
-            seeOtherPlayersSceneButtons.get(i).setDisable(true);
             seeOtherPlayersSceneButtons.get(i).setOnMouseClicked(event -> handleSeeOtherPlayerScene(playersInGame.get(finalI)));
             this.root.getChildren().add(seeOtherPlayersSceneButtons.get(i));
         }
     }
 
+    /**
+     * Handles the request to see other player's scene
+     * @param otherPlayer player requested to see scene
+     */
     private void handleSeeOtherPlayerScene(PlayerGUI otherPlayer) {
         root.getChildren().remove(playerInScene.getHand());
         root.getChildren().remove(playerInScene.getBoard());
@@ -166,25 +199,19 @@ public class MainScene extends Scene {
         viewControllerGUI.showScene();
     }
 
-    public DrawableAreaGUI getDrawableArea(){
-        return drawableArea;
-    }
 
-    public ScoreBoardGUI getScoreBoard() {
-        return scoreBoard;
-    }
-
-
-    public ObjectivesSectionGUI getObjectivesSection() {
-        return objectivesSection;
-    }
-
+    /**
+     * Enables flip hand button
+     */
     public void enableFlipHandButton(){
         if (playerInScene.equals(viewControllerGUI.getMyPlayer()))
             flipYourHandButton.setDisable(false);
         else flipYourHandButton.setDisable(true);
     }
 
+    /**
+     * Handles "flip your hand" button click flipping and showing hand
+     */
     private void flipAndShowHand() {
         HandGUI hand = viewControllerGUI.getMyPlayer().getHand();
         for (CardGUI card : hand.getHandCards()){
@@ -194,17 +221,23 @@ public class MainScene extends Scene {
                 card.setBorder(null);
                 card.isSelected = false;
                 confirmActionButton.setDisable(true);
-                enableActions = false;
+                StaticsForGUI.enableActions = false;
             }
         }
     }
 
+    /**
+     * Enables confirm button click only if player in scene is my player, is current player and actions are enabled
+     */
     public void enableConfirmButtonClick(){
-        if (playerInScene.equals(viewControllerGUI.getMyPlayer()) && playerInScene.isCurrentPlayer() && enableActions)
+        if (playerInScene.equals(viewControllerGUI.getMyPlayer()) && playerInScene.isCurrentPlayer() && StaticsForGUI.enableActions)
             confirmActionButton.setDisable(false);
         else confirmActionButton.setDisable(true);
     }
 
+    /**
+     * Adds event handlers to hand cards
+     */
     public void addEventHandlerToHandCards(){
         HandGUI hand = viewControllerGUI.getMyPlayer().getHand();
         CardGUI[] handCards = hand.getHandCards();
@@ -215,22 +248,29 @@ public class MainScene extends Scene {
                 handCard.toggleSelection(handCard, hand);
                 hand.setChosenHandCard(handCard);
                 hand.setChosenHandCardIndex(finalI);
-                if (atLeastOneCornerSelected && viewControllerGUI.getMyPlayer().getHand().getChosenHandCard().isSelected){
-                    enableActions = true;
+                if (StaticsForGUI.atLeastOneCornerSelected && viewControllerGUI.getMyPlayer().getHand().getChosenHandCard().isSelected){
+                    StaticsForGUI.enableActions = true;
                     confirmActionButton.setDisable(false);
                 }else{
-                    enableActions = false;
+                    StaticsForGUI.enableActions = false;
                     confirmActionButton.setDisable(true);
                 }
             });
         }
     }
+
+    /**
+     * Sets event handlers to board cards
+     */
     public void setEventHandlerToBoardCards() {
         for (CardGUI card : viewControllerGUI.getMyPlayer().getBoard().getCardsOnBoard()){
             addEventHandlerToCorners(card);
         }
     }
 
+    /**
+     * Adds event handlers to corners of board cards
+     */
     public void addEventHandlerToCorners(CardGUI card){
         CornerGUI[] corners = card.getCorners();
         for (int i = 0; i < corners.length; i++) {
@@ -241,20 +281,27 @@ public class MainScene extends Scene {
         }
     }
 
+    /**
+     * Handles clicks on corners of board cards
+     * @param corner corner clicked
+     * @param card card on which said corner was click
+     */
     public void handleCornerClick(CornerGUI corner, CardGUI card) {
-        MainScene.atLeastOneCornerSelected = corner.toggleSelection(corner, viewControllerGUI.getMyPlayer().getBoard());
+        StaticsForGUI.atLeastOneCornerSelected = corner.toggleSelection(corner, viewControllerGUI.getMyPlayer().getBoard());
         viewControllerGUI.getMyPlayer().getBoard().setChosenCard(card);
         card.setChosenCornerCoordinates(corner.cornerCoordinates);
-        if (MainScene.atLeastOneCornerSelected && viewControllerGUI.getMyPlayer().getHand().getChosenHandCard().isSelected){
-            MainScene.enableActions = true;
+        if (StaticsForGUI.atLeastOneCornerSelected && viewControllerGUI.getMyPlayer().getHand().getChosenHandCard().isSelected){
+            StaticsForGUI.enableActions = true;
             confirmActionButton.setDisable(false);
         }else{
-            MainScene.enableActions = false;
+            StaticsForGUI.enableActions = false;
             confirmActionButton.setDisable(true);
         }
     }
 
-
+    /**
+     * Adds event handlers to drawable area cards
+     */
     public void addEventHandlerToDrawableAreaCards() {
         AtomicBoolean isResourceCardChosen = new AtomicBoolean(false);
         AtomicBoolean isGoldCardChosen = new AtomicBoolean(false);
@@ -281,56 +328,102 @@ public class MainScene extends Scene {
         }
     }
 
+    /**
+     * Checks if a resource or gold card is selected
+     * @param isResourceCardChosen true if a resource card is chosen, false otherwise
+     * @param isGoldCardChosen true if a gold card is chosen, false otherwise
+     */
     private void checkForSelectedCards(boolean isResourceCardChosen, boolean isGoldCardChosen) {
         if (isResourceCardChosen || isGoldCardChosen){
-            enableActions = true;
+            StaticsForGUI.enableActions = true;
             enableConfirmButtonClick();
         } else{
-            enableActions = false;
-            enableConfirmButtonClick();
+            StaticsForGUI.enableActions = false;
+            confirmActionButton.setDisable(true);
         }
     }
 
+    /**
+     * Getter for drawable area
+     * @return drawable area
+     */
+    public DrawableAreaGUI getDrawableArea(){
+        return drawableArea;
+    }
 
+    /**
+     * Getter for score board
+     * @return score board
+     */
+    public ScoreBoardGUI getScoreBoard() {
+        return scoreBoard;
+    }
+
+    /**
+     * Getter for objectives section
+     * @return objectives section
+     */
+    public ObjectivesSectionGUI getObjectivesSection() {
+        return objectivesSection;
+    }
+
+    /**
+     * Getter for endgame label
+     * @return endGameLabel
+     */
     public Label getEndGameLabel() {
         return endGameLabel;
     }
 
-    public void setConfirmActionLabel(String text) {
-        this.confirmActionLabel.setText(text);
-    }
-
-    public void setActionLabel(String text){
-        this.actionLabel.setText(text);
-
-    }
-    public String getTurnLabelText(){
-        return turnLabel.getText();
-    }
-
+    /**
+     * Getter for seeOtherPlayersSceneButtons
+     * @return seeOtherPlayersSceneButtons
+     */
     public ArrayList<Button> getSeeOtherPlayersSceneButtons() {
         return seeOtherPlayersSceneButtons;
     }
 
-    public ViewControllerGUI getViewControllerGUI(){
-        return viewControllerGUI;
+    /**
+     * Getter for confirmActionButton
+     * @return confirmActionButton
+     */
+    public Button getConfirmActionButton() {
+        return confirmActionButton;
     }
 
-    public void setPlayerInScene(PlayerGUI player) {
-        this.playerInScene = player;
+    /**
+     * Sets confirm action label to a specific text
+     * @param text text to be set
+     */
+    public void setConfirmActionLabel(String text) {
+        this.confirmActionLabel.setText(text);
     }
 
-    public PlayerGUI getPlayerInScene() {
-        return playerInScene;
+    /**
+     * Sets action label to a specific text
+     * @param text text to be set
+     */
+    public void setActionLabel(String text){
+        this.actionLabel.setText(text);
     }
+
+    /**
+     * Sets the turn label to a specific text
+     * @param text text
+     */
+    public void setTurnLabel(String text){
+        turnLabel.setText(text);
+    }
+
+    /**
+     * Sets score board to player's usernames and adds it to main scene
+     * @param playerUsernames players in game usernames
+     */
 
     public void setScoreBoard(ArrayList<String> playerUsernames) {
         scoreBoard = new ScoreBoardGUI(playerUsernames);
         root.getChildren().add(scoreBoard);
     }
 
-    public Button getConfirmActionButton() {
-        return confirmActionButton;
-    }
 
 }

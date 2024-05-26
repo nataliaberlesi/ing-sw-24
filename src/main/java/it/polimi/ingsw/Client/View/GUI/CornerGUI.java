@@ -35,13 +35,13 @@ public class CornerGUI extends Region {
                     Color.RED, BorderStrokeStyle.SOLID, new CornerRadii(3), new BorderWidths(3)
             )));
             corner.isSelected = true;
-            MainScene.atLeastOneCornerSelected = true;
+            StaticsForGUI.atLeastOneCornerSelected = true;
         } else {
             corner.setBorder(null);
             corner.isSelected = false;
-            MainScene.atLeastOneCornerSelected = false;
+            StaticsForGUI.atLeastOneCornerSelected = false;
         }
-        return MainScene.atLeastOneCornerSelected;
+        return StaticsForGUI.atLeastOneCornerSelected;
     }
 
 

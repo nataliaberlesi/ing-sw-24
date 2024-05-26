@@ -122,7 +122,7 @@ public class BoardGUI extends ScrollPane {
                 corner.setOnMouseClicked(null);
             }
         }
-        MainScene.atLeastOneCornerSelected = false;
+        StaticsForGUI.atLeastOneCornerSelected = false;
     }
 
 

@@ -48,7 +48,7 @@ public class PrivateObjectiveChoice extends Scene {
     private void handlePrivateObjectiveChoice(int i, String cardID) {
         viewControllerGUI.getMyPlayer().setPrivateObjectiveIndex(i);
         viewControllerGUI.getMyPlayer().setPrivateObjectiveID(cardID);
-        MainScene.enableActions = true;
+        StaticsForGUI.enableActions = true;
         viewControllerGUI.getMainScene().enableConfirmButtonClick();
         viewControllerGUI.getPopUpStage().close();
     }
