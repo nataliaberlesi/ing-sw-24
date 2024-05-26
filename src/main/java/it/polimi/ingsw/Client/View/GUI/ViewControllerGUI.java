@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Client.View.GUI;
 import it.polimi.ingsw.Client.Network.MessageDispatcher;
 import it.polimi.ingsw.Client.Network.MessageParser;
+import it.polimi.ingsw.Client.Network.MessageType;
 import it.polimi.ingsw.Client.View.ViewController;
 import javafx.application.Platform;
 import javafx.event.Event;
@@ -533,6 +534,10 @@ public class ViewControllerGUI extends ViewController implements Initializable{
             playersInGame.getPlayer(affectedPlayer).setColor(messageParser.getColor());
             setPlayerColor(affectedPlayer, playersInGame.getPlayer(affectedPlayer).getColor());
         }
+        if (messageParser.getMessageType() == MessageType.CONTINUE){
+            for (Button button : mainScene.getSeeOtherPlayersSceneButtons())
+                button.setDisable(false);
+        }
     }
 
     /**
@@ -599,7 +604,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
      */
     @Override
     protected void enablePlaceCard() {
-        mainScene.setActionLabel("Choose a card from your hand\nand a corner to place it on the board");
+        mainScene.setActionLabel("Choose a card from your hand and\na corner to place it on the board");
         mainScene.addEventHandlerToHandCards();
         mainScene.setEventHandlerToBoardCards();
         mainScene.getConfirmActionButton().setOnMouseClicked(event -> sendPlaceCardMessageAndUpdateScene());
