@@ -3,6 +3,7 @@ package it.polimi.ingsw.Server.Network;
 import com.google.gson.JsonObject;
 import it.polimi.ingsw.Client.Network.DTO.ModelDTO.ScoreboardPositionDTO;
 import it.polimi.ingsw.Server.Controller.DTO.OutParamsDTO;
+import it.polimi.ingsw.Server.Controller.DTO.ParamsDTO;
 import it.polimi.ingsw.Server.Controller.GameInstance;
 import it.polimi.ingsw.Server.Model.Cards.Card;
 import it.polimi.ingsw.Server.Model.Cards.Objectives.Objective;
@@ -15,29 +16,23 @@ import it.polimi.ingsw.Server.Model.Scoreboard;
 import java.util.ArrayList;
 
 public class MessageCrafter {
-    private static final MessageParser messageParser=MessageParser.getINSTANCE();
-    public static Message craftErrorMessage(MessageType messageType, String currentPlayer) {
-        JsonObject params=new JsonObject();
-        params.addProperty("currentPlayer",currentPlayer);
-        return new Message(messageType,params);
-    }
     public static Message craftConnectMessage(boolean masterStatus) {
         MessageType messageType=MessageType.CONNECT;
-        JsonObject params=new JsonObject();
-        params.addProperty("masterStatus",masterStatus);
-        return new Message(messageType,params);
+        OutParamsDTO outParamsDTO=new OutParamsDTO(
+                masterStatus
+        );
+        return new Message(messageType,new ParamsDTO(outParamsDTO));
     }
     public static Message craftAbortMessage(String cause) {
         MessageType messageType=MessageType.ABORT;
-        JsonObject params= new JsonObject();
-        params.addProperty("cause",cause);
-        return new Message(messageType,params);
+        OutParamsDTO outParamsDTO=new OutParamsDTO(
+                cause
+        );
+        return new Message(messageType,new ParamsDTO(outParamsDTO));
     }
     public static Message craftCreateMessage(String username) {
         MessageType messageType=MessageType.CREATE;
-        JsonObject params= new JsonObject();
-        params.addProperty("currentPlayer",username);
-        return new Message(messageType,params);
+        return new Message(messageType,new ParamsDTO(null,null));
     }
     public static Message craftJoinMessage(String username,Boolean unavailableUsername) {
         MessageType messageType=MessageType.JOIN;
@@ -46,7 +41,7 @@ public class MessageCrafter {
                         username,
                         unavailableUsername
                 );
-        return new Message(messageType,messageParser.toJsonObject(outParamsDTO));
+        return new Message(messageType,new ParamsDTO(outParamsDTO));
     }
 
     public static Message craftFirstRoundMessage(String cardID, String currentPlayer, ArrayList<Color> availableColors, String affectedPlayer, ArrayList<PlacedCard> placedCards, String color) {
@@ -62,7 +57,7 @@ public class MessageCrafter {
                 placedCards,
                 color,
                 availableColors);
-        return new Message(messageType,messageParser.toJsonObject(outParamsDTO));
+        return new Message(messageType,new ParamsDTO(outParamsDTO));
     }
     public static Message craftSecondRoundMessage(String currentPlayer, String affectedPlayer, Card[] hand, Objective[] privateObjectives, Objective chosenPrivateObjective) {
             MessageType messageType=MessageType.SECONDROUND;
@@ -73,7 +68,7 @@ public class MessageCrafter {
                     privateObjectives,
                     chosenPrivateObjective
             );
-            return new Message(messageType,messageParser.toJsonObject(outParamsDTO));
+            return new Message(messageType,new ParamsDTO(outParamsDTO));
     }
 
     public static Message craftPlaceCardMessage(String currentPlayer, ArrayList<PlacedCard> placedCards, Integer score, Card[] hand) {
@@ -85,7 +80,7 @@ public class MessageCrafter {
                 score,
                 hand
         );
-        return new Message(messageType, messageParser.toJsonObject(outParamsDTO));
+        return new Message(messageType, new ParamsDTO(outParamsDTO));
     }
 
     public static Message craftDrawCardMessage(String currentPlayer, String affectedPlayer, Card[] hand, Card[] resourceDrawableArea, Card[] goldDrawableArea) {
@@ -97,7 +92,7 @@ public class MessageCrafter {
                 resourceDrawableArea,
                 goldDrawableArea
         );
-        return new Message(messageType, messageParser.toJsonObject(outParamsDTO));
+        return new Message(messageType, new ParamsDTO(outParamsDTO));
     }
 
     public static Message craftWinnersMessage(Scoreboard scoreBoard) {
@@ -113,11 +108,11 @@ public class MessageCrafter {
         OutParamsDTO outParamsDTO=new OutParamsDTO(
                 scoreBoardDTO
         );
-        return new Message(messageType,messageParser.toJsonObject(outParamsDTO));
+        return new Message(messageType,new ParamsDTO(outParamsDTO));
     }
 
     public static Message craftPersistencyNotification() {
-        return new Message(MessageType.PERSISTENCE,null);
+        return new Message(MessageType.PERSISTENCE,new ParamsDTO(null,null));
     }
 
     public static Message craftContinueGameMessage(GameInstance gameInstance) {
@@ -139,7 +134,7 @@ public class MessageCrafter {
                 gameInstance.getGoldDrawableArea()
         );
         gameInstance.nextTurn();
-        return new Message(messageType,messageParser.toJsonObject(outParamsDTO));
+        return new Message(messageType,new ParamsDTO(outParamsDTO));
     }
     public static Message craftChatMessage(String currentPlayer, String affectedPlayer, String chat) {
         MessageType messageType=MessageType.CHAT;
@@ -148,6 +143,6 @@ public class MessageCrafter {
                 affectedPlayer,
                 chat
         );
-        return new Message(messageType,messageParser.toJsonObject(outParamsDTO));
+        return new Message(messageType,new ParamsDTO(outParamsDTO));
     }
 }

@@ -28,49 +28,48 @@ public class GameController {
     public Message dispatchMessage(String message) {
         Message currentMessage=messageParser.parseMessage(message);
         MessageType messageType=currentMessage.type();
-        JsonObject jsonParams=currentMessage.params();
-        return queryModel(messageType, jsonParams);
+        InParamsDTO inParamsDTO=currentMessage.params().clientOutParams();
+        return queryModel(messageType, inParamsDTO);
     }
     /**
      * Given a specific type of message, queries the model to get/change some information
      */
-    public Message queryModel(MessageType messageType,JsonObject jsonParams) {
+    public Message queryModel(MessageType messageType,InParamsDTO inParamsDTO) {
         switch (messageType) {
             case PERSISTENCE -> {
-                return checkPersistency(jsonParams);
+                return checkPersistency(inParamsDTO);
             }
             case CREATE -> {
-                return createGame(jsonParams);
+                return createGame(inParamsDTO);
             }
             case JOIN -> {
-                return joinGame(jsonParams);
+                return joinGame(inParamsDTO);
             }
             case FIRSTROUND -> {
-                return playFirstRound(jsonParams);
+                return playFirstRound(inParamsDTO);
             }
             case SECONDROUND -> {
                 //TODO
-                return playSecondRound(jsonParams);
+                return playSecondRound(inParamsDTO);
             }
             case ACTION_PLACECARD -> {
                 //TODO
-                return placeCard(jsonParams);
+                return placeCard(inParamsDTO);
             }
             case ACTION_DRAWCARD -> {
                 //TODO
-                return drawCard(jsonParams);
+                return drawCard(inParamsDTO);
             }
             case CHAT -> {
-                return chat(jsonParams);
+                return chat(inParamsDTO);
             }
             case ABORT -> {
-                return closeGame(jsonParams);
+                return closeGame(inParamsDTO);
             }
         }
         return null;
     }
-    private Message checkPersistency(JsonObject jsonParams) {
-        InParamsDTO inParamsDTO=messageParser.parseInParamsDTO(jsonParams);
+    private Message checkPersistency(InParamsDTO inParamsDTO) {
         persistency=inParamsDTO.persistence();
         if(persistency) {
             try {
@@ -86,21 +85,19 @@ public class GameController {
             return MessageCrafter.craftConnectMessage(true);
         }
     }
-    private Message closeGame(JsonObject jsonParams) {
-        InParamsDTO inParamsDTO=messageParser.parseInParamsDTO(jsonParams);
+    private Message closeGame(InParamsDTO inParamsDTO) {
         return MessageCrafter.craftAbortMessage(inParamsDTO.cause());
     }
 
     /**
      * Creates a game using master player data
      */
-    public Message createGame(JsonObject jsonParams){
+    public Message createGame(InParamsDTO inParamsDTO){
         if(this.gameInstance!=null){
             MessageType type=MessageType.ABORT;
             String params="Game is already created";
             return new Message(type, null);
         }
-        InParamsDTO inParamsDTO=messageParser.parseInParamsDTO(jsonParams);
         this.server.openLobby(inParamsDTO.numberOfPlayers());
         this.gameInstance=new GameInstance(inParamsDTO.username().toUpperCase(),inParamsDTO.numberOfPlayers());
         Message message = MessageCrafter.craftCreateMessage(inParamsDTO.username().toUpperCase());
@@ -110,11 +107,9 @@ public class GameController {
 
     /**
      * Lets a player join a game if his username is not taken
-     * @param jsonParams username of the joining player
      * @return an affermative answer if the username is available, a negative answer otherwise
      */
-    public Message joinGame(JsonObject jsonParams) {
-        InParamsDTO inParamsDTO=messageParser.parseInParamsDTO(jsonParams);
+    public Message joinGame(InParamsDTO inParamsDTO) {
         String username=inParamsDTO.username().toUpperCase();
         Boolean unavailableUsername;
         if(persistency) {
@@ -134,18 +129,16 @@ public class GameController {
      * Generates first round parameters and sets DrawableArea for the game instance
      * @return the starting first round parameters in JSON format
      */
-    public JsonObject getJSONStartFirstRoundParams() {
-        OutParamsDTO startFirstRound=SetUpGame.getStartFirstRoundParams(gameInstance);
-        return messageParser.toJsonObject(startFirstRound);
+    public Message getJSONStartFirstRoundParams() {
+        ParamsDTO params=SetUpGame.getStartFirstRoundParams(gameInstance);
+        return new Message(MessageType.START_FIRSTROUND,params);
     }
 
     /**
 +     * Plays the current player's first round with given parameters
-     * @param jsonParams the parameters of his action
      * @return
      */
-    public Message playFirstRound(JsonObject jsonParams) {
-        InParamsDTO inParamsDTO=messageParser.parseInParamsDTO(jsonParams);
+    public Message playFirstRound(InParamsDTO inParamsDTO) {
         String card=null;
         gameInstance.chooseColor(inParamsDTO.username(), inParamsDTO.color());
         gameInstance.placeStartingCard(inParamsDTO.username(),inParamsDTO.isFacingUp());
@@ -161,12 +154,11 @@ public class GameController {
         previousMessageType=message.type();
         return message;
     }
-    public JsonObject getJSONStartSecondRoundParams() {
-        OutParamsDTO startSecondRound=SetUpGame.getStartSecondRoundParams(gameInstance);
-        return messageParser.toJsonObject(startSecondRound);
+    public Message getJSONStartSecondRoundParams() {
+        ParamsDTO startSecondRound=SetUpGame.getStartSecondRoundParams(gameInstance);
+        return new Message(MessageType.START_SECONDROUND,startSecondRound);
     }
-    public Message playSecondRound(JsonObject jsonParams) {
-        InParamsDTO inParamsDTO=messageParser.parseInParamsDTO(jsonParams);
+    public Message playSecondRound(InParamsDTO inParamsDTO) {
         Objective[] privateObjectives=new Objective[2];
         String currentPlayer= "";
         Card[] hand=new Card[3];
@@ -190,8 +182,7 @@ public class GameController {
         this.previousMessageType=message.type();
         return message;
     }
-    public Message placeCard(JsonObject jsonParams) {
-        InParamsDTO inParamsDTO=messageParser.parseInParamsDTO(jsonParams);
+    public Message placeCard(InParamsDTO inParamsDTO) {
         String currentPlayer=inParamsDTO.username();
         if(!gameInstance.getPlayers().get(inParamsDTO.username()).getPlayerBoard().placeCard(
                 gameInstance.getPlayers().get(inParamsDTO.username()).getPlayerHand().showCardInHand(inParamsDTO.index()),
@@ -218,8 +209,7 @@ public class GameController {
         this.previousMessageType=message.type();
         return message;
     }
-    public Message drawCard(JsonObject jsonObject) {
-        InParamsDTO inParamsDTO=messageParser.parseInParamsDTO(jsonObject);
+    public Message drawCard(InParamsDTO inParamsDTO) {
         int affectedPlayerIndex=gameInstance.getCurrentPlayerIndex();
         gameInstance.nextTurn();
         String currentPlayer=gameInstance.getTurn();
@@ -256,8 +246,7 @@ public class GameController {
         }
         return message;
     }
-    public Message chat(JsonObject jsonParams) {
-        InParamsDTO inParamsDTO=messageParser.parseInParamsDTO(jsonParams);
+    public Message chat(InParamsDTO inParamsDTO) {
         return MessageCrafter.craftChatMessage(inParamsDTO.username(), inParamsDTO.affectedPlayer(), inParamsDTO.chat());
     }
     public boolean gameIsFull() {

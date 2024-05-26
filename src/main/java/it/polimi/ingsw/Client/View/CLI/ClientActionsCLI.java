@@ -52,7 +52,7 @@ public class ClientActionsCLI {
      * @param availableColors colors that player can choose from
      */
     public void enableChooseColor(ArrayList<String> availableColors){
-        System.out.println("Now it's time to choose your color:\nSimply type one of these colors to choose one");
+        System.out.println(ClientOutputs.enableColorChoice);
         for(String availableColor: availableColors){
             System.out.println(availableColor);
         }
@@ -79,7 +79,7 @@ public class ClientActionsCLI {
     }
 
     public void enableJoin() {
-        System.out.println("Choose your username");
+        System.out.println(ClientOutputs.chooseUsername);
         join = true;
     }
 
@@ -96,7 +96,7 @@ public class ClientActionsCLI {
     }
 
     public void enableCreate() {
-        System.out.println("Choose your username and number of players (min 2, max 4):");
+        System.out.println(ClientOutputs.chooseUsernameAndNumberOfPlayers);
         create = true;
     }
 
@@ -108,44 +108,27 @@ public class ClientActionsCLI {
         return create;
     }
     public void enablePlaceStartingCard() {
-        System.out.println("""
-                You have been assigned a starting card!
-                You can flip the card by typing 'F'
-                When you are happy with the cards orientation type 'Place'
-                once placed you can't change card orientation""");
+        System.out.println(ClientOutputs.enablePlaceStartingCard);
         placeStartingCard = true;
     }
     public void enablePlaceCard() {
-        System.out.println("""
-                Place a card
-                type "place", then the index of card in your hand you want to place,
-                then the coordinates of where you want to place them in the form (0,0)
-                and then UP or DOWN depending if you want the card face up or not""");
+        System.out.println(ClientOutputs.enablePlaceCard);
         placeCard = true;
     }
     public void enableShowOtherPlayerBoardAndBackOFHand() {
-        System.out.println("Now at any time if you want to see another players board (and back of hand) " +
-                "all you need to do is type:\nSHOW 'username'");
         showOtherPlayerBoardAndBackOFHand = true;
     }
     public void enableDrawCard() {
-        System.out.println("""
-                Draw a card
-                type "draw", then gold/resource,
-                and then the index of the card you want to draw""");
+        System.out.println(ClientOutputs.enableDrawCard);
         drawCard = true;
     }
     public void enableChoosePrivateObjective() {
-        System.out.println("""
-                If you look up you will see the objectives for this game.
-                Those objectives are valid for all players,
-                but each of you can choose a private objective.
-                You can choose from these two:""");
+        System.out.println(ClientOutputs.enableChoosePrivateObjective);
         for (int i = 0; i < privateObjectiveChoices.length; i++) {
             System.out.println(i+1+")");
             privateObjectiveChoices[i].printObjective();
         }
-        System.out.println("Type 1 to choose the first one, type 2 to choose the second one");
+        System.out.println(ClientOutputs.choosePrivateObjectiveInstructions);
         choosePrivateObjective = true;
     }
     public boolean isPlaceStartingCardEnabled() {

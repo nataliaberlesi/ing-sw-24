@@ -46,7 +46,7 @@ public final class InterfaceAdapter<T> implements JsonSerializer<T>, JsonDeseria
 
     private JsonElement get(final JsonObject wrapper, String memberName) {
         final JsonElement elem = wrapper.get(memberName);
-        if (elem == null) throw new JsonParseException("no '" + memberName + "' member found in what was expected to be an interface wrapper");
+        if (elem == null) throw new JsonParseException(memberName + "' not found");
         return elem;
     }
 }

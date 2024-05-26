@@ -3,6 +3,7 @@ package it.polimi.ingsw.Client.Network;
 import com.google.gson.*;
 import it.polimi.ingsw.Client.Network.DTO.InParamsDTO;
 import it.polimi.ingsw.Client.Network.DTO.ModelDTO.*;
+import it.polimi.ingsw.Client.Network.DTO.ParamsDTO;
 import it.polimi.ingsw.Client.View.CLI.CardCLI;
 import it.polimi.ingsw.Client.View.CLI.FinalScoreBoardCLI;
 import it.polimi.ingsw.Client.View.CLI.ObjectiveCLI;
@@ -63,7 +64,7 @@ public class MessageParser {
     public void buildMessage(String inMessage) {
         Message message=parser.fromJson(inMessage,Message.class);
         this.messageType=message.type();
-        this.inParamsDTO=parser.fromJson(message.params(), InParamsDTO.class);
+        this.inParamsDTO=message.params().serverOutParams();
         viewController.updateView();
     }
     /**
@@ -163,6 +164,11 @@ public class MessageParser {
         }
         return objectiveCLIS;
     }
+
+    /**
+     * Parses the public objectives in CLI format
+     * @return
+     */
     public ObjectiveCLI[] getPublicObjectivesCLI() {
         ObjectiveCLI[] objectiveCLIS=new ObjectiveCLI[2];
         ObjectiveDTO[] objectiveDTOS=inParamsDTO.publicObjectives();
@@ -174,6 +180,11 @@ public class MessageParser {
         }
         return objectiveCLIS;
     }
+
+    /**
+     * Parses the private objectives ID
+     * @return
+     */
     public String[] getPrivateObjectivesID() {
         ObjectiveDTO[] objectiveDTOS=inParamsDTO.privateObjectives();
         String[] objectivesIDs= new String[objectiveDTOS.length];
@@ -182,6 +193,11 @@ public class MessageParser {
         }
         return objectivesIDs;
     }
+
+    /**
+     * Parses the public objectives ID
+     * @return
+     */
     public String[] getPublicObjectivesID() {
         ObjectiveDTO[] objectiveDTOS=inParamsDTO.publicObjectives();
         String[] objectivesIDs= new String[objectiveDTOS.length];
@@ -190,6 +206,11 @@ public class MessageParser {
         }
         return objectivesIDs;
     }
+
+    /**
+     * Parses the chosen objective in CLI format
+     * @return
+     */
     public ObjectiveCLI getChosenObjective() {
         ObjectiveDTO objectiveDTO= inParamsDTO.chosenObjective();
         if(objectiveDTO!=null) {
@@ -349,6 +370,11 @@ public class MessageParser {
                 cardDataDTO.frontCenterSymbols()
         );
     }
+
+    /**
+     * Parses the hand in CLI format
+     * @return
+     */
     public CardCLI[] getHandCLI() {
         CardCLI[] handCLI=new CardCLI[3];
         CardDTO[] handDTO=inParamsDTO.hand();
@@ -374,6 +400,11 @@ public class MessageParser {
         }
         return handCLI;
     }
+
+    /**
+     * Parses the ID of the cards in the hand
+     * @return
+     */
     public String[] getHandIDs() {
         String[] handIDs=new String[3];
         CardDTO[] handDTO=inParamsDTO.hand();
@@ -427,6 +458,11 @@ public class MessageParser {
     public String toJson(Object object) {
         return parser.toJson(object);
     }
+
+    /**
+     * Parses the final score board into CLI format
+     * @return
+     */
     public FinalScoreBoardCLI getFinalScoreBoardCLI() {
         ArrayList<ScoreboardPositionDTO> scoreboardPositionDTOS=inParamsDTO.scoreboard();
         FinalScoreBoardCLI finalScoreBoardCLI=new FinalScoreBoardCLI();
@@ -435,12 +471,27 @@ public class MessageParser {
         }
         return finalScoreBoardCLI;
     }
+
+    /**
+     * Parses the final scoreboard in GUI format
+     * @return
+     */
     public ArrayList<ScoreboardPositionDTO> getFinalScoreBoardGUI() {
         return inParamsDTO.scoreboard();
     }
+
+    /**
+     * Parses the chosen objective ID
+     * @return
+     */
     public String getChosenObjectiveID() {
         return inParamsDTO.chosenObjective().data().objectiveID();
     }
+
+    /**
+     * Parses the message in the chat
+     * @return
+     */
     public String getChat() {
         return inParamsDTO.chat();
     }
