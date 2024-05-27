@@ -110,8 +110,8 @@ public class ViewControllerCLI extends ViewController {
     }
 
     @Override
-    protected void addMessageToChat(String sender, String receiver, String bodyOfMessage, boolean isPrivate) {
-        chatRoom.addMessage(sender, receiver, bodyOfMessage, isPrivate);
+    protected void addMessageToChat(String message) {
+        chatRoom.addMessage(message);
     }
 
     @Override

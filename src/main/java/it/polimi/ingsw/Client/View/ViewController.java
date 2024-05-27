@@ -237,49 +237,89 @@ public abstract class ViewController {
     }
 
     /**
-     * checks weather message is sent by my player or for my player and updates the chat
+     * if a message is sent by client, or to client, or to all players in game,
+     * then the message will appear in clients chat
      */
     protected void updateChat(){
         String receiver = messageParser.getAffectedPlayer();
         String messageMeantForEveryone = "-all";
-
         if (shouldProcessMessage(receiver, messageMeantForEveryone)) {
             String sender = messageParser.getCurrentPlayer();
             boolean isPrivate = isPrivateMessage(receiver, messageMeantForEveryone);
-            boolean addMessage = shouldAddMessage(sender, receiver, isPrivate);
-
-            if (isMyPlayer(receiver)) {
-                receiver = "";
-                isPrivate = true;
-                addMessage = true;
-            }
-
+            boolean addMessage = shouldAddMessage(receiver, sender, isPrivate);
             if (addMessage) {
-                addMessageToChat(sender, receiver, messageParser.getChat(), isPrivate);
+                addMessageToChat(buildMessage(sender, receiver, messageParser.getChat(), isPrivate));
                 showUpdatedChat();
             }
         }
     }
 
-    protected abstract void showUpdatedChat();
-
-    private boolean shouldAddMessage(String sender, String receiver, boolean isPrivate) {
-        return !isPrivate || isMyPlayer(sender);
+    /**
+     *
+     * @param sender player who sent message
+     * @param receiver player who is recipient
+     * @param messageBody the message
+     * @param isPrivate false if message is meant for all players, true if message is meant for only one player
+     * @return message that indicates weather it is private/public, who sent the message,
+     *         who received the message (this only happens when client sent the private message), and finally the body of the message
+     */
+    private String buildMessage(String sender, String receiver, String messageBody, boolean isPrivate){
+        String prefix="PUBLIC";
+        if(isPrivate){
+            prefix="PRIVATE";
+            if(isMyPlayer(sender)){
+                sender="ME";
+                prefix+=" TO "+receiver;
+            }
+        }
+        return prefix+" FROM "+sender+": "+messageBody;
     }
 
+    protected abstract void showUpdatedChat();
+
+    /**
+     * used to determine weather or not message should be shown to client
+     * @param receiver of message
+     * @param sender of message
+     * @param isPrivate weather or not the message is meant for all players or just one
+     * @return true is sender or receiver is my client or if message is meant for everyone
+     */
+    private boolean shouldAddMessage( String receiver,String sender, boolean isPrivate) {
+        return !isPrivate || isMyPlayer(sender) || isMyPlayer(receiver);
+    }
+
+    /**
+     * used to determine if a message should be processed, if the receiver is someone that is not in the game the message shouldn't
+     * be processed.
+     * @param receiver of message
+     * @param messageMeantForEveryone string used to determine if message is meant for all players
+     * @return true if receiver is a player in game or if message is meant for all players
+     */
     private boolean shouldProcessMessage(String receiver, String messageMeantForEveryone) {
         return isPlayerInGame(receiver) || receiver.equalsIgnoreCase(messageMeantForEveryone);
     }
 
+    /**
+     *
+     * @param receiver of message
+     * @param messageMeantForEveryone string used to determine if message is meant for all players
+     * @return true if receiver is a specific player, or if sender is my client
+     */
     private boolean isPrivateMessage(String receiver, String messageMeantForEveryone) {
         return !receiver.equalsIgnoreCase(messageMeantForEveryone);
     }
 
+    /**
+     *
+     * @param myPlayerUsername username of my client
+     * @param receiver who the message if meant for
+     * @param message that client wants to send
+     */
     public void sendChatMessage(String myPlayerUsername, String receiver, String message){
         messageDispatcher.chat(myPlayerUsername, receiver, message);
     }
 
-    protected abstract void addMessageToChat(String sender, String receiver,String bodyOfMessage, boolean isPrivate);
+    protected abstract void addMessageToChat(String message);
 
     protected abstract void terminate();
 

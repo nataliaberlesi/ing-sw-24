@@ -2,16 +2,15 @@ package it.polimi.ingsw.Client.View.CLI;
 
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class ChatCLI {
 
-    private final ArrayList<ChatMessageCLI> messages = new ArrayList<>();
+    private final ArrayList<String> messages = new ArrayList<>();
 
     private static final int RECENT_MESSAGES=3;
 
-    public void addMessage(String sender,String receiver, String message, boolean isPrivate) {
-        messages.add(new ChatMessageCLI(sender, receiver, message, isPrivate));
+    public void addMessage(String message) {
+        messages.add(message);
     }
 
     public void printRecentMessages() {
@@ -19,7 +18,7 @@ public class ChatCLI {
         int size = messages.size();
         for (int i = size-RECENT_MESSAGES; i < size; i++) {
             if(i>=0) {
-                messages.get(i).printMessage();
+                System.out.println(messages.get(i));
             }
             else {
                 System.out.println("-");
@@ -29,32 +28,9 @@ public class ChatCLI {
 
     public void printCompleteChat(){
         System.out.println("COMPLETE CHAT");
-        for (ChatMessageCLI message : messages) {
-            message.printMessage();
+        for (String message : messages) {
+            System.out.println(message);
         }
     }
-    private class ChatMessageCLI{
-        private final String sender;
-        private final String message;
-        private final String receiver;
-        private final boolean isPrivate;
 
-        public ChatMessageCLI(String sender, String receiver, String message, boolean isPrivate){
-            this.isPrivate=isPrivate;
-            this.message=message;
-            this.sender=sender;
-            this.receiver=receiver;
-        }
-
-        private void printMessage(){
-            String prefix="PUBLIC";
-            if(isPrivate){
-                prefix="PRIVATE";
-                if(!Objects.equals(receiver, "")){
-                    prefix+=" TO "+receiver;
-                }
-            }
-            System.out.println(prefix+" FROM "+sender+": "+message);
-        }
-    }
 }
