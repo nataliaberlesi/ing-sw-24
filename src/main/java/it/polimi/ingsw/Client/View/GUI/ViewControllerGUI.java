@@ -623,7 +623,8 @@ public class ViewControllerGUI extends ViewController{
      */
     @Override
     protected void setFinalScoreBoard() {
-        EndGameScene endGameScene = new EndGameScene();
+        mainScene.getScoreBoard().updatePlayerScoreWithObjectivesPoints(messageParser.getFinalScoreBoardGUI());
+        EndGameScene endGameScene = new EndGameScene(this);
         endGameScene.setScoreBoard(messageParser.getFinalScoreBoardGUI(), myPlayer.getUsername());
         setSceneOnStage(endGameScene, stage);
     }

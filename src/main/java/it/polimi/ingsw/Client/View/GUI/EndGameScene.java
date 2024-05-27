@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Client.View.GUI;
 import it.polimi.ingsw.Client.Network.DTO.ModelDTO.ScoreboardPositionDTO;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -14,9 +15,11 @@ public class EndGameScene extends Scene {
     private final Label loserLabel =  new Label("Sorry,\nYou lost :(\n");
     private final Label finalScore = new Label("This is the final score:\n");
     private final GridPane finalScoreBoard = new GridPane();
+    private final ViewControllerGUI viewControllerGUI;
 
-    public EndGameScene() {
+    public EndGameScene(ViewControllerGUI viewControllerGUI) {
         super(new AnchorPane(), 1060, 595);
+        this.viewControllerGUI = viewControllerGUI;
         root = (AnchorPane) this.getRoot();
         initializeScene();
         initializeGridPane();
@@ -41,8 +44,12 @@ public class EndGameScene extends Scene {
 
         StaticsForGUI.setLabelCharacteristics(finalScore, "Lao MN Bold", 36,345, 266);
 
-        this.root.getChildren().add(backgroundImageView);
-        this.root.getChildren().add(finalScore);
+        Button goBackButton = new Button("See game");
+        StaticsForGUI.setButtonCharacteristics(goBackButton, "Lao MN Bold", 24, 852, 485, false);
+        goBackButton.setOnMouseClicked(event -> viewControllerGUI.setSceneOnStage(viewControllerGUI.getMainScene(), viewControllerGUI.getStage()));
+        viewControllerGUI.getMainScene().getConfirmActionButton().setDisable(true);
+
+        this.root.getChildren().addAll(backgroundImageView, finalScore, goBackButton);
     }
 
     public void setWinnerLabel(){
