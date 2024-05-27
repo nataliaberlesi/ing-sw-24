@@ -331,6 +331,11 @@ public abstract class ViewController {
 
     protected abstract void setPrivateObjectiveChoice();
 
+    /**
+     *
+     * @param affectedPlayer is player that whose board hand and points need to be updated
+     * @param score are the points that belong to affected player
+     */
     private void updatePlayerBoardHandScore(String affectedPlayer, int score){
         updatePlayerBoard(affectedPlayer);
         updatePlayerHand(affectedPlayer);
@@ -359,6 +364,9 @@ public abstract class ViewController {
 
     protected abstract void showScene();
 
+    /**
+     * adds all players to game, sets drawable area and gives the first player his staring card and shows available colors
+     */
     private void setUpGame() {
         addPlayers(messageParser.getPlayers()); // -> create instance players (myPlayer already initialized when join), show usernames and points in scene, set player's hand label, set see other player's game buttons
         giveInitialCard(messageParser.getPlayers().getFirst()); // -> adds the initial card to the first player

@@ -22,7 +22,7 @@ public class PlayerCLI {
      */
     private final BoardCLI playerBoard;
     /**
-     * the first player to connect is the Master
+     * indicates whether it is this players turn
      */
     private boolean isCurrentPlayer =false;
     /**
@@ -44,11 +44,18 @@ public class PlayerCLI {
     }
 
 
-
+    /**
+     * updates players score
+     * @param score players score
+     */
     public void setScore(int score) {
         this.score = score;
     }
 
+    /**
+     * updates players hand
+     * @param newHand players current hand
+     */
     public void updateHand(CardCLI[] newHand){
         this.playerHand.updateHand(newHand);
     }
@@ -132,37 +139,29 @@ public class PlayerCLI {
         System.out.println(getColoredUsername()+": "+score);
     }
 
-    /**
-     * prints players board and hand, if player is not myPlayer the method will only print back of hand
-     */
-    public void printPlayerSituation(){
-        this.printBoard();
-        this.printHand();
-    }
-
 
     public BoardCLI getPlayerBoard() {
         return playerBoard;
     }
 
+    /**
+     *
+     * @return true if it is the turn of this player
+     */
     public boolean isCurrentPlayer() {
         return isCurrentPlayer;
     }
 
-    public String getPlayerColor() {
-        return playerColor;
-    }
-
-
-    public HandCLI getPlayerHand() {
-        return playerHand;
-    }
 
     public int getScore() {
         return score;
     }
 
-    public void setCurrentPlayer(boolean currentPlayer) {
-        this.isCurrentPlayer = currentPlayer;
+    /**
+     *
+     * @param isCurrentPlayer is true if it is this players turn
+     */
+    public void setCurrentPlayer(boolean isCurrentPlayer) {
+        this.isCurrentPlayer = isCurrentPlayer;
     }
 }
