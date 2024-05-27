@@ -268,6 +268,38 @@ class BoardTest {
     }
 
 
+    @Test
+    void thirdRealGameScenario(){
+        board1= new Board("S22");
+        board1.placeStartingCard(facingUp);
+        board1.addObjective("O01");
+        board1.addObjective("O09");
+        board1.addObjective("O13");
+        board1.placeCard("RB9",new Coordinates(-1,1),facingUp);
+        assertEquals(1, board1.getScore());
+        board1.placeCard("RB8",new Coordinates(-2,2),facingUp);
+        assertEquals(2,board1.getScore());
+        board1.placeCard("RG2",new Coordinates(1,-1),facingUp);
+        board1.placeCard("RG9",new Coordinates(2,-2),facingUp);
+        assertEquals(3,board1.getScore());
+        board1.placeCard("GG4",new Coordinates(1,-3),facingUp);
+        assertEquals(5,board1.getScore());
+        board1.placeCard("RG7",new Coordinates(0,-2),facingUp);
+        assertEquals(6,board1.getScore());
+        board1.placeCard("RG0",new Coordinates(-1,-1),facingUp);
+        board1.placeCard("GG8",new Coordinates(3,-3),facingUp);
+        assertEquals(9,board1.getScore());
+        board1.placeCard("RG1",new Coordinates(4,-4),facingUp);
+        board1.placeCard("RG8",new Coordinates(5,-5),facingUp);
+        assertEquals(10,board1.getScore());
+        board1.placeCard("GG6",new Coordinates(6,-6),facingUp);
+        assertEquals(13,board1.getScore());
+        board1.placeCard("RP2",new Coordinates(6,-4),facingUp);
+        assertEquals(13, board1.getScore());
+        board1.calculateAndUpdateObjectiveScore();
+        assertEquals(23, board1.getFinalScore());
+    }
+
 
 
 }

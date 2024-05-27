@@ -98,7 +98,7 @@ public class DiagonalPatternObjective implements Objective {
     private int diagonalPatternPointCalculator(int cornerNumber){
         int occurences=0;
         Coordinates currentCoordinates, rightCoordinates1, rightCoordinates2;
-        for(int i=0; i<listOfCoordinatesOfInterest.size();i++){
+        for(int i=listOfCoordinatesOfInterest.size()-1; i>=0;i--){
             currentCoordinates=listOfCoordinatesOfInterest.get(i);
             rightCoordinates1=CornerCoordinatesCalculator.cornerCoordinates(currentCoordinates, cornerNumber);
             if(listOfCoordinatesOfInterest.contains(rightCoordinates1)){
@@ -108,7 +108,7 @@ public class DiagonalPatternObjective implements Objective {
                     listOfCoordinatesOfInterest.remove(currentCoordinates);
                     listOfCoordinatesOfInterest.remove(rightCoordinates1);
                     listOfCoordinatesOfInterest.remove(rightCoordinates2);
-                    i--;
+                    i=listOfCoordinatesOfInterest.size();
                 }
             }
         }
