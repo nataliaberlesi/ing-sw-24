@@ -1,20 +1,18 @@
 package it.polimi.ingsw.Client.View.GUI;
 
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.text.Font;
 
 import java.util.HashMap;
 import java.util.Objects;
 
 public class PrivateObjectiveChoice extends Scene {
-    private AnchorPane root;
-    private HashMap<Integer, ImageView> objectiveCards = new HashMap<>();
-    private ViewControllerGUI viewControllerGUI;
+    private final AnchorPane root;
+    private final HashMap<Integer, ImageView> objectiveCards = new HashMap<>();
+    private final ViewControllerGUI viewControllerGUI;
     public PrivateObjectiveChoice(String[] cardIDs, ViewControllerGUI viewControllerGUI) {
         super(new AnchorPane(),380,220);
         this.viewControllerGUI = viewControllerGUI ;

@@ -13,30 +13,11 @@ public class ScoreBoardGUI extends GridPane {
     public ScoreBoardGUI(ArrayList<String> playerUsernames){
         this.setLayoutX(25);
         this.setLayoutY(50);
-        this.setPrefSize(166.0, 154.0);
+        this.setVgap(5);
+        this.setHgap(50);
         this.numberOfPlayersInGame = playerUsernames.size();
         setUpLabels();
         setUsernamesAndInitialScore(playerUsernames);
-        columnsConstraintsSetUp();
-    }
-
-    /**
-     * Sets column constraints
-     */
-    private void columnsConstraintsSetUp() {
-        ColumnConstraints column1 = new ColumnConstraints();
-        column1.setHgrow(javafx.scene.layout.Priority.SOMETIMES);
-        column1.setMaxWidth(137.688);
-        column1.setMinWidth(10.0);
-        column1.setPrefWidth(115.942);
-
-        ColumnConstraints column2 = new ColumnConstraints();
-        column2.setHgrow(javafx.scene.layout.Priority.SOMETIMES);
-        column2.setMaxWidth(96.323);
-        column2.setMinWidth(10.0);
-        column2.setPrefWidth(84.558);
-
-        this.getColumnConstraints().addAll(column1, column2);
     }
 
     /**
