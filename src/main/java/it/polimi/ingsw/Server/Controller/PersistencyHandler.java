@@ -12,25 +12,28 @@ public class PersistencyHandler {
     private static FileWriter fileWriter;
     private static BufferedReader bufferedReader;
     private static ArrayList<String> playersTemp;
+    private static boolean persistence=true;
 
     static {
         gameInstancePath="gameinstance.json";
         file=new File(gameInstancePath);
     }
     public static void saveState(GameInstance gameInstance) throws IOException {
-        String state=messageParser.toJson(gameInstance);
-        if(file.exists()) {
-            if(file.delete()){
-                System.out.println("Deleted file: "+ gameInstancePath);
+        if(persistence) {
+            String state=messageParser.toJson(gameInstance);
+            if(file.exists()) {
+                if(file.delete()){
+                    System.out.println("Deleted file: "+ gameInstancePath);
+                }
             }
+            if(file.createNewFile()){
+                System.out.println("File created: "+gameInstancePath);
+            }
+            fileWriter=new FileWriter(gameInstancePath);
+            fileWriter.write(state);
+            fileWriter.flush();
+            fileWriter.close();
         }
-        if(file.createNewFile()){
-            System.out.println("File created: "+gameInstancePath);
-        }
-        fileWriter=new FileWriter(gameInstancePath);
-        fileWriter.write(state);
-        fileWriter.flush();
-        fileWriter.close();
     }
     public static GameInstance fetchState() throws IOException {
         bufferedReader=new BufferedReader(new FileReader(file));
@@ -47,6 +50,12 @@ public class PersistencyHandler {
     }
     public static boolean deleteGame() {
         return file.delete();
+    }
+    public static void closePersistence() {
+        persistence=false;
+    }
+    public static void startPersistence() {
+        persistence=true;
     }
     public static void setPlayersTemp(ArrayList<String> playersTemp) {
         PersistencyHandler.playersTemp=playersTemp;
