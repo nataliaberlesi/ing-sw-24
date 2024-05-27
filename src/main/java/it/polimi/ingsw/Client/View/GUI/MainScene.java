@@ -136,7 +136,7 @@ public class MainScene extends Scene {
 
         StaticsForGUI.setLabelCharacteristics(actionLabel, "System Bold", 16, 30,517);
 
-        StaticsForGUI.setLabelCharacteristics(endGameLabel, "System Bold", 18, 45,180);
+        StaticsForGUI.setLabelCharacteristics(endGameLabel, "System Bold", 18, 55,20);
         endGameLabel.setVisible(false);
 
         this.root.getChildren().addAll(resourceCardsLabel, goldCardsLabel, handLabel, secretObjectiveLabel, commonObjectivesLabel,
@@ -433,7 +433,6 @@ public class MainScene extends Scene {
      * Sets score board to player's usernames and adds it to main scene
      * @param playerUsernames players in game usernames
      */
-
     public void setScoreBoard(ArrayList<String> playerUsernames) {
         scoreBoard = new ScoreBoardGUI(playerUsernames);
         root.getChildren().add(scoreBoard);
