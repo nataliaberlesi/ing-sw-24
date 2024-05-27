@@ -1,7 +1,7 @@
 package it.polimi.ingsw.Server.Controller;
 
 
-import com.google.gson.JsonObject;
+
 import it.polimi.ingsw.Server.Controller.DTO.*;
 import it.polimi.ingsw.Server.Model.Cards.Card;
 import it.polimi.ingsw.Server.Model.Cards.ObjectiveFactory;
@@ -73,7 +73,7 @@ public class GameController {
         persistency=inParamsDTO.persistence();
         if(persistency) {
             try {
-                gameInstance=PersistencyHandler.fetchState();
+                gameInstance= PersistencyHandler.fetchState();
                 PersistencyHandler.setPlayersTemp((ArrayList<String>) gameInstance.getPlayerTurnOrder().clone());
                 server.openLobby(gameInstance.getNumberOfPlayers());
             } catch (IOException e) {
@@ -94,9 +94,7 @@ public class GameController {
      */
     public Message createGame(InParamsDTO inParamsDTO){
         if(this.gameInstance!=null){
-            MessageType type=MessageType.ABORT;
-            String params="Game is already created";
-            return new Message(type, null);
+            return MessageCrafter.craftAbortMessage("A game already exist");
         }
         this.server.openLobby(inParamsDTO.numberOfPlayers());
         this.gameInstance=new GameInstance(inParamsDTO.username().toUpperCase(),inParamsDTO.numberOfPlayers());
@@ -113,7 +111,7 @@ public class GameController {
         String username=inParamsDTO.username().toUpperCase();
         Boolean unavailableUsername;
         if(persistency) {
-            unavailableUsername=PersistencyHandler.checkPlayerTemp(username);
+            unavailableUsername= PersistencyHandler.checkPlayerTemp(username);
         } else {
             unavailableUsername=this.gameInstance.unavailableUsername(username);
             if(!unavailableUsername){
@@ -211,26 +209,15 @@ public class GameController {
     }
     public Message drawCard(InParamsDTO inParamsDTO) {
         int affectedPlayerIndex=gameInstance.getCurrentPlayerIndex();
+
         gameInstance.nextTurn();
+
         String currentPlayer=gameInstance.getTurn();
         String affectedPlayer=inParamsDTO.username();
-        if(inParamsDTO.drawableSection().equals("resourceDrawableArea")) {
-            gameInstance.getPlayers().get(affectedPlayer).getPlayerHand().placeCardInHand(
-                    gameInstance.getDrawableArea().getResourceDrawingSection().drawCard(inParamsDTO.index())
-            );
-        }
-        if(inParamsDTO.drawableSection().equals("goldDrawableArea")) {
-            gameInstance.getPlayers().get(affectedPlayer).getPlayerHand().placeCardInHand(
-                    gameInstance.getDrawableArea().getGoldDrawingSection().drawCard(inParamsDTO.index())
-            );
-        }
-        if(affectedPlayerIndex == 0 && gameInstance.checkEndgame() && !finalroundIsStarted()){
-            startFinalRound();
-        }
-        if(gameInstance.getCurrentPlayerIndex() == 0 && finalroundIsStarted()) {
-            calculateEndGamePoints();
-            endGame();
-        }
+
+        draw(affectedPlayer,inParamsDTO.drawableSection(),inParamsDTO.index());
+        checkIfFinalRoundHasToStart(affectedPlayerIndex);
+        checkIfGameHasToEnd();
 
         Message message=MessageCrafter.craftDrawCardMessage(currentPlayer,
                 affectedPlayer,
@@ -242,7 +229,7 @@ public class GameController {
         try {
             PersistencyHandler.saveState(gameInstance);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println("LOG: Error during state saving");
         }
         return message;
     }
@@ -283,9 +270,9 @@ public class GameController {
                 gameInstance.getResourceDrawableArea(),
                 gameInstance.getGoldDrawableArea());
     }
-    public void startEndgame(){this.gameInstance.startEndgame();}
     public void startFinalRound(){this.gameInstance.startFinalRound();}
     public void endGame(){
+        PersistencyHandler.closePersistence();
         PersistencyHandler.deleteGame();
         this.gameInstance.endGame();
     }
@@ -339,5 +326,32 @@ public class GameController {
 
     public void unpauseGame() {
         this.gameInstance.unpauseGame();
+    }
+
+    /**
+     * Helper method used to draw a card for a player
+     */
+    private void draw(String affectedPlayer, String drawingSection, Integer index) {
+        if(drawingSection.equals("resourceDrawableArea")) {
+            gameInstance.getPlayers().get(affectedPlayer).getPlayerHand().placeCardInHand(
+                    gameInstance.getDrawableArea().getResourceDrawingSection().drawCard(index)
+            );
+        }
+        if(drawingSection.equals("goldDrawableArea")) {
+            gameInstance.getPlayers().get(affectedPlayer).getPlayerHand().placeCardInHand(
+                    gameInstance.getDrawableArea().getGoldDrawingSection().drawCard(index)
+            );
+        }
+    }
+    private void checkIfFinalRoundHasToStart(Integer affectedPlayerIndex) {
+        if(affectedPlayerIndex == 0 && gameInstance.checkEndgame() && !finalroundIsStarted()){
+            startFinalRound();
+        }
+    }
+    private void checkIfGameHasToEnd() {
+        if(gameInstance.getCurrentPlayerIndex() == 0 && finalroundIsStarted()) {
+            calculateEndGamePoints();
+            endGame();
+        }
     }
 }
