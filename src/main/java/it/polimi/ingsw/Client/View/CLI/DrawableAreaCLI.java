@@ -8,52 +8,6 @@ public class DrawableAreaCLI {
     private final CardCLI[] resourceCards=new CardCLI[3];
     private final CardCLI[] goldCards=new CardCLI[3];
 
-    /**
-     *
-     * @param cardIndex index of card being drawn
-     * @param replacementCard card replacing the first card which is facing down
-     * @return card being drawn (facing up)
-     * @throws IllegalArgumentException if index out of bounds of replacement card is null or if it's not a resource card
-     */
-    public CardCLI drawResourceCard(int cardIndex, CardCLI replacementCard) throws IllegalArgumentException{
-        checkLegalIndex(cardIndex);
-        checkLegalCard(replacementCard,'R');
-        return getCardCLI(cardIndex, replacementCard, resourceCards);
-    }
-
-
-    /**
-     *
-     * @param cardIndex index of card being drawn
-     * @param replacementCard card replacing the first card which is facing down
-     * @return card being drawn (facing up)
-     * @throws IllegalArgumentException if index out of bounds of replacement card is null or if it's not a gold card
-     */
-    public CardCLI drawGoldCard(int cardIndex, CardCLI replacementCard) throws IllegalArgumentException{
-        checkLegalIndex(cardIndex);
-        checkLegalCard(replacementCard, 'G');
-        return getCardCLI(cardIndex, replacementCard, goldCards);
-    }
-
-
-    /**
-     *
-     * @param cardIndex index of card being drawn
-     * @param replacementCard card replacing the first card which is facing down
-     * @param drawnCards array containing the card that is being drawn
-     * @return card being drawn (facing up)
-     */
-    private CardCLI getCardCLI(int cardIndex, CardCLI replacementCard, CardCLI[] drawnCards) {
-        CardCLI drawnCard= drawnCards[cardIndex];
-        CardCLI faceDownCard= drawnCards[0];
-        faceDownCard.flip();
-        if(replacementCard.isFaceUp()){
-            replacementCard.flip();
-        }
-        drawnCards[cardIndex]=faceDownCard;
-        drawnCards[0]=replacementCard;
-        return drawnCard;
-    }
 
     /**
      *
@@ -83,11 +37,19 @@ public class DrawableAreaCLI {
         }
     }
 
+
+    /**
+     * prints out set of cards that players can draw
+     * @param drawableCards cards that can be drawn, can be of two types, ether gold or resource cards
+     */
     private void printDrawableCards(CardCLI[] drawableCards) {
         CardPrinter.printExactlyThreeCardsInAnArray(drawableCards);
         System.out.println();
     }
 
+    /**
+     * prints all cards that can be drawn by players
+     */
     public void printDrawableArea(){
         System.out.println("You can draw these cards:\n");
         System.out.println("RESOURCE CARDS:");
@@ -99,26 +61,49 @@ public class DrawableAreaCLI {
         printDrawableCards(goldCards);
     }
 
-
-
+    /**
+     * inserts gold card in drawable area in the position indicated by the index
+     * @param cardIndex index of where card will be placed in drawable area
+     * @param replacementCard card taking spot indicated by the index
+     * @throws IllegalArgumentException if index or type of card is illegal
+     */
     public void putGoldCard(int cardIndex, CardCLI replacementCard) throws IllegalArgumentException{
-        if(replacementCard==null){
-            replacementCard=new CardCLI();
-        }
-        checkLegalIndex(cardIndex);
-        checkLegalCard(replacementCard,'G');
-        putCard(cardIndex, replacementCard, goldCards);
+        checkLegalityAndPutCard(cardIndex, replacementCard, 'G', goldCards);
     }
 
+    /**
+     * inserts resource card in drawable area
+     * @param cardIndex index of where card will be placed in drawable area
+     * @param replacementCard card taking spot indicated by the index
+     * @throws IllegalArgumentException if index or type of card is illegal
+     */
     public void putResourceCard(int cardIndex, CardCLI replacementCard) throws IllegalArgumentException{
-        if(replacementCard==null){
-            replacementCard=new CardCLI();
-        }
-        checkLegalIndex(cardIndex);
-        checkLegalCard(replacementCard,'R');
-        putCard(cardIndex, replacementCard, resourceCards);
+        checkLegalityAndPutCard(cardIndex, replacementCard, 'R', resourceCards);
     }
 
+    /**
+     * checks whether index is legal and if the type of the replacement card matches with the drawable section it is being inserted into
+     * @param cardIndex index of where card will be placed in drawable area
+     * @param replacementCard card taking spot indicated by the index
+     * @param cardType can either be gold or resource and each must be assigned to their own drawable section
+     * @param drawableCards array of cards that can be drawn, all the same type
+     */
+    private void checkLegalityAndPutCard(int cardIndex, CardCLI replacementCard, char cardType, CardCLI[] drawableCards){
+        if (replacementCard == null) {
+            replacementCard = new CardCLI();
+        }
+        checkLegalIndex(cardIndex);
+        checkLegalCard(replacementCard, cardType);
+        putCard(cardIndex, replacementCard, drawableCards);
+    }
+
+    /**
+     * inserts the replacement card in the spot indicated by the index,
+     * if the card is being put at index 0 it will be face down, else it will be face up
+     * @param cardIndex of where card will be placed in drawable area
+     * @param replacementCard card taking spot indicated by the index
+     * @param drawableCards array of cards that can be drawn that are of the same type as the card being inserted
+     */
     private void putCard(int cardIndex, CardCLI replacementCard, CardCLI[] drawableCards) {
         if(cardIndex==0){
             replacementCard.makeFaceDown();

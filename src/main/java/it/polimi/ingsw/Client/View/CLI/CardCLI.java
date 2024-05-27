@@ -6,7 +6,15 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 /**
- * card as shown in the CLI
+ * cards in cli are broken p into four lines, each line contains different information about the card
+ * first line shows the symbols on the top corners and the points earned by placing card (if card doesn't earn points or if it's faced down then this part isn't shown),
+ * the second line shows the coordinates where the card is placed (these are shown only once the card is placed on board)
+ * the third line shows different things depending on the type of card:
+ *      starting cards show the front center symbols
+ *      resource and gold cards, if they are face down, show the center symbol on the back
+ *      gold cards (if face up) show the prerequisites necessary to place the card
+ * the fourth line shows the bottom corners and gold cards also show (if face up) the conditions to earn the points shown
+ * on the top of the card
  */
 public class CardCLI implements Comparable<CardCLI>{
 
@@ -87,13 +95,9 @@ public class CardCLI implements Comparable<CardCLI>{
         return isFaceUp;
     }
 
-
-
     public String getCardID(){
         return cardID;
     }
-
-
 
     /**
      * the card ID indicates the color of card and ethe color determines which symbol is on the back of the card
@@ -124,6 +128,9 @@ public class CardCLI implements Comparable<CardCLI>{
         this.backSymbol = getProperSpacing(""+backSymbol);
     }
 
+    /**
+     * used to create an empty card
+     */
     public CardCLI(){
         this.cardID=emptyCardID;
         this.frontCorners=emptyCardCorners;
@@ -157,6 +164,7 @@ public class CardCLI implements Comparable<CardCLI>{
         }
         setBackSymbolAndColor();
     }
+
     /**
      * constructor called for startingCards
      * @param cardID unique id of card
@@ -319,21 +327,26 @@ public class CardCLI implements Comparable<CardCLI>{
 
     }
 
+    /**
+     * makes the center of the bottom line that contains the condition to earn points when card is placed
+     * @param cardObjectiveSymbolInitial is the symbol that earns points when card is placed (is char is C then that means that points are earned for each covered corner)
+     *
+     */
     private void makeCardObjectiveBottomLine(char cardObjectiveSymbolInitial){
-        StringBuilder objectiveTopLine=new StringBuilder();
-        objectiveTopLine.append("--*");
-        objectiveTopLine.append(cardObjectiveSymbolInitial);
-        objectiveTopLine.append("---");
-        this.bottomLine=objectiveTopLine.toString();
+        this.bottomLine= "--*" +
+                cardObjectiveSymbolInitial +
+                "---";
     }
 
+    /**
+     * makes the center of the top line that contains the points earned by placing the card on the board
+     * @param cardObjectivePoints are the points earned by placing card on board
+     */
     private void makeCardObjectiveTopLine(int cardObjectivePoints){
-        StringBuilder objectiveTopLine=new StringBuilder();
-        objectiveTopLine.append("--");
-        objectiveTopLine.append(cardObjectivePoints);
-        objectiveTopLine.append("pts");
-        objectiveTopLine.append("-");
-        this.cardObjective=objectiveTopLine.toString();
+        this.cardObjective= "--" +
+                cardObjectivePoints +
+                "pts" +
+                "-";
     }
 
     /**
@@ -353,6 +366,10 @@ public class CardCLI implements Comparable<CardCLI>{
         return coordinates.getY();
     }
 
+    /**
+     *
+     * @return line containing the points earned by placing the card (if card is face down then no points will be in the line)
+     */
     private String getCardObjective(){
         if(isFaceUp){
             return cardObjective;
@@ -469,7 +486,8 @@ public class CardCLI implements Comparable<CardCLI>{
 
     /**
      *
-     * @return current line corresponding to the currentLine
+     * @param lineNumber is the number of the line that will be returned
+     * @return line of card indicated in the params
      */
     public String getLine(int lineNumber){
         StringBuilder line=new StringBuilder();

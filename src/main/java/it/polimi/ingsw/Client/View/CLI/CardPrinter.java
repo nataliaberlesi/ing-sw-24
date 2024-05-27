@@ -1,7 +1,8 @@
 package it.polimi.ingsw.Client.View.CLI;
 
 /**
- * class used to print an array of three cards
+ * class used to print an array of three cards,
+ * very useful for printing hands and drawable areas as they are composed of three cards each
  */
 public class CardPrinter {
     /**

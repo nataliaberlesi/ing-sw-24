@@ -1,5 +1,8 @@
 package it.polimi.ingsw.Client.View.CLI;
 
+/**
+ * all constant messages shown to client are grouped here
+ */
 public class ClientOutputs {
     public static final String loadingScreen = "All good\nWaiting for players...\n\n";
     public static final String askIfPlayerWantsToContinueGame = "There is a saved game, do you want to continue?\n(type Y to continue or N to start a new game";
@@ -38,13 +41,16 @@ public class ClientOutputs {
                             SHOW followed by the username of the player you want to see
                             EXAMPLE: SHOW player3
                             
-                            3) CHAT
+                            3) SEND MESSAGE
                             If you want send a message to other players type T then the username of the player you want to talk to
                             or -ALL if you want to send a message to everyone, then : followed by your message.
                             EXAMPLE: T -all: hello everybody
                                      T kevin: i think you are very cute <3
                             
-                            4) EXIT
+                            4) SEE COMPLETE CHAT
+                            If you want to see all messages sent up to this point simply type CHAT
+                            
+                            5) EXIT
                             To exit the game simply type EXIT, though I will personally get offended if you do decide to leave...
                             EXAMPLE: exit""";
     public static final String congratulationsOnFirstCard = "Congrats! You have placed your first card";
