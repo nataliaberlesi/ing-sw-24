@@ -63,7 +63,7 @@ public class Board {
      * ID used to save the starting card assigned to the player during the second round
      * When the player chooses which one of the two, they become both OBJECTIVE_ALREADY_CHOSEN
      */
-    private String[] startingObjectivesID;
+    private final String[] startingObjectivesID;
 
     /**
      * array of objectives that will assign points at the end of the game
@@ -89,6 +89,7 @@ public class Board {
         if(!StartingCardFactory.isStartingCardID(startingCardID)){
             throw new IllegalArgumentException("Invalid card ID");
         }
+        unplaceableCoordinates.add(new Coordinates());
         this.startingCardID =startingCardID;
     }
     /**
@@ -275,10 +276,8 @@ public class Board {
      * @throws RuntimeException if a set of coordinates is occupied by more than 4 corners/symbols
      */
     private void addSymbolsToPlaceableCoordinates(Coordinates placeable, Symbol cornerSymbol) throws RuntimeException{
-
         //will contain symbols that are already present in placeable coordinates
         ArrayList<Symbol> coordinatesSymbols = new ArrayList<>();
-
         //checking of symbols are already present in placeable coordinates
         if (placeableCoordinates.get(placeable) != null) {
             //gets symbols that already occupy the placeable coordinates
@@ -289,7 +288,6 @@ public class Board {
                 throw new RuntimeException("there are more than 4 corners occupying these coordinates: "+placeable);
             }
         }
-
         // adding currentSymbol symbol to the list of symbols occupying placeable coordinates, if no symbols where already present this operation is equivalent
         // to creating a new placeable coordinate and adding the cornerSymbol to it.
         coordinatesSymbols.add(cornerSymbol);
@@ -306,43 +304,33 @@ public class Board {
      * @throws RuntimeException if a set of coordinates is occupied by more than 4 corners/symbols
      */
     private void placeCornerSymbolsSurroundingCoordinates(Symbol[] corners, Coordinates coordinates) throws RuntimeException{
-
         // will store the corner that is being considered
         Symbol currentCorner;
-
         // will store the coordinates that the current corner occupies (not the coordinates of the card to which the corner belongs to,
         // but the coordinates where, if a card is later placed, will cover the current corner)
         Coordinates currentCornerCoordinates;
-
         for (int i = 0; i < 4; i++) {
-
             // getting the coordinates that the current corner occupies (not the coordinates of the card to which the corner belongs to,
             // but the coordinates where, if a card is later placed, will cover the current corner)
             currentCornerCoordinates = CornerCoordinatesCalculator.cornerCoordinates(coordinates, i);
-
             // getting the corner that is being considered
             currentCorner = corners[i];
-
             // checking if currentCoordinates is already in unplaceableCoordinates,
             // if so it is only necessary to update visibleSymbolCounter, so the body of if statement will be skipped
             if (!unplaceableCoordinates.contains(currentCornerCoordinates)) {
-
                 //checking if the currentCorner is FULL, meaning the current corner coordinates must be added to unplacerable coordinates
                 if (currentCorner.equals(Symbol.FULL)) {
                     //adds currentCoordinates to unplaceableCoordinates and removes it from placeableCoordinates
                     addUnplaceableCoordinates(currentCornerCoordinates);
                 }
-
                 // if the corner is not FULL then the coordinates of the corner are placeable
                 else {
                     // adds currentCorner symbol to currentCornerCoordinates in placeableCoordinates
                     addSymbolsToPlaceableCoordinates(currentCornerCoordinates, currentCorner);
                 }
             }
-
             updateVisibleCounter(currentCorner);
         }
-
     }
 
 
