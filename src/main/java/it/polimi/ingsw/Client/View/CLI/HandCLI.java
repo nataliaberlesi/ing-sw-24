@@ -27,18 +27,6 @@ public class HandCLI {
 
 
     /**
-     *
-     * @param cardIndex of card that is being taken from hand, that will be replaced by empty card
-     * @return the card being taken
-     */
-    public CardCLI takeCard(int cardIndex){
-        cardIndex--;
-        CardCLI cardBeingTaken=hand[cardIndex];
-        hand[cardIndex] = emptyCard;
-        return cardBeingTaken;
-    }
-
-    /**
      * replaces all cards in hand with the updated hand sent by server
      * @param cardsInUpdatedHand is the new hand sent by server
      */
@@ -52,21 +40,6 @@ public class HandCLI {
             hand[i] = updatedCard;
         }
     }
-
-    /**
-     *
-     * @param card that is being placed in hand, replacing the empty card
-     */
-    public void putCard(CardCLI card){
-        card.makeFaceUp();
-        for(int i=0; i<3; i++){
-            if(hand[i].getCardID().equals(emptyCard.getCardID())){
-                hand[i] = card;
-                break;
-            }
-        }
-    }
-
 
     /**
      * prints out cards in hand

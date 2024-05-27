@@ -1,7 +1,8 @@
 package it.polimi.ingsw.Client.View.CLI;
 
 /**
- * objectives that are in game
+ * objectives that are in game, 2 objectives are public and are applied to all players,
+ * every player also has a private objective that only applies to them and only they can see it
  */
 public class ObjectivesSectionCLI {
 
@@ -76,6 +77,9 @@ public class ObjectivesSectionCLI {
         }
     }
 
+    /**
+     * shows all objectives that effect client
+     */
     public void printObjectivesSection(){
         printCommonObjectives();
         printPrivateObjective();

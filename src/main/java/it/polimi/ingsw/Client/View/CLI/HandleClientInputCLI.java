@@ -115,9 +115,8 @@ public class HandleClientInputCLI implements Runnable{
     }
 
     /**
-     *
-     * @param input should come in the form of "show 'username'", if so method will change player screen to show the board of the player
-     *              indicated by the input
+     * change client screen to show the board of the player indicated by the input
+     * @param input should come in the form of "show 'username'"
      */
     private void dealWithShowingOtherPlayerBoard(String input){
         String[] inputArray=input.split(" ");
@@ -184,7 +183,9 @@ public class HandleClientInputCLI implements Runnable{
 
     /**
      *
-     * @param inputArray players input where each word is an element in the array
+     * @param inputArray players input where each word is an element in the array,
+     *                   to place a card it should come in the form:
+     *                   1 (index of card in hand that will be placed) 0,0(coordinates)
      * @return true if all params are correct
      */
     private boolean placeCard(String[] inputArray){

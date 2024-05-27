@@ -1,9 +1,12 @@
 package it.polimi.ingsw.Client.View.CLI;
 
+/**
+ * objectives are a way for player to earn points, this class creates the description of these objectives
+ */
 public class ObjectiveCLI {
 
     /**
-     * objective as seen in CLI
+     * description of the objective
      */
     private String objective="Earn ";
 
@@ -51,7 +54,7 @@ public class ObjectiveCLI {
         switch (specificType){
             case "MUSHROOM":
                 verticalPattern.append(ColoredText.ANSI_RED);
-                verticalPattern.append("C\n");
+                verticalPattern.append("C\n\n");
                 verticalPattern.append(emptySpace);
                 verticalPattern.append("C\n");
                 verticalPattern.append(ColoredText.ANSI_GREEN);
@@ -64,7 +67,7 @@ public class ObjectiveCLI {
                 verticalPattern.append("  C\n");
                 verticalPattern.append(ColoredText.ANSI_BLUE);
                 verticalPattern.append(emptySpace);
-                verticalPattern.append("C\n");
+                verticalPattern.append("C\n\n");
                 verticalPattern.append(emptySpace);
                 verticalPattern.append("C\n");
                 verticalPattern.append(ColoredText.ANSI_RESET);
@@ -74,14 +77,14 @@ public class ObjectiveCLI {
                 verticalPattern.append("C\n");
                 verticalPattern.append(ColoredText.ANSI_PURPLE);
                 verticalPattern.append(emptySpace);
-                verticalPattern.append("  C\n");
+                verticalPattern.append("  C\n\n");
                 verticalPattern.append(emptySpace);
                 verticalPattern.append("  C\n");
                 verticalPattern.append(ColoredText.ANSI_RESET);
                 break;
             case "LEAF":
                 verticalPattern.append(ColoredText.ANSI_GREEN);
-                verticalPattern.append("  C\n");
+                verticalPattern.append("  C\n\n");
                 verticalPattern.append(emptySpace);
                 verticalPattern.append("  C\n");
                 verticalPattern.append(ColoredText.ANSI_PURPLE);
@@ -162,6 +165,9 @@ public class ObjectiveCLI {
         return " ".repeat(Math.max(0, length));
     }
 
+    /**
+     * prints out description of objective
+     */
     public void printObjective(){
         System.out.println(this.objective);
     }
