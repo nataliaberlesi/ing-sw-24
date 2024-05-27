@@ -152,10 +152,10 @@ public class MainScene extends Scene {
 
         StaticsForGUI.setButtonCharacteristics(confirmActionButton, "System Bold", 16, 38, 230, true);
 
-        StaticsForGUI.setButtonCharacteristics(chatButton, "System Bold", 16, 65, 170, false);
+        StaticsForGUI.setButtonCharacteristics(chatButton, "System Bold", 16, 65, 180, true);
         chatButton.setOnMouseClicked(event -> {
-            viewControllerGUI.showUpdatedChat();
-            viewControllerGUI.setSceneOnStage(viewControllerGUI.getChatScene(), viewControllerGUI.getChatStage());
+            viewControllerGUI.openChat();
+            chatButton.setStyle("-fx-border-color: transparent; -fx-border-width: 0;");
         });
 
         this.root.getChildren().addAll(flipYourHandButton, confirmActionButton, chatButton);
@@ -180,7 +180,7 @@ public class MainScene extends Scene {
             seeOtherPlayersSceneButtons.add(new Button("See " + playersInGame.get(i).getUsername() + "'s game"));
             StaticsForGUI.setButtonCharacteristics(seeOtherPlayersSceneButtons.get(i), "System", 12, 38, 277+45*i, true);
             int finalI = i;
-            seeOtherPlayersSceneButtons.get(i).setOnMouseClicked(event -> handleSeeOtherPlayerScene(playersInGame.get(finalI)));
+            seeOtherPlayersSceneButtons.get(i).setOnAction(event -> handleSeeOtherPlayerScene(playersInGame.get(finalI)));
             this.root.getChildren().add(seeOtherPlayersSceneButtons.get(i));
         }
     }
@@ -195,10 +195,16 @@ public class MainScene extends Scene {
         playerInScene = otherPlayer;
         enableConfirmButtonClick();
         enableFlipHandButton();
+        enableChatButton();
         addHandAndBoardToScene();
         viewControllerGUI.showScene();
     }
 
+    public void enableChatButton() {
+        if (playerInScene.equals(viewControllerGUI.getMyPlayer()))
+            chatButton.setDisable(false);
+        else chatButton.setDisable(true);
+    }
 
     /**
      * Enables flip hand button
@@ -376,6 +382,14 @@ public class MainScene extends Scene {
     }
 
     /**
+     * Getter for chat button
+     * @return chatButton
+     */
+    public Button getChatButton() {
+        return chatButton;
+    }
+
+    /**
      * Getter for seeOtherPlayersSceneButtons
      * @return seeOtherPlayersSceneButtons
      */
@@ -424,6 +438,5 @@ public class MainScene extends Scene {
         scoreBoard = new ScoreBoardGUI(playerUsernames);
         root.getChildren().add(scoreBoard);
     }
-
 
 }

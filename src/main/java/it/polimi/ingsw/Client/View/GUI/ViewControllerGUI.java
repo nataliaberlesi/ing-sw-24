@@ -138,6 +138,11 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     protected void setChatStage(){
         chatStage = new Stage();
         setStageCharacteristics(chatStage);
+        chatScene = new ChatGUI(this);
+    }
+    protected void openChat() {
+        setSceneOnStage(chatScene, chatStage);
+        chatStage.toFront();
     }
 
     /**
@@ -199,12 +204,18 @@ public class ViewControllerGUI extends ViewController implements Initializable{
 
     @Override
     protected void showUpdatedChat() {
+        String receiver = messageParser.getAffectedPlayer();
+        String sender = messageParser.getCurrentPlayer();
+        if ((receiver.equalsIgnoreCase(myPlayer.getUsername()) || receiver.equalsIgnoreCase("-all")) && !chatStage.isShowing())
+            mainScene.getChatButton().setStyle("-fx-border-color: blue; -fx-border-width: 2;");
+        if (sender.equalsIgnoreCase(myPlayer.getUsername()))
+            mainScene.getChatButton().setStyle("-fx-border-color: transparent; -fx-border-width: 0;");
 
     }
 
     @Override
-    protected void addMessageToChat(String sender, String receiver, String bodyOfMessage, boolean isPrivate) {
-
+    protected void addMessageToChat(String message) {
+        chatScene.addMessageToChat(message);
     }
 
     /**
@@ -214,8 +225,8 @@ public class ViewControllerGUI extends ViewController implements Initializable{
      */
     protected void setSceneOnStage(Scene scene, Stage stage){
         stage.setScene(scene);
-        stage.hide();
-        stage.show();
+        if (!stage.isShowing())
+            stage.show();
     }
 
     /**
@@ -407,6 +418,7 @@ public class ViewControllerGUI extends ViewController implements Initializable{
         mainScene.setSeeOtherPlayersGameButtons(playersInGame.getPlayers());
         mainScene.setScoreBoard(playerUsernames);
         mainScene.setHelloPlayerLabel(myPlayer.getUsername());
+        chatScene.initializeReceiverChoiceBox(playerUsernames);
     }
 
     /**
@@ -468,9 +480,8 @@ public class ViewControllerGUI extends ViewController implements Initializable{
      */
     @Override
     protected void showScene() {
-        stage.setScene(mainScene);
-        stage.hide();
-        stage.show();
+        setSceneOnStage(mainScene, stage);
+        mainScene.enableChatButton();
     }
 
     /**
@@ -686,6 +697,10 @@ public class ViewControllerGUI extends ViewController implements Initializable{
      */
     protected PlayerGUI getMyPlayer(){
         return this.myPlayer;
+    }
+
+    protected PlayersInGameGUI getPlayersInGame(){
+        return playersInGame;
     }
 
 

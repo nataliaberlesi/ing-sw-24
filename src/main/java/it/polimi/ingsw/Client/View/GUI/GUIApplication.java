@@ -44,5 +44,6 @@ public class GUIApplication extends Application {
     public void start(Stage primaryStage) throws Exception {
         viewControllerGUI.setStage(primaryStage);
         viewControllerGUI.setPopUpStage();
+        viewControllerGUI.setChatStage();
     }
 }
