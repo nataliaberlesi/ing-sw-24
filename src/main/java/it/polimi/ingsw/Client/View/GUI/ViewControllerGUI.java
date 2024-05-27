@@ -5,25 +5,18 @@ import it.polimi.ingsw.Client.Network.MessageType;
 import it.polimi.ingsw.Client.View.ViewController;
 import javafx.application.Platform;
 import javafx.event.Event;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.ResourceBundle;
 import java.util.concurrent.Semaphore;
 
 /**
  * Class representing the gui view and acting as main controller for JavaFX application.
  */
 
-public class ViewControllerGUI extends ViewController implements Initializable{
+public class ViewControllerGUI extends ViewController{
 
     /**
      * Initial application stage.
@@ -61,16 +54,6 @@ public class ViewControllerGUI extends ViewController implements Initializable{
      * Players in game
      */
     private final PlayersInGameGUI playersInGame = new PlayersInGameGUI();
-    /**
-     * Number of players ChoiceBox.
-     */
-    @FXML
-    private ChoiceBox<Integer> numberOfPlayersChoiceBox;
-    /**
-     * Username TextField.
-     */
-    @FXML
-    private TextField usernameField;
 
     /**
      * Constructor for ViewControllerGUI class
@@ -88,7 +71,6 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     protected void setStage(Stage stage){
         this.stage = stage;
         this.stage.setOnCloseRequest(event -> exit());
-        this.numberOfPlayersChoiceBox = new ChoiceBox<>();
         this.errorAlert = new Alert(Alert.AlertType.ERROR);
         setStageCharacteristics(this.stage);
     }
@@ -162,27 +144,11 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     }
 
     /**
-     * Getter for chat stage
-     * @return stage
-     */
-    public Stage getChatStage(){
-        return chatStage;
-    }
-
-    /**
      * Getter for main scene
      * @return main scene
      */
     public MainScene getMainScene() {
         return mainScene;
-    }
-
-    /**
-     * Getter for chat scene
-     * @return chat scene
-     */
-    public ChatGUI getChatScene() {
-        return chatScene;
     }
 
     /**
@@ -227,23 +193,6 @@ public class ViewControllerGUI extends ViewController implements Initializable{
         stage.setScene(scene);
         if (!stage.isShowing())
             stage.show();
-    }
-
-    /**
-     * Method for switching to a new FXML scene in application.
-     *
-     * @param resourceName fxml file resource to load
-     */
-    private void switchFXMLScene(String resourceName) {
-        try {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(resourceName));
-            fxmlLoader.setController(this);
-            Parent root = fxmlLoader.load();
-            Scene scene = new Scene(root);
-            setSceneOnStage(scene, stage);
-        } catch (IOException e){
-            throw new RuntimeException("Error while trying to switch scene");
-        }
     }
 
     /**
@@ -312,7 +261,8 @@ public class ViewControllerGUI extends ViewController implements Initializable{
      */
     @Override
     protected void switchToCreate() {
-        switchFXMLScene("startMenuCreate.fxml");
+        StartMenuScene startMenuCreate = new StartMenuScene(this,"create");
+        setSceneOnStage(startMenuCreate, stage);
     }
 
     /**
@@ -320,25 +270,22 @@ public class ViewControllerGUI extends ViewController implements Initializable{
      */
     @Override
     protected void switchToJoin() {
-        switchFXMLScene("startMenuJoin.fxml");
+        StartMenuScene startMenuJoin = new StartMenuScene(this,"join");
+        setSceneOnStage(startMenuJoin, stage);
     }
 
     /**
      * Confirm create event
      */
-    @FXML
-    protected void confirmCreate() {
-        Integer numberOfPlayers = this.numberOfPlayersChoiceBox.getValue();
-        String username = this.usernameField.getCharacters().toString().toUpperCase();
+
+    protected void confirmCreate(String username, Integer numberOfPlayers) {
         super.checkParamsAndSendCreate(username, numberOfPlayers);
     }
 
     /**
      * Confirm join event
      */
-    @FXML
-    protected void confirmJoin() {
-        String username = this.usernameField.getCharacters().toString().toUpperCase();
+    protected void confirmJoin(String username) {
         super.checkParamsAndSendJoin(username);
     }
 
@@ -349,16 +296,6 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     protected void switchToLoading() {
         LoadingScene loadingScene = new LoadingScene();
         setSceneOnStage(loadingScene, stage);
-    }
-
-    /**
-     * Sets choice box
-     * @param url url location
-     * @param resourceBundle resource bundle
-     */
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        numberOfPlayersChoiceBox.getItems().addAll(2,3,4);
     }
 
     /**
@@ -698,10 +635,5 @@ public class ViewControllerGUI extends ViewController implements Initializable{
     protected PlayerGUI getMyPlayer(){
         return this.myPlayer;
     }
-
-    protected PlayersInGameGUI getPlayersInGame(){
-        return playersInGame;
-    }
-
 
 }
