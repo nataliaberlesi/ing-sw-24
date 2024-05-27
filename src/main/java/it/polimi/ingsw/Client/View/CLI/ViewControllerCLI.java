@@ -6,20 +6,53 @@ import it.polimi.ingsw.Client.View.ViewController;
 
 import java.util.ArrayList;
 
-
+/**
+ * controller of CLI
+ */
 public class ViewControllerCLI extends ViewController {
 
-
+    /**
+     * list of all players currently in game
+     */
     private final PlayersInGameCLI playersInGame=new PlayersInGameCLI();
+    /**
+     * contains all the objectives that belong to client
+     */
     private final ObjectivesSectionCLI objectivesSection=new ObjectivesSectionCLI();
+    /**
+     * contains all the cards that can be drawn by players
+     */
     private final DrawableAreaCLI drawableArea=new DrawableAreaCLI();
+    /**
+     * is player used by client
+     */
     private PlayerCLI myPlayer;
+    /**
+     * is the player that is currently being shown to clint in his view, client can change player in view at any time
+     */
     private PlayerCLI currentPlayerInScene;
+    /**
+     * contains all the actions a player can do and weather they are enabled or not
+     */
     private final ClientActionsCLI clientActions=new ClientActionsCLI();
+    /**
+     * is the scoreboard shown at the end of a game that contains the rank of each player and their final score
+     */
     private FinalScoreBoardCLI finalScoreBoard;
+    /**
+     * runs a separate thread that handles clint inputs
+     */
     private final HandleClientInputCLI clientInputHandler;
+    /**
+     * contains all the messages sent by players
+     */
     private final ChatCLI chatRoom=new ChatCLI();
 
+    /**
+     * sets up CLI controller and starts input handler thread
+     * @param messageParser parses messages sent by server
+     * @param messageDispatcher dispatches messages to server
+     */
     public ViewControllerCLI(MessageParser messageParser, MessageDispatcher messageDispatcher) {
         super(messageParser, messageDispatcher);
         this.clientInputHandler=new HandleClientInputCLI(this, messageDispatcher, clientActions );
@@ -39,6 +72,10 @@ public class ViewControllerCLI extends ViewController {
         clientActions.enableHelp();
     }
 
+    /**
+     * client can change the player that is in his view to inspect other players boards and back of hand
+     * @param currentPlayerInScene is the player that is currently in view of client
+     */
     public void setCurrentPlayerInScene(PlayerCLI currentPlayerInScene) {
         this.currentPlayerInScene = currentPlayerInScene;
     }
@@ -52,7 +89,10 @@ public class ViewControllerCLI extends ViewController {
         System.out.println("\nWaiting for server to check username...\n");
     }
 
-
+    /**
+     *
+     * @return all players in game
+     */
     public PlayersInGameCLI getPlayersInGame() {
         return playersInGame;
     }
@@ -73,58 +113,100 @@ public class ViewControllerCLI extends ViewController {
         System.out.println(ClientOutputs.loadingScreen);
     }
 
+    /**
+     *
+     * @param affectedPlayer is player whose board will be updated
+     */
     @Override
     protected void updatePlayerBoard(String affectedPlayer) {
         playersInGame.getPlayer(affectedPlayer).getPlayerBoard().updateBoard(messageParser.getPlacedCardsCLI());
     }
 
+    /**
+     *
+     * @param affectedPlayer player whose color will be set
+     * @param color chosen by affected player
+     */
     @Override
     protected void setPlayerColor(String affectedPlayer, String color) {
         playersInGame.getPlayer(affectedPlayer).setPlayerColor(color);
     }
 
+    /**
+     * asks whether client wants to continue an existing game or start a new one
+     */
     @Override
     protected void askCreateOrContinue() {
         clientActions.enableContinueGame();
         System.out.println(ClientOutputs.askIfPlayerWantsToContinueGame);
     }
 
+    /**
+     * This method is called when a game is rejoined and server sends information to continue the game,
+     * some information is sent multiple times but only needs to be inserted once.
+     * This method checks whether that information has already been set.
+     * @return true if information sent by server has already been dealt with
+     */
     @Override
     protected boolean playersInfoNotYetAdded() {
         return playersInGame.getPlayers().isEmpty();
     }
 
+    /**
+     *
+     * @param username of a player
+     * @return true if username passed is the same as my clients username
+     */
     @Override
     protected boolean isMyPlayer(String username) {
         return myPlayer.getUsername().equalsIgnoreCase(username);
     }
 
+    /**
+     * method is only called when a game is rejoined and it saves the private objective that was chosen by client before game was stopped
+     */
     @Override
     protected void setPrivateObjective() {
         setPrivateObjective(messageParser.getChosenObjective());
     }
 
+    /**
+     * shows scene with updated chat
+     */
     @Override
     protected void showUpdatedChat() {
         showScene();
     }
 
+    /**
+     * adds a message sent by player to chat
+     * @param message that has been sent by a player
+     */
     @Override
     protected void addMessageToChat(String message) {
         chatRoom.addMessage(message);
     }
 
+    /**
+     * terminates input handler thread and view controller
+     */
     @Override
     protected void terminate() {
         clientInputHandler.terminate();
         System.exit(0);
     }
 
+    /**
+     * clears terminal screen
+     */
     private void clearScreen(){
         System.out.print("\033[H\033[2J");
         System.out.flush();
     }
 
+    /**
+     * sends message to server notifying the client isn't playing anymore and terminates CLI controller
+     */
     @Override
     protected void exit() {
         messageDispatcher.abortGame(myPlayer.getUsername(),"I don't want to play anymore :(");
@@ -132,32 +214,54 @@ public class ViewControllerCLI extends ViewController {
         terminate();
     }
 
+    /**
+     * shows player final ranking and scores
+     */
     @Override
     protected void showFinalScoreBoard() {
         clearScreen();
         finalScoreBoard.printFinalScoreBoard();
     }
 
+    /**
+     * sets ranking and final score for each player
+     */
     @Override
     protected void setFinalScoreBoard() {
         this.finalScoreBoard=messageParser.getFinalScoreBoardCLI();
     }
 
+    /**
+     * all players are shown two private objectives but can only choose one, this method saves the two choices to show them to client
+     */
     @Override
     protected void setPrivateObjectiveChoice() {
         clientActions.setPrivateObjectiveChoices(messageParser.getPrivateObjectivesCLI());
     }
 
+    /**
+     *
+     * @param username of a possible player
+     * @return true is username corresponds to a player in the game
+     */
     @Override
     protected boolean isPlayerInGame(String username) {
         return playersInGame.isPlayerInGame(username);
     }
 
+    /**
+     *
+     * @param username of player whose score needs to be updated
+     * @param score updated score of player
+     */
     @Override
     protected void updatePlayerScore(String username, int score) {
         playersInGame.getPlayer(username).setScore(score);
     }
 
+    /**
+     * sets the objective that apply to all players
+     */
     @Override
     protected void setPublicObjectives() {
         for(ObjectiveCLI objective:messageParser.getPublicObjectivesCLI()){
@@ -165,26 +269,43 @@ public class ViewControllerCLI extends ViewController {
         }
     }
 
+    /**
+     * saves objective chosen by client
+     * @param privateObjective objective chosen by client that only applies to client
+     */
     public void setPrivateObjective(ObjectiveCLI privateObjective){
         clientActions.enableShowOtherPlayerBoardAndBackOFHand();
         objectivesSection.setPrivateObjective(privateObjective);
     }
 
+    /**
+     *
+     * @param username of player whose hand needs to be updated
+     */
     @Override
     protected void updatePlayerHand(String username) {
         playersInGame.getPlayer(username).updateHand(messageParser.getHandCLI());
     }
 
+    /**
+     * enables the possibility to place a card on the board
+     */
     @Override
     protected void enablePlaceCard() {
         clientActions.enablePlaceCard();
     }
 
+    /**
+     * enables the possibility to draw a card
+     */
     @Override
     protected void enableDrawCard() {
         clientActions.enableDrawCard();
     }
 
+    /**
+     * is it is the second round and it's the clients turn this method enables the client to choose his/her private objective
+     */
     @Override
     protected void enableSecondRoundActions() {
         clientActions.enableChoosePrivateObjective();
@@ -211,6 +332,11 @@ public class ViewControllerCLI extends ViewController {
     }
 
 
+    /**
+     * prints out an error alert
+     * @param header of error alert
+     * @param content of error alert
+     */
     @Override
     protected void showErrorAlert(String header, String content) {
         System.out.println(header);
@@ -252,6 +378,14 @@ public class ViewControllerCLI extends ViewController {
         clientActions.enablePlaceStartingCard();
     }
 
+    /**
+     * shows all current information relative to the game :
+     * drawing section,
+     * score board,
+     * recent messages in chat,
+     * board of player in view (client can choose which player he has in view)
+     * hand of player in view (if player in view is not the client then only the back of the hand is shown)
+     */
     private synchronized void printScene(){
         System.out.println("\n\n\n-----------------------------------------------------------------------------\n\n\n");
         playersInGame.printScores();
@@ -270,16 +404,26 @@ public class ViewControllerCLI extends ViewController {
         chatRoom.printRecentMessages();
     }
 
+    /**
+     * shows main playing scene
+     */
     @Override
     protected void showScene() {
         printScene();
     }
 
+    /**
+     * each player must choose a color dooring the setup of the game, this method updates which colors are still available for the player to choose from
+     * @param availableColors colors still available for player to choose from
+     */
     @Override
     protected void updateAvailableColors(ArrayList<String> availableColors) {
         clientActions.setAvailableColors(availableColors);
     }
 
+    /**
+     * updates the cards that can be drawn by players
+     */
     @Override
     protected void updateDrawableArea() {
         String resourceDrawableArea="resourceDrawableArea";
@@ -290,6 +434,10 @@ public class ViewControllerCLI extends ViewController {
         }
     }
 
+    /**
+     * each player is given a starting card that is placed in the center of their board, player must then choose whether the card should face up or down for the rest of the game
+     * @param username of player that is currently receiving an initial card
+     */
     @Override
     protected void giveInitialCard(String username) {
         try {
@@ -325,10 +473,17 @@ public class ViewControllerCLI extends ViewController {
         setCurrentPlayer(messageParser.getPlayers().getFirst());
     }
 
+    /**
+     * prints out all the messages sent in the chat
+     */
     public void printCompleteChat(){
         chatRoom.printCompleteChat();
     }
 
+    /**
+     *
+     * @return player corresponding to my client
+     */
     public PlayerCLI getMyPlayer() {
         return myPlayer;
     }
