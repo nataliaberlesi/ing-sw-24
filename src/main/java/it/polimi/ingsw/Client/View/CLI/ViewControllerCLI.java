@@ -36,10 +36,6 @@ public class ViewControllerCLI extends ViewController {
      */
     private final ClientActionsCLI clientActions=new ClientActionsCLI();
     /**
-     * is the scoreboard shown at the end of a game that contains the rank of each player and their final score
-     */
-    private FinalScoreBoardCLI finalScoreBoard;
-    /**
      * runs a separate thread that handles clint inputs
      */
     private final HandleClientInputCLI clientInputHandler;
@@ -215,20 +211,12 @@ public class ViewControllerCLI extends ViewController {
     }
 
     /**
-     * shows player final ranking and scores
+     * gets final scoreboard from server and shows it to player
      */
     @Override
-    protected void showFinalScoreBoard() {
+    protected void setAndShowFinalScoreBoard() {
         clearScreen();
-        finalScoreBoard.printFinalScoreBoard();
-    }
-
-    /**
-     * sets ranking and final score for each player
-     */
-    @Override
-    protected void setFinalScoreBoard() {
-        this.finalScoreBoard=messageParser.getFinalScoreBoardCLI();
+        messageParser.getFinalScoreBoardCLI().printFinalScoreBoard();
     }
 
     /**

@@ -28,9 +28,9 @@ public class ClientOutputs {
 
                             1) PLACE CARD
                             To place a card simply type PLACE followed by the index of the card in your hand you want to place,
-                            followed by the coordinates where you want to place the card (x,y),
+                            followed by the coordinates where you want to place the card 'x,y',
                             followed UP/DOWN depending on weather you want the card facing up or facing down
-                            EXAMPLE: PLACE 3 (-4,7) DOWN
+                            EXAMPLE: PLACE 3 -4,7 DOWN
 
                             2) DRAW CARD
                             To draw a card simply type DRAW followed by GOLD/RESOURCE and the index of the card you want to draw
