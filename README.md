@@ -12,6 +12,8 @@
 | CLIENT GUI  | [:white_check_mark:](https://github.com/nataliaberlesi/ing-sw-24/tree/master/src/main/java/it/polimi/ingsw/Client/View/GUI)  |
 | CHAT  | :white_check_mark:  |
 | PERSISTENCE  | :white_check_mark:  |
+| MULTIPLAYER  | :no_entry: |
+| RESILIENCE  | :no_entry: |
 
 ### Legend
 
