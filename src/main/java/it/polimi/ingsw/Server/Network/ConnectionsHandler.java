@@ -91,16 +91,12 @@ public class ConnectionsHandler implements Runnable{
     /**
      * If endgame conditions are met, send a ENDGAME broadcast message
      */
-    private void checkEndgame(){
+    private void checkEndgame() throws IOException {
         if(gameController.gameIsEnded()){
             Message outmessage=MessageCrafter.craftEndgameMessage(gameController.getScoreBoard());
             for(PlayerConnection pc: server.getConnections()) {
                 pc.setOutMessage(outmessage);
-                try {
-                    pc.close();
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
+                pc.close();
             }
         }
     }
@@ -176,7 +172,11 @@ public class ConnectionsHandler implements Runnable{
                 checkStartFirstRound();
                 checkStartSecondRound();
                 checkStartGame();
-                checkEndgame();
+                try {
+                    checkEndgame();
+                } catch (IOException e) {
+                    System.out.println("WARNING: Can't close a player connection");
+                }
             }
             handleConnections(server.getConnections());
             checkAllPlayerConnected();

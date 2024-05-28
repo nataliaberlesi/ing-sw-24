@@ -5,7 +5,7 @@ import it.polimi.ingsw.Server.Network.MessageParser;
 import java.io.*;
 import java.util.ArrayList;
 
-public class PersistencyHandler {
+public class PersistenceHandler {
     private static final String gameInstancePath;
     private static final MessageParser messageParser=MessageParser.getINSTANCE();
     private static File file;
@@ -58,7 +58,7 @@ public class PersistencyHandler {
         persistence=true;
     }
     public static void setPlayersTemp(ArrayList<String> playersTemp) {
-        PersistencyHandler.playersTemp=playersTemp;
+        PersistenceHandler.playersTemp=playersTemp;
     }
     public static boolean checkPlayerTemp(String player) {
         boolean flag=true;

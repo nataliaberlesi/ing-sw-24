@@ -1,43 +1,38 @@
 package it.polimi.ingsw.Server.Network;
 
-import it.polimi.ingsw.Server.Controller.PersistencyHandler;
+import it.polimi.ingsw.Server.Controller.PersistenceHandler;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 
 public class Server implements Runnable{
     /**
-     * The port where the server listens
-     */
-    private final int port;
-    /**
      * The server socket that listens for connections
      */
-    private ServerSocket serverSocket;
+    private final ServerSocket serverSocket;
     private int maxAllowablePlayers;
 
     /**
      * The active connections inside the server
      */
-    private ArrayList<PlayerConnection> connections= new ArrayList<>();
+    private final ArrayList<PlayerConnection> connections= new ArrayList<>();
     private boolean masterIsConnected;
     private boolean lobbyIsOpen;
     private boolean aGameAlreadyExist;
     private boolean chooseContinueGame;
     /**
      * Creates a server using a custom port, then waits for a master player to connect
-     * @param port
-     * @throws IOException
+     * @param port the port where to connect
      */
     public Server(int port) throws IOException {
-        this.port = port;
         maxAllowablePlayers=0;
         masterIsConnected=false;
         lobbyIsOpen=false;
         chooseContinueGame=false;
-        aGameAlreadyExist= PersistencyHandler.gameAlreadyExists();
+        aGameAlreadyExist= PersistenceHandler.gameAlreadyExists();
         this.serverSocket=new ServerSocket(port);
         serverSocket.setSoTimeout(1000);
     }
@@ -49,7 +44,6 @@ public class Server implements Runnable{
 
     /**
      * Opens lobby and sets max allowable players
-     * @param maxAllowablePlayers
      */
     public void openLobby(Integer maxAllowablePlayers) {
         this.maxAllowablePlayers=maxAllowablePlayers;
@@ -67,7 +61,6 @@ public class Server implements Runnable{
     }
     /**
      * Waits for a player connection
-     * @throws IOException
      */
     public void waitPlayer() throws IOException {
         PlayerConnection player=connectPlayer();
@@ -79,7 +72,6 @@ public class Server implements Runnable{
     /**
      * Connects the master to the server
      * @return The master connection
-     * @throws IOException
      */
     private PlayerConnection connectPlayer() throws IOException {
         Socket Socket=serverSocket.accept();
@@ -90,7 +82,6 @@ public class Server implements Runnable{
     }
     /**
      *Sends CONNECT message
-     * @param masterStatus
      */
     private void sendMasterStatus(Boolean masterStatus) {
         Message message=MessageCrafter.craftConnectMessage(masterStatus);
@@ -110,7 +101,6 @@ public class Server implements Runnable{
 
     /**
      * Sends in broadcast an ABORT message and closes serversocket and all the connections.
-     * @throws IOException
      */
     public void close() throws IOException {
         for(PlayerConnection playerConnection: connections) {
@@ -123,16 +113,12 @@ public class Server implements Runnable{
     /**
      * Waits for a game master to join if it is not connected
      */
-    private void checkMasterConnection() {
+    private void checkMasterConnection() throws IOException {
         if(!masterIsConnected) {
-            try {
-                waitPlayer();
-                masterIsConnected=true;
-                chooseContinueGame=true;
-                PersistencyHandler.startPersistence();
-            } catch (IOException e) {
-                //socket timed out
-            }
+            waitPlayer();
+            masterIsConnected=true;
+            chooseContinueGame=true;
+            PersistenceHandler.startPersistence();
         }
     }
 
@@ -155,21 +141,24 @@ public class Server implements Runnable{
     /**
      * Accepts a player in the connections' lobby if it is open
      */
-    private void checkLobby() {
+    private void checkLobby() throws IOException {
         if(connections.size()<maxAllowablePlayers && lobbyIsOpen) {
-            try {
-                waitPlayer();
-                sendMasterStatus(false);
-            } catch (IOException ioe) {
-                //waiting for player
-            }
+            waitPlayer();
+            sendMasterStatus(false);
         }
     }
     public void run() {
         while(!serverSocket.isClosed()) {
-            checkMasterConnection();
-            checkContinueGame();
-            checkLobby();
+            try {
+                checkMasterConnection();
+                checkContinueGame();
+                checkLobby();
+            } catch(SocketTimeoutException stoe) {
+                //socket is waiting
+            } catch(IOException ioe) {
+                System.out.println("WARNING: A player can't connect");
+            }
+
         }
     }
 }

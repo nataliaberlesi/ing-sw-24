@@ -66,15 +66,15 @@ public class GameController {
         persistence =inParamsDTO.persistence();
         if(persistence) {
             try {
-                gameInstance= PersistencyHandler.fetchState();
-                PersistencyHandler.setPlayersTemp((ArrayList<String>) gameInstance.getPlayerTurnOrder().clone());
+                gameInstance= PersistenceHandler.fetchState();
+                PersistenceHandler.setPlayersTemp((ArrayList<String>) gameInstance.getPlayerTurnOrder().clone());
                 server.openLobby(gameInstance.getNumberOfPlayers());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
             return MessageCrafter.craftConnectMessage(false);
         } else {
-            PersistencyHandler.deleteGame();
+            PersistenceHandler.deleteGame();
             return MessageCrafter.craftConnectMessage(true);
         }
     }
@@ -100,9 +100,9 @@ public class GameController {
      */
     public Message joinGame(InParamsDTO inParamsDTO) {
         String username=inParamsDTO.username().toUpperCase();
-        Boolean unavailableUsername;
+        boolean unavailableUsername;
         if(persistence) {
-            unavailableUsername= PersistencyHandler.checkPlayerTemp(username);
+            unavailableUsername= PersistenceHandler.checkPlayerTemp(username);
         } else {
             unavailableUsername=this.gameInstance.unavailableUsername(username);
             if(!unavailableUsername){
@@ -123,7 +123,7 @@ public class GameController {
 
     /**
 +     * Plays the current player's first round with given parameters. When the first round is ended, starts the second round
-     * @return
+     * @return a FIRSTROUND message
      */
     public Message playFirstRound(InParamsDTO inParamsDTO) {
         String card=null;
@@ -150,7 +150,7 @@ public class GameController {
 
     /**
      * Plays the current player's second round with given parameters. When the second round is ended, starts the game
-     * @return
+     * @return a SECONDROUND message
      */
     public Message playSecondRound(InParamsDTO inParamsDTO) {
         Objective[] privateObjectives=new Objective[2];
@@ -178,7 +178,6 @@ public class GameController {
     /**
      * Tries to place a card. If it's placeable, places it in the board and removes it from the hand.
      * If the drawable area is empty, the turn in the gameInstance is increased
-     * @param inParamsDTO
      * @return
      * a ACTION_DRAWCARD with the same currentplayer if the action was illegal
      * a ACTION_PLACECARD with the same currentplayer if the action was legal
@@ -249,7 +248,7 @@ public class GameController {
             );
         }
         try {
-            PersistencyHandler.saveState(gameInstance);
+            PersistenceHandler.saveState(gameInstance);
         } catch (IOException e) {
             System.out.println("LOG: Error during state saving");
         }
@@ -262,7 +261,7 @@ public class GameController {
         return this.gameInstance.checkIfGameIsFull();
     }
     public boolean persistencyGameIsFull() {
-        return PersistencyHandler.playersTempIsEmpty();
+        return PersistenceHandler.playersTempIsEmpty();
     }
     public boolean firstRoundIsStarted() {
         return gameInstance.firstRoundIsStarted();
@@ -274,7 +273,6 @@ public class GameController {
 
     /**
      * Starts a game when all user are joined
-     * @throws IOException
      */
     public void startFirstRound(){
         this.gameInstance.startFirstRound();
@@ -295,8 +293,8 @@ public class GameController {
     }
     public void startFinalRound(){this.gameInstance.startFinalRound();}
     public void endGame(){
-        PersistencyHandler.closePersistence();
-        PersistencyHandler.deleteGame();
+        PersistenceHandler.closePersistence();
+        PersistenceHandler.deleteGame();
         this.gameInstance.endGame();
     }
     public boolean gameInstanceExists() {
@@ -344,7 +342,6 @@ public class GameController {
     /**
      * Helper method used to check if a card is placeable.
      * If it's placeable, it places it.
-     * @param inParamsDTO
      * @return
      * true if the card is placeable
      * false if the hand index contains a null card or if the card is not placeable
@@ -384,7 +381,6 @@ public class GameController {
 
     /**
      * Helper method to check if final round requirements are meet
-     * @param affectedPlayerIndex
      */
     private void checkIfFinalRoundHasToStart(Integer affectedPlayerIndex) {
         if(affectedPlayerIndex == 0 && gameInstance.checkEndgame() && !finalroundIsStarted()){
