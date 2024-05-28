@@ -56,6 +56,7 @@ public class Server implements Runnable{
     public void restart() {
         masterIsConnected=false;
         maxAllowablePlayers=0;
+        aGameAlreadyExist=PersistenceHandler.gameAlreadyExists();
         connections.clear();
         System.out.println("SERVER RESTARTED");
     }
