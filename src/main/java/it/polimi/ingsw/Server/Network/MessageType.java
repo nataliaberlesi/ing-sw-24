@@ -45,7 +45,7 @@ public enum MessageType {
      */
     ACTION_PLACECARD,
     /**
-     * A player drown a card.
+     * A player drawn a card.
      */
     ACTION_DRAWCARD,
     /**

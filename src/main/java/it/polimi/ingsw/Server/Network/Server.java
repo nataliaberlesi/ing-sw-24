@@ -46,10 +46,19 @@ public class Server implements Runnable{
     }
 
     public void closeLobby() {lobbyIsOpen=false;}
+
+    /**
+     * Opens lobby and sets max allowable players
+     * @param maxAllowablePlayers
+     */
     public void openLobby(Integer maxAllowablePlayers) {
         this.maxAllowablePlayers=maxAllowablePlayers;
         lobbyIsOpen=true;
     }
+
+    /**
+     * Restarts server with default configuration
+     */
     public void restart() {
         masterIsConnected=false;
         maxAllowablePlayers=0;
@@ -57,20 +66,11 @@ public class Server implements Runnable{
         System.out.println("SERVER RESTARTED");
     }
     /**
-     * Waits for the master player to connect and add it to the connections
-     * @throws IOException
-     */
-    private void waitMaster() throws IOException {
-        PlayerConnection master=connectPlayer(true);
-        this.connections.add(master);
-    }
-
-    /**
      * Waits for a player connection
      * @throws IOException
      */
     public void waitPlayer() throws IOException {
-        PlayerConnection player=connectPlayer(false);
+        PlayerConnection player=connectPlayer();
         synchronized (connections){
             this.connections.add(player);
         }
@@ -78,45 +78,55 @@ public class Server implements Runnable{
 
     /**
      * Connects the master to the server
-     * @param isMaster true if the player is the first to connect(the master), false otherwise
      * @return The master connection
      * @throws IOException
      */
-    private PlayerConnection connectPlayer(boolean isMaster) throws IOException {
+    private PlayerConnection connectPlayer() throws IOException {
         Socket Socket=serverSocket.accept();
         //TODO: thread
-        PlayerConnection playerConnection=new PlayerConnection(Socket, isMaster);
+        PlayerConnection playerConnection=new PlayerConnection(Socket);
         new Thread(playerConnection).start();
         return playerConnection;
     }
-
-    public void setMaxAllowablePlayers(int maxAllowablePlayers) {
-        this.maxAllowablePlayers=maxAllowablePlayers;
-    }
     /**
-     *
+     *Sends CONNECT message
      * @param masterStatus
      */
     private void sendMasterStatus(Boolean masterStatus) {
         Message message=MessageCrafter.craftConnectMessage(masterStatus);
-        String outMessage=MessageParser.getINSTANCE().toJson(message);
-        connections.getLast().setOutMessage(outMessage);
+        connections.getLast().setOutMessage(message);
     }
+
+    /**
+     * Sends PERSISTENCE message
+     */
     private void sendPersistencyNotification() {
         Message message=MessageCrafter.craftPersistencyNotification();
-        String outMessage=MessageParser.getINSTANCE().toJson(message);
-        connections.getLast().setOutMessage(outMessage);
+        connections.getLast().setOutMessage(message);
     }
     public boolean isClosed() {
         return serverSocket.isClosed();
     }
+
+    /**
+     * Sends in broadcast an ABORT message and closes serversocket and all the connections.
+     * @throws IOException
+     */
     public void close() throws IOException {
+        for(PlayerConnection playerConnection: connections) {
+            playerConnection.setOutMessage(MessageCrafter.craftAbortMessage("Server has been closed"));
+            playerConnection.close();
+        }
         serverSocket.close();
     }
+
+    /**
+     * Waits for a game master to join if it is not connected
+     */
     private void checkMasterConnection() {
         if(!masterIsConnected) {
             try {
-                waitMaster();
+                waitPlayer();
                 masterIsConnected=true;
                 chooseContinueGame=true;
                 PersistencyHandler.startPersistence();
@@ -125,6 +135,10 @@ public class Server implements Runnable{
             }
         }
     }
+
+    /**
+     * Sends a PERSISTENCE message if a game already exist
+     */
     private void checkContinueGame() {
         if(chooseContinueGame) {
             if(!aGameAlreadyExist) {
@@ -137,6 +151,10 @@ public class Server implements Runnable{
             }
         }
     }
+
+    /**
+     * Accepts a player in the connections' lobby if it is open
+     */
     private void checkLobby() {
         if(connections.size()<maxAllowablePlayers && lobbyIsOpen) {
             try {

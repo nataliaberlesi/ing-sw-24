@@ -12,6 +12,9 @@ import it.polimi.ingsw.Server.Model.Cards.Objectives.Objective;
 
 public class MessageParser {
     private final Gson parser;
+    /**
+     * The singleton instance
+     */
     private static final MessageParser INSTANCE=new MessageParser();
     private MessageParser() {
         parser=new GsonBuilder().registerTypeAdapter(CardObjective.class, new InterfaceAdapter<CardObjective>())
@@ -20,22 +23,38 @@ public class MessageParser {
                 .enableComplexMapKeySerialization()
                 .create();
     }
+
+    /**
+     * Used to get the singleton instance of MessageParser
+     * @return
+     */
     public static MessageParser getINSTANCE() {
         return INSTANCE;
     }
-    public InParamsDTO parseInParamsDTO(JsonObject jsonParams) {
-        return parser.fromJson(jsonParams, InParamsDTO.class);
-    }
+
+    /**
+     * Used to deserialize a message from a json string
+     * @param message
+     * @return
+     */
     public Message parseMessage(String message) {
         return parser.fromJson(message,Message.class);
     }
-    public JsonObject toJsonObject(Object object) {
-        return parser.toJsonTree(object).getAsJsonObject();
-    }
 
+    /**
+     * Used to get a json serialization of a object
+     * @param object the object to serialize
+     * @return a json string
+     */
     public String toJson(Object object) {
         return parser.toJson(object);
     }
+
+    /**
+     * Used to deserialize a GameInstance in json format
+     * @param state
+     * @return
+     */
     public GameInstance parseGameInstance(String state) {
         return parser.fromJson(state, GameInstance.class);
     }

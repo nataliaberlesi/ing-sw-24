@@ -223,7 +223,13 @@ public class GameInstance {
     public Card[] getResourceDrawableArea() {
         Card[] cards=new Card[3];
         for(int i=0;i<3;i++) {
-            cards[i]=ResourceCardFactory.makeResourceCard(getDrawableArea().getResourceDrawingSection().seeCard(i));
+            String cardID=getDrawableArea().getResourceDrawingSection().seeCard(i);
+            if(cardID!=null){
+                cards[i]=ResourceCardFactory.makeResourceCard(cardID);
+            } else{
+                cards[i]=null;
+            }
+
         }
         return cards;
     }
@@ -235,15 +241,18 @@ public class GameInstance {
     public Card[] getGoldDrawableArea() {
         Card[] cards=new Card[3];
         for(int i=0;i<3;i++) {
-            cards[i]=ResourceCardFactory.makeResourceCard(getDrawableArea().getGoldDrawingSection().seeCard(i));
+            String cardID=getDrawableArea().getGoldDrawingSection().seeCard(i);
+            if(cardID!=null){
+                cards[i]=ResourceCardFactory.makeResourceCard(cardID);
+            } else{
+                cards[i]=null;
+            }
         }
         return cards;
     }
-
     public boolean allObjectivesHaveBeenChosen() {
         return this.allObjectivesHaveBeenChosen;
     }
-
     public boolean gameIsStarted() {
         return this.gameIsStarted;
     }
@@ -290,6 +299,10 @@ public class GameInstance {
         }
         return false;
     }
+
+    /**
+     * Sets the endGame flag
+     */
     public void endGame(){
         this.gameIsEnded=true;
     }

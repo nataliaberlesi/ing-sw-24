@@ -210,21 +210,30 @@ public class GameController {
     public Message drawCard(InParamsDTO inParamsDTO) {
         int affectedPlayerIndex=gameInstance.getCurrentPlayerIndex();
 
-        gameInstance.nextTurn();
-
-        String currentPlayer=gameInstance.getTurn();
         String affectedPlayer=inParamsDTO.username();
 
-        draw(affectedPlayer,inParamsDTO.drawableSection(),inParamsDTO.index());
+        boolean isLegal=draw(affectedPlayer,inParamsDTO.drawableSection(),inParamsDTO.index());
         checkIfFinalRoundHasToStart(affectedPlayerIndex);
         checkIfGameHasToEnd();
+        Message message;
+        if(isLegal) {
+            gameInstance.nextTurn();
+            String currentPlayer=gameInstance.getTurn();
 
-        Message message=MessageCrafter.craftDrawCardMessage(currentPlayer,
-                affectedPlayer,
-                gameInstance.getHand(affectedPlayer),
-                gameInstance.getResourceDrawableArea(),
-                gameInstance.getGoldDrawableArea()
-                );
+            message=MessageCrafter.craftDrawCardMessage(currentPlayer,
+                    affectedPlayer,
+                    gameInstance.getHand(affectedPlayer),
+                    gameInstance.getResourceDrawableArea(),
+                    gameInstance.getGoldDrawableArea()
+            );
+        } else {
+            message=MessageCrafter.craftDrawCardMessage(affectedPlayer,
+                    affectedPlayer,
+                    gameInstance.getHand(affectedPlayer),
+                    gameInstance.getResourceDrawableArea(),
+                    gameInstance.getGoldDrawableArea()
+            );
+        }
         this.previousMessageType=message.type();
         try {
             PersistencyHandler.saveState(gameInstance);
@@ -276,18 +285,8 @@ public class GameController {
         PersistencyHandler.deleteGame();
         this.gameInstance.endGame();
     }
-    /**
-     *
-     * @throws IOException
-     */
-    public void chooseColor() throws IOException {
-    }
-    public void shutDown() {
-
-    }
-
-    public GameInstance getGameInstance() {
-        return gameInstance;
+    public boolean gameInstanceExists() {
+        return gameInstance!=null;
     }
 
     public boolean allBoardsAreSet() {
@@ -331,17 +330,25 @@ public class GameController {
     /**
      * Helper method used to draw a card for a player
      */
-    private void draw(String affectedPlayer, String drawingSection, Integer index) {
+    private boolean draw(String affectedPlayer, String drawingSection, Integer index) {
+        String drawnCard;
         if(drawingSection.equals("resourceDrawableArea")) {
-            gameInstance.getPlayers().get(affectedPlayer).getPlayerHand().placeCardInHand(
-                    gameInstance.getDrawableArea().getResourceDrawingSection().drawCard(index)
-            );
+            drawnCard=gameInstance.getDrawableArea().getResourceDrawingSection().drawCard(index);
+            if(drawnCard!=null) {
+                gameInstance.getPlayers().get(affectedPlayer).getPlayerHand().placeCardInHand(drawnCard);
+                return true;
+            }
+            return false;
         }
         if(drawingSection.equals("goldDrawableArea")) {
-            gameInstance.getPlayers().get(affectedPlayer).getPlayerHand().placeCardInHand(
-                    gameInstance.getDrawableArea().getGoldDrawingSection().drawCard(index)
-            );
+            drawnCard=gameInstance.getDrawableArea().getGoldDrawingSection().drawCard(index);
+            if(drawnCard!=null) {
+                gameInstance.getPlayers().get(affectedPlayer).getPlayerHand().placeCardInHand(drawnCard);
+                return true;
+            }
+            return false;
         }
+        return false;
     }
     private void checkIfFinalRoundHasToStart(Integer affectedPlayerIndex) {
         if(affectedPlayerIndex == 0 && gameInstance.checkEndgame() && !finalroundIsStarted()){

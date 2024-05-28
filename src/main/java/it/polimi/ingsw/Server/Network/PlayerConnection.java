@@ -11,15 +11,6 @@ public class PlayerConnection implements Runnable{
      * Channel used to communicate between a single player and the server
      */
     private Socket socket;
-    /**
-     * States if the player has been the first to connect to the server
-     */
-    private boolean isMaster;
-    private MessageParser messageParser;
-    /**
-     * The player instance in the model
-     */
-    private Player player;
     private BufferedReader inSocket;
     private PrintWriter outSocket;
     private String outMessage;
@@ -32,10 +23,9 @@ public class PlayerConnection implements Runnable{
      * @param isMaster States if the player has been the first to connect to the server
      * @throws IOException
      */
-    public PlayerConnection(Socket s, boolean isMaster) throws IOException {
+    public PlayerConnection(Socket s) throws IOException {
         socket=s;
         setUpIO();
-        this.isMaster=isMaster;
     }
     /**
      * Setups input stream and output stream for the socket
@@ -93,18 +83,12 @@ public class PlayerConnection implements Runnable{
         }
         System.out.println("Player disconnected");
     }
-    public Player getPlayer() {
-        return player;
-    }
-
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
-
-    public boolean isMaster() {
-        return this.isMaster;
-    }
-    public synchronized String getInMessage(boolean read) throws IOException {
+    /**
+     * Gets the actual inMessage
+     * @param read if it's reading
+     * @return the message read
+     */
+    public synchronized String getInMessage(boolean read){
         if(read) {
             this.inMessage=this.readMessage;
             return inMessage;
@@ -114,8 +98,13 @@ public class PlayerConnection implements Runnable{
             return consumedMessage;
         }
     }
-    public synchronized void setOutMessage(String outMessage) {
-        this.outMessage=outMessage;
+
+    /**
+     * Sets the outMessage and then sends it
+     * @param outMessage
+     */
+    public synchronized void setOutMessage(Message outMessage) {
+        this.outMessage=MessageParser.getINSTANCE().toJson(outMessage);
         send();
     }
     public String getOutMessage() {

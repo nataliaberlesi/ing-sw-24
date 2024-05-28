@@ -9,21 +9,20 @@ import java.io.InputStreamReader;
 
 public class ServerInputHandler implements Runnable{
     private Server server;
-    private GameController gameController;
-    public ServerInputHandler(Server server, GameController gameController) {
+    public ServerInputHandler(Server server) {
         this.server=server;
-        this.gameController=gameController;
     }
-    public void readServerInput() {
+
+    /**
+     * Reads and handles server input in commandline
+     */
+    private void readServerInput() {
         BufferedReader inKeyboard=new BufferedReader(new InputStreamReader(System.in));
         while(!server.isClosed()) {
             try {
                 String input = inKeyboard.readLine();
                 if(input.toUpperCase().strip().equals("CLOSE")) {
                     server.close();
-                }
-                if(input.toUpperCase().strip().equals("ENDGAME")){
-
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);

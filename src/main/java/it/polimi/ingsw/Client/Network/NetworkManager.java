@@ -101,7 +101,7 @@ public class NetworkManager implements Runnable{
                 try {
                     socket.close();
                 } catch(IOException ioe1) {
-
+                    throw new RuntimeException();
                 }
             }
         }
