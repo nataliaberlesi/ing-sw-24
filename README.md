@@ -10,7 +10,7 @@
 | CLIENT NETWORK  | [:white_check_mark:](https://github.com/nataliaberlesi/ing-sw-24/tree/master/src/main/java/it/polimi/ingsw/Client/Network)  |
 | CLIENT CLI  | [:white_check_mark:](https://github.com/nataliaberlesi/ing-sw-24/tree/master/src/main/java/it/polimi/ingsw/Client/View/CLI)  |
 | CLIENT GUI  | [:white_check_mark:](https://github.com/nataliaberlesi/ing-sw-24/tree/master/src/main/java/it/polimi/ingsw/Client/View/GUI)  |
-| CHAT  | ⏱️  |
+| CHAT  | :white_check_mark:  |
 | PERSISTENCE  | :white_check_mark:  |
 
 ### Legend
