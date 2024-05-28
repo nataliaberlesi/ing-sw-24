@@ -117,7 +117,7 @@ public abstract class ViewController {
 
             case ACTION_DRAWCARD -> {
                 setCurrentPlayer(messageParser.getCurrentPlayer());
-                updatePlayerHand(messageParser.getAffectedPlayer());
+                updatePlayerBoardHandScore(messageParser.getAffectedPlayer(), messageParser.getScore());
                 updateDrawableArea();
                 showScene();
                 if(isMyTurn(messageParser.getCurrentPlayer())){
