@@ -12,7 +12,7 @@ import java.util.Objects;
 /**
  * Scene to give player the possibility of choosing their private objective
  */
-public class PrivateObjectiveChoice extends Scene {
+public class PrivateObjectiveChoiceScene extends Scene {
     /**
      * Root of scene
      */
@@ -31,7 +31,7 @@ public class PrivateObjectiveChoice extends Scene {
      * @param cardIDs ID's of private objectives cards to choose from
      * @param viewControllerGUI viewControllerGUI
      */
-    public PrivateObjectiveChoice(String[] cardIDs, ViewControllerGUI viewControllerGUI) {
+    public PrivateObjectiveChoiceScene(String[] cardIDs, ViewControllerGUI viewControllerGUI) {
         super(new AnchorPane(),380,220);
         this.viewControllerGUI = viewControllerGUI ;
         root = (AnchorPane) this.getRoot();

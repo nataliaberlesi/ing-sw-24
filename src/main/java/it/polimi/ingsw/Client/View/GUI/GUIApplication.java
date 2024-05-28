@@ -53,12 +53,12 @@ public class GUIApplication extends Application {
 
     /**
      * Start method for JavaFX application.
-     * @param primaryStage application's primaryStage
+     * @param stage application's stage
      * @throws Exception if application can't be started
      */
     @Override
-    public void start(Stage primaryStage) throws Exception {
-        viewControllerGUI.setStage(primaryStage);
+    public void start(Stage stage) throws Exception {
+        viewControllerGUI.setStage(stage);
         viewControllerGUI.setPopUpStage();
         viewControllerGUI.setChatStage();
     }

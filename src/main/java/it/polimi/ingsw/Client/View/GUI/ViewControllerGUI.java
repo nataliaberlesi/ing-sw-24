@@ -49,7 +49,7 @@ public class ViewControllerGUI extends ViewController{
     /**
      * Instance of chat scene for the game
      */
-    private ChatGUI chatScene;
+    private ChatGUIScene chatScene;
     /**
      * Players in game
      */
@@ -123,7 +123,7 @@ public class ViewControllerGUI extends ViewController{
     protected void setChatStage(){
         chatStage = new Stage();
         setStageCharacteristics(chatStage);
-        chatScene = new ChatGUI(this);
+        chatScene = new ChatGUIScene(this);
     }
 
     /**
@@ -213,8 +213,8 @@ public class ViewControllerGUI extends ViewController{
      */
     @Override
     protected void connectScene() {
-        InitialScene initialScene = new InitialScene(this);
-        setSceneOnStage(initialScene, stage);
+        PlayScene playScene = new PlayScene(this);
+        setSceneOnStage(playScene, stage);
     }
 
     /**
@@ -222,8 +222,8 @@ public class ViewControllerGUI extends ViewController{
      */
     @Override
     protected void askCreateOrContinue() {
-        InitialScene initialSceneWithPersistence = new InitialScene(this, popUpStage);
-        setSceneOnStage(initialSceneWithPersistence, stage);
+        PlayScene playSceneWithPersistence = new PlayScene(this, popUpStage);
+        setSceneOnStage(playSceneWithPersistence, stage);
     }
 
     /**
@@ -420,7 +420,7 @@ public class ViewControllerGUI extends ViewController{
      * @param tokenColors available token colors to choose from
      */
     private void setTokenChoicePopUpScene(ArrayList<String> tokenColors) {
-        TokenColorChoice tokenColorChoiceScene = new TokenColorChoice(tokenColors, this);
+        TokenColorChoiceScene tokenColorChoiceScene = new TokenColorChoiceScene(tokenColors, this);
         popUpStage.setScene(tokenColorChoiceScene);
     }
 
@@ -535,7 +535,7 @@ public class ViewControllerGUI extends ViewController{
      */
     @Override
     protected void setPrivateObjectiveChoice() {
-    PrivateObjectiveChoice privateObjectiveChoiceScene = new PrivateObjectiveChoice(messageParser.getPrivateObjectivesID(), this);
+    PrivateObjectiveChoiceScene privateObjectiveChoiceScene = new PrivateObjectiveChoiceScene(messageParser.getPrivateObjectivesID(), this);
     popUpStage.setScene(privateObjectiveChoiceScene);
     }
 

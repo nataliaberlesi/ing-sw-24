@@ -9,7 +9,7 @@ import java.util.ArrayList;
 /**
  * Scene that represents Chat for GUI
  */
-public class ChatGUI extends Scene {
+public class ChatGUIScene extends Scene {
     /**
      * Scroll pane for chat conversation
      */
@@ -35,7 +35,7 @@ public class ChatGUI extends Scene {
      * Constructor of chat
      * @param viewControllerGUI viewControllerGUI
      */
-    public ChatGUI(ViewControllerGUI viewControllerGUI) {
+    public ChatGUIScene(ViewControllerGUI viewControllerGUI) {
         super(new BorderPane(), 400, 565);
         this.viewControllerGUI = viewControllerGUI;
         BorderPane root = (BorderPane) this.getRoot();

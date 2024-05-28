@@ -6,7 +6,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
-import javafx.stage.Stage;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,7 +14,7 @@ import java.util.Objects;
 /**
  * Scene to give player the possibility of choosing their color token
  */
-public class TokenColorChoice extends Scene {
+public class TokenColorChoiceScene extends Scene {
     /**
      * Root of scene
      */
@@ -34,7 +33,7 @@ public class TokenColorChoice extends Scene {
      * @param tokenColors available color tokens to be put in scene
      * @param viewControllerGUI ViewControllerGUI instance
      */
-    public TokenColorChoice(ArrayList<String> tokenColors, ViewControllerGUI viewControllerGUI) {
+    public TokenColorChoiceScene(ArrayList<String> tokenColors, ViewControllerGUI viewControllerGUI) {
         super(new AnchorPane(),300,250);
         this.viewControllerGUI = viewControllerGUI ;
         root = (AnchorPane) this.getRoot();

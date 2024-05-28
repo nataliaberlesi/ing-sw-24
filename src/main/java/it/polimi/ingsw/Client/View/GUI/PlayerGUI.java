@@ -11,11 +11,11 @@ public class PlayerGUI {
     /**
      * Player's board
      */
-    private BoardGUI board = new BoardGUI();
+    private final BoardGUI board = new BoardGUI();
     /**
      * Player's hand
      */
-    private HandGUI hand = new HandGUI();
+    private final HandGUI hand = new HandGUI();
     /**
      * Player's color
      */
@@ -55,22 +55,6 @@ public class PlayerGUI {
      */
     protected HandGUI getHand() {
         return hand;
-    }
-
-    /**
-     * Setter for player's board
-     * @param board board to be set to player
-     */
-    protected void setBoard(BoardGUI board) {
-        this.board = board;
-    }
-
-    /**
-     * Setter for player's hand
-     * @param hand hand to be set to player
-     */
-    protected void setHand(HandGUI hand) {
-        this.hand = hand;
     }
 
     /**

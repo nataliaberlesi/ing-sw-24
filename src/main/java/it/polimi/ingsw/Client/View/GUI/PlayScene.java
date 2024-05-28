@@ -11,9 +11,9 @@ import javafx.stage.Stage;
 import java.util.Objects;
 
 /**
- * Scene to represent initial scene (Play scene)
+ * Scene to represent initial scene
  */
-public class InitialScene extends Scene {
+public class PlayScene extends Scene {
     /**
      * Root of scene
      */
@@ -27,7 +27,7 @@ public class InitialScene extends Scene {
      * Constructor for initial scene without persistence
      * @param viewController ViewControllerGUI instance to control scene
      */
-    public InitialScene(ViewControllerGUI viewController) {
+    public PlayScene(ViewControllerGUI viewController) {
         super(new AnchorPane(), 1060.0, 595.0);
         root = (AnchorPane) this.getRoot();
         initializeScene();
@@ -39,7 +39,7 @@ public class InitialScene extends Scene {
      * @param viewController ViewControllerGUI instance to control scene
      * @param popUpStage pop up to ask player if he intends to continue a game already started
      */
-    public InitialScene(ViewControllerGUI viewController, Stage popUpStage) {
+    public PlayScene(ViewControllerGUI viewController, Stage popUpStage) {
         super(new AnchorPane(), 1060.0, 595.0);
         root = (AnchorPane) this.getRoot();
         initializeScene();
