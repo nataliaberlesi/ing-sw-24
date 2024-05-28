@@ -6,6 +6,9 @@ import java.util.regex.Pattern;
 import it.polimi.ingsw.Client.Network.MessageDispatcher;
 import it.polimi.ingsw.Client.Network.MessageParser;
 
+/**
+ * Controller class for View
+ */
 public abstract class ViewController {
 
     /**
