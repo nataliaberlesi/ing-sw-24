@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
 /**
- * Class representing the gui view and acting as main controller for JavaFX application.
+ * Class representing the main controller of GUI for JavaFX application.
  */
 
 public class ViewControllerGUI extends ViewController{
@@ -117,11 +117,18 @@ public class ViewControllerGUI extends ViewController{
         setStageCharacteristics(popUpStage);
     }
 
+    /**
+     * Initializes chat stage and scene
+     */
     protected void setChatStage(){
         chatStage = new Stage();
         setStageCharacteristics(chatStage);
         chatScene = new ChatGUI(this);
     }
+
+    /**
+     * Opens chat
+     */
     protected void openChat() {
         setSceneOnStage(chatScene, chatStage);
         chatStage.toFront();
@@ -168,6 +175,9 @@ public class ViewControllerGUI extends ViewController{
         }
     }
 
+    /**
+     * Updates chat button to a notification format when there is a new message in chat and chat window is not open
+     */
     @Override
     protected void showUpdatedChat() {
         String receiver = messageParser.getAffectedPlayer();
@@ -176,9 +186,12 @@ public class ViewControllerGUI extends ViewController{
             mainScene.getChatButton().setStyle("-fx-border-color: blue; -fx-border-width: 2;");
         if (sender.equalsIgnoreCase(myPlayer.getUsername()))
             mainScene.getChatButton().setStyle("-fx-border-color: transparent; -fx-border-width: 0;");
-
     }
 
+    /**
+     * Adds message to chat scene
+     * @param message message to be added
+     */
     @Override
     protected void addMessageToChat(String message) {
         chatScene.addMessageToChat(message);
@@ -277,7 +290,6 @@ public class ViewControllerGUI extends ViewController{
     /**
      * Confirm create event
      */
-
     protected void confirmCreate(String username, Integer numberOfPlayers) {
         super.checkParamsAndSendCreate(username, numberOfPlayers);
     }
@@ -567,7 +579,6 @@ public class ViewControllerGUI extends ViewController{
         messageDispatcher.placeCard(myPlayer.getUsername(), myPlayer.getHand().getChosenHandCard().isFaceUp(), myPlayer.getHand().getChosenHandCardIndex(), myPlayer.getBoard().getChosenCard().getChosenCornerCoordinates());
         myPlayer.getHand().deactivateEventHandlerOnHandCards();
         myPlayer.getBoard().deactivateEventHandlerOnCorners();
-
     }
 
     /**
@@ -613,16 +624,11 @@ public class ViewControllerGUI extends ViewController{
         messageDispatcher.drawCard(myPlayer.getUsername(), mainScene.getDrawableArea().getChosenDrawableAreaCardIndex(), mainScene.getDrawableArea().getChosenDrawableArea());
     }
 
-    @Override
-    protected void showFinalScoreBoard() {
-
-    }
-
     /**
      * Sets and show final scene with winners and scoreboard
      */
     @Override
-    protected void setFinalScoreBoard() {
+    protected void setAndShowFinalScoreBoard() {
         mainScene.getScoreBoard().updatePlayerScoreWithObjectivesPoints(messageParser.getFinalScoreBoardGUI());
         EndGameScene endGameScene = new EndGameScene(this);
         endGameScene.setScoreBoard(messageParser.getFinalScoreBoardGUI(), myPlayer.getUsername());
