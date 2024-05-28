@@ -20,7 +20,6 @@ public class PlayerConnection implements Runnable{
     /**
      *
      * @param s Channel of communication between the player and the server
-     * @param isMaster States if the player has been the first to connect to the server
      * @throws IOException
      */
     public PlayerConnection(Socket s) throws IOException {
