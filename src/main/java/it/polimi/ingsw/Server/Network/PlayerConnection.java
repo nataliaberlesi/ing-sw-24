@@ -13,9 +13,10 @@ public class PlayerConnection implements Runnable{
     private Socket socket;
     private BufferedReader inSocket;
     private PrintWriter outSocket;
-    private String outMessage;
-    private String inMessage;
-    private String readMessage;
+    private Message outMessage;
+    private Message inMessage;
+    private Message readMessage;
+    private final MessageParser messageParser;
 
     /**
      *
@@ -24,6 +25,7 @@ public class PlayerConnection implements Runnable{
      */
     public PlayerConnection(Socket s) throws IOException {
         socket=s;
+        messageParser=MessageParser.getINSTANCE();
         setUpIO();
     }
     /**
@@ -57,7 +59,7 @@ public class PlayerConnection implements Runnable{
     public void send() {
         if(outMessage!=null) {
             System.out.println("OUT | "+outMessage);
-            outSocket.println(outMessage);
+            outSocket.println(messageParser.toJson(outMessage));
             outMessage=null;
         }
     }
@@ -68,7 +70,7 @@ public class PlayerConnection implements Runnable{
         while(!socket.isClosed()) {
             try{
                 if(inMessage==null) {
-                    this.readMessage=inSocket.readLine();
+                    this.readMessage=messageParser.parseMessage(inSocket.readLine());
                     getInMessage(true);
                 }
 
@@ -87,12 +89,12 @@ public class PlayerConnection implements Runnable{
      * @param read if it's reading
      * @return the message read
      */
-    public synchronized String getInMessage(boolean read){
+    public synchronized Message getInMessage(boolean read){
         if(read) {
             this.inMessage=this.readMessage;
             return inMessage;
         } else {
-            String consumedMessage=this.inMessage;
+            Message consumedMessage=this.inMessage;
             this.inMessage=null;
             return consumedMessage;
         }
@@ -100,13 +102,13 @@ public class PlayerConnection implements Runnable{
 
     /**
      * Sets the outMessage and then sends it
-     * @param outMessage
+     * @param outMessage the message to send
      */
     public synchronized void setOutMessage(Message outMessage) {
-        this.outMessage=MessageParser.getINSTANCE().toJson(outMessage);
+        this.outMessage=outMessage;
         send();
     }
-    public String getOutMessage() {
+    public Message getOutMessage() {
         synchronized (this) {
             return this.outMessage;
         }

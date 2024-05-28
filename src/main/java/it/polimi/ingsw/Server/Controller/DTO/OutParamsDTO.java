@@ -100,7 +100,12 @@ public record OutParamsDTO(String currentPlayer,
     public OutParamsDTO(String currentPlayer, String affectedPlayer, ArrayList<PlacedCard> placedCards, Integer score, Card[] hand){
         this(currentPlayer, null, null,affectedPlayer,placedCards,score,null,hand,null,null,null,null,null,null,null,null,null,null,null);
     }
-
+    /**
+     * Constructo used for a generic ACTION params
+     */
+    public OutParamsDTO(String currentPlayer, String affectedPlayer, ArrayList<PlacedCard> placedCards, Integer score, Card[] hand,Card[] resourceDrawableArea, Card[] goldDrawableArea){
+        this(currentPlayer, null, null,affectedPlayer,placedCards,score,null,hand,null,null,null,null,resourceDrawableArea,goldDrawableArea,null,null,null,null,null);
+    }
     /**
      * Constructor used for ACTION_DRAWCARD params
      * @param currentPlayer
@@ -110,7 +115,7 @@ public record OutParamsDTO(String currentPlayer,
     }
 
     /**
-     * Constructor used for WINNERS params
+     * Constructor used for ENDGAME params
      * @param scoreboard
      */
     public OutParamsDTO(ArrayList<ScoreboardPositionDTO> scoreboard){

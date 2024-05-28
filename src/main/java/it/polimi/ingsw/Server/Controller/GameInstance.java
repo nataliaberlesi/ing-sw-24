@@ -334,4 +334,8 @@ public class GameInstance {
     public void unpauseGame() {
         this.gameIsStarted=false;
     }
+
+    public void getCardFromPlayerHand(String username, Integer index) {
+        players.get(username).getPlayerHand().getCardFromHand(index);
+    }
 }

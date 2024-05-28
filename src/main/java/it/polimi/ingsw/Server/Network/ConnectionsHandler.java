@@ -8,11 +8,9 @@ import java.util.ArrayList;
 
 public class ConnectionsHandler implements Runnable{
     private GameController gameController;
-    private MessageParser messageParser;
     private Server server;
     public ConnectionsHandler(Server server) throws IOException {
         this.server=server;
-        messageParser=MessageParser.getINSTANCE();
         this.gameController=new GameController(server);
         ServerInputHandler serverInputHandler=new ServerInputHandler(server);
         new Thread(serverInputHandler).start();
@@ -23,7 +21,7 @@ public class ConnectionsHandler implements Runnable{
      * @param inMessage
      * @return the GameController's answer
      */
-    private Message handleMessage(String inMessage) {
+    private Message handleMessage(Message inMessage) {
         return gameController.dispatchMessage(inMessage);
     }
 
@@ -34,7 +32,7 @@ public class ConnectionsHandler implements Runnable{
     private void handleConnections(ArrayList<PlayerConnection> playerConnections) {
         synchronized (playerConnections) {
             for(PlayerConnection playerConnection: playerConnections) {
-                String inMessage = playerConnection.getInMessage(false);
+                Message inMessage = playerConnection.getInMessage(false);
                 if(inMessage!=null) {
                     System.out.println("IN | "+inMessage);
                     Message outMessage=handleMessage(inMessage);
@@ -57,7 +55,7 @@ public class ConnectionsHandler implements Runnable{
         if(gameController.gameIsFull() && !gameController.firstRoundIsStarted()) {
             server.closeLobby();
             gameController.startFirstRound();
-            Message outMessage =gameController.getJSONStartFirstRoundParams();
+            Message outMessage =gameController.doStartFirstRound();
             for(PlayerConnection pc: server.getConnections()) {
                 pc.setOutMessage(outMessage);
             }
@@ -69,7 +67,7 @@ public class ConnectionsHandler implements Runnable{
      */
     private void checkStartSecondRound() {
         if(gameController.allBoardsAreSet() && !gameController.secondRoundIsStarted()) {
-            Message outMessage=gameController.getJSONStartSecondRoundParams();
+            Message outMessage=gameController.doStartSecondRound();
             gameController.startSecondRound();
             for(PlayerConnection pc:server.getConnections()) {
                 pc.setOutMessage(outMessage);

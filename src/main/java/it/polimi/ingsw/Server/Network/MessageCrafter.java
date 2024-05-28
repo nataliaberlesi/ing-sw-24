@@ -116,11 +116,11 @@ public class MessageCrafter {
      * @param hand the current player hand
      * @return a ACTION_PLACECARD message
      */
-    public static Message craftPlaceCardMessage(String currentPlayer, ArrayList<PlacedCard> placedCards, Integer score, Card[] hand) {
+    public static Message craftPlaceCardMessage(String currentPlayer,String affectedPlayer, ArrayList<PlacedCard> placedCards, Integer score, Card[] hand) {
         MessageType messageType=MessageType.ACTION_PLACECARD;
         OutParamsDTO outParamsDTO=new OutParamsDTO(
                 currentPlayer,
-                currentPlayer,
+                affectedPlayer,
                 placedCards,
                 score,
                 hand
@@ -136,11 +136,13 @@ public class MessageCrafter {
      * @param goldDrawableArea the board drawable area
      * @return a ACTION_DRAWCARD message
      */
-    public static Message craftDrawCardMessage(String currentPlayer, String affectedPlayer, Card[] hand, Card[] resourceDrawableArea, Card[] goldDrawableArea) {
+    public static Message craftDrawCardMessage(String currentPlayer, String affectedPlayer, ArrayList<PlacedCard> placedCards,Integer score, Card[] hand, Card[] resourceDrawableArea, Card[] goldDrawableArea) {
         MessageType messageType=MessageType.ACTION_DRAWCARD;
         OutParamsDTO outParamsDTO=new OutParamsDTO(
                 currentPlayer,
                 affectedPlayer,
+                placedCards,
+                score,
                 hand,
                 resourceDrawableArea,
                 goldDrawableArea

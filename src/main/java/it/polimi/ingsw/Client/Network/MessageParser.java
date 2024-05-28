@@ -440,16 +440,6 @@ public class MessageParser {
             return null;
         }
     }
-
-    /**
-     * Transforms an Object into a navigable JsonObject
-     * @param object
-     * @return
-     */
-    public JsonObject toJsonObject(Object object) {
-        return parser.toJsonTree(object).getAsJsonObject();
-    }
-
     /**
      * Transforms an Object into a json string
      * @param object

@@ -14,21 +14,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class GameController {
-    private final MessageParser messageParser;
     private GameInstance gameInstance;
     private final Server server;
-    private MessageType previousMessageType;
-    private boolean persistency;
+    private boolean persistence;
     public GameController(Server server) throws IOException {
         this.server=server;
-        this.messageParser=MessageParser.getINSTANCE();
-        persistency=false;
+        persistence =false;
     }
 
-    public Message dispatchMessage(String message) {
-        Message currentMessage=messageParser.parseMessage(message);
-        MessageType messageType=currentMessage.type();
-        InParamsDTO inParamsDTO=currentMessage.params().clientOutParams();
+    public Message dispatchMessage(Message message) {
+        MessageType messageType=message.type();
+        InParamsDTO inParamsDTO=message.params().clientOutParams();
         return queryModel(messageType, inParamsDTO);
     }
     /**
@@ -49,15 +45,12 @@ public class GameController {
                 return playFirstRound(inParamsDTO);
             }
             case SECONDROUND -> {
-                //TODO
                 return playSecondRound(inParamsDTO);
             }
             case ACTION_PLACECARD -> {
-                //TODO
                 return placeCard(inParamsDTO);
             }
             case ACTION_DRAWCARD -> {
-                //TODO
                 return drawCard(inParamsDTO);
             }
             case CHAT -> {
@@ -70,8 +63,8 @@ public class GameController {
         return null;
     }
     private Message checkPersistency(InParamsDTO inParamsDTO) {
-        persistency=inParamsDTO.persistence();
-        if(persistency) {
+        persistence =inParamsDTO.persistence();
+        if(persistence) {
             try {
                 gameInstance= PersistencyHandler.fetchState();
                 PersistencyHandler.setPlayersTemp((ArrayList<String>) gameInstance.getPlayerTurnOrder().clone());
@@ -98,9 +91,7 @@ public class GameController {
         }
         this.server.openLobby(inParamsDTO.numberOfPlayers());
         this.gameInstance=new GameInstance(inParamsDTO.username().toUpperCase(),inParamsDTO.numberOfPlayers());
-        Message message = MessageCrafter.craftCreateMessage(inParamsDTO.username().toUpperCase());
-        previousMessageType=message.type();
-        return message;
+        return MessageCrafter.craftCreateMessage(inParamsDTO.username().toUpperCase());
     }
 
     /**
@@ -110,7 +101,7 @@ public class GameController {
     public Message joinGame(InParamsDTO inParamsDTO) {
         String username=inParamsDTO.username().toUpperCase();
         Boolean unavailableUsername;
-        if(persistency) {
+        if(persistence) {
             unavailableUsername= PersistencyHandler.checkPlayerTemp(username);
         } else {
             unavailableUsername=this.gameInstance.unavailableUsername(username);
@@ -118,22 +109,20 @@ public class GameController {
                 gameInstance.joinPlayer(username);
             }
         }
-        Message message = MessageCrafter.craftJoinMessage(inParamsDTO.username(),unavailableUsername);
-        previousMessageType=message.type();
-        return message;
+        return MessageCrafter.craftJoinMessage(inParamsDTO.username(),unavailableUsername);
 
     }
     /**
      * Generates first round parameters and sets DrawableArea for the game instance
-     * @return the starting first round parameters in JSON format
+     * @return the starting first round parameters as message
      */
-    public Message getJSONStartFirstRoundParams() {
+    public Message doStartFirstRound() {
         ParamsDTO params=SetUpGame.getStartFirstRoundParams(gameInstance);
         return new Message(MessageType.START_FIRSTROUND,params);
     }
 
     /**
-+     * Plays the current player's first round with given parameters
++     * Plays the current player's first round with given parameters. When the first round is ended, starts the second round
      * @return
      */
     public Message playFirstRound(InParamsDTO inParamsDTO) {
@@ -148,14 +137,21 @@ public class GameController {
             card=gameInstance.getPlayers().get(currentPlayer).getPlayerBoard().seeStartingCardID();
         }
         gameInstance.checkIfAllBoardsAreSet();
-        Message message = MessageCrafter.craftFirstRoundMessage(card,currentPlayer,gameInstance.getAvailableColors(),inParamsDTO.username(),placedCards,inParamsDTO.color());
-        previousMessageType=message.type();
-        return message;
+        return MessageCrafter.craftFirstRoundMessage(card,currentPlayer,gameInstance.getAvailableColors(),inParamsDTO.username(),placedCards,inParamsDTO.color());
     }
-    public Message getJSONStartSecondRoundParams() {
+    /**
+     * Generates second round parameters
+     * @return the starting second round parameters as message
+     */
+    public Message doStartSecondRound() {
         ParamsDTO startSecondRound=SetUpGame.getStartSecondRoundParams(gameInstance);
         return new Message(MessageType.START_SECONDROUND,startSecondRound);
     }
+
+    /**
+     * Plays the current player's second round with given parameters. When the second round is ended, starts the game
+     * @return
+     */
     public Message playSecondRound(InParamsDTO inParamsDTO) {
         Objective[] privateObjectives=new Objective[2];
         String currentPlayer= "";
@@ -169,43 +165,57 @@ public class GameController {
             hand=gameInstance.getHand(currentPlayer);
         }
         gameInstance.getPlayers().get(inParamsDTO.username()).getPlayerBoard().choosePrivateObjective(inParamsDTO.index());
-        Message message=MessageCrafter.craftSecondRoundMessage(
+        gameInstance.checkIfAllObjectivesHaveBeenChosen();
+        return MessageCrafter.craftSecondRoundMessage(
                 currentPlayer,
                 inParamsDTO.username(),
                 hand,
                 privateObjectives,
                 gameInstance.getPlayers().get(inParamsDTO.username()).getPlayerBoard().seeObjective(2)
         );
-        gameInstance.checkIfAllObjectivesHaveBeenChosen();
-        this.previousMessageType=message.type();
-        return message;
     }
+
+    /**
+     * Tries to place a card. If it's placeable, places it in the board and removes it from the hand.
+     * If the drawable area is empty, the turn in the gameInstance is increased
+     * @param inParamsDTO
+     * @return
+     * a ACTION_DRAWCARD with the same currentplayer if the action was illegal
+     * a ACTION_PLACECARD with the same currentplayer if the action was legal
+     * a ACTION_DRAWCARD with a new currentplayer if the drawableArea is empty
+     */
     public Message placeCard(InParamsDTO inParamsDTO) {
-        String currentPlayer=inParamsDTO.username();
-        if(!gameInstance.getPlayers().get(inParamsDTO.username()).getPlayerBoard().placeCard(
-                gameInstance.getPlayers().get(inParamsDTO.username()).getPlayerHand().showCardInHand(inParamsDTO.index()),
-                inParamsDTO.coordinates(),
-                inParamsDTO.isFacingUp()
-        )) {
-            Message message=MessageCrafter.craftDrawCardMessage(
-                    currentPlayer,
-                    currentPlayer,
-                    gameInstance.getHand(currentPlayer),
+        if(!place(inParamsDTO)) {
+            return MessageCrafter.craftDrawCardMessage(
+                    inParamsDTO.username(),
+                    inParamsDTO.username(),
+                    gameInstance.getPlacedCards(inParamsDTO.username()),
+                    gameInstance.getScore(inParamsDTO.username()),
+                    gameInstance.getHand(inParamsDTO.username()),
                     gameInstance.getResourceDrawableArea(),
                     gameInstance.getGoldDrawableArea()
             );
-            this.previousMessageType=message.type();
-            return message;
         }
-        gameInstance.getPlayers().get(inParamsDTO.username()).getPlayerHand().getCardFromHand(inParamsDTO.index());
-        Message message=MessageCrafter.craftPlaceCardMessage(
-                currentPlayer,
-                gameInstance.getPlacedCards(currentPlayer),
-                gameInstance.getScore(currentPlayer),
-                gameInstance.getHand(currentPlayer)
+        gameInstance.getCardFromPlayerHand(inParamsDTO.username(),inParamsDTO.index());
+        if(!gameInstance.getDrawableArea().isEmpty()) {
+            return MessageCrafter.craftPlaceCardMessage(
+                    inParamsDTO.username(),
+                    inParamsDTO.username(),
+                    gameInstance.getPlacedCards(inParamsDTO.username()),
+                    gameInstance.getScore(inParamsDTO.username()),
+                    gameInstance.getHand(inParamsDTO.username())
+            );
+        }
+        gameInstance.nextTurn();
+        return MessageCrafter.craftDrawCardMessage(
+                gameInstance.getTurn(),
+                inParamsDTO.username(),
+                gameInstance.getPlacedCards(inParamsDTO.username()),
+                gameInstance.getScore(inParamsDTO.username()),
+                gameInstance.getHand(inParamsDTO.username()),
+                gameInstance.getResourceDrawableArea(),
+                gameInstance.getGoldDrawableArea()
         );
-        this.previousMessageType=message.type();
-        return message;
     }
     public Message drawCard(InParamsDTO inParamsDTO) {
         int affectedPlayerIndex=gameInstance.getCurrentPlayerIndex();
@@ -222,6 +232,8 @@ public class GameController {
 
             message=MessageCrafter.craftDrawCardMessage(currentPlayer,
                     affectedPlayer,
+                    gameInstance.getPlacedCards(affectedPlayer),
+                    gameInstance.getScore(affectedPlayer),
                     gameInstance.getHand(affectedPlayer),
                     gameInstance.getResourceDrawableArea(),
                     gameInstance.getGoldDrawableArea()
@@ -229,12 +241,13 @@ public class GameController {
         } else {
             message=MessageCrafter.craftDrawCardMessage(affectedPlayer,
                     affectedPlayer,
+                    gameInstance.getPlacedCards(affectedPlayer),
+                    gameInstance.getScore(affectedPlayer),
                     gameInstance.getHand(affectedPlayer),
                     gameInstance.getResourceDrawableArea(),
                     gameInstance.getGoldDrawableArea()
             );
         }
-        this.previousMessageType=message.type();
         try {
             PersistencyHandler.saveState(gameInstance);
         } catch (IOException e) {
@@ -257,7 +270,6 @@ public class GameController {
     public boolean secondRoundIsStarted() {
         return gameInstance.secondRoundIsStarted();
     }
-    public boolean endgameIsStarted(){return gameInstance.isEndgameIsStarted();}
     public boolean finalroundIsStarted(){return gameInstance.isFinalRoundIsStarted();}
 
     /**
@@ -275,6 +287,8 @@ public class GameController {
         return MessageCrafter.craftDrawCardMessage(
                 gameInstance.getTurn(),
                 gameInstance.getTurn(),
+                gameInstance.getPlacedCards(gameInstance.getTurn()),
+                gameInstance.getScore(gameInstance.getTurn()),
                 gameInstance.getHand(gameInstance.getTurn()),
                 gameInstance.getResourceDrawableArea(),
                 gameInstance.getGoldDrawableArea());
@@ -312,7 +326,7 @@ public class GameController {
         gameInstance.calculateEndgamePoints();
     }
     public boolean persistency() {
-        return this.persistency;
+        return this.persistence;
     }
 
     public Message continueGame() {
@@ -320,13 +334,30 @@ public class GameController {
     }
 
     public void turnOffPersistency() {
-        this.persistency=false;
+        this.persistence =false;
     }
 
     public void unpauseGame() {
         this.gameInstance.unpauseGame();
     }
 
+    /**
+     * Helper method used to check if a card is placeable.
+     * If it's placeable, it places it.
+     * @param inParamsDTO
+     * @return
+     * true if the card is placeable
+     * false if the hand index contains a null card or if the card is not placeable
+     */
+    private boolean place(InParamsDTO inParamsDTO) {
+        if(gameInstance.getPlayers().get(inParamsDTO.username()).getPlayerHand().showCardInHand(inParamsDTO.index())==null) {
+            return false;
+        }
+        return gameInstance.getPlayers().get(inParamsDTO.username()).getPlayerBoard().placeCard(
+                gameInstance.getPlayers().get(inParamsDTO.username()).getPlayerHand().showCardInHand(inParamsDTO.index()),
+                inParamsDTO.coordinates(),
+                inParamsDTO.isFacingUp());
+    }
     /**
      * Helper method used to draw a card for a player
      */
@@ -350,11 +381,20 @@ public class GameController {
         }
         return false;
     }
+
+    /**
+     * Helper method to check if final round requirements are meet
+     * @param affectedPlayerIndex
+     */
     private void checkIfFinalRoundHasToStart(Integer affectedPlayerIndex) {
         if(affectedPlayerIndex == 0 && gameInstance.checkEndgame() && !finalroundIsStarted()){
             startFinalRound();
         }
     }
+
+    /**
+     * Helper method to check if game has to end
+     */
     private void checkIfGameHasToEnd() {
         if(gameInstance.getCurrentPlayerIndex() == 0 && finalroundIsStarted()) {
             calculateEndGamePoints();
