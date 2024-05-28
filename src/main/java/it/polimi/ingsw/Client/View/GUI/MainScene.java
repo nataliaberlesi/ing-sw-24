@@ -293,7 +293,7 @@ public class MainScene extends Scene {
      * @param card card on which said corner was click
      */
     public void handleCornerClick(CornerGUI corner, CardGUI card) {
-        StaticsForGUI.atLeastOneCornerSelected = corner.toggleSelection(corner, viewControllerGUI.getMyPlayer().getBoard());
+        corner.toggleSelection(corner, viewControllerGUI.getMyPlayer().getBoard());
         viewControllerGUI.getMyPlayer().getBoard().setChosenCard(card);
         card.setChosenCornerCoordinates(corner.cornerCoordinates);
         if (StaticsForGUI.atLeastOneCornerSelected && viewControllerGUI.getMyPlayer().getHand().getChosenHandCard().isSelected){

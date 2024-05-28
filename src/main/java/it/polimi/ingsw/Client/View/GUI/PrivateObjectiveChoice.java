@@ -9,10 +9,28 @@ import javafx.scene.layout.AnchorPane;
 import java.util.HashMap;
 import java.util.Objects;
 
+/**
+ * Scene to give player the possibility of choosing their private objective
+ */
 public class PrivateObjectiveChoice extends Scene {
+    /**
+     * Root of scene
+     */
     private final AnchorPane root;
+    /**
+     * Map to associate the index to the objective appearing in pop up
+     */
     private final HashMap<Integer, ImageView> objectiveCards = new HashMap<>();
+    /**
+     * Instance of ViewControllerGUI to control scene
+     */
     private final ViewControllerGUI viewControllerGUI;
+
+    /**
+     * Constructor of scene
+     * @param cardIDs ID's of private objectives cards to choose from
+     * @param viewControllerGUI viewControllerGUI
+     */
     public PrivateObjectiveChoice(String[] cardIDs, ViewControllerGUI viewControllerGUI) {
         super(new AnchorPane(),380,220);
         this.viewControllerGUI = viewControllerGUI ;
@@ -23,6 +41,10 @@ public class PrivateObjectiveChoice extends Scene {
         addImagesToScene(cardIDs);
     }
 
+    /**
+     * Adds images of private objectives to choose to scene
+     * @param cardIDs private objectives to choose from
+     */
     private void addImagesToScene(String[] cardIDs) {
         for(int i = 0; i < cardIDs.length; i++) {
             ImageView objective = new ImageView();
@@ -43,6 +65,11 @@ public class PrivateObjectiveChoice extends Scene {
         }
     }
 
+    /**
+     * Handler for private objective's choice
+     * @param i index of chosen private objective in scene
+     * @param cardID ID of chosen private objective
+     */
     private void handlePrivateObjectiveChoice(int i, String cardID) {
         viewControllerGUI.getMyPlayer().setPrivateObjectiveIndex(i);
         viewControllerGUI.getMyPlayer().setPrivateObjectiveID(cardID);

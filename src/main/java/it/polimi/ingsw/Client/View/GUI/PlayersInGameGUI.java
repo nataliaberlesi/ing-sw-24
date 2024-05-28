@@ -7,11 +7,12 @@ import java.util.ArrayList;
 public class PlayersInGameGUI {
 
     /**
-     * list of players that have joined game
+     * List of players that have joined game
      */
     private final ArrayList<PlayerGUI> players = new ArrayList<>();
 
     /**
+     * Getter for player in game
      * @param username of player that method caller is looking for
      * @return player with same username as passed in params
      * @throws RuntimeException if no such player is present
@@ -26,7 +27,7 @@ public class PlayersInGameGUI {
     }
 
     /**
-     *
+     * Indicates if player is present in the game or not
      * @param username of player that might be in game
      * @return true if username corresponds to a player in the game
      */
@@ -40,7 +41,7 @@ public class PlayersInGameGUI {
     }
 
     /**
-     *
+     * Adds player to player in game
      * @param player new player that has joined
      * @throws RuntimeException if player already joined
      */
@@ -51,6 +52,10 @@ public class PlayersInGameGUI {
         players.add(player);
     }
 
+    /**
+     * Getter for players in game
+     * @return players
+     */
     public ArrayList<PlayerGUI> getPlayers() {
         return players;
     }

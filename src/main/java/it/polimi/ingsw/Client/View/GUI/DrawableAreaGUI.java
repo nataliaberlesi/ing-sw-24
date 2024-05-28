@@ -4,19 +4,44 @@ import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
 
+/**
+ * Group to represent drawable area in main scene
+ */
 public class DrawableAreaGUI extends Group {
 
+    /**
+     * VBox to contain resource cards
+     */
     private final VBox resourceCardsContainer = new VBox(10);
+    /**
+     * VBox to contain gold cards
+     */
     private final VBox goldCardsContainer = new VBox(10);
+    /**
+     * Resource cards present in drawable area
+     */
     private final CardGUI[] resourceCards = new CardGUI[3];
+    /**
+     * Gold cards present in drawable area
+     */
     private final CardGUI[] goldCards = new CardGUI[3];
-    private ArrayList<CardGUI> drawableAreaCards = new ArrayList<>();
-    private CardGUI chosenDrawableAreaCard = new CardGUI();
+    /**
+     * All cards present in drawable area
+     */
+    private final ArrayList<CardGUI> drawableAreaCards = new ArrayList<>();
+    /**
+     * Indicator for chosen drawable area (resource/gold)
+     */
     private String chosenDrawableArea;
+    /**
+     * Index of chosen card in drawable area
+     */
     private int chosenDrawableAreaCardIndex;
 
+    /**
+     * DrawableAreaGUI constructor
+     */
     public DrawableAreaGUI(){
-
         resourceCardsContainer.setPrefSize(77,170);
         resourceCardsContainer.setLayoutX(920);
         resourceCardsContainer.setLayoutY(86);
@@ -31,7 +56,8 @@ public class DrawableAreaGUI extends Group {
     }
 
     /**
-     * Initialize resource and gold cards in their containers
+     * Initialize resource and gold cards and adds them to their containers
+     * Adds all cards to drawableAreaCards arraylist
      * */
     private void initializeCards() {
         for (int i = 0; i < 3; i++) {
@@ -39,18 +65,29 @@ public class DrawableAreaGUI extends Group {
             goldCards[i] = new CardGUI();
             resourceCardsContainer.getChildren().add(resourceCards[i]);
             goldCardsContainer.getChildren().add(goldCards[i]);
+
             drawableAreaCards.add(resourceCards[i]);
             drawableAreaCards.add(goldCards[i]);
         }
     }
 
-    public ArrayList<CardGUI> getDrawableAreaCards() {
+    /**
+     * Getter for drawable area cards
+     * @return drawableAreaCards
+     */
+    protected ArrayList<CardGUI> getDrawableAreaCards() {
         return drawableAreaCards;
     }
 
-    public boolean setChosenDrawableAreaCard(CardGUI drawableAreaCard, Boolean isResourceCard) {
+    /**
+     * Event handler for the selection of drawable area cards
+     * Sets the type of drawable area of the selected card
+     * @param drawableAreaCard selected drawable area card
+     * @param isResourceCard indicates if selected card is of resource type or not
+     * @return true if a card in the drawable area is selected, false otherwise
+     */
+    protected boolean setChosenDrawableAreaCard(CardGUI drawableAreaCard, Boolean isResourceCard) {
         if (drawableAreaCard.isSelected){
-            chosenDrawableAreaCard = drawableAreaCard;
             if (isResourceCard){
                 chosenDrawableArea = "resourceDrawableArea";
             } else {
@@ -60,43 +97,47 @@ public class DrawableAreaGUI extends Group {
         } else return false;
     }
 
-    public String getChosenDrawableArea(){
-        return chosenDrawableArea;
-    }
-
-    public CardGUI[] getResourceCards() {
-        return resourceCards;
-    }
-
-    public CardGUI[] getGoldCards() {
-        return goldCards;
-    }
-
     /**
-     * Getter for gold cards
-     * @return a gold card in a specific position of the gold cards array
+     * Getter for chosen drawable area
+     * @return chosenDrawableArea
      */
-    public CardGUI getGoldCard(int position) {
-
-        return goldCards[position];
+    protected String getChosenDrawableArea(){
+        return chosenDrawableArea;
     }
 
     /**
      * Getter for resource cards
-     * @return a resource card in a specific position of the gold cards array
+     * @return resourceCards
      */
-    public CardGUI getResourceCard(int position) {
-        return resourceCards[position];
+    protected CardGUI[] getResourceCards() {
+        return resourceCards;
     }
 
-    public void setResourceCardsDrawableArea(String[] resourceCardsIDs){
+    /**
+     * Getter for gold cards
+     * @return goldCards
+     */
+    protected CardGUI[] getGoldCards() {
+        return goldCards;
+    }
+
+    /**
+     * Sets resource cards IDs and images, flips first resource card
+     * @param resourceCardsIDs IDs received from server
+     */
+    protected void setResourceCardsDrawableArea(String[] resourceCardsIDs){
         for (int i = 0; i < resourceCardsIDs.length; i++) {
             resourceCards[i].setCardIDAndImage(resourceCardsIDs[i]);
         }
         if (resourceCards[0].isFaceUp())
             resourceCards[0].flipAndShow();
     }
-    public void setGoldCardsDrawableArea(String[] goldCardsIDs){
+
+    /**
+     * Sets gold cards IDs and images, flips first gold card
+     * @param goldCardsIDs IDs received from server
+     */
+    protected void setGoldCardsDrawableArea(String[] goldCardsIDs){
         for (int i = 0; i < goldCardsIDs.length; i++) {
             goldCards[i].setCardIDAndImage(goldCardsIDs[i]);
         }
@@ -104,7 +145,10 @@ public class DrawableAreaGUI extends Group {
             goldCards[0].flipAndShow();
     }
 
-    public void deactivateEventHandlerOnDrawableArea(){
+    /**
+     * Deactivates event handlers in drawable area cards
+     */
+    protected void deactivateEventHandlerOnDrawableArea(){
         for (CardGUI card : drawableAreaCards){
             card.setOnMouseClicked(null);
             if (card.isSelected){
@@ -114,11 +158,19 @@ public class DrawableAreaGUI extends Group {
         }
     }
 
-    public int getChosenDrawableAreaCardIndex() {
+    /**
+     * Getter for chosen drawable area card index
+     * @return chosenDrawableAreaCardIndex
+     */
+    protected int getChosenDrawableAreaCardIndex() {
         return chosenDrawableAreaCardIndex;
     }
 
-    public void setChosenDrawableAreaCardIndex(int chosenDrawableAreaCardIndex) {
+    /**
+     * Setter for chosen drawable area card index
+     * @param chosenDrawableAreaCardIndex chosenDrawableAreaCardIndex
+     */
+    protected void setChosenDrawableAreaCardIndex(int chosenDrawableAreaCardIndex) {
         this.chosenDrawableAreaCardIndex = chosenDrawableAreaCardIndex;
     }
 }

@@ -12,11 +12,28 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
+/**
+ * Scene to give player the possibility of choosing their color token
+ */
 public class TokenColorChoice extends Scene {
+    /**
+     * Root of scene
+     */
     private final AnchorPane root;
+    /**
+     * Map to associate the index to the colored token appearing in pop up
+     */
     private HashMap<String, ImageView> availableTokens = new HashMap<>();
+    /**
+     * Instance of ViewControllerGUI to control scene
+     */
     private final ViewControllerGUI viewControllerGUI;
 
+    /**
+     * Constructor of scene
+     * @param tokenColors available color tokens to be put in scene
+     * @param viewControllerGUI ViewControllerGUI instance
+     */
     public TokenColorChoice(ArrayList<String> tokenColors, ViewControllerGUI viewControllerGUI) {
         super(new AnchorPane(),300,250);
         this.viewControllerGUI = viewControllerGUI ;
@@ -30,6 +47,10 @@ public class TokenColorChoice extends Scene {
         addTokensToPopUpScene(tokenColors);
     }
 
+    /**
+     * Adds token images to pop up scene
+     * @param tokenColors available token colors to be added to scene
+     */
     private void addTokensToPopUpScene(ArrayList<String> tokenColors){
         for (String token: tokenColors){
             ImageView imageView = new ImageView();
@@ -55,6 +76,10 @@ public class TokenColorChoice extends Scene {
         }
     }
 
+    /**
+     * Event handler for choosing a color token
+     * @param color chosen color token
+     */
     public void handleTokenColorChoice(String color) {
         viewControllerGUI.getMyPlayer().setColor(color);
         StaticsForGUI.enableActions = true;

@@ -7,13 +7,16 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import java.util.Objects;
 
+/**
+ * AnchorPane to represent cards in GUI
+ */
 public class CardGUI extends AnchorPane {
     /**
      * ImageView associated with the card
      * */
     private final ImageView imageView = new ImageView();
     /**
-     * Regions to represent the corners of the card
+     * Corners of the card
      * */
     private final CornerGUI[] corners = new CornerGUI[4];
     /**
@@ -24,41 +27,42 @@ public class CardGUI extends AnchorPane {
      * Card's face down resource ID
      */
     private String faceDownCardID;
-
     /**
      * Indicates the orientation of the card
      */
     private boolean isFaceUp = true;
-
     /**
-     * Model coordinates of where client would like the next card to be placed
+     * Model coordinates of where player would like the next card to be placed on the board
      */
     private Coordinates chosenCornerCoordinates;
     /**
-     * Model coordinates of where the card is placed
+     * Model coordinates of where the card is placed in the board
      */
     private final Coordinates modelCoordinates = new Coordinates();
     /**
-     * GUI coordinates of where the card is placed
+     * GUI coordinates of where the card is placed in the board
      */
     private final Coordinates guiCoordinates = new Coordinates();
-
+    /**
+     * Indicates if a card is selected or not
+     */
     protected boolean isSelected = false;
 
+    /**
+     * Constructor of card for cards in hand or in drawable area
+     */
     public CardGUI(){
-        imageView.setFitHeight(55);
-        imageView.setFitWidth(82.5);
-        imageView.setPickOnBounds(true);
-        imageView.setPreserveRatio(true);
-        this.getChildren().add(imageView);
+        setCardCharacteristics();
     }
 
+    /**
+     * Constructor of card for board cards
+     * @param cardID resource ID of card
+     * @param modelCoordinates model coordinates of where the card is to be placed in the board
+     * @param isFacingUp orientation of the card
+     */
     public CardGUI(String cardID, Coordinates modelCoordinates, Boolean isFacingUp){
-        imageView.setFitHeight(55);
-        imageView.setFitWidth(82.5);
-        imageView.setPickOnBounds(true);
-        imageView.setPreserveRatio(true);
-        this.getChildren().add(imageView);
+        setCardCharacteristics();
         this.isFaceUp = isFacingUp;
         this.setCardIDAndImage(cardID);
         this.convertCoordinatesFromModelToGUIAndSetLayout(modelCoordinates.getX(), modelCoordinates.getY());
@@ -66,12 +70,23 @@ public class CardGUI extends AnchorPane {
     }
 
     /**
+     * Sets card's imageview characteristics
+     */
+    private void setCardCharacteristics(){
+        imageView.setFitHeight(55);
+        imageView.setFitWidth(82.5);
+        imageView.setPickOnBounds(true);
+        imageView.setPreserveRatio(true);
+        this.getChildren().add(imageView);
+    }
+
+    /**
      * Puts the corners on the card
      * */
-    public void initializeCorners() {
+     private void initializeCorners() {
 
-        double[] xPositions = {imageView.getLayoutX(), imageView.getLayoutX() + (imageView.getFitWidth() - CornerGUI.cornerWidth)};
-        double[] yPositions = {imageView.getLayoutY(), imageView.getLayoutY() + (imageView.getFitHeight() - CornerGUI.cornerHeight)};
+        double[] xPositions = {imageView.getLayoutX(), imageView.getLayoutX() + (imageView.getFitWidth() - StaticsForGUI.cornerWidth)};
+        double[] yPositions = {imageView.getLayoutY(), imageView.getLayoutY() + (imageView.getFitHeight() - StaticsForGUI.cornerHeight)};
 
         for (int i = 0; i < corners.length; i++) {
             corners[i] = new CornerGUI();
@@ -88,33 +103,41 @@ public class CardGUI extends AnchorPane {
         }
     }
 
-    public ImageView getImageView() {
-        return imageView;
-    }
-
-    public CornerGUI[] getCorners() {
+    /**
+     * Getter for card's corners
+     * @return corners
+     */
+    protected CornerGUI[] getCorners() {
         return corners;
     }
 
     /**
-     * Gets the chosen corner's coordinates for placing the next card on board
-     * @return coordinates
+     * Getter for chosen corner's coordinates
+     * @return coordinates where player wants next card to be placed on board
      */
-    public Coordinates getChosenCornerCoordinates(){
+    protected Coordinates getChosenCornerCoordinates(){
         return chosenCornerCoordinates;
     }
-    public void setChosenCornerCoordinates(Coordinates chosenCornerCoordinates) {
+
+    /**
+     * Setter for chosen corner coordinates
+     * @param chosenCornerCoordinates coordinates where player wants next card to be placed on board
+     */
+    protected void setChosenCornerCoordinates(Coordinates chosenCornerCoordinates) {
         this.chosenCornerCoordinates = chosenCornerCoordinates;
     }
 
     /**
      * Flips the card
      */
-    public void flipCard(){
+    protected void flipCard(){
         isFaceUp=!isFaceUp;
     }
 
-    public void flipAndShow(){
+    /**
+     * Flips the card and updates its image
+     */
+    protected void flipAndShow(){
         flipCard();
         setCardImage();
     }
@@ -122,20 +145,24 @@ public class CardGUI extends AnchorPane {
     /**
      * Returns the state of the card
      * */
-    public boolean isFaceUp() {
+    protected boolean isFaceUp() {
         return isFaceUp;
     }
 
-
-    public void setCardIDAndImage(String cardID){
+    /**
+     * Sets card's ID and image
+     * @param cardID string ID associated with image resource
+     */
+    protected void setCardIDAndImage(String cardID){
         this.faceUpCardID = cardID;
         this.faceDownCardID = cardID.substring(0,2);
         setCardImage();
     }
+
     /**
      * Sets the card's ImageView to the Image associated with its ID
      * */
-    public void setCardImage(){
+    protected void setCardImage(){
         String cardID;
         if (isFaceUp){
             cardID = faceUpCardID;
@@ -146,35 +173,29 @@ public class CardGUI extends AnchorPane {
         imageView.setImage(cardImage);
     }
 
-    public void removeCardIDAndImage(){
+    /**
+     * Removes card ID and image from Card
+     */
+    protected void removeCardIDAndImage(){
         this.imageView.setImage(null);
         this.faceUpCardID = null;
         this.faceDownCardID = null;
     }
 
     /**
-     * Gets the ID of the card facing up
+     * Gets the ID of the card
      * @return card's ID
      */
-    public String getCardID(){
+    protected String getCardID(){
         if (isFaceUp)
             return faceUpCardID;
         else return faceDownCardID;
     }
 
     /**
-     * Sets the face up ID of the card
-     * @param faceUpCardID string to represent the ID of the card facing up
-     * */
-    public void setFaceUpCardID(String faceUpCardID) {
-        this.faceUpCardID = faceUpCardID;
-    }
-
-
-    /**
      * Converts the model coordinates to gui coordinates and places the card on the board
      * */
-    public void convertCoordinatesFromModelToGUIAndSetLayout(int x, int y){
+    protected void convertCoordinatesFromModelToGUIAndSetLayout(int x, int y){
         modelCoordinates.setX(x);
         modelCoordinates.setY(y);
         guiCoordinates.setX(63*x + 1260);
@@ -183,50 +204,51 @@ public class CardGUI extends AnchorPane {
         this.setLayoutY(640 - 32*y);
     }
 
-
-    /**
-     * Gets the guiCoordinates
-     * @return gui coordinates
-     */
-    public Coordinates getGuiCoordinates(){
-        return guiCoordinates;
-    }
-
     /**
      * Gets the modelCoordinates
      * @return model coordinates
      */
-    public Coordinates getModelCoordinates(){
+    protected Coordinates getModelCoordinates(){
         return modelCoordinates;
     }
 
-    public void toggleSelection(CardGUI card, HandGUI hand) {
+    /**
+     * Event handler for the selection of hand cards
+     * @param card card to be selected by player
+     * @param hand player's hand cards
+     */
+    protected void toggleSelection(CardGUI card, HandGUI hand) {
         for (CardGUI cardInHand : hand.getHandCards()){
-            if(cardInHand.isSelected && !cardInHand.equals(card)){
+            if(cardInHand.isSelected && !cardInHand.equals(card)){  //if there is already another card selected, unselect it
                 cardInHand.setBorder(null);
                 cardInHand.isSelected = false;
             }
         }
 
-        if ((card.getBorder() == null || card.getBorder().getStrokes().isEmpty()) && !card.isSelected) {
-            card.setBorder(new Border(new BorderStroke(
-                    Color.RED, BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(5)
-            )));
-            card.isSelected = true;
-        } else {
-            card.setBorder(null);
-            card.isSelected = false;
-        }
+        addBorderAndSelectCard(card);
     }
 
-    public void toggleSelection(CardGUI card, DrawableAreaGUI drawableAreaGUI){
+    /**
+     * Event handler for the selection of drawable area cards
+     * @param card card to be selected by player
+     * @param drawableAreaGUI player's drawable area cards
+     */
+    protected void toggleSelection(CardGUI card, DrawableAreaGUI drawableAreaGUI){
         for (CardGUI cardInDrawableArea : drawableAreaGUI.getDrawableAreaCards()){
-            if(cardInDrawableArea.isSelected && !cardInDrawableArea.equals(card)){
+            if(cardInDrawableArea.isSelected && !cardInDrawableArea.equals(card)){ //if there is already another card selected, unselect it
                 cardInDrawableArea.setBorder(null);
                 cardInDrawableArea.isSelected = false;
             }
         }
 
+        addBorderAndSelectCard(card);
+    }
+
+    /**
+     * Adds (or removes) red border to/from selected card and marks it as selected/unselected
+     * @param card selected card
+     */
+    private void addBorderAndSelectCard(CardGUI card) {
         if ((card.getBorder() == null || card.getBorder().getStrokes().isEmpty()) && !card.isSelected) {
             card.setBorder(new Border(new BorderStroke(
                     Color.RED, BorderStrokeStyle.SOLID, new CornerRadii(5), new BorderWidths(5)

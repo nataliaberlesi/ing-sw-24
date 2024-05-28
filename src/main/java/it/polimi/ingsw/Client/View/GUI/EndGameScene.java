@@ -9,14 +9,39 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import java.util.ArrayList;
 
+/**
+ * Scene to declare winners and losers of game
+ */
 public class EndGameScene extends Scene {
+    /**
+     * Scene's root
+     */
     private final AnchorPane root;
+    /**
+     * Winner label
+     */
     private final Label winnerLabel = new Label("CONGRATULATIONS,\nYOU WON!!!\n");
+    /**
+     * Loser label
+     */
     private final Label loserLabel =  new Label("Sorry,\nYou lost :(\n");
+    /**
+     * Final score label
+     */
     private final Label finalScore = new Label("This is the final score:\n");
+    /**
+     * Final score board
+     */
     private final GridPane finalScoreBoard = new GridPane();
+    /**
+     * Instance of ViewControllerGUI to control scene
+     */
     private final ViewControllerGUI viewControllerGUI;
 
+    /**
+     * Constructor of endgame scene
+     * @param viewControllerGUI viewControllerGUI instance
+     */
     public EndGameScene(ViewControllerGUI viewControllerGUI) {
         super(new AnchorPane(), 1060, 595);
         this.viewControllerGUI = viewControllerGUI;
@@ -25,12 +50,18 @@ public class EndGameScene extends Scene {
         initializeGridPane();
     }
 
+    /**
+     * Initializes final score board's characteristics and adds it to scene
+     */
     private void initializeGridPane() {
         finalScoreBoard.setLayoutX(438);
         finalScoreBoard.setLayoutY(358);
         this.root.getChildren().add(finalScoreBoard);
     }
 
+    /**
+     * Initializes other scene's components
+     */
     private void initializeScene() {
         AnchorPane root = (AnchorPane) this.getRoot();
         root.setPrefSize(1060, 595);
@@ -52,18 +83,29 @@ public class EndGameScene extends Scene {
         this.root.getChildren().addAll(backgroundImageView, finalScore, goBackButton);
     }
 
-    public void setWinnerLabel(){
+    /**
+     * Sets winner label to scene for players that won the game
+     */
+    protected void setWinnerLabel(){
         StaticsForGUI.setLabelCharacteristics(winnerLabel,"Lao MN Bold", 36, 330, 108);
         this.root.getChildren().add(winnerLabel);
 
     }
 
-    public void setLoserLabel(){
+    /**
+     * Sets loser label to scene for players that lost the game
+     */
+    protected void setLoserLabel(){
         StaticsForGUI.setLabelCharacteristics(loserLabel,"Lao MN Bold", 36, 467, 108);
         this.root.getChildren().add(loserLabel);
     }
 
-    protected void setScoreBoard(ArrayList<ScoreboardPositionDTO> ranking, String username){
+    /**
+     * Sets final score board with rankings and winner/loser label
+     * @param ranking ranking of players with usernames, scores and positions
+     * @param myPlayerUsername username of my player
+     */
+    protected void setScoreBoard(ArrayList<ScoreboardPositionDTO> ranking, String myPlayerUsername){
         finalScoreBoard.setVgap(5);
         finalScoreBoard.setHgap(20);
         ArrayList<Label> rankingLabels = new ArrayList<>();
@@ -91,10 +133,10 @@ public class EndGameScene extends Scene {
             GridPane.setColumnIndex(scores.get(i), 2);
             finalScoreBoard.getChildren().add(scores.get(i));
 
-            if (ranking.get(i).username().equalsIgnoreCase(username) && ranking.get(i).position() == 1){
+            if (ranking.get(i).username().equalsIgnoreCase(myPlayerUsername) && ranking.get(i).position() == 1){
                 setWinnerLabel();
             }
-            if (ranking.get(i).username().equalsIgnoreCase(username) && ranking.get(i).position() != 1){
+            if (ranking.get(i).username().equalsIgnoreCase(myPlayerUsername) && ranking.get(i).position() != 1){
                 setLoserLabel();
             }
         }

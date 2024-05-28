@@ -8,6 +8,9 @@ import javafx.scene.layout.AnchorPane;
 import java.util.ArrayList;
 import java.util.Objects;
 
+/**
+ * Scroll pane to represent board in GUI
+ */
 public class BoardGUI extends ScrollPane {
     /**
      * Anchor pane that will be used as container of cards inside the scroll pane
@@ -17,10 +20,14 @@ public class BoardGUI extends ScrollPane {
      * Initial card placed in the middle of the board
      */
     private CardGUI initialCard;
+    /**
+     * Chosen board card
+     */
     private CardGUI chosenCard;
-
+    /**
+     * Current cards present on board
+     */
     private ArrayList<CardGUI> cardsOnBoard = new ArrayList<>();
-
     /**
      * Image View to contain the black token
      */
@@ -30,6 +37,9 @@ public class BoardGUI extends ScrollPane {
      */
     private final ImageView playerColorToken = new ImageView();
 
+    /**
+     * Constructor of board
+     */
     public BoardGUI(){
         this.setPrefSize(663, 418);
         this.setLayoutX(200);
@@ -44,7 +54,7 @@ public class BoardGUI extends ScrollPane {
     /**
      * Sets the initial card's characteristics
      */
-    public void setInitialCard(String cardID) {
+    protected void setInitialCard(String cardID) {
         initialCard = new CardGUI(cardID, new Coordinates(0,0), true);
         initialCard.convertCoordinatesFromModelToGUIAndSetLayout(0, 0);
         anchorPane.getChildren().add(initialCard);
@@ -59,14 +69,14 @@ public class BoardGUI extends ScrollPane {
      * Getter for initial card
      * @return initial card
      */
-    public CardGUI getInitialCard() {
+    protected CardGUI getInitialCard() {
         return initialCard;
     }
 
     /**
      * Sets the first player token to black
      */
-    public void setFirstPlayerToken(){
+    protected void setFirstPlayerToken(){
         firstPlayerToken.setImage(new Image(Objects.requireNonNull(GUIApplication.class.getResourceAsStream("Images/Tokens/BLACK.png"))));
         firstPlayerToken.setFitWidth(20);
         firstPlayerToken.setFitHeight(20);
@@ -75,14 +85,13 @@ public class BoardGUI extends ScrollPane {
         anchorPane.getChildren().remove(firstPlayerToken);
         anchorPane.getChildren().add(firstPlayerToken);
         firstPlayerToken.toFront();
-
     }
 
     /**
      * Sets the token of the player to a color image
      * @param tokenImage image resource associated with the token color
      */
-    public void setPlayerColorToken(String tokenImage){
+    protected void setPlayerColorToken(String tokenImage){
         String imagePath = String.format("Images/Tokens/%s.png", tokenImage);
         playerColorToken.setImage(new Image(Objects.requireNonNull(GUIApplication.class.getResourceAsStream(imagePath))));
         anchorPane.getChildren().remove(playerColorToken);
@@ -90,31 +99,46 @@ public class BoardGUI extends ScrollPane {
         playerColorToken.toFront();
     }
 
-
     /**
      * Method to place cards on board
      * @param cards cards to be placed on board
      */
-    public void updateBoard(ArrayList<CardGUI> cards){
+    protected void updateBoard(ArrayList<CardGUI> cards){
         cardsOnBoard = cards;
         anchorPane.getChildren().remove(initialCard);
         for (CardGUI cardGUI : cardsOnBoard) {
             anchorPane.getChildren().add(cardGUI);
         }
     }
-    public void setChosenCard(CardGUI chosenCard){
+
+    /**
+     * Setter for chosen board card
+     * @param chosenCard chosen board card
+     */
+    protected void setChosenCard(CardGUI chosenCard){
         this.chosenCard = chosenCard;
     }
 
-    public ArrayList<CardGUI> getCardsOnBoard() {
+    /**
+     * Getter for cards on board
+     * @return cardsOnBoard
+     */
+    protected ArrayList<CardGUI> getCardsOnBoard() {
         return cardsOnBoard;
     }
 
-    public CardGUI getChosenCard() {
+    /**
+     * Getter for chosen board card
+     * @return chosenCard
+     */
+    protected CardGUI getChosenCard() {
         return chosenCard;
     }
 
-    public void deactivateEventHandlerOnCorners(){
+    /**
+     * Deactivates event handlers on corners of board cards
+     */
+    protected void deactivateEventHandlerOnCorners(){
         for (CardGUI card : cardsOnBoard){
             for (CornerGUI corner : card.getCorners()) {
                 corner.setBorder(null);
@@ -124,6 +148,5 @@ public class BoardGUI extends ScrollPane {
         }
         StaticsForGUI.atLeastOneCornerSelected = false;
     }
-
 
 }

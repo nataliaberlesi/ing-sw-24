@@ -11,11 +11,24 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 import java.util.Objects;
 
+/**
+ * Start menu scene to choose username and number of players for the game
+ */
 public class StartMenuScene extends Scene {
+    /**
+     * Username field to select username
+     */
     private final TextField usernameField;
+    /**
+     * ChoiceBox to select number of players for the game
+     */
     private final ChoiceBox<Integer> numberOfPlayersChoiceBox;
 
-
+    /**
+     * Constructor for StartMenuScene
+     * @param viewController ViewControllerGUI instance to control scene
+     * @param confirmActionMethod string to represent if player is creating or joining game and behave accordingly
+     */
     public StartMenuScene(ViewControllerGUI viewController, String confirmActionMethod) {
         super(new AnchorPane(), 1060, 595);
         AnchorPane root = (AnchorPane) this.getRoot();
@@ -52,11 +65,12 @@ public class StartMenuScene extends Scene {
         numberOfPlayersChoiceBox.getItems().addAll(2, 3, 4);
         numberOfPlayersChoiceBox.setStyle("-fx-font-size: 18px; -fx-font-family: 'Lao MN Bold';");
 
+        //Makes player join game only choosing username
         if ("join".equals(confirmActionMethod)) {
             confirmButton.setOnAction(event -> viewController.confirmJoin(usernameField.getCharacters().toString().toUpperCase()));
             numberOfPlayersChoiceBox.setVisible(false);
             numberOfPlayersLabel.setVisible(false);
-        } else {
+        } else { //Makes player create game, choosing username and number of players
             confirmButton.setOnAction(event -> viewController.confirmCreate(usernameField.getCharacters().toString().toUpperCase(), numberOfPlayersChoiceBox.getValue()));
         }
 
