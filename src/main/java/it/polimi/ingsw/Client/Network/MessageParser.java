@@ -3,7 +3,6 @@ package it.polimi.ingsw.Client.Network;
 import com.google.gson.*;
 import it.polimi.ingsw.Client.Network.DTO.InParamsDTO;
 import it.polimi.ingsw.Client.Network.DTO.ModelDTO.*;
-import it.polimi.ingsw.Client.Network.DTO.ParamsDTO;
 import it.polimi.ingsw.Client.View.CLI.CardCLI;
 import it.polimi.ingsw.Client.View.CLI.FinalScoreBoardCLI;
 import it.polimi.ingsw.Client.View.CLI.ObjectiveCLI;
@@ -11,7 +10,6 @@ import it.polimi.ingsw.Client.View.GUI.CardGUI;
 import it.polimi.ingsw.Client.View.ViewController;
 import it.polimi.ingsw.Server.Model.Coordinates;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Used to parse data from the incoming message from server
@@ -106,15 +104,6 @@ public class MessageParser {
     public void setView(ViewController viewController) {
         this.viewController = viewController;
     }
-
-    /**
-     * Parses the list of winners
-     * @return the list of possible winners
-     */
-    public List<String> getWinners() {
-        return inParamsDTO.winners();
-    }
-
     /**
      * Parses the ordered list of players
      * @return the turn order
@@ -167,7 +156,7 @@ public class MessageParser {
 
     /**
      * Parses the public objectives in CLI format
-     * @return
+     * @return the public objectives in CLI format
      */
     public ObjectiveCLI[] getPublicObjectivesCLI() {
         ObjectiveCLI[] objectiveCLIS=new ObjectiveCLI[2];
@@ -183,7 +172,7 @@ public class MessageParser {
 
     /**
      * Parses the private objectives ID
-     * @return
+     * @return the private objectives ID
      */
     public String[] getPrivateObjectivesID() {
         ObjectiveDTO[] objectiveDTOS=inParamsDTO.privateObjectives();
@@ -196,7 +185,7 @@ public class MessageParser {
 
     /**
      * Parses the public objectives ID
-     * @return
+     * @return the public objectives ID
      */
     public String[] getPublicObjectivesID() {
         ObjectiveDTO[] objectiveDTOS=inParamsDTO.publicObjectives();
@@ -209,7 +198,7 @@ public class MessageParser {
 
     /**
      * Parses the chosen objective in CLI format
-     * @return
+     * @return a Objective in CLI format
      */
     public ObjectiveCLI getChosenObjective() {
         ObjectiveDTO objectiveDTO= inParamsDTO.chosenObjective();
@@ -233,7 +222,7 @@ public class MessageParser {
      * Gets a cardDTO from a given drawableArea
      * @param drawableArea the given drawableArea
      * @param index the index inside the drawableArea
-     * @return
+     * @return the raw CardDataDTO
      */
     private CardDataDTO getCardDTO(String drawableArea, int index) {
         switch(drawableArea) {
@@ -248,7 +237,7 @@ public class MessageParser {
 
     /**
      * Parses a CardCLI from the message
-     * @return
+     * @return a CardCLI
      */
     public CardCLI getCardCLI() {
         CardDataDTO cardDataDTO =getCardDTO();
@@ -373,7 +362,7 @@ public class MessageParser {
 
     /**
      * Parses the hand in CLI format
-     * @return
+     * @return a hand made out of CardCLI
      */
     public CardCLI[] getHandCLI() {
         CardCLI[] handCLI=new CardCLI[3];
@@ -403,7 +392,7 @@ public class MessageParser {
 
     /**
      * Parses the ID of the cards in the hand
-     * @return
+     * @return a hand made out of card ID
      */
     public String[] getHandIDs() {
         String[] handIDs=new String[3];
@@ -420,7 +409,7 @@ public class MessageParser {
     }
     /**
      * Parses the starting card ID
-     * @return
+     * @return the card ID
      */
     public String getCardID() {
         return inParamsDTO.card().data().cardID();
@@ -430,7 +419,7 @@ public class MessageParser {
      * Parses the card ID from a given drawableArea
      * @param drawableArea the given drawableArea
      * @param index the index inside the drawableArea
-     * @return
+     * @return the card ID
      */
     public String getCardID(String drawableArea, int index) {
         CardDataDTO cardDataDTO =getCardDTO(drawableArea,index);
@@ -442,8 +431,6 @@ public class MessageParser {
     }
     /**
      * Transforms an Object into a json string
-     * @param object
-     * @return
      */
     public String toJson(Object object) {
         return parser.toJson(object);
@@ -451,7 +438,7 @@ public class MessageParser {
 
     /**
      * Parses the final score board into CLI format
-     * @return
+     * @return the final scoreboard
      */
     public FinalScoreBoardCLI getFinalScoreBoardCLI() {
         ArrayList<ScoreboardPositionDTO> scoreboardPositionDTOS=inParamsDTO.scoreboard();
@@ -464,7 +451,7 @@ public class MessageParser {
 
     /**
      * Parses the final scoreboard in GUI format
-     * @return
+     * @return the final scoreboard
      */
     public ArrayList<ScoreboardPositionDTO> getFinalScoreBoardGUI() {
         return inParamsDTO.scoreboard();
@@ -472,7 +459,7 @@ public class MessageParser {
 
     /**
      * Parses the chosen objective ID
-     * @return
+     * @return the chosen objective ID
      */
     public String getChosenObjectiveID() {
         return inParamsDTO.chosenObjective().data().objectiveID();
@@ -480,7 +467,7 @@ public class MessageParser {
 
     /**
      * Parses the message in the chat
-     * @return
+     * @return the chat message
      */
     public String getChat() {
         return inParamsDTO.chat();

@@ -4,7 +4,6 @@ import it.polimi.ingsw.Server.Controller.DTO.OutParamsDTO;
 import it.polimi.ingsw.Server.Controller.DTO.ParamsDTO;
 import it.polimi.ingsw.Server.Model.Cards.*;
 import it.polimi.ingsw.Server.Model.Cards.Objectives.Objective;
-import it.polimi.ingsw.Server.Model.Color;
 import it.polimi.ingsw.Server.Model.DrawableArea;
 import it.polimi.ingsw.Server.Model.DrawableCards;
 import it.polimi.ingsw.Server.Model.Player;
@@ -17,7 +16,6 @@ import java.util.*;
 public class SetUpGame {
     /**
      * Generates first round starting configuration
-     * @param gameInstance
      * @return DTO representing the gameInstance's first round starting configuration
      */
     public static ParamsDTO getStartFirstRoundParams(GameInstance gameInstance) {
@@ -39,7 +37,6 @@ public class SetUpGame {
 
     /**
      * Generates second round starting configuration
-     * @param gameInstance
      * @return DTO representing the game instance starting configuration
      */
     public static ParamsDTO getStartSecondRoundParams(GameInstance gameInstance) {
@@ -61,15 +58,20 @@ public class SetUpGame {
                 publicObjectives));
     }
 
-
+    /**
+     *Gives a starting card to each player and setups objectives
+     */
     private static void setupPlayerBoards(GameInstance gameInstance) {
         Deck deck= DeckFactory.createShuffledStartingDeck();
-        gameInstance.setStartingDeck(deck);
         for(String player: gameInstance.getPlayerTurnOrder()) {
             gameInstance.getPlayers().get(player).placeStartingCard(deck.next());
         }
         setupObjectives(gameInstance);
     }
+
+    /**
+     * Gives 2 public objectives to each player, and two private objectives to choose from
+     */
     private static void setupObjectives(GameInstance gameInstance) {
         ArrayList<String> objectives=ObjectiveFactory.makeEveryObjectiveID();
         Collections.shuffle(objectives);
@@ -83,6 +85,10 @@ public class SetUpGame {
             gameInstance.setPublicObjectives(player,firstPublicObjectiveID,secondPublicObjectiveID);
         }
     }
+
+    /**
+     *Draws 2 card from the resource deck and 1 card from the gold deck for each player
+     */
     private static void setupHands(GameInstance gameInstance) {
         DrawableArea drawableArea=gameInstance.getDrawableArea();
         for(String player: gameInstance.getPlayerTurnOrder()) {
@@ -97,28 +103,16 @@ public class SetUpGame {
                     .placeCardInHand(drawableArea.getGoldDrawingSection().drawCard(0));
         }
     }
+
+    /**
+     * Setups the drawableArea with one resource drawing section and one gold drawing section
+     * @return the drawableArea
+     */
     private static DrawableArea getDrawableArea() {
         Deck goldDeck=DeckFactory.createShuffledGoldDeck();
         Deck resourceDeck=DeckFactory.createShuffledResourceDeck();
         DrawableCards goldDrawableCards=new DrawableCards(goldDeck);
         DrawableCards resourceDrawableCards=new DrawableCards(resourceDeck);
         return new DrawableArea(resourceDrawableCards,goldDrawableCards);
-    }
-    private static Card[] setupHand(Player currentPlayer, DrawableArea drawableArea) {
-        Card[] hand=new Card[3];
-        for(int i=0;i<2;i++) {
-            currentPlayer
-                    .getPlayerHand()
-                    .placeCardInHand(drawableArea.getResourceDrawingSection().drawCard(0));
-        }
-        currentPlayer
-                .getPlayerHand()
-                .placeCardInHand(drawableArea.getGoldDrawingSection().drawCard(0));
-        for(int i=0;i<3;i++) {
-            hand[i]=ResourceCardFactory.makeResourceCard(currentPlayer
-                    .getPlayerHand()
-                    .showCardInHand(i));
-        }
-        return hand;
     }
 }

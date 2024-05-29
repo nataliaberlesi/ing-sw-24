@@ -20,7 +20,6 @@ public class GameInstance {
 
     private final HashMap<String, Player> players=new HashMap<String,Player>();
     private DrawableArea drawableArea;
-    private Deck startingDeck;
     private final ArrayList<Color> availableColors=new ArrayList<Color>();
     private boolean firstRoundIsStarted;
     private boolean secondRoundIsStarted;
@@ -123,9 +122,6 @@ public class GameInstance {
         }
         this.allBoardsAreSet=flag;
     }
-    public void setStartingDeck(Deck startingDeck) {
-        this.startingDeck=startingDeck;
-    }
     /**
      *
      * @return the current player username
@@ -149,9 +145,6 @@ public class GameInstance {
     }
     public ArrayList<Color> getAvailableColors() {
         return availableColors;
-    }
-    public Deck getStartingDeck() {
-        return startingDeck;
     }
     /**
      * Sets the player's color

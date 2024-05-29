@@ -65,8 +65,9 @@ public class NetworkManager implements Runnable{
     }
 
     /**
-     * Used to receive messages and to build them into the messageParser. Also closes the connection if the inMessage is
-     * ABORT or if the connection throws an IOException. If the connection is closed, builds an ABORT message.
+     * Used to receive messages and to build them into the messageParser.
+     * Also closes the connection if the inMessage is ABORT or if the connection throws an IOException.
+     * If the connection is closed, builds an ABORT message.
      */
     public void threadReceiveMethod(){
         while(!socket.isClosed()) {

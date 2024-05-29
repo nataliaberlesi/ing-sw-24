@@ -8,7 +8,13 @@ import it.polimi.ingsw.Server.Model.Coordinates;
  * Used to compose a message and send it to the server
  */
 public class MessageDispatcher {
+    /**
+     * The network manager instance to communicate with the server
+     */
     private final NetworkManager networkManager;
+    /**
+     * The MessageParser used to create json strings
+     */
     private final MessageParser messageParser;
     public MessageDispatcher(NetworkManager networkManager) {
         this.networkManager=networkManager;
