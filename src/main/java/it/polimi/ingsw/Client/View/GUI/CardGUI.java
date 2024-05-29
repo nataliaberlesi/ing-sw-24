@@ -73,8 +73,9 @@ public class CardGUI extends AnchorPane {
      * Sets card's imageview characteristics
      */
     private void setCardCharacteristics(){
-        imageView.setFitHeight(55);
-        imageView.setFitWidth(82.5);
+        this.setPrefSize(StaticsForGUI.dimensions.get("cardWidth"), StaticsForGUI.dimensions.get("cardHeight"));
+        imageView.setFitHeight(StaticsForGUI.dimensions.get("cardHeight"));
+        imageView.setFitWidth(StaticsForGUI.dimensions.get("cardWidth"));
         imageView.setPickOnBounds(true);
         imageView.setPreserveRatio(true);
         this.getChildren().add(imageView);
@@ -85,8 +86,8 @@ public class CardGUI extends AnchorPane {
      * */
      private void initializeCorners() {
 
-        double[] xPositions = {imageView.getLayoutX(), imageView.getLayoutX() + (imageView.getFitWidth() - StaticsForGUI.cornerWidth)};
-        double[] yPositions = {imageView.getLayoutY(), imageView.getLayoutY() + (imageView.getFitHeight() - StaticsForGUI.cornerHeight)};
+        double[] xPositions = {imageView.getLayoutX(), imageView.getLayoutX() + (imageView.getFitWidth() - StaticsForGUI.dimensions.get("cornerWidth"))};
+        double[] yPositions = {imageView.getLayoutY(), imageView.getLayoutY() + (imageView.getFitHeight() - StaticsForGUI.dimensions.get("cornerHeight"))};
 
         for (int i = 0; i < corners.length; i++) {
             corners[i] = new CornerGUI();
@@ -198,10 +199,10 @@ public class CardGUI extends AnchorPane {
     protected void convertCoordinatesFromModelToGUIAndSetLayout(int x, int y){
         modelCoordinates.setX(x);
         modelCoordinates.setY(y);
-        guiCoordinates.setX(63*x + 1260);
-        guiCoordinates.setY(640 - 32*y);
-        this.setLayoutX(63*x + 1260);
-        this.setLayoutY(640 - 32*y);
+        guiCoordinates.setX((int)((StaticsForGUI.dimensions.get("cardWidth") - StaticsForGUI.dimensions.get("cornerWidth"))*x + StaticsForGUI.dimensions.get("initialCardLayoutX")));
+        guiCoordinates.setY((int)(StaticsForGUI.dimensions.get("initialCardLayoutY") - (StaticsForGUI.dimensions.get("cardHeight") - StaticsForGUI.dimensions.get("cornerHeight"))*y));
+        this.setLayoutX(guiCoordinates.getX());
+        this.setLayoutY(guiCoordinates.getY());
     }
 
     /**
@@ -214,34 +215,32 @@ public class CardGUI extends AnchorPane {
 
     /**
      * Event handler for the selection of hand cards
-     * @param card card to be selected by player
      * @param hand player's hand cards
      */
-    protected void toggleSelection(CardGUI card, HandGUI hand) {
+    protected void toggleSelection(HandGUI hand) {
         for (CardGUI cardInHand : hand.getHandCards()){
-            if(cardInHand.isSelected && !cardInHand.equals(card)){  //if there is already another card selected, unselect it
+            if(cardInHand.isSelected && !cardInHand.equals(this)){  //if there is already another card selected, unselect it
                 cardInHand.setBorder(null);
                 cardInHand.isSelected = false;
             }
         }
 
-        addBorderAndSelectCard(card);
+        addBorderAndSelectCard(this);
     }
 
     /**
      * Event handler for the selection of drawable area cards
-     * @param card card to be selected by player
      * @param drawableAreaGUI player's drawable area cards
      */
-    protected void toggleSelection(CardGUI card, DrawableAreaGUI drawableAreaGUI){
+    protected void toggleSelection(DrawableAreaGUI drawableAreaGUI){
         for (CardGUI cardInDrawableArea : drawableAreaGUI.getDrawableAreaCards()){
-            if(cardInDrawableArea.isSelected && !cardInDrawableArea.equals(card)){ //if there is already another card selected, unselect it
+            if(cardInDrawableArea.isSelected && !cardInDrawableArea.equals(this)){ //if there is already another card selected, unselect it
                 cardInDrawableArea.setBorder(null);
                 cardInDrawableArea.isSelected = false;
             }
         }
 
-        addBorderAndSelectCard(card);
+        addBorderAndSelectCard(this);
     }
 
     /**

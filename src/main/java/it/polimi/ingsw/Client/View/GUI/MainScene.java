@@ -116,19 +116,19 @@ public class MainScene extends Scene {
      */
     private void setUpLabels(){
         Label resourceCardsLabel = new Label("Resource Cards");
-        StaticsForGUI.setLabelCharacteristics(resourceCardsLabel, "System Bold Italic", 16, 912,52);
+        StaticsForGUI.setLabelCharacteristics(resourceCardsLabel, "System Bold Italic", 18, 904,32);
 
         Label goldCardsLabel = new Label("Gold Cards");
-        StaticsForGUI.setLabelCharacteristics(goldCardsLabel, "System Bold Italic", 16, 924,332);
+        StaticsForGUI.setLabelCharacteristics(goldCardsLabel, "System Bold Italic", 18, 920,307);
 
         Label handLabel = new Label("Hand");
-        StaticsForGUI.setLabelCharacteristics(handLabel, "System Bold Italic", 16, 380,457);
+        StaticsForGUI.setLabelCharacteristics(handLabel, "System Bold Italic", 18, 395,457);
 
         Label secretObjectiveLabel = new Label("Secret Objective");
-        StaticsForGUI.setLabelCharacteristics(secretObjectiveLabel, "System Bold Italic", 16, 560,457);
+        StaticsForGUI.setLabelCharacteristics(secretObjectiveLabel, "System Bold Italic", 18, 575,457);
 
         Label commonObjectivesLabel = new Label("Common Objectives");
-        StaticsForGUI.setLabelCharacteristics(commonObjectivesLabel, "System Bold Italic", 16, 686,457);
+        StaticsForGUI.setLabelCharacteristics(commonObjectivesLabel, "System Bold Italic", 18, 715,457);
 
         StaticsForGUI.setLabelCharacteristics(confirmActionLabel, "System Bold", 14, 30,547);
 
@@ -147,12 +147,12 @@ public class MainScene extends Scene {
      * Sets up all standard buttons for the scene
      */
     private void setUpButtons() {
-        StaticsForGUI.setButtonCharacteristics(flipYourHandButton, "System", 12, 350, 555, true);
+        StaticsForGUI.setButtonCharacteristics(flipYourHandButton, "System", 14, 368, 563, true);
         flipYourHandButton.setOnMouseClicked(event -> flipAndShowHand());
 
-        StaticsForGUI.setButtonCharacteristics(confirmActionButton, "System Bold", 16, 38, 230, true);
+        StaticsForGUI.setButtonCharacteristics(confirmActionButton, "System Bold", 16, 30, 230, true);
 
-        StaticsForGUI.setButtonCharacteristics(chatButton, "System Bold", 16, 65, 180, true);
+        StaticsForGUI.setButtonCharacteristics(chatButton, "System Bold", 16, 63, 180, true);
         chatButton.setOnMouseClicked(event -> {
             viewControllerGUI.openChat();
             chatButton.setStyle("-fx-border-color: transparent; -fx-border-width: 0;");
@@ -167,7 +167,7 @@ public class MainScene extends Scene {
      */
     public void setHelloPlayerLabel(String username){
         Label helloPlayerLabel = new Label("Hi " + username);
-        StaticsForGUI.setLabelCharacteristics(helloPlayerLabel, "System Bold", 18, 38, 457);
+        StaticsForGUI.setLabelCharacteristics(helloPlayerLabel, "System Bold", 18, 30, 457);
         this.root.getChildren().add(helloPlayerLabel);
     }
 
@@ -178,7 +178,7 @@ public class MainScene extends Scene {
     public void setSeeOtherPlayersGameButtons(ArrayList<PlayerGUI> playersInGame){
         for (int i = 0; i < playersInGame.size(); i++) {
             seeOtherPlayersSceneButtons.add(new Button("See " + playersInGame.get(i).getUsername() + "'s game"));
-            StaticsForGUI.setButtonCharacteristics(seeOtherPlayersSceneButtons.get(i), "System", 12, 38, 277+45*i, true);
+            StaticsForGUI.setButtonCharacteristics(seeOtherPlayersSceneButtons.get(i), "System", 13, 30, 277+45*i, true);
             int finalI = i;
             seeOtherPlayersSceneButtons.get(i).setOnAction(event -> handleSeeOtherPlayerScene(playersInGame.get(finalI)));
             this.root.getChildren().add(seeOtherPlayersSceneButtons.get(i));
@@ -253,7 +253,7 @@ public class MainScene extends Scene {
             int finalI = i;
             CardGUI handCard = handCards[i];
             handCard.setOnMouseClicked(event -> {
-                handCard.toggleSelection(handCard, hand);
+                handCard.toggleSelection(hand);
                 hand.setChosenHandCard(handCard);
                 hand.setChosenHandCardIndex(finalI);
                 if (StaticsForGUI.atLeastOneCornerSelected && viewControllerGUI.getMyPlayer().getHand().getChosenHandCard().isSelected){
@@ -295,7 +295,7 @@ public class MainScene extends Scene {
      * @param card card on which said corner was click
      */
     public void handleCornerClick(CornerGUI corner, CardGUI card) {
-        corner.toggleSelection(corner, viewControllerGUI.getMyPlayer().getBoard());
+        corner.toggleSelection(viewControllerGUI.getMyPlayer().getBoard());
         viewControllerGUI.getMyPlayer().getBoard().setChosenCard(card);
         card.setChosenCornerCoordinates(corner.cornerCoordinates);
         if (StaticsForGUI.atLeastOneCornerSelected && viewControllerGUI.getMyPlayer().getHand().getChosenHandCard().isSelected){
@@ -319,7 +319,7 @@ public class MainScene extends Scene {
             int finalI = i;
             resourceCards[i].setOnMouseClicked(event -> {
                 drawableArea.setChosenDrawableAreaCardIndex(finalI);
-                resourceCards[finalI].toggleSelection(resourceCards[finalI], drawableArea);
+                resourceCards[finalI].toggleSelection(drawableArea);
                 isResourceCardChosen.set(drawableArea.setChosenDrawableAreaCard(resourceCards[finalI], true));
                 checkForSelectedCards(isResourceCardChosen.get(), isGoldCardChosen.get());
             });
@@ -329,7 +329,7 @@ public class MainScene extends Scene {
             int finalI = i;
             goldCards[i].setOnMouseClicked(event -> {
                 drawableArea.setChosenDrawableAreaCardIndex(finalI);
-                goldCards[finalI].toggleSelection(goldCards[finalI], drawableArea);
+                goldCards[finalI].toggleSelection(drawableArea);
                 isGoldCardChosen.set(drawableArea.setChosenDrawableAreaCard(goldCards[finalI], false));
                 checkForSelectedCards(isResourceCardChosen.get(), isGoldCardChosen.get());
             });

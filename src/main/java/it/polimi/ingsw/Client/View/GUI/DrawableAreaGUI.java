@@ -44,12 +44,12 @@ public class DrawableAreaGUI extends Group {
     public DrawableAreaGUI(){
         resourceCardsContainer.setPrefSize(77,170);
         resourceCardsContainer.setLayoutX(920);
-        resourceCardsContainer.setLayoutY(86);
+        resourceCardsContainer.setLayoutY(66);
         this.getChildren().add(resourceCardsContainer);
 
         goldCardsContainer.setPrefSize(77,170);
         goldCardsContainer.setLayoutX(920);
-        goldCardsContainer.setLayoutY(367);
+        goldCardsContainer.setLayoutY(342);
         this.getChildren().add(goldCardsContainer);
 
         initializeCards();

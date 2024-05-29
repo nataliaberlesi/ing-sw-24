@@ -14,7 +14,7 @@ public abstract class ViewController {
     /**
      * Regex for valid usernames.
      */
-    protected static final String USERNAME_REGEX = "^\\w{1,10}$";
+    protected static final String USERNAME_REGEX = "^\\w{2,10}$";
 
     /**
      * Instance of message parser to read messages from server
@@ -197,7 +197,7 @@ public abstract class ViewController {
      */
     protected boolean correctUsernameShowAlertIfFalse(String username){
         if (username == null || !correctUsername(username)){
-            showErrorAlert("Invalid username", "Username must contain between 1 and 10 alphanumeric characters");
+            showErrorAlert("Invalid username", "Username must contain between 2 and 10 alphanumeric characters");
             return false;
         }
         return true;

@@ -23,26 +23,25 @@ public class CornerGUI extends Region {
      * Constructor for corners
      */
     public CornerGUI(){
-        setPrefSize(StaticsForGUI.cornerWidth, StaticsForGUI.cornerHeight);
+        setPrefSize(StaticsForGUI.dimensions.get("cornerWidth"), StaticsForGUI.dimensions.get("cornerHeight"));
         setBackground(new Background(new BackgroundFill(Color.TRANSPARENT, CornerRadii.EMPTY, Insets.EMPTY)));
     }
 
     /**
      * Toggle selection for board card's corners
-     * @param corner selected corner
      * @param board board
      */
 
-    protected void toggleSelection(CornerGUI corner, BoardGUI board) {
+    protected void toggleSelection(BoardGUI board) {
         for (CardGUI cardInBoard : board.getCardsOnBoard()){ //if there is already another corner selected in board cards, unselect it
             for (CornerGUI cornerInCard : cardInBoard.getCorners()) {
-                if (cornerInCard.isSelected && !cornerInCard.equals(corner)) {
+                if (cornerInCard.isSelected && !cornerInCard.equals(this)) {
                     cornerInCard.setBorder(null);
                     cornerInCard.isSelected = false;
                 }
             }
         }
-        addBorderAndSelectCorner(corner);
+        addBorderAndSelectCorner(this);
     }
 
     /**

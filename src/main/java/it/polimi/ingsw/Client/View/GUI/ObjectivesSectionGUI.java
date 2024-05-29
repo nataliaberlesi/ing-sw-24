@@ -19,7 +19,7 @@ public class ObjectivesSectionGUI extends HBox {
      * Constructor for objectives section
      */
     public ObjectivesSectionGUI(){
-        this.setLayoutX(576.0);
+        this.setLayoutX(590.0);
         this.setLayoutY(489.0);
         this.setPrefSize(264.0,56.0);
         this.setSpacing(10);

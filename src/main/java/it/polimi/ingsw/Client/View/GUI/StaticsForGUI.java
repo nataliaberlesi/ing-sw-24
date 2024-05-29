@@ -6,6 +6,10 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Font;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Class used for grouping static constants and methods that will be used in different classes in GUI
  */
@@ -18,14 +22,32 @@ public class StaticsForGUI {
      * Indicates if at least one corner is selected in a board card
      */
     protected static boolean atLeastOneCornerSelected = false;
+
+    public static Map<String, Double> dimensions = new HashMap<>();
+
+    static {
+        dimensions.put("cardWidth", 94.875);
+        dimensions.put("cardHeight", 63.25);
+        dimensions.put("cornerWidth", 22.425);
+        dimensions.put("cornerHeight", 26.45);
+        dimensions.put("boardWidth", dimensions.get("cardWidth") + 40* (dimensions.get("cardWidth") - dimensions.get("cornerWidth")));
+        dimensions.put("boardHeight", dimensions.get("cardHeight") + 40 * (dimensions.get("cardHeight") - dimensions.get("cornerHeight")));
+        dimensions.put("initialCardLayoutX", (dimensions.get("boardWidth") - dimensions.get("cardWidth")) / 2);
+        dimensions.put("initialCardLayoutY", (dimensions.get("boardHeight") - dimensions.get("cardHeight")) / 2);
+        dimensions.put("xOffsetForPlayerColorToken", 18.4);
+        dimensions.put("yOffsetForPlayerColorToken", 19.55);
+        dimensions.put("xOffsetForFirstPlayerToken", 52.9);
+        dimensions.put("yOffsetForFirstPlayerToken", dimensions.get("yOffsetForPlayerColorToken"));
+        dimensions.put("tokenDimension", 23.0);
+    }
+
     /**
-     * Corner fixed width
+     * Method used to scale the dimensions of the cards for testing
      */
-    protected static final double cornerWidth = 19.5;
-    /**
-     * Corner fixed height
-     */
-    protected static final double cornerHeight = 23.0;
+    public static void scaleAllDimensions(double scaleFactor) {
+        dimensions.replaceAll((key, value) -> value * scaleFactor);
+    }
+
 
     /**
      * Sets the characteristics of labels in scenes
@@ -58,5 +80,4 @@ public class StaticsForGUI {
         button.setMnemonicParsing(false);
         button.setDisable(setDisable);
     }
-
 }

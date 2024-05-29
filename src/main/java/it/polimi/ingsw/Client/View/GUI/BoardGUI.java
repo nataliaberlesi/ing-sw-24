@@ -42,10 +42,10 @@ public class BoardGUI extends ScrollPane {
      */
     public BoardGUI(){
         this.setPrefSize(663, 418);
-        this.setLayoutX(200);
+        this.setLayoutX(215);
         this.setLayoutY(22);
         anchorPane = new AnchorPane();
-        anchorPane.setPrefSize(2603, 1335);
+        anchorPane.setPrefSize(StaticsForGUI.dimensions.get("boardWidth"), StaticsForGUI.dimensions.get("boardHeight"));
         this.setContent(anchorPane);
         this.setHvalue(0.5);
         this.setVvalue(0.5);
@@ -59,10 +59,10 @@ public class BoardGUI extends ScrollPane {
         initialCard.convertCoordinatesFromModelToGUIAndSetLayout(0, 0);
         anchorPane.getChildren().add(initialCard);
 
-        playerColorToken.setFitWidth(20);
-        playerColorToken.setFitHeight(20);
-        playerColorToken.setLayoutX(1276);
-        playerColorToken.setLayoutY(657);
+        playerColorToken.setFitWidth(StaticsForGUI.dimensions.get("tokenDimension"));
+        playerColorToken.setFitHeight(StaticsForGUI.dimensions.get("tokenDimension"));
+        playerColorToken.setLayoutX(StaticsForGUI.dimensions.get("initialCardLayoutX") + StaticsForGUI.dimensions.get("xOffsetForPlayerColorToken"));
+        playerColorToken.setLayoutY(StaticsForGUI.dimensions.get("initialCardLayoutY") + StaticsForGUI.dimensions.get("yOffsetForPlayerColorToken"));
     }
 
     /**
@@ -78,10 +78,10 @@ public class BoardGUI extends ScrollPane {
      */
     protected void setFirstPlayerToken(){
         firstPlayerToken.setImage(new Image(Objects.requireNonNull(GUIApplication.class.getResourceAsStream("Images/Tokens/BLACK.png"))));
-        firstPlayerToken.setFitWidth(20);
-        firstPlayerToken.setFitHeight(20);
-        firstPlayerToken.setLayoutX(1306);
-        firstPlayerToken.setLayoutY(657);
+        firstPlayerToken.setFitWidth(StaticsForGUI.dimensions.get("tokenDimension"));
+        firstPlayerToken.setFitHeight(StaticsForGUI.dimensions.get("tokenDimension"));
+        firstPlayerToken.setLayoutX(StaticsForGUI.dimensions.get("initialCardLayoutX") + StaticsForGUI.dimensions.get("xOffsetForFirstPlayerToken"));
+        firstPlayerToken.setLayoutY(StaticsForGUI.dimensions.get("initialCardLayoutY") + StaticsForGUI.dimensions.get("yOffsetForFirstPlayerToken"));
         anchorPane.getChildren().remove(firstPlayerToken);
         anchorPane.getChildren().add(firstPlayerToken);
         firstPlayerToken.toFront();
