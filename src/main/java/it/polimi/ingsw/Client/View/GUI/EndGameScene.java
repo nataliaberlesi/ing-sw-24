@@ -135,9 +135,13 @@ public class EndGameScene extends Scene {
 
             if (ranking.get(i).username().equalsIgnoreCase(myPlayerUsername) && ranking.get(i).position() == 1){
                 setWinnerLabel();
+                viewControllerGUI.getMainScene().setTurnLabel("Congratulations!\nYou won!");
+                viewControllerGUI.getMainScene().setConfirmActionLabel("");
             }
             if (ranking.get(i).username().equalsIgnoreCase(myPlayerUsername) && ranking.get(i).position() != 1){
                 setLoserLabel();
+                viewControllerGUI.getMainScene().setTurnLabel("Sorry,\nYou lost :(");
+                viewControllerGUI.getMainScene().setConfirmActionLabel("");
             }
         }
     }

@@ -165,7 +165,7 @@ public abstract class ViewController {
      */
     protected void manageJoinStatus(){
         if(messageParser.unavailableUsername()){
-            this.showErrorAlert("Invalid username", "Username already taken, please select another one");
+            this.showErrorAlert("Invalid username", "Please select another one");
             switchToJoin();
         }
         else {

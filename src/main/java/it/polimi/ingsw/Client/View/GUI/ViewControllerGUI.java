@@ -615,7 +615,6 @@ public class ViewControllerGUI extends ViewController{
     }
 
     /**
-     * Sends draw card message to server and updates main scene accordingly
      */
     private void sendDrawCardMessageAndUpdateScene() {
         StaticsForGUI.enableActions = false;
@@ -630,6 +629,7 @@ public class ViewControllerGUI extends ViewController{
     @Override
     protected void setAndShowFinalScoreBoard() {
         mainScene.getScoreBoard().updatePlayerScoreWithObjectivesPoints(messageParser.getFinalScoreBoardGUI());
+        mainScene.setActionLabel("");
         EndGameScene endGameScene = new EndGameScene(this);
         endGameScene.setScoreBoard(messageParser.getFinalScoreBoardGUI(), myPlayer.getUsername());
         setSceneOnStage(endGameScene, stage);

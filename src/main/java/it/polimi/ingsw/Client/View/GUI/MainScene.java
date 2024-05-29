@@ -216,7 +216,7 @@ public class MainScene extends Scene {
     }
 
     /**
-     * Handles "flip your hand" button click flipping and showing hand
+     * Handles "flip your hand" button click flipping and showing hand cards
      */
     private void flipAndShowHand() {
         HandGUI hand = viewControllerGUI.getMyPlayer().getHand();
