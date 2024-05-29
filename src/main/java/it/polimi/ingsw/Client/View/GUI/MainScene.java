@@ -221,8 +221,10 @@ public class MainScene extends Scene {
     private void flipAndShowHand() {
         HandGUI hand = viewControllerGUI.getMyPlayer().getHand();
         for (CardGUI card : hand.getHandCards()){
-            if (card.getCardID() != null)
+            if (card.getCardID() != null) {
                 card.flipAndShow();
+            } else card.flipCard();
+
             if (card.isSelected) {
                 card.setBorder(null);
                 card.isSelected = false;
