@@ -1,13 +1,9 @@
 package it.polimi.ingsw.Client.Network;
 
-import com.google.gson.Gson;
 import it.polimi.ingsw.Server.Network.MessageCrafter;
 
 import java.io.*;
 import java.net.Socket;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Map;
 
 public class NetworkManager implements Runnable{
     private PrintWriter outSocket;
@@ -19,9 +15,8 @@ public class NetworkManager implements Runnable{
 
     /**
      * setups the network manager getting server and port as input
-     * @param server
-     * @param port
-     * @throws IOException
+     * @param server server IP address
+     * @param port port of the server
      */
     public NetworkManager(String server , int port) throws IOException {
         connect(server, port);
@@ -31,7 +26,6 @@ public class NetworkManager implements Runnable{
      * Connects the client to a server in a specific port
      * @param server The address of the server
      * @param port The port of the server
-     * @throws IOException
      */
     private void connect(String server, int port) throws IOException {
         this.socket=new Socket(server,port);
@@ -39,7 +33,6 @@ public class NetworkManager implements Runnable{
 
     /**
      * Setups outSocket, inSocket and inKeyboard
-     * @throws IOException
      */
     private void setupIO() throws IOException {
         this.outSocket=new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())),true);

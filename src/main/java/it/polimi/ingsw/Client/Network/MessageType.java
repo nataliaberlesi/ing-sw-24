@@ -36,10 +36,6 @@ public enum MessageType {
      */
     SECONDROUND,
     /**
-     * Initializes player actions.
-     */
-    START_ACTION,
-    /**
      * A player placed a card.
      */
     ACTION_PLACECARD,

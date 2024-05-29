@@ -12,14 +12,15 @@ import java.io.IOException;
 
 public class ClientLauncher {
     public static void main(String[] args) {
+        String IPAddress="localhost";
         if(args.length>=0) {
             try {
-                NetworkManager networkManager = new NetworkManager("localhost", 60600);
+                NetworkManager networkManager = new NetworkManager(IPAddress, 60600);
                 MessageParser messageParser = MessageParser.getInstance();
                 MessageDispatcher messageDispatcher = new MessageDispatcher(networkManager);
                 networkManager.setMessageParser(messageParser);
                 //if (args[0].equals("--gui") ) {
-                if(false){
+                if(true){
                     ViewControllerGUI viewControllerGUI = new ViewControllerGUI(messageParser, messageDispatcher);
                     GUIApplication.setViewControllerGUI(viewControllerGUI);
                     GUIApplication.setParserAndDispatcher(messageParser, messageDispatcher);
@@ -28,8 +29,8 @@ public class ClientLauncher {
                     new Thread(networkManager).start();
                     System.out.println("hello");
 
-                } //else if (args[0].equals("--cli")) {
-                if(true){
+                }// else if (args[0].equals("--cli")) {
+                if(false){
                     ViewControllerCLI viewControllerCLI=new ViewControllerCLI(messageParser, messageDispatcher);
                     new Thread(networkManager).start();
                 }

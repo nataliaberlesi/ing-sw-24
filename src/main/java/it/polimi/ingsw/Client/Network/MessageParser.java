@@ -198,7 +198,7 @@ public class MessageParser {
 
     /**
      * Parses the chosen objective in CLI format
-     * @return a Objective in CLI format
+     * @return an Objective in CLI format
      */
     public ObjectiveCLI getChosenObjective() {
         ObjectiveDTO objectiveDTO= inParamsDTO.chosenObjective();
@@ -234,28 +234,6 @@ public class MessageParser {
             }
         } throw new MessageParserException("Not such drawableArea:"+ drawableArea);
     }
-
-    /**
-     * Parses a CardCLI from the message
-     * @return a CardCLI
-     */
-    public CardCLI getCardCLI() {
-        CardDataDTO cardDataDTO =getCardDTO();
-        ArrayList<String> prerequisites=new ArrayList<>();
-        if (cardDataDTO.prerequisites()!=null) {
-            prerequisites= cardDataDTO.prerequisites();
-        }
-        return new CardCLI(
-                cardDataDTO.cardID(),
-                cardDataDTO.frontCorners(),
-                cardDataDTO.backCorners(),
-                cardDataDTO.cardObjective().type(),
-                cardDataDTO.cardObjective().data().symbolOfInterest(),
-                cardDataDTO.cardObjective().data().points(),
-                prerequisites
-        );
-    }
-
     /**
      * Parses the placed cards in CLI format
      * @return an ordered ArrayList of PlacedCards in CLI format
@@ -308,7 +286,6 @@ public class MessageParser {
         ArrayList<CardGUI> placedCardsGUI=new ArrayList<>();
         ArrayList<PlacedCardDTO> placedCardsDTO=inParamsDTO.placedCards();
         for(PlacedCardDTO placedCardDTO: placedCardsDTO) {
-            Coordinates coordinates=new Coordinates(placedCardDTO.cardCoordinates().x(),placedCardDTO.cardCoordinates().y());
             placedCardsGUI.add(
                     new CardGUI(
                             placedCardDTO.placedCard().data().cardID(),

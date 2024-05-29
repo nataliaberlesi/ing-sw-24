@@ -48,8 +48,8 @@ public class PersistenceHandler {
     public static boolean gameAlreadyExists() {
         return file.exists();
     }
-    public static boolean deleteGame() {
-        return file.delete();
+    public static void deleteGame() {
+        file.delete();
     }
     public static void closePersistence() {
         persistence=false;

@@ -2,7 +2,6 @@ package it.polimi.ingsw.Server.Controller;
 
 import it.polimi.ingsw.Server.Model.*;
 import it.polimi.ingsw.Server.Model.Cards.Card;
-import it.polimi.ingsw.Server.Model.Cards.Deck;
 import it.polimi.ingsw.Server.Model.Cards.Objectives.Objective;
 import it.polimi.ingsw.Server.Model.Cards.ResourceCardFactory;
 
@@ -14,19 +13,18 @@ import java.util.HashMap;
  * Is the instance of the game for the controller and acts as a way to communicate with the model data
  */
 public class GameInstance {
-    private final ArrayList<String> playersTurnOrder=new ArrayList<String>();
+    private final ArrayList<String> playersTurnOrder=new ArrayList<>();
     private int currentPlayerIndex;
     private final int numberOfPlayers;
 
-    private final HashMap<String, Player> players=new HashMap<String,Player>();
+    private final HashMap<String, Player> players=new HashMap<>();
     private DrawableArea drawableArea;
-    private final ArrayList<Color> availableColors=new ArrayList<Color>();
+    private final ArrayList<Color> availableColors=new ArrayList<>();
     private boolean firstRoundIsStarted;
     private boolean secondRoundIsStarted;
     private boolean gameIsStarted;
     private boolean allBoardsAreSet;
     private boolean allObjectivesHaveBeenChosen;
-    private boolean endgameIsStarted;
     private boolean finalRoundIsStarted;
     private boolean gameIsEnded;
 
@@ -43,7 +41,6 @@ public class GameInstance {
         firstRoundIsStarted=false;
         secondRoundIsStarted=false;
         gameIsStarted=false;
-        endgameIsStarted=false;
         finalRoundIsStarted=false;
         gameIsEnded=false;
     }
@@ -96,7 +93,6 @@ public class GameInstance {
         this.secondRoundIsStarted=true;
     }
     public void startGame() {this.gameIsStarted=true;}
-    public void startEndgame(){this.endgameIsStarted=true;}
     public void startFinalRound(){this.finalRoundIsStarted=true;}
     public boolean firstRoundIsStarted() {
         return this.firstRoundIsStarted;
@@ -107,7 +103,6 @@ public class GameInstance {
     public boolean allBoardsAreSet() {
         return allBoardsAreSet;
     }
-    public boolean isEndgameIsStarted(){return this.endgameIsStarted;}
     public boolean isFinalRoundIsStarted(){return this.finalRoundIsStarted;}
 
     /**
@@ -148,8 +143,8 @@ public class GameInstance {
     }
     /**
      * Sets the player's color
-     * @param username
-     * @param color
+     * @param username the player
+     * @param color the color
      */
     public void chooseColor(String username, String color) {
         players.get(username).setPlayerColor(Color.valueOf(color));
@@ -165,8 +160,6 @@ public class GameInstance {
     }
     /**
      * Sets public objectives for each player
-     * @param firstPublicObjective
-     * @param secondPublicObjective
      */
     public void setPublicObjectives(String currentPlayer,String firstPublicObjective, String secondPublicObjective) {
         getPlayers().get(currentPlayer).getPlayerBoard().addObjective(firstPublicObjective);
@@ -202,7 +195,6 @@ public class GameInstance {
 
     /**
      * Shows the score of a given player
-     * @param currentPlayer
      * @return the player score
      */
     public Integer getScore(String currentPlayer) {
@@ -265,7 +257,7 @@ public class GameInstance {
 
     /**
      * Get the actual scoreboard
-     * @return
+     * @return the actual scoreboard
      */
     public Scoreboard getScoreBoard() {
         Scoreboard scoreboard=new Scoreboard();
@@ -279,7 +271,7 @@ public class GameInstance {
 
     /**
      * checks if endgame conditions are meet
-     * @return
+     * @return if endgame conditions are meet
      */
     public boolean checkEndgame() {
         if(drawableArea.isEmpty()) {
