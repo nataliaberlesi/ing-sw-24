@@ -59,6 +59,9 @@ public class GameController {
             case ABORT -> {
                 return closeGame(inParamsDTO);
             }
+            case POKE->{
+                return MessageCrafter.craftPokeMessage();
+            }
         }
         return null;
     }

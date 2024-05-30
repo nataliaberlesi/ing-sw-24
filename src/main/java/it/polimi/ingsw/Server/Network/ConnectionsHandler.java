@@ -36,12 +36,14 @@ public class ConnectionsHandler implements Runnable{
                         System.out.println("IN | " + inMessage);
                     }
                     Message outMessage=handleMessage(inMessage);
-                    if(!(outMessage.type().equals(MessageType.JOIN) || outMessage.type().equals(MessageType.CREATE))) {
-                        for(PlayerConnection playerConnection1: playerConnections) {
-                            playerConnection1.setOutMessage(outMessage);
-                    }
-                } else {
-                        playerConnection.setOutMessage(outMessage);
+                    if(!outMessage.type().equals(MessageType.POKE)){
+                        if(!(outMessage.type().equals(MessageType.JOIN) || outMessage.type().equals(MessageType.CREATE))) {
+                            for(PlayerConnection playerConnection1: playerConnections) {
+                                playerConnection1.setOutMessage(outMessage);
+                            }
+                        } else {
+                            playerConnection.setOutMessage(outMessage);
+                        }
                     }
             }
         }
