@@ -205,6 +205,8 @@ public class GameController {
                     gameInstance.getHand(inParamsDTO.username())
             );
         }
+        checkIfFinalRoundHasToStart(gameInstance.getCurrentPlayerIndex());
+        checkIfGameHasToEnd();
         gameInstance.nextTurn();
         return MessageCrafter.craftDrawCardMessage(
                 gameInstance.getTurn(),
@@ -222,7 +224,7 @@ public class GameController {
         String affectedPlayer=inParamsDTO.username();
 
         boolean isLegal=draw(affectedPlayer,inParamsDTO.drawableSection(),inParamsDTO.index());
-        checkIfFinalRoundHasToStart(affectedPlayerIndex-1);
+        checkIfFinalRoundHasToStart(affectedPlayerIndex);
         checkIfGameHasToEnd();
         Message message;
         if(isLegal) {
