@@ -222,7 +222,7 @@ public class GameController {
         String affectedPlayer=inParamsDTO.username();
 
         boolean isLegal=draw(affectedPlayer,inParamsDTO.drawableSection(),inParamsDTO.index());
-        checkIfFinalRoundHasToStart(affectedPlayerIndex);
+        checkIfFinalRoundHasToStart(affectedPlayerIndex-1);
         checkIfGameHasToEnd();
         Message message;
         if(isLegal) {
@@ -392,7 +392,7 @@ public class GameController {
      * Helper method to check if game has to end
      */
     private void checkIfGameHasToEnd() {
-        if(gameInstance.getCurrentPlayerIndex() == 0 && finalroundIsStarted()) {
+        if(gameInstance.getCurrentPlayerIndex() == gameInstance.getNumberOfPlayers()-1 && finalroundIsStarted()) {
             calculateEndGamePoints();
             endGame();
         }
