@@ -1,6 +1,7 @@
 package it.polimi.ingsw.Client.Network;
 
-import it.polimi.ingsw.Server.Network.MessageCrafter;
+import it.polimi.ingsw.Client.Network.DTO.InParamsDTO;
+import it.polimi.ingsw.Client.Network.DTO.ParamsDTO;
 
 import java.io.*;
 import java.net.Socket;
@@ -73,20 +74,24 @@ public class NetworkManager implements Runnable{
                     }
                     inMessage=null;
                 }
-            } catch(IOException ioe) {
+            } catch(RuntimeException | IOException re) {
                 try {
                     socket.close();
-                } catch(IOException ioe1) {
-                    throw new RuntimeException();
+                    messageParser.buildMessage(
+                            messageParser.toJson(
+                                    new Message(
+                                            MessageType.ABORT,
+                                            new ParamsDTO(
+                                                    new InParamsDTO("Server is unreachable"),null))));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
             }
         }
-        messageParser.buildMessage(messageParser.toJson(MessageCrafter.craftAbortMessage("Server is unreachable")));
     }
     public void run() {
         new Thread(this::threadReceiveMethod).start();
         new Thread(this::threadSendMethod).start();
-
     }
 
 }

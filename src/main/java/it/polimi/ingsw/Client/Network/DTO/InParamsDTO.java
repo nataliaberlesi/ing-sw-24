@@ -25,4 +25,7 @@ public record InParamsDTO(String currentPlayer,
                           ArrayList<ScoreboardPositionDTO> scoreboard,
                           String chat
 ) {
+    public InParamsDTO(String cause) {
+        this(null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,cause,null,null,null);
+    }
 }
