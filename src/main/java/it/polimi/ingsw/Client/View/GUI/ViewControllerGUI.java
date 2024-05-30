@@ -89,12 +89,11 @@ public class ViewControllerGUI extends ViewController{
     /**
      * Called to exit the game when abort message is received
      */
-    @Override
     protected void exit() {
-        if (myPlayer != null)
-            messageDispatcher.abortGame(myPlayer.getUsername(), myPlayer.getUsername() + " doesn't want to play anymore :(");
-        else messageDispatcher.abortGame(null, "A player has disconnected");
-        terminate();
+        if (myPlayer!=null){
+            exit(myPlayer.getUsername());
+        } else exit(null);
+
     }
 
     /**

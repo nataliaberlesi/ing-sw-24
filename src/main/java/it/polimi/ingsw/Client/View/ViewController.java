@@ -256,6 +256,13 @@ public abstract class ViewController {
      * then the message will appear in clients chat
      */
 
+    protected void exit(String username){
+        if (username != null)
+            messageDispatcher.abortGame(username, username + " doesn't want to play anymore :(");
+        else messageDispatcher.abortGame(null, "A player has disconnected");
+        terminate();
+    }
+
     //******** END OF VIEW CONTROLLER IMPLEMENTED METHODS USED BY ViewControllerGUI AND ViewControllerCLI ********//
 
 
@@ -288,8 +295,6 @@ public abstract class ViewController {
     protected abstract void setPrivateObjective();
 
     protected abstract void terminate();
-
-    protected abstract void exit();
 
     protected abstract void setAndShowFinalScoreBoard();
 
