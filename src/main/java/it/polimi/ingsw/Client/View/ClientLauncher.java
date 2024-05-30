@@ -12,15 +12,14 @@ import java.io.IOException;
 
 public class ClientLauncher {
     public static void main(String[] args) {
-        String IPAddress="localhost";
-        if(args.length>=0) {
+
+        if(args.length>1) {
             try {
-                NetworkManager networkManager = new NetworkManager(IPAddress, 60600);
+                NetworkManager networkManager = new NetworkManager(args[1], 60600);
                 MessageParser messageParser = MessageParser.getInstance();
                 MessageDispatcher messageDispatcher = new MessageDispatcher(networkManager);
                 networkManager.setMessageParser(messageParser);
-                //if (args[0].equals("--gui") ) {
-                if(true){
+                if (args[0].equals("--gui") ) {
                     ViewControllerGUI viewControllerGUI = new ViewControllerGUI(messageParser, messageDispatcher);
                     GUIApplication.setViewControllerGUI(viewControllerGUI);
                     GUIApplication.setParserAndDispatcher(messageParser, messageDispatcher);
@@ -29,14 +28,14 @@ public class ClientLauncher {
                     new Thread(networkManager).start();
                     System.out.println("hello");
 
-                }// else if (args[0].equals("--cli")) {
-                if(false){
-                    ViewControllerCLI viewControllerCLI=new ViewControllerCLI(messageParser, messageDispatcher);
+                } else if (args[0].equals("--cli")) {
+                    new ViewControllerCLI(messageParser, messageDispatcher);
                     new Thread(networkManager).start();
                 }
             } catch(IOException ioe) {
                 System.out.println(ioe);
             }
         }
+        else System.out.println("YOU NEED TO PROVIDE AN IP ADDRESS");
     }
 }
