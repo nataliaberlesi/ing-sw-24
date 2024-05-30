@@ -32,13 +32,13 @@
 ## How to start the game
 To start the game from your terminal, you need to launch the LB07.jar you can find in the shade directory and specify the following arguments:
 
-* To start the server:
+### To start the server:
 When you find yourself in the shade directory, type: java -jar LB07.jar --server
 
-* To start the client:
-To play in GUI:
+### To start the client:
+* To play in GUI:
 When you find yourself in the shade directory, type: java -jar LB07.jar --gui ServerIPAddress
-To play in CLI: 
+* To play in CLI: 
 When you find yourself in the shade directory, type: java -jar LB07.jar --gui ServerIPAddress
 
 Note: If you want to start both server and clients using the same network, use ServerIPAddress = localhost.
