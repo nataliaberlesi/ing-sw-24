@@ -296,6 +296,8 @@ public abstract class ViewController {
 
     protected abstract void terminate();
 
+    protected abstract void exit();
+
     protected abstract void setAndShowFinalScoreBoard();
 
     protected abstract void setPrivateObjectiveChoice();

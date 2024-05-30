@@ -205,8 +205,13 @@ public class ViewControllerCLI extends ViewController {
      */
     @Override
     protected void exit() {
-        messageDispatcher.abortGame(myPlayer.getUsername(),"I don't want to play anymore :(");
         clearScreen();
+        if(myPlayer==null){
+            exit(null);
+        }
+        else {
+            exit(myPlayer.getUsername());
+        }
         terminate();
     }
 
