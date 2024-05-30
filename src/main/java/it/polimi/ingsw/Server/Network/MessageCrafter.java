@@ -218,4 +218,8 @@ public class MessageCrafter {
         );
         return new Message(messageType,new ParamsDTO(outParamsDTO));
     }
+    public static Message craftPokeMessage(){
+        MessageType messageType=MessageType.POKE;
+        return new Message(messageType, new ParamsDTO(null,null));
+    }
 }

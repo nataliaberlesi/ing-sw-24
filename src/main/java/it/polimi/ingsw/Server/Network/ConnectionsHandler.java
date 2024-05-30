@@ -32,7 +32,9 @@ public class ConnectionsHandler implements Runnable{
             for(PlayerConnection playerConnection: playerConnections) {
                 Message inMessage = playerConnection.getInMessage(false);
                 if(inMessage!=null) {
-                    System.out.println("IN | "+inMessage);
+                    if (!inMessage.type().equals(MessageType.POKE)){
+                        System.out.println("IN | " + inMessage);
+                    }
                     Message outMessage=handleMessage(inMessage);
                     if(!(outMessage.type().equals(MessageType.JOIN) || outMessage.type().equals(MessageType.CREATE))) {
                         for(PlayerConnection playerConnection1: playerConnections) {
@@ -123,8 +125,10 @@ public class ConnectionsHandler implements Runnable{
     private void closeConnections(String cause) {
         synchronized (server.getConnections()) {
             for(PlayerConnection pc: server.getConnections()) {
-                if(!pc.socketIsClosed()) {
-                    pc.setOutMessage(MessageCrafter.craftAbortMessage(cause));
+                synchronized (pc) {
+                    if(!pc.socketIsClosed()) {
+                        pc.setOutMessage(MessageCrafter.craftAbortMessage(cause));
+                    }
                 }
             }
         }

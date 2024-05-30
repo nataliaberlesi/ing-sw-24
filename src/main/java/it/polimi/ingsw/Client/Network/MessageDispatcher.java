@@ -117,4 +117,7 @@ public class MessageDispatcher {
         OutParamsDTO outParamsDTO=new OutParamsDTO(username, affectedPlayer,chat);
         dispatch(MessageType.CHAT,new ParamsDTO(outParamsDTO));
     }
+    public void poke(){
+        dispatch(MessageType.POKE,new ParamsDTO(null,null));
+    }
 }

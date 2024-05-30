@@ -5,6 +5,10 @@ import it.polimi.ingsw.Server.Model.Player;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
+
+import static java.lang.Thread.sleep;
 
 public class PlayerConnection implements Runnable{
     /**
@@ -25,6 +29,7 @@ public class PlayerConnection implements Runnable{
      */
     public PlayerConnection(Socket s) throws IOException {
         socket=s;
+        socket.setSoTimeout(30000);
         messageParser=MessageParser.getINSTANCE();
         setUpIO();
     }
@@ -59,7 +64,9 @@ public class PlayerConnection implements Runnable{
     public void send() {
         if(!socket.isClosed()) {
             if(outMessage!=null) {
-                System.out.println("OUT | "+outMessage);
+                if (!outMessage.type().equals(MessageType.POKE)){
+                    System.out.println("OUT | " + outMessage);
+                }
                 outSocket.println(messageParser.toJson(outMessage));
                 outMessage=null;
             }
@@ -78,13 +85,29 @@ public class PlayerConnection implements Runnable{
 
             } catch(IOException ioe) {
                 try {
-                    socket.close();
+                    synchronized (this) {
+                        close();
+                    }
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
             }
         }
         System.out.println("Player disconnected");
+    }
+
+    /**
+     * Sends a poke message to the client
+     */
+    public void threadPokeMethod() {
+        while(!socketIsClosed()) {
+            try {
+                sleep(10000);
+            } catch (InterruptedException e) {
+                System.out.println("WARNING: poke mode off");
+            }
+            setOutMessage(MessageCrafter.craftPokeMessage());
+        }
     }
     /**
      * Gets the actual inMessage
@@ -117,7 +140,8 @@ public class PlayerConnection implements Runnable{
     }
     @Override
     public void run() {
-        threadReceiveMethod();
+        new Thread(this::threadReceiveMethod).start();
+        new Thread(this::threadPokeMethod).start();
     }
 }
 

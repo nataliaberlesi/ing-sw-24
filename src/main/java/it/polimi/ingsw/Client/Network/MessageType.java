@@ -55,5 +55,8 @@ public enum MessageType {
      * Game abort.
      */
     ABORT,
-
+    /**
+     * Connection check
+     */
+    POKE
 }
