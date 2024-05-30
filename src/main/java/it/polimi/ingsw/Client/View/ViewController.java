@@ -73,10 +73,10 @@ public abstract class ViewController {
 
             case FIRSTROUND -> {
                 setCurrentPlayer(messageParser.getCurrentPlayer());
-                updatePlayerBoard(messageParser.getAffectedPlayer());//update the board of the last player to act
+                giveInitialCard(messageParser.getCurrentPlayer());
                 setPlayerColor(messageParser.getAffectedPlayer(), messageParser.getColor());
                 updateAvailableColors(messageParser.getAvailableColors());
-                giveInitialCard(messageParser.getCurrentPlayer());
+                updatePlayerBoard(messageParser.getAffectedPlayer());//update the board of the last player to act
                 showScene();
                 if(isMyTurn(messageParser.getCurrentPlayer())){
                     enableFirstRoundActions();

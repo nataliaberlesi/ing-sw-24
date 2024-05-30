@@ -105,14 +105,9 @@ public class BoardGUI extends ScrollPane {
      */
     protected void updateBoard(ArrayList<CardGUI> cards){
         cardsOnBoard = cards;
-        anchorPane.getChildren().remove(initialCard);
+        anchorPane.getChildren().removeAll();
         for (CardGUI cardGUI : cardsOnBoard) {
-            if (cardsOnBoard.getLast() == chosenCard){
-                anchorPane.getChildren().add(cardsOnBoard.getLast());
-                break;
-            }
-            else
-                anchorPane.getChildren().add(cardGUI);
+            anchorPane.getChildren().add(cardGUI);
         }
     }
 
