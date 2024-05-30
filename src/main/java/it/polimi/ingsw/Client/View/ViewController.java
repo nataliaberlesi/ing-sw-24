@@ -25,6 +25,8 @@ public abstract class ViewController {
      */
     protected final MessageDispatcher messageDispatcher;
 
+    protected boolean masterStatus;
+
     /**
      * Constructor of ViewController
      * @param messageParser MessageParser instance
@@ -58,7 +60,10 @@ public abstract class ViewController {
 
             case CHAT -> updateChat();
 
-            case CONNECT -> connectScene();
+            case CONNECT -> {
+                connectScene();
+                masterStatus = messageParser.masterStatus();
+            }
 
             case JOIN -> manageJoinStatus();
 
@@ -144,7 +149,7 @@ public abstract class ViewController {
      * Connects player to create or join mode based on server response indicating the master status of the player trying to connect
      * */
     protected void connectPlayer() {
-        if (messageParser.masterStatus()) {
+        if (masterStatus) {
             switchToCreate();
         } else switchToJoin();
     }
