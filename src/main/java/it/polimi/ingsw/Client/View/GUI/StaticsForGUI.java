@@ -30,8 +30,8 @@ public class StaticsForGUI {
         dimensions.put("cardHeight", 63.25);
         dimensions.put("cornerWidth", 22.425);
         dimensions.put("cornerHeight", 26.45);
-        dimensions.put("boardWidth", dimensions.get("cardWidth") + 40* (dimensions.get("cardWidth") - dimensions.get("cornerWidth")));
-        dimensions.put("boardHeight", dimensions.get("cardHeight") + 40 * (dimensions.get("cardHeight") - dimensions.get("cornerHeight")));
+        dimensions.put("boardWidth", (dimensions.get("cardWidth") + 40* (dimensions.get("cardWidth") - dimensions.get("cornerWidth")))*2);
+        dimensions.put("boardHeight", (dimensions.get("cardHeight") + 40 * (dimensions.get("cardHeight") - dimensions.get("cornerHeight")))*2);
         dimensions.put("initialCardLayoutX", (dimensions.get("boardWidth") - dimensions.get("cardWidth")) / 2);
         dimensions.put("initialCardLayoutY", (dimensions.get("boardHeight") - dimensions.get("cardHeight")) / 2);
         dimensions.put("xOffsetForPlayerColorToken", 18.4);
