@@ -122,27 +122,34 @@ public class DrawableAreaGUI extends Group {
     }
 
     /**
-     * Sets resource cards IDs and images, flips first resource card
+     * Sets resource cards IDs and images, if not null, flips first resource card
      * @param resourceCardsIDs IDs received from server
      */
     protected void setResourceCardsDrawableArea(String[] resourceCardsIDs){
-        for (int i = 0; i < resourceCardsIDs.length; i++) {
-            resourceCards[i].setCardIDAndImage(resourceCardsIDs[i]);
-        }
-        if (resourceCards[0].isFaceUp())
-            resourceCards[0].flipAndShow();
+        updateDrawableArea(resourceCardsIDs, resourceCards);
     }
 
     /**
-     * Sets gold cards IDs and images, flips first gold card
+     * Sets gold cards IDs and images, if not null, flips first gold card
      * @param goldCardsIDs IDs received from server
      */
     protected void setGoldCardsDrawableArea(String[] goldCardsIDs){
-        for (int i = 0; i < goldCardsIDs.length; i++) {
-            goldCards[i].setCardIDAndImage(goldCardsIDs[i]);
+        updateDrawableArea(goldCardsIDs, goldCards);
+    }
+
+    /**
+     * Updates a certain drawable area with new images
+     * @param cardsIDs ids of images to be added to drawable area
+     * @param drawableAreaCards current drawable area cards to be updated
+     */
+    private void updateDrawableArea(String[] cardsIDs, CardGUI[] drawableAreaCards) {
+        for (int i = 0; i < cardsIDs.length; i++) {
+            if (cardsIDs[i] != null)
+                drawableAreaCards[i].setCardIDAndImage(cardsIDs[i]);
+            else drawableAreaCards[i].removeCardIDAndImage();
         }
-        if (goldCards[0].isFaceUp())
-            goldCards[0].flipAndShow();
+        if (drawableAreaCards[0].isFaceUp() && drawableAreaCards[0].getCardID() != null)
+            drawableAreaCards[0].flipAndShow();
     }
 
     /**
