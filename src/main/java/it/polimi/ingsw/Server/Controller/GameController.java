@@ -209,8 +209,8 @@ public class GameController {
             );
         }
         checkIfFinalRoundHasToStart(gameInstance.getCurrentPlayerIndex());
-        checkIfGameHasToEnd();
         gameInstance.nextTurn();
+        checkIfGameHasToEnd();
         return MessageCrafter.craftDrawCardMessage(
                 gameInstance.getTurn(),
                 inParamsDTO.username(),
@@ -227,14 +227,17 @@ public class GameController {
         String affectedPlayer=inParamsDTO.username();
 
         boolean isLegal=draw(affectedPlayer,inParamsDTO.drawableSection(),inParamsDTO.index());
-        checkIfFinalRoundHasToStart(affectedPlayerIndex);
-        checkIfGameHasToEnd();
-        Message message;
         if(isLegal) {
+            checkIfFinalRoundHasToStart(affectedPlayerIndex);
             gameInstance.nextTurn();
+            checkIfGameHasToEnd();
             String currentPlayer=gameInstance.getTurn();
-
-            message=MessageCrafter.craftDrawCardMessage(currentPlayer,
+            try {
+                PersistenceHandler.saveState(gameInstance);
+            } catch (IOException e) {
+                System.out.println("LOG: Error during state saving");
+            }
+            return MessageCrafter.craftDrawCardMessage(currentPlayer,
                     affectedPlayer,
                     gameInstance.getPlacedCards(affectedPlayer),
                     gameInstance.getScore(affectedPlayer),
@@ -243,19 +246,13 @@ public class GameController {
                     gameInstance.getGoldDrawableArea()
             );
         } else {
-            message=MessageCrafter.craftPlaceCardMessage(affectedPlayer,
+            return MessageCrafter.craftPlaceCardMessage(affectedPlayer,
                     affectedPlayer,
                     gameInstance.getPlacedCards(affectedPlayer),
                     gameInstance.getScore(affectedPlayer),
                     gameInstance.getHand(affectedPlayer)
             );
         }
-        try {
-            PersistenceHandler.saveState(gameInstance);
-        } catch (IOException e) {
-            System.out.println("LOG: Error during state saving");
-        }
-        return message;
     }
     public Message chat(InParamsDTO inParamsDTO) {
         return MessageCrafter.craftChatMessage(inParamsDTO.username(), inParamsDTO.affectedPlayer(), inParamsDTO.chat());
@@ -396,7 +393,7 @@ public class GameController {
      * Helper method to check if game has to end
      */
     private void checkIfGameHasToEnd() {
-        if(gameInstance.getCurrentPlayerIndex() == gameInstance.getNumberOfPlayers()-1 && finalroundIsStarted()) {
+        if(gameInstance.getCurrentPlayerIndex() == 0 && finalroundIsStarted()) {
             calculateEndGamePoints();
             endGame();
         }
