@@ -274,7 +274,7 @@ public class GameInstance {
      * @return if endgame conditions are meet
      */
     public boolean checkEndgame() {
-        if(drawableArea.isEmpty()) {
+        if(drawableArea.isBothDecksEmpty()) {
             return true;
         }
         for(String player:playersTurnOrder) {

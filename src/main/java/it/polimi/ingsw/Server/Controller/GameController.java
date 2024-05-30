@@ -196,7 +196,7 @@ public class GameController {
             );
         }
         gameInstance.getCardFromPlayerHand(inParamsDTO.username(),inParamsDTO.index());
-        if(!gameInstance.getDrawableArea().isEmpty()) {
+        if(!gameInstance.getDrawableArea().isBothDecksEmpty()) {
             return MessageCrafter.craftPlaceCardMessage(
                     inParamsDTO.username(),
                     inParamsDTO.username(),

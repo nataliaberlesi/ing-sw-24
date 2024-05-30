@@ -43,10 +43,11 @@ public class DrawableArea {
         return resourceDrawableCards;
     }
 
+    public boolean isBothDecksEmpty(){
+        return resourceDrawableCards.deckIsEmpty() && goldDrawableCards.deckIsEmpty();
+    }
+
     public boolean isEmpty(){
-        if(resourceDrawableCards.deckIsEmpty() && goldDrawableCards.deckIsEmpty()){
-            return true;
-        }
-        return false;
+        return goldDrawableCards.isEmpty() && resourceDrawableCards.isEmpty();
     }
 }

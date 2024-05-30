@@ -92,4 +92,8 @@ public class DrawableCards {
         return this.drawableCards[0]==null;
     }
 
+    public boolean isEmpty(){
+        return (this.drawableCards[0]==null && this.drawableCards[1]==null && this.drawableCards[2]==null);
+    }
+
 }

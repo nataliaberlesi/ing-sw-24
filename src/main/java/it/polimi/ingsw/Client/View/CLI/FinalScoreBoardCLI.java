@@ -19,7 +19,7 @@ public class FinalScoreBoardCLI {
     public void addPlayer(int position, String username, int finalScore){
         finalScoreBoard=finalScoreBoard+position+": "+username+" "+finalScore;
         if(position==1){
-            finalScoreBoard=finalScoreBoard+" \\uD83C\\uDFC6";
+            finalScoreBoard=finalScoreBoard+" WINNER ";
         }
         finalScoreBoard=finalScoreBoard+"\n";
     }
