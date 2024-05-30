@@ -196,7 +196,7 @@ public class GameController {
             );
         }
         gameInstance.getCardFromPlayerHand(inParamsDTO.username(),inParamsDTO.index());
-        if(!gameInstance.getDrawableArea().isBothDecksEmpty()) {
+        if(!gameInstance.getDrawableArea().isEmpty()) {
             return MessageCrafter.craftPlaceCardMessage(
                     inParamsDTO.username(),
                     inParamsDTO.username(),
@@ -345,11 +345,12 @@ public class GameController {
      * false if the hand index contains a null card or if the card is not placeable
      */
     private boolean place(InParamsDTO inParamsDTO) {
-        if(gameInstance.getPlayers().get(inParamsDTO.username()).getPlayerHand().showCardInHand(inParamsDTO.index())==null) {
+        String cardID=gameInstance.getPlayers().get(inParamsDTO.username()).getPlayerHand().showCardInHand(inParamsDTO.index());
+        if(cardID==null) {
             return false;
         }
         return gameInstance.getPlayers().get(inParamsDTO.username()).getPlayerBoard().placeCard(
-                gameInstance.getPlayers().get(inParamsDTO.username()).getPlayerHand().showCardInHand(inParamsDTO.index()),
+                cardID,
                 inParamsDTO.coordinates(),
                 inParamsDTO.isFacingUp());
     }
