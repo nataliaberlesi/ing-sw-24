@@ -30,7 +30,7 @@ public class NetworkManager implements Runnable{
      */
     private void connect(String server, int port) throws IOException {
         this.socket=new Socket(server,port);
-        socket.setSoTimeout(10000);
+        socket.setSoTimeout(20000);
     }
 
     /**

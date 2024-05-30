@@ -29,7 +29,7 @@ public class PlayerConnection implements Runnable{
      */
     public PlayerConnection(Socket s) throws IOException {
         socket=s;
-        socket.setSoTimeout(10000);
+        socket.setSoTimeout(20000);
         messageParser=MessageParser.getINSTANCE();
         setUpIO();
     }
