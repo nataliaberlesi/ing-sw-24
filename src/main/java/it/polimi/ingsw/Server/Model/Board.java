@@ -11,16 +11,12 @@ import java.util.Objects;
  * The Board acts like a map of coordinates where it is legal or not to place cards.
  * These coordinates are stored in a hashmap, where each coordinate is a key to a list of symbols that occupy those coordinates
  * (So if a card is later placed there, those symbols will be covered).
- * The board also stores a dynamic list of coordinates where it will always be illegal to place a card(unplaceable coordinates).
- * Each time a card is placed, it's "visible" corners will create new placeable coordinates (if not already present) and
- * it's "hidden" corners will create new unplaceable coordinates.
+ * If in a given coordinate there is the symbol FULL, then a card cannot be placed there.
  * There is also a symbol counter (in the form of a hashmap) that keeps track of how many visible symbols are present on the board.
  * Every time a card is placed, the symbol counter will be updated by taking away the symbols that have been covered and adding the
- * symbols of the card that is being placed; each "visible" corner creates a new placeable coordinate (if it is not already existing or an unplaceable)
- * and each "hidden" corner will creat a new unplaceable coordinate (if it is not already existing) or "transforms" a placeable coordinate into an unplaceable one.
+ * symbols of the card that is being placed; each
  */
 public class Board {
-
 
     /**
      * score of the player that controls this board
@@ -30,34 +26,29 @@ public class Board {
      * points earned by completing objectives
      */
     private int objectivesScore=0;
-
     /**
      * position on the scoreboard of the player that controls this board
      */
     private int position;
-
     /**
-     * list of cards that have been laced on board, where they were placed and in which orientation
+     * list of cards that have been placed on board, where they were placed and in which orientation
      */
     private final ArrayList<PlacedCard> placedCards=new ArrayList<>();
-
     /**
-     * map of all coordinates where cards are allowed to be placed
+     * map of all coordinates that have been initialized,
+     * if a coordinate a key to a list that contains the symbol FULL then a card cannot be placed there
      */
-    private final HashMap<Coordinates, ArrayList<Symbol>> coordinates = new HashMap<>();
-
+    private final HashMap<Coordinates, ArrayList<Symbol>> initiatedCoordinates = new HashMap<>();
     /**
      * map containing the number of visible occurrences for each symbol
      * Useful for objectives and card objectives that assign points based on the number of symbols present in the Board
      */
     private final HashMap<Symbol, Integer> visibleSymbolCounter = new HashMap<>();
-
     /**
      * ID used to save the starting card assigned to the player during the first round
      * When the player chooses to flip it, it becomes CARD_ALREADY_BE_PLACED
      */
     private String startingCardID;
-
     /**
      * ID used to save the starting card assigned to the player during the second round
      * When the player chooses which one of the two, they become both OBJECTIVE_ALREADY_CHOSEN
@@ -77,7 +68,6 @@ public class Board {
     private final Objective[] objectives=new Objective[3];
 
 
-
     /**
      * a board when initiated will save the id of starting card that will be placed in coordinates 0,0 upon command
      * @param startingCardID id of starting card that will be placed
@@ -91,6 +81,7 @@ public class Board {
         addUnplaceableCoordinates(new Coordinates());
         this.startingCardID =startingCardID;
     }
+
     /**
      * objectives are what give extra points at the end of the game, some objectives calculate points based on patterns on the board,
      * others based on symbols that are visible on the board at the end of the game.
@@ -108,6 +99,12 @@ public class Board {
         }
         throw new RuntimeException("more than three objectives have been assigned to player board");
     }
+
+    /**
+     * assigns to player the private objective he/she choose
+     * @param objectiveIndex of private objective that has been chosen by player
+     * @throws RuntimeException if the index is not valid or if the player has already selected a private objective
+     */
     public void choosePrivateObjective(int objectiveIndex) throws RuntimeException{
         String objectiveAlreadyBeenChosen="OBJECTIVE_ALREADY_BEEN_CHOSEN";
         if(objectiveIndex>1 || objectiveIndex<0) {
@@ -120,9 +117,10 @@ public class Board {
         addObjective(objective);
         this.setStartingObjectivesID(objectiveAlreadyBeenChosen, objectiveAlreadyBeenChosen);
     }
+
     /**
      * starting card will be placed in (0,0) in the orientation indicated.
-     * Each corner of a startingCard creates new placeable or unplaceable coordinates for each corner, unplaceable if it is "hidden"
+     * Each corner of a startingCard creates new placeable or unplaceable coordinates for each corner, unplaceable if it has the symbol FULL
      * or placeable if it is "visible". If placed facing up it will also contain symbols in its center that are added to the
      * visibleSymbolCounter.
      * @param isFacingUp is the orientation that the starting card will have.
@@ -134,7 +132,7 @@ public class Board {
         }
         StartingCard startingCard =StartingCardFactory.makeStartingCard(this.startingCardID);
         Symbol[] corners=getVisibleCorners(startingCard, isFacingUp);
-        // place starting card in coordinates (0,0) and creates new placeable and unplaceable coordinates
+        // creates new coordinates for each corner of the card
         placeCornerSymbolsSurroundingCoordinates(corners, new Coordinates());
         // add center symbols to visible counter if card is facing up
         if(isFacingUp){
@@ -171,9 +169,10 @@ public class Board {
 
 
     /**
-     * places card in given coordinates if coordinates are contained in placeableCoordinates,
-     * placing a card will create new placeable and unplaceable coordinates for each corner (placeable if corner is "visible"),
-     * the symbols that the card covers by being placed will be removed from the visible symbol counter and the symbols visible
+     * places card in given coordinates if coordinates are not keys to lists containing the symbol FULL,
+     * and if there are enough visible symbols on the board.
+     * Placing a card will create new coordinates for each corner (placeable if corner is "visible", unplaceable if corner has symbol FULL).
+     * The symbols that the card covers by being placed will be removed from the visible symbol counter and the symbols visible
      * on the card will be added. Points earner by placing the card will be added to the score.
      * The objectives of the board will be updated on the card being placed.
      *
@@ -190,10 +189,10 @@ public class Board {
             //if card is facing down, it is unnecessary to check prerequisites
             if(!isFacingUp||card.checkPrerequisites(visibleSymbolCounter)){
                 //gets the symbols on corners that will be covered
-                ArrayList<Symbol> coveredSymbols= this.coordinates.get(coordinates);
+                ArrayList<Symbol> coveredSymbols= this.initiatedCoordinates.get(coordinates);
                 //removes covered symbols from the visibleSymbolCounter
                 removeCoveredSymbolsFromSymbolCounter(coveredSymbols);
-                //adds coordinates to unplaceableCoordinates
+                //the coordinates where the card is placed become unplaceable
                 addUnplaceableCoordinates(coordinates);
                 Symbol[] cardVisibleCorners=getVisibleCorners(card, isFacingUp);
                 //then for each corner it creates new placeable or unplaceable corners, or it adds symbols to existing ones
@@ -216,6 +215,11 @@ public class Board {
         return false;
     }
 
+    /**
+     * calculates how many corners have been covered by card being placed, FULL symbols are ignored as they don't indicate a corner (in this case)
+     * @param coveredSymbols are the symbols that are covered by the card being placed
+     * @return the number of symbols (other than FULL) being covered
+     */
     private int getNumberOfCoveredCorners(ArrayList<Symbol> coveredSymbols){
         int numberOfCoveredCorners=0;
         for(Symbol coveredSymbol: coveredSymbols){
@@ -228,13 +232,13 @@ public class Board {
 
 
     /**
-     *
+     * if coordinates aren't key to a list containing the symbol FULL then they are placeable
      * @param coordinates where user wants to place card
      * @return true if it is possible to place a card in those coordinates
      */
     public boolean isPlaceable(Coordinates coordinates){
-        if(this.coordinates.containsKey(coordinates)){
-            return !this.coordinates.get(coordinates).contains(Symbol.FULL);
+        if(this.initiatedCoordinates.containsKey(coordinates)){
+            return !this.initiatedCoordinates.get(coordinates).contains(Symbol.FULL);
         }
         return false;
     }
@@ -271,8 +275,8 @@ public class Board {
     }
 
     /**
-     * adds currentCoordinates to unplaceableCoordinates and removes it from placeableCoordinates if present
-     * @param unplaceable are the coordinates that are unplaceable that will be added to the list of unplaceableCoordinates
+     * makes coordinates unplaceable by adding the symbol FULL in their list
+     * @param unplaceable are the coordinates that are unplaceable that will be added to the list of the coordinates
      */
     private void addUnplaceableCoordinates(Coordinates unplaceable){
         addSymbolsToCoordinates(unplaceable, Symbol.FULL);
@@ -288,9 +292,9 @@ public class Board {
         //will contain symbols that are already present in coordinates
         ArrayList<Symbol> coordinatesSymbols = new ArrayList<>();
         //checking of symbols are already present in coordinates
-        if (this.coordinates.get(coordinates) != null) {
+        if (this.initiatedCoordinates.get(coordinates) != null) {
             //gets symbols that already occupy the coordinates
-            coordinatesSymbols = this.coordinates.get(coordinates);
+            coordinatesSymbols = this.initiatedCoordinates.get(coordinates);
             //the number of symbols already present in coordinates  is equal to the number of corners, that can never exceed 4
             // (including the on the method is about to add)
             if(coordinatesSymbols.size()>4){
@@ -300,14 +304,12 @@ public class Board {
         // adding currentSymbol symbol to the list of symbols occupying coordinates , if no symbols where already present this operation is equivalent
         // to creating a new coordinates coordinate and adding the cornerSymbol to it.
         coordinatesSymbols.add(cornerSymbol);
-        this.coordinates.put(coordinates , coordinatesSymbols);
+        this.initiatedCoordinates.put(coordinates , coordinatesSymbols);
     }
 
     /**
      * associates each corner (symbol) of the card that is being placed in the Board
-     * to the adequate coordinates it points to
-     * if a card's corned is FULL ("hidden"), it adds the corresponding pointed coordinates to the unplaceableCoordinates list
-     * if a card's corner is "visible", it adds its symbol and pointed coordinates to the placeableCoordinates hashmap
+     * to the adequate coordinates it points to in the hashmap
      * @param corners are the visible corners of card being placed
      * @param coordinates location where the card is being placed
      * @throws RuntimeException if a set of coordinates is occupied by more than 4 corners/symbols
