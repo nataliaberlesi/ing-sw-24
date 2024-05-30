@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Objects;
 
 /**
- * The Board acts like a dynamic matrix of coordinates where it is legal to place cards (placeable coordinates).
+ * The Board acts like a map of coordinates where it is legal or not to place cards.
  * These coordinates are stored in a hashmap, where each coordinate is a key to a list of symbols that occupy those coordinates
  * (So if a card is later placed there, those symbols will be covered).
  * The board also stores a dynamic list of coordinates where it will always be illegal to place a card(unplaceable coordinates).
@@ -35,30 +35,29 @@ public class Board {
      * position on the scoreboard of the player that controls this board
      */
     private int position;
+
     /**
      * list of cards that have been laced on board, where they were placed and in which orientation
      */
     private final ArrayList<PlacedCard> placedCards=new ArrayList<>();
-    /**
-     * list of all coordinates where cards can't be placed
-     */
-    private final ArrayList<Coordinates> unplaceableCoordinates = new ArrayList<>();
 
     /**
      * map of all coordinates where cards are allowed to be placed
      */
-    private final HashMap<Coordinates, ArrayList<Symbol>> placeableCoordinates = new HashMap<>();
+    private final HashMap<Coordinates, ArrayList<Symbol>> coordinates = new HashMap<>();
 
     /**
      * map containing the number of visible occurrences for each symbol
      * Useful for objectives and card objectives that assign points based on the number of symbols present in the Board
      */
     private final HashMap<Symbol, Integer> visibleSymbolCounter = new HashMap<>();
+
     /**
      * ID used to save the starting card assigned to the player during the first round
      * When the player chooses to flip it, it becomes CARD_ALREADY_BE_PLACED
      */
     private String startingCardID;
+
     /**
      * ID used to save the starting card assigned to the player during the second round
      * When the player chooses which one of the two, they become both OBJECTIVE_ALREADY_CHOSEN
@@ -89,7 +88,7 @@ public class Board {
         if(!StartingCardFactory.isStartingCardID(startingCardID)){
             throw new IllegalArgumentException("Invalid card ID");
         }
-        unplaceableCoordinates.add(new Coordinates());
+        addUnplaceableCoordinates(new Coordinates());
         this.startingCardID =startingCardID;
     }
     /**
@@ -191,13 +190,11 @@ public class Board {
             //if card is facing down, it is unnecessary to check prerequisites
             if(!isFacingUp||card.checkPrerequisites(visibleSymbolCounter)){
                 //gets the symbols on corners that will be covered
-                ArrayList<Symbol> coveredSymbols=placeableCoordinates.get(coordinates);
+                ArrayList<Symbol> coveredSymbols= this.coordinates.get(coordinates);
                 //removes covered symbols from the visibleSymbolCounter
                 removeCoveredSymbolsFromSymbolCounter(coveredSymbols);
-                //removes the coordinates where the card is being placed from the hashmap of placeableCoordinates.
-                placeableCoordinates.remove(coordinates);
                 //adds coordinates to unplaceableCoordinates
-                unplaceableCoordinates.add(coordinates);
+                addUnplaceableCoordinates(coordinates);
                 Symbol[] cardVisibleCorners=getVisibleCorners(card, isFacingUp);
                 //then for each corner it creates new placeable or unplaceable corners, or it adds symbols to existing ones
                 placeCornerSymbolsSurroundingCoordinates(cardVisibleCorners, coordinates);
@@ -207,7 +204,7 @@ public class Board {
                 }
                 else{
                     //calculate points gained by placing card and adds it to the score
-                    score+=card.getCardObjective().calculatePoints(visibleSymbolCounter,coveredSymbols.size());
+                    score+=card.getCardObjective().calculatePoints(visibleSymbolCounter,getNumberOfCoveredCorners(coveredSymbols));
                 }
                 //adds card and coordinates to occupiedCoordinates
                 updateBoardObjectives(card.getBackSymbol(), coordinates);
@@ -219,6 +216,16 @@ public class Board {
         return false;
     }
 
+    private int getNumberOfCoveredCorners(ArrayList<Symbol> coveredSymbols){
+        int numberOfCoveredCorners=0;
+        for(Symbol coveredSymbol: coveredSymbols){
+            if(!coveredSymbol.equals(Symbol.FULL)) {
+                numberOfCoveredCorners++;
+            }
+        }
+        return numberOfCoveredCorners;
+    }
+
 
     /**
      *
@@ -226,7 +233,10 @@ public class Board {
      * @return true if it is possible to place a card in those coordinates
      */
     public boolean isPlaceable(Coordinates coordinates){
-        return placeableCoordinates.containsKey(coordinates);
+        if(this.coordinates.containsKey(coordinates)){
+            return !this.coordinates.get(coordinates).contains(Symbol.FULL);
+        }
+        return false;
     }
 
 
@@ -265,33 +275,32 @@ public class Board {
      * @param unplaceable are the coordinates that are unplaceable that will be added to the list of unplaceableCoordinates
      */
     private void addUnplaceableCoordinates(Coordinates unplaceable){
-        placeableCoordinates.remove(unplaceable);
-        unplaceableCoordinates.add(unplaceable);
+        addSymbolsToCoordinates(unplaceable, Symbol.FULL);
     }
 
     /**
      *
-     * @param placeable are placeable coordinates that will be added to the list of placeableCoordinates if not already present
-     * @param cornerSymbol is the symbol that occupies the placeable coordinate and will be added to the list of symbols that occupy the placeable coordinates
+     * @param coordinates are coordinates that will be added to the list of placeableCoordinates if not already present
+     * @param cornerSymbol is the symbol that occupies the coordinates coordinate and will be added to the list of symbols that occupy the coordinates coordinates
      * @throws RuntimeException if a set of coordinates is occupied by more than 4 corners/symbols
      */
-    private void addSymbolsToPlaceableCoordinates(Coordinates placeable, Symbol cornerSymbol) throws RuntimeException{
-        //will contain symbols that are already present in placeable coordinates
+    private void addSymbolsToCoordinates(Coordinates coordinates, Symbol cornerSymbol) throws RuntimeException{
+        //will contain symbols that are already present in coordinates
         ArrayList<Symbol> coordinatesSymbols = new ArrayList<>();
-        //checking of symbols are already present in placeable coordinates
-        if (placeableCoordinates.get(placeable) != null) {
-            //gets symbols that already occupy the placeable coordinates
-            coordinatesSymbols = placeableCoordinates.get(placeable);
-            //the number of symbols already present in placeable coordinates is equal to the number of corners, that can never exceed 4
+        //checking of symbols are already present in coordinates
+        if (this.coordinates.get(coordinates) != null) {
+            //gets symbols that already occupy the coordinates
+            coordinatesSymbols = this.coordinates.get(coordinates);
+            //the number of symbols already present in coordinates  is equal to the number of corners, that can never exceed 4
             // (including the on the method is about to add)
-            if(coordinatesSymbols.size()>3){
-                throw new RuntimeException("there are more than 4 corners occupying these coordinates: "+placeable);
+            if(coordinatesSymbols.size()>4){
+                throw new RuntimeException("there are more than 4 corners occupying these coordinates: "+coordinates);
             }
         }
-        // adding currentSymbol symbol to the list of symbols occupying placeable coordinates, if no symbols where already present this operation is equivalent
-        // to creating a new placeable coordinate and adding the cornerSymbol to it.
+        // adding currentSymbol symbol to the list of symbols occupying coordinates , if no symbols where already present this operation is equivalent
+        // to creating a new coordinates coordinate and adding the cornerSymbol to it.
         coordinatesSymbols.add(cornerSymbol);
-        placeableCoordinates.put(placeable , coordinatesSymbols);
+        this.coordinates.put(coordinates , coordinatesSymbols);
     }
 
     /**
@@ -315,20 +324,9 @@ public class Board {
             currentCornerCoordinates = CornerCoordinatesCalculator.cornerCoordinates(coordinates, i);
             // getting the corner that is being considered
             currentCorner = corners[i];
-            // checking if currentCoordinates is already in unplaceableCoordinates,
-            // if so it is only necessary to update visibleSymbolCounter, so the body of if statement will be skipped
-            if (!unplaceableCoordinates.contains(currentCornerCoordinates)) {
-                //checking if the currentCorner is FULL, meaning the current corner coordinates must be added to unplacerable coordinates
-                if (currentCorner.equals(Symbol.FULL)) {
-                    //adds currentCoordinates to unplaceableCoordinates and removes it from placeableCoordinates
-                    addUnplaceableCoordinates(currentCornerCoordinates);
-                }
-                // if the corner is not FULL then the coordinates of the corner are placeable
-                else {
-                    // adds currentCorner symbol to currentCornerCoordinates in placeableCoordinates
-                    addSymbolsToPlaceableCoordinates(currentCornerCoordinates, currentCorner);
-                }
-            }
+
+            addSymbolsToCoordinates(currentCornerCoordinates, currentCorner);
+
             updateVisibleCounter(currentCorner);
         }
     }
@@ -381,7 +379,7 @@ public class Board {
         if(isFacingUp){
             return card.getFrontCorners();
         }
-           return  card.getBackCorners();
+        return  card.getBackCorners();
     }
 
     /**
