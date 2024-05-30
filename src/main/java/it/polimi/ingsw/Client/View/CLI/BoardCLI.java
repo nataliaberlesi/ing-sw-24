@@ -35,8 +35,6 @@ public class BoardCLI {
     private int currentView=0;
 
 
-
-
     /**
      *  map that contains the list of cards the Y axis corresponding to the key
      */
@@ -53,7 +51,9 @@ public class BoardCLI {
     }
 
     /**
-     * prints current board formation
+     * prints the cards placed on board, or at least the ones that fit inside the max width.
+     * The view of the board can be shifted to the left or to the right
+     * @param widths max characters that can be printed in one line
      */
     public void printBoard(int widths){
         System.out.println("BOARD:\n\n");
@@ -65,13 +65,7 @@ public class BoardCLI {
                 currentLine.setLength(0);
                 int cursor=minX-1;
                 for (CardCLI card : cardsInCurrentLine) {
-                    int cardX = card.getX();
-                    if (cardX != cursor) {
-                        spacing.append(CardIndexCLI.cardLength.repeat(Math.max(0, cardX - (cursor + 1))));
-                    }
-                    cursor = cardX;
-                    currentLine.append(spacing).append(card.getLine(k));
-                    spacing.setLength(0);
+                    cursor=buildLine(card, cursor, spacing, currentLine, k);
                 }
                 currentLine = new StringBuilder(getSubstring(currentLine.toString(), currentView * widths /2, currentView * widths /2 + widths));
                 if(!currentLine.toString().isBlank()) {
@@ -83,17 +77,45 @@ public class BoardCLI {
         System.out.println("\n\n");
     }
 
-    private String getSubstring(String str, int start, int end) {
-        if (str.length() < end) {
-            end = str.length();
+    /**
+     * takes the line of the card and adds it to the line of the board that is being printed
+     * @param card cardin line being printed
+     * @param cursor is used to indicate where to start building line
+     * @param spacing is the spacing between cards
+     * @param currentLine is the line being built
+     * @param cardLine the number of the line of the card that is on the line being built
+     */
+    private int buildLine(CardCLI card, int cursor, StringBuilder spacing, StringBuilder currentLine, int cardLine){
+        int cardX = card.getX();
+        if (cardX != cursor) {
+            spacing.append(CardIndexCLI.cardLength.repeat(Math.max(0, cardX - (cursor + 1))));
         }
-        if (start > str.length()) {
-            return "";
-        }
-        return str.substring(start, end);
+        currentLine.append(spacing).append(card.getLine(cardLine));
+        spacing.setLength(0);
+        return  cardX;
     }
 
+    /**
+     *
+     * @param string complete string
+     * @param start starting index
+     * @param end index
+     * @return if possible, substring of complete string (from start to end), else an empty string
+     */
+    private String getSubstring(String string, int start, int end) {
+        if (string.length() < end) {
+            end = string.length();
+        }
+        if (start > string.length()) {
+            return "";
+        }
+        return string.substring(start, end);
+    }
 
+    /**
+     * moves the center view of the board ether to the right or to the left
+     * @param direction ether r (right) or l (left)
+     */
     public void moveView(String direction){
         if(direction.equalsIgnoreCase("r")){
             currentView++;

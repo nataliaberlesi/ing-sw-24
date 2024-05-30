@@ -44,7 +44,10 @@ public class ViewControllerCLI extends ViewController {
      */
     private final ChatCLI chatRoom=new ChatCLI();
 
-    private int maxBoardWidths=133;
+    /**
+     * width of board
+     */
+    private int maxBoardWidth =133;
 
     /**
      * sets up CLI controller and starts input handler thread
@@ -226,14 +229,23 @@ public class ViewControllerCLI extends ViewController {
         messageParser.getFinalScoreBoardCLI().printFinalScoreBoard();
     }
 
+
+    /**
+     * changes the center view of board
+     * @param direction can be r (right) or l (left)
+     */
     public void moveBoardView(String direction){
         currentPlayerInScene.getPlayerBoard().moveView(direction);
         showScene();
     }
 
-    public void resizeBoardWidths(int maxWidths){
-        if(maxWidths>0) {
-            this.maxBoardWidths = maxWidths;
+    /**
+     *
+     * @param maxWidth is the new character limit for the lines in the board
+     */
+    public void resizeBoardWidths(int maxWidth){
+        if(maxWidth>0) {
+            this.maxBoardWidth = maxWidth;
             showScene();
         }
     }
@@ -402,7 +414,7 @@ public class ViewControllerCLI extends ViewController {
         drawableArea.printDrawableArea();
         String currentPlayerPossessiveForm=currentPlayerInScene.getUsername().toUpperCase()+"'S";
         System.out.println(currentPlayerPossessiveForm+" BOARD:");
-        currentPlayerInScene.printBoard(maxBoardWidths);
+        currentPlayerInScene.printBoard(maxBoardWidth);
         System.out.println(currentPlayerPossessiveForm+" HAND:");
         if(currentPlayerInScene == myPlayer){
             System.out.println("hand facing up:");

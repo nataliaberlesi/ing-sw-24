@@ -104,6 +104,10 @@ public class HandleClientInputCLI implements Runnable{
         System.out.println(ClientOutputs.inputHandlerHasTerminated);
     }
 
+    /**
+     * handles the inouts that change how the board is seen
+     * @param input should be ether "right" to move the view of board to the right (same for "left"), or "resize" + width to resize board
+     */
     private void handleResizingBoard(String input) {
         String [] inputArray=input.strip().toUpperCase().split(" ");
         switch (inputArray[0]){
