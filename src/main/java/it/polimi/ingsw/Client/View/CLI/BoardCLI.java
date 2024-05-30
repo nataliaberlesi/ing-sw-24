@@ -32,6 +32,10 @@ public class BoardCLI {
      */
     private CardCLI startingCard;
 
+    private int currentView=0;
+
+
+
 
     /**
      *  map that contains the list of cards the Y axis corresponding to the key
@@ -51,12 +55,14 @@ public class BoardCLI {
     /**
      * prints current board formation
      */
-    public void printBoard(){
-        System.out.println("BOARD:");
+    public void printBoard(int widths){
+        System.out.println("BOARD:\n\n");
         StringBuilder spacing= new StringBuilder();
+        StringBuilder currentLine= new StringBuilder();
         for(int i=maxY;i>=minY;i--){
             ArrayList<CardCLI> cardsInCurrentLine = board.get(i);
             for(int k=0; k<4; k++) {
+                currentLine.setLength(0);
                 int cursor=minX-1;
                 for (CardCLI card : cardsInCurrentLine) {
                     int cardX = card.getX();
@@ -64,10 +70,37 @@ public class BoardCLI {
                         spacing.append(CardIndexCLI.cardLength.repeat(Math.max(0, cardX - (cursor + 1))));
                     }
                     cursor = cardX;
-                    System.out.print(spacing+card.getLine(k));
+                    currentLine.append(spacing).append(card.getLine(k));
                     spacing.setLength(0);
                 }
-                System.out.println();
+                currentLine = new StringBuilder(getSubstring(currentLine.toString(), currentView * widths /2, currentView * widths /2 + widths));
+                if(!currentLine.toString().isBlank()) {
+                    System.out.println(currentLine);
+                    System.out.print(ColoredText.ANSI_RESET);
+                }
+            }
+        }
+        System.out.println("\n\n");
+    }
+
+    private String getSubstring(String str, int start, int end) {
+        if (str.length() < end) {
+            end = str.length();
+        }
+        if (start > str.length()) {
+            return "";
+        }
+        return str.substring(start, end);
+    }
+
+
+    public void moveView(String direction){
+        if(direction.equalsIgnoreCase("r")){
+            currentView++;
+        }
+        else if(direction.equalsIgnoreCase("l")){
+            if(currentView>0){
+                currentView--;
             }
         }
     }

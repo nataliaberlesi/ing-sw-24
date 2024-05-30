@@ -109,8 +109,8 @@ public class PlayerCLI {
     /**
      * prints the board of player
      */
-    public void printBoard(){
-        playerBoard.printBoard();
+    public void printBoard(int widths){
+        playerBoard.printBoard(widths);
     }
 
     /**

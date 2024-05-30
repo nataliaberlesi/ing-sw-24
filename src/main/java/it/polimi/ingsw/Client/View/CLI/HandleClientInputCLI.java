@@ -53,50 +53,78 @@ public class HandleClientInputCLI implements Runnable{
     @Override
     public void run() {
         while(running){
-            if(scanner.hasNextLine()){
+            if(scanner.hasNextLine()) {
                 String input = scanner.nextLine().strip();
-                if(input.equalsIgnoreCase("EXIT")){
-                   viewController.exit();
-                }
-                if(actionsCLI.isPlaceCardEnabled()){
-                    dealWithCardPlacement(input);
-                }
-                if(actionsCLI.isDrawCardEnabled()){
-                    dealWithDrawingCard(input);
-                }
-                if(actionsCLI.isShowOtherPlayerBoardAndBackOFHandEnabled()){
-                    dealWithShowingOtherPlayerBoard(input);
-                }
-                if(actionsCLI.isContinueGameEnabled()){
-                    dealWithContinueGame(input);
-                }
-                if(actionsCLI.isChooseColorEnabled()){
-                    dealWithPlayerColorChoice(input.toUpperCase());
-                }
-                if(actionsCLI.isPlaceStartingCardEnabled()){
-                    dealWithFirstCardPlacement(input.toUpperCase());
-                }
-                if(actionsCLI.isCreateEnabled()){
-                    checkUsernameAndNumberOfPlayersAsksAgainIfNotOK(input);
-                }
-                if(actionsCLI.isJoinEnabled()){
-                    checkUsernameAsksAgainIfNotOk(input);
-                }
-                if(actionsCLI.isisChoosePrivateObjectiveEnabled()){
-                    dealWithPrivateObjectiveChoice(getIndex(input));
-                }
-                if(input.equalsIgnoreCase("HELP")){
-                    helpPlayer();
-                }
-                if(!input.isEmpty() && (input.charAt(0)=='T' || input.charAt(0)=='t')){
-                    sendMessageToChat(input);
-                }
-                if(input.equalsIgnoreCase("chat")){
-                    viewController.printCompleteChat();
+                if (!input.isEmpty()) {
+                    if (input.equalsIgnoreCase("EXIT")) {
+                        viewController.exit();
+                    }
+                    if (actionsCLI.isPlaceCardEnabled()) {
+                        dealWithCardPlacement(input);
+                    }
+                    if (actionsCLI.isDrawCardEnabled()) {
+                        dealWithDrawingCard(input);
+                    }
+                    if (actionsCLI.isShowOtherPlayerBoardAndBackOFHandEnabled()) {
+                        dealWithShowingOtherPlayerBoard(input);
+                    }
+                    if (actionsCLI.isContinueGameEnabled()) {
+                        dealWithContinueGame(input);
+                    }
+                    if (actionsCLI.isChooseColorEnabled()) {
+                        dealWithPlayerColorChoice(input.toUpperCase());
+                    }
+                    if (actionsCLI.isPlaceStartingCardEnabled()) {
+                        dealWithFirstCardPlacement(input.toUpperCase());
+                    }
+                    if (actionsCLI.isCreateEnabled()) {
+                        checkUsernameAndNumberOfPlayersAsksAgainIfNotOK(input);
+                    }
+                    if (actionsCLI.isJoinEnabled()) {
+                        checkUsernameAsksAgainIfNotOk(input);
+                    }
+                    if (actionsCLI.isisChoosePrivateObjectiveEnabled()) {
+                        dealWithPrivateObjectiveChoice(getIndex(input));
+                    }
+                    if (input.equalsIgnoreCase("HELP")) {
+                        helpPlayer();
+                    }
+                    if ((input.charAt(0) == 'T' || input.charAt(0) == 't')) {
+                        sendMessageToChat(input);
+                    }
+                    if (input.equalsIgnoreCase("chat")) {
+                        viewController.printCompleteChat();
+                    }
+                    if (actionsCLI.isResizeBoardEnabled()) {
+                        handleResizingBoard(input);
+                    }
                 }
             }
         }
         System.out.println(ClientOutputs.inputHandlerHasTerminated);
+    }
+
+    private void handleResizingBoard(String input) {
+        String [] inputArray=input.strip().toUpperCase().split(" ");
+        switch (inputArray[0]){
+            case "RIGHT"->{
+                viewController.moveBoardView("r");
+            }
+            case "LEFT"->{
+                viewController.moveBoardView("l");
+            }
+            case "RESIZE"->{
+                if(inputArray.length>1){
+                    try {
+                        int width = Integer.parseInt(inputArray[1]);
+                        viewController.resizeBoardWidths(width);
+                    }
+                    catch (NumberFormatException e){
+                        System.out.println(ClientOutputs.invalidResizeInput);
+                    }
+                }
+            }
+        }
     }
 
     /**

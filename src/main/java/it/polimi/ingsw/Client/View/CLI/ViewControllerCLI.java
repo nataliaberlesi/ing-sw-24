@@ -44,6 +44,8 @@ public class ViewControllerCLI extends ViewController {
      */
     private final ChatCLI chatRoom=new ChatCLI();
 
+    private int maxBoardWidths=133;
+
     /**
      * sets up CLI controller and starts input handler thread
      * @param messageParser parses messages sent by server
@@ -224,6 +226,18 @@ public class ViewControllerCLI extends ViewController {
         messageParser.getFinalScoreBoardCLI().printFinalScoreBoard();
     }
 
+    public void moveBoardView(String direction){
+        currentPlayerInScene.getPlayerBoard().moveView(direction);
+        showScene();
+    }
+
+    public void resizeBoardWidths(int maxWidths){
+        if(maxWidths>0) {
+            this.maxBoardWidths = maxWidths;
+            showScene();
+        }
+    }
+
     /**
      * all players are shown two private objectives but can only choose one, this method saves the two choices to show them to client
      */
@@ -267,6 +281,7 @@ public class ViewControllerCLI extends ViewController {
      * @param privateObjective objective chosen by client that only applies to client
      */
     public void setPrivateObjective(ObjectiveCLI privateObjective){
+        clientActions.enableResizeBoard();
         clientActions.enableShowOtherPlayerBoardAndBackOFHand();
         objectivesSection.setPrivateObjective(privateObjective);
     }
@@ -368,6 +383,7 @@ public class ViewControllerCLI extends ViewController {
      */
     @Override
     protected void enableFirstRoundActions() {
+        clientActions.enableResizeBoard();
         clientActions.enablePlaceStartingCard();
     }
 
@@ -386,7 +402,7 @@ public class ViewControllerCLI extends ViewController {
         drawableArea.printDrawableArea();
         String currentPlayerPossessiveForm=currentPlayerInScene.getUsername().toUpperCase()+"'S";
         System.out.println(currentPlayerPossessiveForm+" BOARD:");
-        currentPlayerInScene.printBoard();
+        currentPlayerInScene.printBoard(maxBoardWidths);
         System.out.println(currentPlayerPossessiveForm+" HAND:");
         if(currentPlayerInScene == myPlayer){
             System.out.println("hand facing up:");

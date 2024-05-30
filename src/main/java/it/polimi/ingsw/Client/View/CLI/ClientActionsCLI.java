@@ -47,6 +47,8 @@ public class ClientActionsCLI {
      * true when there is a game saved that the client can choose to continue or start a new game
      */
     private boolean continueGame=false;
+
+    private boolean resizeBoard=false;
     /**
      * are the objectives that a player can choose from for his/her private objective
      */
@@ -55,6 +57,7 @@ public class ClientActionsCLI {
      * are the current available colors that hte client can choose from
      */
     private ArrayList<String> availableColors;
+
 
     /**
      *
@@ -87,6 +90,14 @@ public class ClientActionsCLI {
      */
     public void disableContinueGame(){
         continueGame=false;
+    }
+
+    public boolean isResizeBoardEnabled(){
+        return resizeBoard;
+    }
+
+    public void enableResizeBoard(){
+        resizeBoard=true;
     }
 
     public boolean isContinueGameEnabled(){

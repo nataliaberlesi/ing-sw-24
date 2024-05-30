@@ -27,28 +27,36 @@ public class ClientOutputs {
                             ACTIONS:
 
                             1) PLACE CARD
-                            To place a card simply type PLACE followed by the index of the card in your hand you want to place,
+                            To place a card simply type "PLACE" followed by the index of the card in your hand you want to place,
                             followed by the coordinates where you want to place the card 'x,y',
                             followed UP/DOWN depending on weather you want the card facing up or facing down
                             EXAMPLE: PLACE 3 -4,7 DOWN
 
                             2) DRAW CARD
-                            To draw a card simply type DRAW followed by GOLD/RESOURCE and the index of the card you want to draw
+                            To draw a card simply type "DRAW" followed by GOLD/RESOURCE and the index of the card you want to draw
                             EXAMPLE: DRAW RESOURCE 2
                             
                             3) SEE OTHER PLAYER BOARD AND BACK OF HAND
                             You can see another players board and the back of their hand by typing
-                            SHOW followed by the username of the player you want to see
+                            "SHOW" followed by the username of the player you want to see
                             EXAMPLE: SHOW player3
                             
                             3) SEND MESSAGE
                             If you want send a message to other players type T then the username of the player you want to talk to
-                            or -ALL if you want to send a message to everyone, then : followed by your message.
+                            or "-ALL" if you want to send a message to everyone, then : followed by your message.
                             EXAMPLE: T -all: hello everybody
                                      T kevin: i think you are very cute <3
                             
                             4) SEE COMPLETE CHAT
                             If you want to see all messages sent up to this point simply type CHAT
+                            
+                            6) RESIZE BOARD
+                            You can resize a board by typing "RESIZE" and the maximum width of the board that you want
+                            EXAMPLE: RESIZE 135
+                            
+                            7) MOVE BOARD
+                            If the board doesn't fit in your terminal you can move your view of the board to the right or the left
+                            by typing "RIGHT" or "LEFT"
                             
                             5) EXIT
                             To exit the game simply type EXIT, though I will personally get offended if you do decide to leave...
@@ -80,5 +88,6 @@ public class ClientOutputs {
                 but each of you can choose a private objective.
                 You can choose from these two:""";
     public static final String choosePrivateObjectiveInstructions = "Type 1 to choose the first one, type 2 to choose the second one";
+    public static final String invalidResizeInput = "the width must me a number";
 
 }
