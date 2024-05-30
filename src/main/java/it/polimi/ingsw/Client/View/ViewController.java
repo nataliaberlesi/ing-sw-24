@@ -125,14 +125,16 @@ public abstract class ViewController {
                 }
             }
 
-            case ENDGAME  -> {
-                setAndShowFinalScoreBoard();
-                //showFinalScoreBoard();
-            }
+            case ENDGAME  -> setAndShowFinalScoreBoard();
+
             case ABORT -> {
                 showErrorAlert(messageParser.getCause(), "Game has terminated");
                 terminate();
             }
+
+            case POKE -> messageDispatcher.poke();
+
+
         }
     }
 
