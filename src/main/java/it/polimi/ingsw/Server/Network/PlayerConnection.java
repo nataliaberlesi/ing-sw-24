@@ -83,7 +83,7 @@ public class PlayerConnection implements Runnable{
                     getInMessage(true);
                 }
 
-            } catch(IOException ioe) {
+            } catch(IOException | RuntimeException re) {
                 try {
                     synchronized (this) {
                         close();

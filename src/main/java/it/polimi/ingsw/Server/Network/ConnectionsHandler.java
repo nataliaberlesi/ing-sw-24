@@ -178,7 +178,12 @@ public class ConnectionsHandler implements Runnable{
                     System.out.println("WARNING: Can't close a player connection");
                 }
             }
-            handleConnections(server.getConnections());
+            try{
+                handleConnections(server.getConnections());
+            } catch(RuntimeException re) {
+                System.out.println("ERROR: "+re.getMessage());
+                safeCloseConnections(re.getMessage());
+            }
             checkAllPlayerConnected();
         }
     }

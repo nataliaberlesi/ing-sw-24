@@ -83,7 +83,7 @@ public class NetworkManager implements Runnable{
                                     new Message(
                                             MessageType.ABORT,
                                             new ParamsDTO(
-                                                    new InParamsDTO("Server is unreachable"),null))));
+                                                    new InParamsDTO(re.getMessage()),null))));
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
