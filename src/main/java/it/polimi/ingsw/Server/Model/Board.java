@@ -38,7 +38,7 @@ public class Board {
      * map of all coordinates that have been initialized,
      * if a coordinate a key to a list that contains the symbol FULL then a card cannot be placed there
      */
-    private final HashMap<Coordinates, ArrayList<Symbol>> initiatedCoordinates = new HashMap<>();
+    private final HashMap<Coordinates, ArrayList<Symbol>> initializedCoordinates = new HashMap<>();
     /**
      * map containing the number of visible occurrences for each symbol
      * Useful for objectives and card objectives that assign points based on the number of symbols present in the Board
@@ -189,7 +189,7 @@ public class Board {
             //if card is facing down, it is unnecessary to check prerequisites
             if(!isFacingUp||card.checkPrerequisites(visibleSymbolCounter)){
                 //gets the symbols on corners that will be covered
-                ArrayList<Symbol> coveredSymbols= this.initiatedCoordinates.get(coordinates);
+                ArrayList<Symbol> coveredSymbols= this.initializedCoordinates.get(coordinates);
                 //removes covered symbols from the visibleSymbolCounter
                 removeCoveredSymbolsFromSymbolCounter(coveredSymbols);
                 //the coordinates where the card is placed become unplaceable
@@ -237,8 +237,8 @@ public class Board {
      * @return true if it is possible to place a card in those coordinates
      */
     public boolean isPlaceable(Coordinates coordinates){
-        if(this.initiatedCoordinates.containsKey(coordinates)){
-            return !this.initiatedCoordinates.get(coordinates).contains(Symbol.FULL);
+        if(this.initializedCoordinates.containsKey(coordinates)){
+            return !this.initializedCoordinates.get(coordinates).contains(Symbol.FULL);
         }
         return false;
     }
@@ -292,9 +292,9 @@ public class Board {
         //will contain symbols that are already present in coordinates
         ArrayList<Symbol> coordinatesSymbols = new ArrayList<>();
         //checking of symbols are already present in coordinates
-        if (this.initiatedCoordinates.get(coordinates) != null) {
+        if (this.initializedCoordinates.get(coordinates) != null) {
             //gets symbols that already occupy the coordinates
-            coordinatesSymbols = this.initiatedCoordinates.get(coordinates);
+            coordinatesSymbols = this.initializedCoordinates.get(coordinates);
             //the number of symbols already present in coordinates  is equal to the number of corners, that can never exceed 4
             // (including the on the method is about to add)
             if(coordinatesSymbols.size()>4){
@@ -304,7 +304,7 @@ public class Board {
         // adding currentSymbol symbol to the list of symbols occupying coordinates , if no symbols where already present this operation is equivalent
         // to creating a new coordinates coordinate and adding the cornerSymbol to it.
         coordinatesSymbols.add(cornerSymbol);
-        this.initiatedCoordinates.put(coordinates , coordinatesSymbols);
+        this.initializedCoordinates.put(coordinates , coordinatesSymbols);
     }
 
     /**
