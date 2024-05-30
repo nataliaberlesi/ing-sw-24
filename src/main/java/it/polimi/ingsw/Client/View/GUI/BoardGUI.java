@@ -107,7 +107,12 @@ public class BoardGUI extends ScrollPane {
         cardsOnBoard = cards;
         anchorPane.getChildren().remove(initialCard);
         for (CardGUI cardGUI : cardsOnBoard) {
-            anchorPane.getChildren().add(cardGUI);
+            if (cardsOnBoard.getLast() == chosenCard){
+                anchorPane.getChildren().add(cardsOnBoard.getLast());
+                break;
+            }
+            else
+                anchorPane.getChildren().add(cardGUI);
         }
     }
 
