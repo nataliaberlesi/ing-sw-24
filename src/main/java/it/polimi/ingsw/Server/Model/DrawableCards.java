@@ -89,7 +89,7 @@ public class DrawableCards {
     }
 
     public boolean deckIsEmpty(){
-        return deck.isEmpty();
+        return this.drawableCards[0]==null;
     }
 
 }

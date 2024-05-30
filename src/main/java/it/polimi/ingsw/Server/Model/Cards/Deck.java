@@ -61,8 +61,4 @@ public class Deck implements Iterator<String> {
         return null;
     }
 
-    public boolean isEmpty(){
-        return resourceCards.isEmpty();
-    }
-
 }
