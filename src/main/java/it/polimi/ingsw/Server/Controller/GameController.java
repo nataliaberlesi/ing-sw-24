@@ -238,13 +238,11 @@ public class GameController {
                     gameInstance.getGoldDrawableArea()
             );
         } else {
-            message=MessageCrafter.craftDrawCardMessage(affectedPlayer,
+            message=MessageCrafter.craftPlaceCardMessage(affectedPlayer,
                     affectedPlayer,
                     gameInstance.getPlacedCards(affectedPlayer),
                     gameInstance.getScore(affectedPlayer),
-                    gameInstance.getHand(affectedPlayer),
-                    gameInstance.getResourceDrawableArea(),
-                    gameInstance.getGoldDrawableArea()
+                    gameInstance.getHand(affectedPlayer)
             );
         }
         try {
