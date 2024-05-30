@@ -29,7 +29,7 @@ public class PlayerConnection implements Runnable{
      */
     public PlayerConnection(Socket s) throws IOException {
         socket=s;
-        socket.setSoTimeout(30000);
+        socket.setSoTimeout(10000);
         messageParser=MessageParser.getINSTANCE();
         setUpIO();
     }
@@ -102,7 +102,7 @@ public class PlayerConnection implements Runnable{
     public void threadPokeMethod() {
         while(!socketIsClosed()) {
             try {
-                sleep(10000);
+                sleep(5000);
             } catch (InterruptedException e) {
                 System.out.println("WARNING: poke mode off");
             }
