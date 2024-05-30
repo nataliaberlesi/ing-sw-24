@@ -9,11 +9,9 @@ import java.util.ArrayList;
 public class ConnectionsHandler implements Runnable{
     private GameController gameController;
     private Server server;
-    public ConnectionsHandler(Server server) throws IOException {
+    public ConnectionsHandler(Server server){
         this.server=server;
         this.gameController=new GameController(server);
-        ServerInputHandler serverInputHandler=new ServerInputHandler(server);
-        new Thread(serverInputHandler).start();
     }
 
     /**
@@ -138,11 +136,7 @@ public class ConnectionsHandler implements Runnable{
      */
     private void safeCloseConnections(String cause) {
         closeConnections(cause);
-        try {
-            gameController=new GameController(server);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        gameController=new GameController(server);
         server.restart();
     }
 

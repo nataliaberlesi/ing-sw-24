@@ -227,10 +227,18 @@ public class MessageParser {
     private CardDataDTO getCardDTO(String drawableArea, int index) {
         switch(drawableArea) {
             case("goldDrawableArea") -> {
-                return inParamsDTO.goldDrawableArea()[index].data();
+                CardDTO cardDTO=inParamsDTO.goldDrawableArea()[index];
+                if(cardDTO!=null) {
+                    return inParamsDTO.goldDrawableArea()[index].data();
+                }
+                return null;
             }
             case("resourceDrawableArea") -> {
-                return inParamsDTO.resourceDrawableArea()[index].data();
+                CardDTO cardDTO=inParamsDTO.resourceDrawableArea()[index];
+                if(cardDTO!=null) {
+                    return inParamsDTO.resourceDrawableArea()[index].data();
+                }
+                return null;
             }
         } throw new MessageParserException("Not such drawableArea:"+ drawableArea);
     }

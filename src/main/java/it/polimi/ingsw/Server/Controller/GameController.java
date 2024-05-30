@@ -17,7 +17,7 @@ public class GameController {
     private GameInstance gameInstance;
     private final Server server;
     private boolean persistence;
-    public GameController(Server server) throws IOException {
+    public GameController(Server server){
         this.server=server;
         persistence =false;
     }

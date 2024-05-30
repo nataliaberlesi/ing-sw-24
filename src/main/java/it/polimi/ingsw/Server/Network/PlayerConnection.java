@@ -57,10 +57,12 @@ public class PlayerConnection implements Runnable{
      * Sends a Message into outSocket
      */
     public void send() {
-        if(outMessage!=null) {
-            System.out.println("OUT | "+outMessage);
-            outSocket.println(messageParser.toJson(outMessage));
-            outMessage=null;
+        if(!socket.isClosed()) {
+            if(outMessage!=null) {
+                System.out.println("OUT | "+outMessage);
+                outSocket.println(messageParser.toJson(outMessage));
+                outMessage=null;
+            }
         }
     }
     /**
