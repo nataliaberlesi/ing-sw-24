@@ -44,9 +44,9 @@ public abstract class ViewController {
     public void updateView() {
         switch (this.messageParser.getMessageType()) {
 
-            case PERSISTENCE ->
-                    askCreateOrContinue();
-            case CONTINUE ->{
+            case PERSISTENCE -> askCreateOrContinue();
+
+            case CONTINUE -> {
                 if(playersInfoNotYetAdded()){
                     addPlayers(messageParser.getPlayers());
                     setPublicObjectives();
@@ -61,8 +61,8 @@ public abstract class ViewController {
             case CHAT -> updateChat();
 
             case CONNECT -> {
-                connectScene();
                 masterStatus = messageParser.masterStatus();
+                connectScene();
             }
 
             case JOIN -> manageJoinStatus();
