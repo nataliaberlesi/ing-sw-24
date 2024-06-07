@@ -31,7 +31,7 @@
 
 ## How to start the game
 The game is started from the terminal. 
-To start the game you need to launch the LB07.jar you can find in the shade/MacOS or shade/Windows directory and specify the following arguments:
+Depending on you operating system, to start the game you need to launch the LB07.jar you can find in the shade/MacOS or shade/Windows directory and specify the following arguments:
 
 ### To start the server:
 When you find yourself in the shade/MacOS or shade/Windows directory type: java -jar LB07.jar --server
