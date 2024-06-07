@@ -37,9 +37,9 @@ Depending on your operating system, go to the MacOS or Windows directory from yo
 
 ### To start the client:
 * To play in GUI:
-When you find yourself in the shade directory, type: java -jar LB07.jar --gui ServerIPAddress
+When you find yourself in the MacOS or Windows directory, type: java -jar LB07.jar --gui ServerIPAddress
 * To play in CLI: 
-When you find yourself in the shade directory, type: java -jar LB07.jar --gui ServerIPAddress
+When you find yourself in the MacOS or Windows directory, type: java -jar LB07.jar --gui ServerIPAddress
 
 Note: If you want to start both server and clients using the same network, use ServerIPAddress = localhost.
 
